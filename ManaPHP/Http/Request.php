@@ -44,7 +44,7 @@ namespace ManaPHP\Http {
 		 */
 		protected $_files;
 
-		function __construct(){
+		public function __construct(){
 			if($this->isPut()){
 				parse_str($this->getRawBody(),$this->_putCache);
 			}
