@@ -6,31 +6,43 @@ namespace ManaPHP\Mvc\Router {
 	 * ManaPHP\Mvc\Router\Route
 	 *
 	 * This class represents every route added to the router
+	 *
+	 * NOTE_PHP:
+	 * 	Hostname Constraints has been removed by PHP implementation
 	 */
 	
-	class Route implements \ManaPHP\Mvc\Router\RouteInterface {
+	class Route implements RouteInterface {
 
+		/**
+		 * @var string
+		 */
 		protected $_pattern;
 
+		/**
+		 * @var string
+		 */
 		protected $_compiledPattern;
 
+		/**
+		 * @var array
+		 */
 		protected $_paths;
 
+		/**
+		 * @var array|null|string
+		 */
 		protected $_methods;
 
-		protected $_hostname;
 
-		protected $_converters;
-
-		protected $_id;
-
-		protected $_name;
-
+		/**
+		 * @var callable
+		 */
 		protected $_beforeMatch;
 
+		/**
+		 * @var \ManaPHP\Mvc\Router\GroupInterface
+		 */
 		protected $_group;
-
-		protected static $_uniqueId;
 
 		/**
 		 * \ManaPHP\Mvc\Router\Route constructor
@@ -39,7 +51,11 @@ namespace ManaPHP\Mvc\Router {
 		 * @param array $paths
 		 * @param array|string $httpMethods
 		 */
-		public function __construct($pattern, $paths=null, $httpMethods=null){ }
+		public function __construct($pattern, $paths=null, $httpMethods=null){
+			$this->reConfigure($pattern, $paths);
+
+			$this->_methods =$httpMethods;
+		}
 
 
 		/**
@@ -48,53 +64,137 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @return string
 		 */
-		public function compilePattern($pattern){ }
+		public function compilePattern($pattern){
 
+			// If a pattern contains ':', maybe there are placeholders to replace
+			if(strpos($pattern,':') !==false){
+				$pattern =str_replace('/:module','/{module:[\w-]+}',$pattern);
+				$pattern=str_replace('/:controller','/{controller:[\w-]+}',$pattern);
+				$pattern =str_replace('/:namespace','/{namespace:[\w-]+}',$pattern);
+				$pattern =str_replace('/:action','/{action:[\w-]+}',$pattern);
+				$pattern=str_replace('/:params','/{params}',$pattern);
+				$pattern=str_replace('/:int','/(\d+)',$pattern);
+			}
+
+			if(strpos($pattern,'(') !==false ||strpos($pattern,'[') !==false){
+				return "#^" . $pattern . "$#";
+			}else{
+				return $pattern;
+			}
+		}
 
 		/**
-		 * Set one or more HTTP methods that constraint the matching of the route
-		 *
-		 *<code>
-		 * $route->via('GET');
-		 * $route->via(array('GET', 'POST'));
-		 *</code>
-		 *
-		 * @param string|array $httpMethods
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * Extracts parameters from a string
+		 * @param string $pattern
+		 * @return array|boolean
 		 */
-		public function via($httpMethods){ }
+		public function extractNamedParams($pattern){
+			if(strpos($pattern,'{') ===false){
+				return $pattern;
+			}
 
+			$left_token='@_@';
+			$right_token='!_!';
+			$need_restore_token =false;
 
+			if(preg_match('#{\d#',$pattern) ===1){
+				if(strpos($pattern,$left_token) ===false &&strpos($pattern,$right_token) ===false){
+					$need_restore_token =true;
+					$pattern =preg_replace('#{(\d+,?\d*)}#',$left_token.'\1'.$right_token,$pattern);
+				}
+			}
+
+			if(preg_match_all('#{([A-Z].*)}#Ui',$pattern,$matches,PREG_SET_ORDER) >0){
+				foreach($matches as $match){
+
+					if(strpos($match[0],':') ===false){
+						$pattern=str_replace($match[0],'(?<'.$match[1].'>[\w_]+)',$pattern);
+					}else{
+						$parts =explode(':',$match[1]);
+						$pattern =str_replace($match[0],'(?<'.$parts[0].'>'.$parts[1].')',$pattern);
+					}
+				}
+			}
+
+			if($need_restore_token){
+				$pattern=str_replace([$left_token,$right_token],['{','}'],$pattern);
+			}
+
+			return '#^'.$pattern.'$#';
+		}
+
+		/**
+		 * Returns routePaths
+		 * @param string|array $paths
+		 * @return array
+		 * @throws
+		 */
+		public static function getRoutePaths($paths=null){
+			if($paths !==null){
+				if(is_string($paths)){
+					$parts =explode('::',$paths);
+					if(count($parts) ==3){
+						$moduleName =$parts[0];
+						$controllerName=$parts[1];
+						$actionName=$parts[2];
+					}elseif(count($parts)==2){
+						$controllerName=$parts[0];
+						$actionName=$parts[1];
+					}else{
+						$controllerName=$parts[0];
+					}
+
+					$routePaths =[];
+					if(isset($moduleName)){
+						$routePaths['module']=$moduleName;
+					}
+
+					if(isset($controllerName)){
+						if(strpos($controllerName,'\\') !==false){
+							throw new Exception('-- invalid part: '.$controllerName);
+						}else{
+							// Always pass the controller to lowercase
+							$routePaths['controller']='todo';
+						}
+					}
+
+					if(isset($actionName)){
+						$routePaths['action']=$actionName;
+					}
+				}else if(is_array($paths)){
+					$routePaths =$paths;
+				}else{
+					throw new Exception('--paths must be a string or array.');
+				}
+			}else{
+				$routePaths=[];
+			}
+
+			return $routePaths;
+		}
 		/**
 		 * Reconfigure the route adding a new pattern and a set of paths
 		 *
 		 * @param string $pattern
 		 * @param array $paths
 		 */
-		public function reConfigure($pattern, $paths=null){ }
+		public function reConfigure($pattern, $paths=null){
+			$this->_pattern =$pattern;
+			$this->_paths =self::getRoutePaths($paths);
 
+			// If the route starts with '#' we assume that it is a regular expression
+			if($pattern[0] !=='#'){
+				if(strpos($pattern,'{') !==false){
+					$pcrePattern=$this->extractNamedParams($pattern);
+				}else{
+					$pcrePattern=$pattern;
+				}
 
-		/**
-		 * Returns the route's name
-		 *
-		 * @return string
-		 */
-		public function getName(){ }
-
-
-		/**
-		 * Sets the route's name
-		 *
-		 *<code>
-		 * $router->add('/about', array(
-		 *     'controller' => 'about'
-		 * ))->setName('about');
-		 *</code>
-		 *
-		 * @param string $name
-		 * @return \ManaPHP\Mvc\Router\Route
-		 */
-		public function setName($name){ }
+				$this->_compiledPattern=$this->compilePattern($pcrePattern);
+			}else{
+				$this->_compiledPattern =$pattern;
+			}
+		}
 
 
 		/**
@@ -104,8 +204,15 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @param callback $callback
 		 * @return \ManaPHP\Mvc\Router\Route
+		 * @throws
 		 */
-		public function beforeMatch($callback){ }
+		public function beforeMatch($callback){
+			if(!is_callable($callback)) {
+				throw new Exception("Before-Match callback is not callable");
+			}
+			$this->_beforeMatch =$callback;
+			return $this;
+		}
 
 
 		/**
@@ -113,15 +220,9 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @return mixed
 		 */
-		public function getBeforeMatch(){ }
-
-
-		/**
-		 * Returns the route's id
-		 *
-		 * @return string
-		 */
-		public function getRouteId(){ }
+		public function getBeforeMatch(){
+			return $this->_beforeMatch;
+		}
 
 
 		/**
@@ -129,7 +230,9 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @return string
 		 */
-		public function getPattern(){ }
+		public function getPattern(){
+			return $this->_pattern;
+		}
 
 
 		/**
@@ -137,7 +240,9 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @return string
 		 */
-		public function getCompiledPattern(){ }
+		public function getCompiledPattern(){
+			return $this->_compiledPattern;
+		}
 
 
 		/**
@@ -145,7 +250,9 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @return array
 		 */
-		public function getPaths(){ }
+		public function getPaths(){
+			return $this->_paths;
+		}
 
 
 		/**
@@ -153,7 +260,14 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @return array
 		 */
-		public function getReversedPaths(){ }
+		public function getReversedPaths(){
+			$reversed=[];
+			foreach($this->_paths as $path=>$position){
+				$reversed[$position]=$path;
+			}
+
+			return $reversed;
+		}
 
 
 		/**
@@ -167,7 +281,10 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string|array $httpMethods
 		 * @return \ManaPHP\Mvc\Router\Route
 		 */
-		public function setHttpMethods($httpMethods){ }
+		public function setHttpMethods($httpMethods){
+			$this->_methods =$httpMethods;
+			return $this;
+		}
 
 
 		/**
@@ -175,29 +292,9 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @return string|array
 		 */
-		public function getHttpMethods(){ }
-
-
-		/**
-		 * Sets a hostname restriction to the route
-		 *
-		 *<code>
-		 * $route->setHostname('localhost');
-		 *</code>
-		 *
-		 * @param string|array $httpMethods
-		 * @return \ManaPHP\Mvc\Router\Route
-		 */
-		public function setHostname($hostname){ }
-
-
-		/**
-		 * Returns the hostname restriction if any
-		 *
-		 * @return string
-		 */
-		public function getHostname(){ }
-
+		public function getHttpMethods(){
+			return $this->_methods;
+		}
 
 		/**
 		 * Sets the group associated with the route
@@ -205,7 +302,10 @@ namespace ManaPHP\Mvc\Router {
 		 * @param \ManaPHP\Mvc\Router\Group $group
 		 * @return \ManaPHP\Mvc\RouterInterface
 		 */
-		public function setGroup($group){ }
+		public function setGroup($group){
+			$this->_group=$group;
+			return $this;
+		}
 
 
 		/**
@@ -213,31 +313,8 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @return \ManaPHP\Mvc\Router\Group|null
 		 */
-		public function getGroup(){ }
-
-
-		/**
-		 * Adds a converter to perform an additional transformation for certain parameter
-		 *
-		 * @param string $name
-		 * @param callable $converter
-		 * @return \ManaPHP\Mvc\Router\Route
-		 */
-		public function convert($name, $converter){ }
-
-
-		/**
-		 * Returns the router converter
-		 *
-		 * @return array
-		 */
-		public function getConverters(){ }
-
-
-		/**
-		 * Resets the internal route id generator
-		 */
-		public static function reset(){ }
-
+		public function getGroup(){
+			return $this->_group;
+		}
 	}
 }
