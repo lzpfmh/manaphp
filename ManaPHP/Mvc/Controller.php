@@ -40,7 +40,7 @@ namespace ManaPHP\Mvc {
 	 *</code>
 	 */
 	
-	abstract class Controller extends Injectable implements EventsAwareInterface, InjectionAwareInterface, ControllerInterface {
+	abstract class Controller extends Injectable implements ControllerInterface {
 
 		/**
 		 * \ManaPHP\Mvc\Controller constructor

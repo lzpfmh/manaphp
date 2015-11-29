@@ -29,7 +29,7 @@ namespace ManaPHP\Mvc {
 	 *</code>
 	 */
 	
-	class Dispatcher extends \ManaPHP\Dispatcher implements EventsAwareInterface, InjectionAwareInterface, DispatcherInterface {
+	class Dispatcher extends \ManaPHP\Dispatcher implements  DispatcherInterface {
 
 		const EXCEPTION_NO_DI = 0;
 

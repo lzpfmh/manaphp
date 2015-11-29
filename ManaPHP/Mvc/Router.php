@@ -388,7 +388,7 @@ namespace ManaPHP\Mvc {
 						$parts =$paths;
 
 						foreach($paths as $part=>$position){
-							if(is_integer($position) &&isset($matches[$position])){
+							if(is_int($position) &&isset($matches[$position])){
 								$parts[$part]=$matches[$position];
 							}
 						}
