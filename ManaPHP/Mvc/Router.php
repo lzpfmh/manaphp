@@ -366,48 +366,7 @@ namespace ManaPHP\Mvc {
 			for($i =count($this->_routes)-1; $i>=0; $i--){
 				$route =$this->_routes[$i];
 
-				$matches =null;
-
-				$methods =$route->getHttpMethods();
-				if($methods !==null){
-					if(is_string($methods)){
-						if($methods !==$_SERVER['REQUEST_METHOD']){
-							continue;
-						}
-					}else{
-						if(!in_array($_SERVER['REQUEST_METHOD'],$methods,true)){
-							continue;
-						}
-					}
-				}
-
-				if(is_object($this->_eventsManager)){
-					$this->_eventsManager->fire('router:beforeCheckRoute', $this, $route);
-				}
-
-				$pattern =$route->getCompiledPattern();
-
-				if(strpos($pattern,'^') !==false){
-					$r=preg_match($pattern,$handle_uri,$matches);
-					if($r ===false){
-						throw new Exception('--invalid PCRE: '.$pattern. ' for '. $route->getPattern());
-					}
-
-					$route_found =$r===1;
-				}else{
-					$route_found =$pattern===$handle_uri;
-				}
-
-				if($route_found){
-					$beforeMatch=$route->getBeforeMatch();
-					if($beforeMatch !==null){
-						if(!is_callable($beforeMatch)) {
-							throw new Exception('Before-Match callback is not callable in matched route');
-						}
-
-						$route_found=call_user_func_array($route->getBeforeMatch(),[$handle_uri, $route,$this]);
-					}
-				}
+				$route_found=$route->isMatched($handle_uri,$matches);
 
 				if($route_found){
 					$paths =$route->getPaths();
