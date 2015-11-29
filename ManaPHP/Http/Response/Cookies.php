@@ -9,14 +9,20 @@ namespace ManaPHP\Http\Response {
 	 * A cookies bag is automatically registered as part of the 'response' service in the DI
 	 */
 	
-	class Cookies implements \ManaPHP\Http\Response\CookiesInterface, \ManaPHP\DI\InjectionAwareInterface {
+	class Cookies implements \ManaPHP\Http\Response\CookiesInterface, \ManaPHP\Di\InjectionAwareInterface {
 
+		/**
+		 * @var \ManaPHP\DiInterface
+		 */
 		protected $_dependencyInjector;
 
 		protected $_registered;
 
 		protected $_useEncryption;
 
+		/**
+		 * @var \ManaPHP\Http\Cookie[]
+		 */
 		protected $_cookies;
 
 		/**
@@ -24,7 +30,9 @@ namespace ManaPHP\Http\Response {
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 */
-		public function setDI($dependencyInjector){ }
+		public function setDI($dependencyInjector){
+			$this->_dependencyInjector =$dependencyInjector;
+		}
 
 
 		/**
@@ -32,7 +40,9 @@ namespace ManaPHP\Http\Response {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public function getDI(){ }
+		public function getDI(){
+			return $this->_dependencyInjector;
+		}
 
 
 		/**
@@ -41,7 +51,9 @@ namespace ManaPHP\Http\Response {
 		 * @param boolean $useEncryption
 		 * @return \ManaPHP\Http\Response\Cookies
 		 */
-		public function useEncryption($useEncryption){ }
+		public function useEncryption($useEncryption){
+			$this->_useEncryption =$useEncryption;
+		}
 
 
 		/**
@@ -49,7 +61,9 @@ namespace ManaPHP\Http\Response {
 		 *
 		 * @return boolean
 		 */
-		public function isUsingEncryption(){ }
+		public function isUsingEncryption(){
+			return $this->_useEncryption;
+		}
 
 
 		/**
@@ -64,8 +78,43 @@ namespace ManaPHP\Http\Response {
 		 * @param string $domain
 		 * @param boolean $httpOnly
 		 * @return \ManaPHP\Http\Response\Cookies
+		 * @throws
 		 */
-		public function set($name, $value=null, $expire=null, $path=null, $secure=null, $domain=null, $httpOnly=null){ }
+		public function set($name, $value=null, $expire=null, $path=null, $secure=null, $domain=null, $httpOnly=null){
+			/**
+			 * @var \ManaPHP\Http\Cookie $cookie
+			 * @var \ManaPHP\Http\ResponseInterface $response
+			 */
+			if(!isset($this->_cookies[$name])){
+
+				$cookie =$this->_dependencyInjector->get('ManaPHP\Http\Cookie',
+							[$name,$value,$expire,$path,$secure,$domain,$httpOnly]);
+
+				$cookie->setDI($this->_dependencyInjector);
+				$cookie->useEncryption($this->_useEncryption);
+				$this->_cookies[$name]=$cookie;
+			}else{
+				$cookie =$this->_cookies[$name];
+
+				$cookie->setValue($value);
+				$cookie->setExpiration($expire);
+				$cookie->setPath($path);
+				$cookie->setSecure($secure);
+				$cookie->setDomain($domain);
+				$cookie->setHttpOnly($httpOnly);
+			}
+
+			if($this->_registered ===false){
+				if(!is_object($this->_dependencyInjector)){
+					throw new Exception("A dependency injection object is required to access the 'response' service");
+				}
+
+				$response =$this->_dependencyInjector->getShared('response');
+				$response->setCookies($this);
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -74,7 +123,24 @@ namespace ManaPHP\Http\Response {
 		 * @param string $name
 		 * @return \ManaPHP\Http\Cookie
 		 */
-		public function get($name){ }
+		public function get($name){
+			/**
+			 * @var \ManaPHP\Http\Cookie $cookie
+			 */
+			if(isset($this->_cookies[$name])){
+				return $this->_cookies[$name];
+			}
+
+
+			$cookie =$this->_dependencyInjector->get('ManaPHP\Http\Cookie',[$name]);
+			if(is_object($this->_dependencyInjector)){
+				$cookie->setDI($this->_dependencyInjector);
+				$cookie->useEncryption($this->_useEncryption);
+			}
+			$this->_cookies[$name] =$cookie;
+
+			return $cookie;
+		}
 
 
 		/**
@@ -83,7 +149,17 @@ namespace ManaPHP\Http\Response {
 		 * @param string $name
 		 * @return boolean
 		 */
-		public function has($name){ }
+		public function has($name){
+			if(isset($this->_cookies[$name])){
+				return true;
+			}
+
+			if(isset($_COOKIE[$name])){
+				return true;
+			}
+
+			return false;
+		}
 
 
 		/**
@@ -93,7 +169,14 @@ namespace ManaPHP\Http\Response {
 		 * @param string $name
 		 * @return boolean
 		 */
-		public function delete($name){ }
+		public function delete($name){
+			if(isset($this->_cookies[$name])){
+				$this->_cookies[$name]->delete();
+				return true;
+			}else{
+				return false;
+			}
+		}
 
 
 		/**
@@ -102,7 +185,17 @@ namespace ManaPHP\Http\Response {
 		 *
 		 * @return boolean
 		 */
-		public function send(){ }
+		public function send(){
+			if(!headers_sent()){
+				foreach($this->_cookies as $cookie){
+					$cookie->send();
+				}
+
+				return true;
+			}else{
+				return false;
+			}
+		}
 
 
 		/**
@@ -110,7 +203,9 @@ namespace ManaPHP\Http\Response {
 		 *
 		 * @return \ManaPHP\Http\Response\Cookies
 		 */
-		public function reset(){ }
-
+		public function reset(){
+			$this->_cookies =[];
+			return $this;
+		}
 	}
 }
