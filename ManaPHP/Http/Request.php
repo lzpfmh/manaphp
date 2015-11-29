@@ -31,10 +31,6 @@ namespace ManaPHP\Http {
 		 */
 		protected $_dependencyInjector;
 
-		/**
-		 * @var \ManaPHP\FilterInterface
-		 */
-		protected $_filter;
 
 		protected $_rawBody;
 
