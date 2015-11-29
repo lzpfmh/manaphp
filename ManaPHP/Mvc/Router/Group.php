@@ -7,6 +7,10 @@ namespace ManaPHP\Mvc\Router {
 	 *
 	 * Helper class to create a group of routes with common attributes
 	 *
+	 * NOTE_PHP:
+	 * 		1.Hostname Constraints has been removed by PHP implementation
+	 * 		2. remove clear method
+	 *
 	 *<code>
 	 * $router = new ManaPHP\Mvc\Router();
 	 *
@@ -43,52 +47,49 @@ namespace ManaPHP\Mvc\Router {
 	
 	class Group {
 
+		/*
+		 * var string
+		 */
 		protected $_prefix;
 
-		protected $_hostname;
-
+		/**
+		 * @var array
+		 */
 		protected $_paths;
 
+		/**
+		 * @var \ManaPHP\Mvc\Router\RouteInterface[]
+		 */
 		protected $_routes;
 
+		/**
+		 * @var string
+		 */
 		protected $_beforeMatch;
 
-		protected $_converters;
-
-		protected $_name;
 
 		/**
 		 * \ManaPHP\Mvc\Router\Group constructor
 		 *
 		 * @param array $paths
 		 */
-		public function __construct($paths=null){ }
-
-
-		/**
-		 * Set a hostname restriction for all the routes in the group
-		 *
-		 * @param string $hostname
-		 * @return \ManaPHP\Mvc\Router\Group
-		 */
-		public function setHostname($hostname){ }
-
-
-		/**
-		 * Returns the hostname restriction
-		 *
-		 * @return string
-		 */
-		public function getHostname(){ }
+		public function __construct($paths=null){
+			if(is_array($paths)){
+				$this->_paths =$paths;
+			}
+		}
 
 
 		/**
 		 * Set a common uri prefix for all the routes in this group
 		 *
 		 * @param string $prefix
-		 * @return \ManaPHP\Mvc\Router\Group
+		 * @return \ManaPHP\Mvc\Router\GroupInterface
 		 */
-		public function setPrefix($prefix){ }
+		public function setPrefix($prefix){
+			$this->_prefix=$prefix;
+			return $this;
+		}
 
 
 		/**
@@ -96,49 +97,69 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @return string
 		 */
-		public function getPrefix(){ }
+		public function getPrefix(){
+			return $this->_prefix;
+		}
 
 
 		/**
-		 * Set a before-match condition for the whole group
+		 * Set a before-match condition for the whole group,
+		 * The developer can implement any arbitrary conditions here
+		 * If the callback returns false the route is treated as not matched
 		 *
-		 * @param string $prefix
-		 * @return \ManaPHP\Mvc\Router\Group
+		 * @param callable $beforeMatch
+		 * @return \ManaPHP\Mvc\Router\GroupInterface
+		 * @throws
 		 */
-		public function beforeMatch($beforeMatch){ }
+		public function beforeMatch($beforeMatch){
+			if(!is_callable($beforeMatch)) {
+				throw new Exception("Before-Match callback is not callable");
+			}
+			$this->_beforeMatch =$beforeMatch;
+			return $this;
+		}
 
 
 		/**
 		 * Returns the before-match condition if any
 		 *
-		 * @return string
+		 * @return callable
 		 */
-		public function getBeforeMatch(){ }
+		public function getBeforeMatch(){
+			return $this->_beforeMatch;
+		}
 
 
 		/**
 		 * Set common paths for all the routes in the group
 		 *
 		 * @param array $paths
-		 * @return \ManaPHP\Mvc\Router\Group
+		 * @return \ManaPHP\Mvc\Router\GroupInterface
 		 */
-		public function setPaths($paths){ }
+		public function setPaths($paths){
+			$this->_paths =$paths;
+			return $this;
+		}
 
 
 		/**
 		 * Returns the common paths defined for this group
 		 *
-		 * @return array|string
+		 * @return array
 		 */
-		public function getPaths(){ }
+		public function getPaths(){
+			return $this->_paths;
+		}
 
 
 		/**
 		 * Returns the routes added to the group
 		 *
-		 * @return \ManaPHP\Mvc\Router\Route[]
+		 * @return \ManaPHP\Mvc\Router\RouteInterface[]
 		 */
-		public function getRoutes(){ }
+		public function getRoutes(){
+			return $this->_routes;
+		}
 
 
 		/**
@@ -147,9 +168,15 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @param array $httpMethods
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		protected function _addRoute(){ }
+		protected function _addRoute($pattern, $paths=null, $httpMethods=null){
+			$route =new Route($this->_prefix.$pattern,is_array($paths)?array_merge($this->_paths,$paths):$this->_paths, $httpMethods);
+			$route->setGroup($this);
+			$this->_routes[]=$route;
+
+			return $route;
+		}
 
 
 		/**
@@ -160,122 +187,96 @@ namespace ManaPHP\Mvc\Router {
 		 *</code>
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
+		 * @param array $paths
 		 * @param string $httpMethods
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function add($pattern, $paths=null, $httpMethods=null){ }
+		public function add($pattern, $paths=null, $httpMethods=null){
+			return $this->_addRoute($pattern,$paths,$httpMethods);
+		}
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is GET
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @param array $paths
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addGet($pattern, $paths=null){ }
+		public function addGet($pattern, $paths=null){
+			return $this->_addRoute($pattern, $paths, "GET");
+		}
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is POST
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @param array $paths
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addPost($pattern, $paths=null){ }
+		public function addPost($pattern, $paths=null){
+			return $this->_addRoute($pattern, $paths, "POST");
+		}
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is PUT
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @param array $paths
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addPut($pattern, $paths=null){ }
+		public function addPut($pattern, $paths=null){
+			return $this->_addRoute($pattern, $paths, "PUT");
+		}
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is PATCH
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @param array $paths
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addPatch($pattern, $paths=null){ }
+		public function addPatch($pattern, $paths=null){
+			return $this->_addRoute($pattern, $paths, "PATCH");
+		}
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is DELETE
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @param array $paths
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addDelete($pattern, $paths=null){ }
+		public function addDelete($pattern, $paths=null){
+			return $this->_addRoute($pattern, $paths, "DELETE");
+		}
 
 
 		/**
 		 * Add a route to the router that only match if the HTTP method is OPTIONS
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @param array $paths
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addOptions($pattern, $paths=null){ }
+		public function addOptions($pattern, $paths=null){
+			return $this->_addRoute($pattern, $paths, "OPTIONS");
+		}
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is HEAD
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @param array $paths
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addHead($pattern, $paths=null){ }
-
-
-		/**
-		 * Removes all the pre-defined routes
-		 */
-		public function clear(){ }
-
-
-		/**
-		 * Adds a converter to perform an additional transformation for certain parameter
-		 *
-		 * @param string $name
-		 * @param callable $converter
-		 * @return \ManaPHP\Mvc\Router\Group
-		 */
-		public function convert($name, $converter){ }
-
-
-		/**
-		 * Returns the router converter
-		 *
-		 * @return array|null
-		 */
-		public function getConverters(){ }
-
-
-		/**
-		 * Set the name of the group
-		 *
-		 * @param string $hostname
-		 * @return \ManaPHP\Mvc\Router\Group
-		 */
-		public function setName($name){ }
-
-
-		/**
-		 * Returns the name of this group
-		 *
-		 * @return string
-		 */
-		public function getName(){ }
-
+		public function addHead($pattern, $paths=null){
+			return $this->_addRoute($pattern, $paths, "HEAD");
+		}
 	}
 }
