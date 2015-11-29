@@ -1,9 +1,9 @@
 <?php 
 
-namespace ManaPHP\DI {
+namespace ManaPHP\Di {
 
 	/**
-	 * ManaPHP\DI\InjectionAwareInterface initializer
+	 * ManaPHP\Di\InjectionAwareInterface initializer
 	 */
 	
 	interface InjectionAwareInterface {
@@ -22,6 +22,5 @@ namespace ManaPHP\DI {
 		 * @return \ManaPHP\DiInterface
 		 */
 		public function getDI();
-
 	}
 }
