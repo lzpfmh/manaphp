@@ -2,6 +2,8 @@
 
 namespace ManaPHP\Mvc {
 
+	use ManaPHP\Mvc\Dispatcher\Exception;
+
 	/**
 	 * ManaPHP\Mvc\Dispatcher
 	 *
@@ -11,7 +13,7 @@ namespace ManaPHP\Mvc {
 	 *
 	 *<code>
 	 *
-	 *	$di = new ManaPHP\DI();
+	 *	$di = new ManaPHP\Di();
 	 *
 	 *	$dispatcher = new ManaPHP\Mvc\Dispatcher();
 	 *
@@ -26,7 +28,7 @@ namespace ManaPHP\Mvc {
 	 *</code>
 	 */
 	
-	class Dispatcher extends \ManaPHP\Dispatcher implements \ManaPHP\Events\EventsAwareInterface, \ManaPHP\DI\InjectionAwareInterface, \ManaPHP\DispatcherInterface, \ManaPHP\Mvc\DispatcherInterface {
+	class Dispatcher extends \ManaPHP\Dispatcher implements \ManaPHP\Events\EventsAwareInterface, \ManaPHP\Di\InjectionAwareInterface, \ManaPHP\DispatcherInterface, \ManaPHP\Mvc\DispatcherInterface {
 
 		const EXCEPTION_NO_DI = 0;
 
@@ -40,18 +42,20 @@ namespace ManaPHP\Mvc {
 
 		const EXCEPTION_ACTION_NOT_FOUND = 5;
 
-		protected $_handlerSuffix;
+		protected $_handlerSuffix='Controller';
 
-		protected $_defaultHandler;
+		protected $_defaultHandler='Index';
 
-		protected $_defaultAction;
+		protected $_defaultAction='index';
 
 		/**
 		 * Sets the default controller suffix
 		 *
 		 * @param string $controllerSuffix
 		 */
-		public function setControllerSuffix($controllerSuffix){ }
+		public function setControllerSuffix($controllerSuffix){
+			$this->_handlerSuffix =$controllerSuffix;
+		}
 
 
 		/**
@@ -59,7 +63,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $controllerName
 		 */
-		public function setDefaultController($controllerName){ }
+		public function setDefaultController($controllerName){
+			$this->_defaultHandler =$controllerName;
+		}
 
 
 		/**
@@ -67,7 +73,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $controllerName
 		 */
-		public function setControllerName($controllerName, $isExact=null){ }
+		public function setControllerName($controllerName, $isExact=null){
+			$this->_handlerName =$controllerName;
+		}
 
 
 		/**
@@ -75,7 +83,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return string
 		 */
-		public function getControllerName(){ }
+		public function getControllerName(){
+			return $this->_handlerName;
+		}
 
 
 		/**
@@ -83,19 +93,42 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $message
 		 * @param int $exceptionCode
+		 * @return boolean
+		 * @throws
 		 */
-		protected function _throwDispatchException(){ }
+		protected function _throwDispatchException($message, $exceptionCode=0){
+			if(!is_object($this->_dependencyInjector)){
+				throw new Exception(
+					"A dependency injection container is required to access the 'response' service",
+					\ManaPHP\Dispatcher::EXCEPTION_NO_DI
+				);
+			}
+
+			$response =$this->_dependencyInjector->getShared('response');
+			$response->setStatusCode(404, "Not Found");
+
+			$exception =new Exception($message, $exceptionCode);
+
+			if($this->_handleException($exception) ===false){
+				return false;
+			}
+
+			throw $exception;
+		}
 
 
 		/**
 		 * Handles a user exception
 		 *
 		 * @param \Exception $exception
+		 * @return boolean
 		 *
 		 * @warning If any additional logic is to be implemented here, please check
 		 * ManaPHP_dispatcher_fire_event() first
 		 */
-		protected function _handleException(){ }
+		protected function _handleException($exception){
+
+		}
 
 
 		/**
@@ -103,7 +136,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return string
 		 */
-		public function getControllerClass(){ }
+		public function getControllerClass(){
+			return $this->getHandlerClass();
+		}
 
 
 		/**
@@ -111,7 +146,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return \ManaPHP\Mvc\ControllerInterface
 		 */
-		public function getLastController(){ }
+		public function getLastController(){
+			return $this->_lastHandler;
+		}
 
 
 		/**
@@ -119,7 +156,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return \ManaPHP\Mvc\ControllerInterface
 		 */
-		public function getActiveController(){ }
+		public function getActiveController(){
+			return $this->_activeHandler;
+		}
 
 
 		/**
