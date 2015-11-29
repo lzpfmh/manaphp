@@ -293,7 +293,7 @@ namespace ManaPHP\Http {
 		 * @return boolean
 		 */
 		public function isAjax(){
-			return isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] === "XMLHttpRequest";
+			return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 		}
 
 
@@ -314,7 +314,7 @@ namespace ManaPHP\Http {
 		 */
 		public function getRawBody(){
 			if(empty($this->_rawBody)){
-				$this->_rawBody =file_get_contents("php://input");
+				$this->_rawBody =file_get_contents('php://input');
 			}
 
 			return $this->_rawBody;

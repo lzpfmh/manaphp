@@ -106,7 +106,7 @@ namespace ManaPHP\Mvc {
 			}
 
 			$response =$this->_dependencyInjector->getShared('response');
-			$response->setStatusCode(404, "Not Found");
+			$response->setStatusCode(404, 'Not Found');
 
 			$exception =new Exception($message, $exceptionCode);
 

@@ -47,8 +47,8 @@ namespace ManaPHP\Mvc {
 		 *
 		 */
 		final public function __construct(){
-			if(method_exists($this, "onConstruct")) {
-				$this->{"onConstruct"}();
+			if(method_exists($this, 'onConstruct')) {
+				$this->{'onConstruct'}();
 			}
 		}
 

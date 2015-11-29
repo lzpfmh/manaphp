@@ -27,7 +27,7 @@ namespace ManaPHP\Events {
 		 */
 		public function attach($event, $handler){
 			if(!is_object($handler)){
-				throw new Exception("Event handler must be an Object");
+				throw new Exception('Event handler must be an Object');
 			}
 
 			if(strpos($event,':') !==false) {
@@ -60,7 +60,7 @@ namespace ManaPHP\Events {
 		 */
 		public function fire($event, $source, $data=null){
 			if(strpos($event,':') ===false){
-				throw new Exception("Invalid event type " . $event);
+				throw new Exception('Invalid event type ' . $event);
 			}
 
 			list($fire_type,$fire_name)=explode(':',$event,2);

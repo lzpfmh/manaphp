@@ -185,7 +185,7 @@ namespace ManaPHP\Mvc {
 			 */
 
 			if(!is_object($this->_dependencyInjector)){
-				throw new Exception("A dependency injection object is required to access internal services");
+				throw new Exception('A dependency injection object is required to access internal services');
 			}
 
 			if(is_object($this->_eventsManager)){
@@ -245,7 +245,7 @@ namespace ManaPHP\Mvc {
 				}else if($module instanceof \Closure){
 					$moduleObject =call_user_func_array($module,[$this->_dependencyInjector]);
 				}else{
-					throw new Exception("Invalid module definition");
+					throw new Exception('Invalid module definition');
 				}
 
 				if(is_object($this->_eventsManager)){
@@ -294,7 +294,7 @@ namespace ManaPHP\Mvc {
 							$renderStatus =true;
 
 							if(is_object($this->_eventsManager)){
-								$renderStatus = $this->_eventsManager->fire("application:viewRender", $this, $view);
+								$renderStatus = $this->_eventsManager->fire('application:viewRender', $this, $view);
 							}
 
 							/**

@@ -107,7 +107,7 @@ namespace ManaPHP\Di {
 			if(!is_object($this->_dependencyInjector)){
 				$this->_dependencyInjector =Di::getDefault();
 				if(!is_object($this->_dependencyInjector)){
-					throw new Exception("A dependency injection object is required to access the application services");
+					throw new Exception('A dependency injection object is required to access the application services');
 				}
 			}
 
@@ -119,7 +119,7 @@ namespace ManaPHP\Di {
 				return $this->{'di'}=$this->_dependencyInjector;
 			}
 
-			trigger_error("Access to undefined property " . $propertyName);
+			trigger_error('Access to undefined property ' . $propertyName);
 
 			return null;
 		}

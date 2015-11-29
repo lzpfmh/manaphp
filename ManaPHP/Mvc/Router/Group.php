@@ -113,7 +113,7 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		public function beforeMatch($beforeMatch){
 			if(!is_callable($beforeMatch)) {
-				throw new Exception("Before-Match callback is not callable");
+				throw new Exception('Before-Match callback is not callable');
 			}
 			$this->_beforeMatch =$beforeMatch;
 			return $this;
@@ -204,7 +204,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
 		public function addGet($pattern, $paths=null){
-			return $this->_addRoute($pattern, $paths, "GET");
+			return $this->_addRoute($pattern, $paths, 'GET');
 		}
 
 
@@ -216,7 +216,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
 		public function addPost($pattern, $paths=null){
-			return $this->_addRoute($pattern, $paths, "POST");
+			return $this->_addRoute($pattern, $paths, 'POST');
 		}
 
 
@@ -228,7 +228,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
 		public function addPut($pattern, $paths=null){
-			return $this->_addRoute($pattern, $paths, "PUT");
+			return $this->_addRoute($pattern, $paths, 'PUT');
 		}
 
 
@@ -240,7 +240,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
 		public function addPatch($pattern, $paths=null){
-			return $this->_addRoute($pattern, $paths, "PATCH");
+			return $this->_addRoute($pattern, $paths, 'PATCH');
 		}
 
 
@@ -252,7 +252,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
 		public function addDelete($pattern, $paths=null){
-			return $this->_addRoute($pattern, $paths, "DELETE");
+			return $this->_addRoute($pattern, $paths, 'DELETE');
 		}
 
 
@@ -264,7 +264,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
 		public function addOptions($pattern, $paths=null){
-			return $this->_addRoute($pattern, $paths, "OPTIONS");
+			return $this->_addRoute($pattern, $paths, 'OPTIONS');
 		}
 
 
@@ -276,7 +276,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
 		public function addHead($pattern, $paths=null){
-			return $this->_addRoute($pattern, $paths, "HEAD");
+			return $this->_addRoute($pattern, $paths, 'HEAD');
 		}
 	}
 }

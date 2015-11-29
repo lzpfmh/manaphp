@@ -182,7 +182,7 @@ namespace ManaPHP\Http {
 		 * @return \ManaPHP\Http\ResponseInterface
 		 */
 		public function setNotModified(){
-			$this->setStatusCode(304, "Not modified");
+			$this->setStatusCode(304, 'Not modified');
 			return $this;
 		}
 
@@ -277,7 +277,7 @@ namespace ManaPHP\Http {
 			/**
 			 * Change the current location using 'Location'
 			 */
-			$this->setHeader("Location", $location);
+			$this->setHeader('Location', $location);
 			return $this;
 		}
 
@@ -385,7 +385,7 @@ namespace ManaPHP\Http {
 		 */
 		public function send(){
 			if($this->_sent ===true){
-				throw new Exception("Response was already sent");
+				throw new Exception('Response was already sent');
 			}
 
 			if(is_object($this->_headers)){
@@ -424,10 +424,10 @@ namespace ManaPHP\Http {
 				$basePath =$attachmentName;
 			}
 
-			$this->_headers->setRaw("Content-Description: File Transfer");
-			$this->_headers->setRaw("Content-Type: application/octet-stream");
-			$this->_headers->setRaw("Content-Disposition: attachment; filename=" . $basePath);
-			$this->_headers->setRaw("Content-Transfer-Encoding: binary");
+			$this->_headers->setRaw('Content-Description: File Transfer');
+			$this->_headers->setRaw('Content-Type: application/octet-stream');
+			$this->_headers->setRaw('Content-Disposition: attachment; filename=' . $basePath);
+			$this->_headers->setRaw('Content-Transfer-Encoding: binary');
 			$this->_file =$filePath;
 
 			return $this;

@@ -234,7 +234,7 @@ namespace ManaPHP {
 		 */
 		public function setParams($params){
 			if(!is_array($params)){
-				$this->_throwDispatchException("Parameters must be an Array");
+				$this->_throwDispatchException('Parameters must be an Array');
 			}
 			$this->_params=$params;
 
@@ -340,7 +340,7 @@ namespace ManaPHP {
 		 */
 		public function dispatch(){
 			if(!is_object($this->_dependencyInjector)){
-				$this->_throwDispatchException("A dependency injection container is required to access related dispatching services", self::EXCEPTION_NO_DI);
+				$this->_throwDispatchException('A dependency injection container is required to access related dispatching services', self::EXCEPTION_NO_DI);
 				return false;
 			}
 
@@ -389,7 +389,7 @@ namespace ManaPHP {
 				$handler =$this->_dependencyInjector->getShared($handlerClass);
 				$wasFreshInstance =$this->_dependencyInjector->wasFreshInstance();
 				if(!is_object($handler)){
-					if($this->_throwDispatchException("Invalid handler returned from the services container", self::EXCEPTION_INVALID_HANDLER) ===false ){
+					if($this->_throwDispatchException('Invalid handler returned from the services container', self::EXCEPTION_INVALID_HANDLER) ===false ){
 						if($this->_finished ===false){
 							continue;
 						}
@@ -472,7 +472,7 @@ namespace ManaPHP {
 
 				$value=null;
 				if(is_object($this->_eventsManager)){
-					if($this->_eventsManager->fire("dispatch:afterExecuteRoute", $this, $value) ===false){
+					if($this->_eventsManager->fire('dispatch:afterExecuteRoute', $this, $value) ===false){
 						continue;
 					}
 
@@ -481,7 +481,7 @@ namespace ManaPHP {
 					}
 
 					// Call afterDispatch
-					$this->_eventsManager->fire("dispatch:afterDispatch", $this);
+					$this->_eventsManager->fire('dispatch:afterDispatch', $this);
 				}
 
 				if(method_exists($handler,'afterExecuteRoute')){

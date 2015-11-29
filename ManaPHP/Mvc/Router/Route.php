@@ -83,7 +83,7 @@ namespace ManaPHP\Mvc\Router {
 			}
 
 			if(strpos($pattern,'(') !==false ||strpos($pattern,'[') !==false){
-				return "#^" . $pattern . "$#";
+				return '#^' . $pattern . '$#';
 			}else{
 				return $pattern;
 			}
@@ -189,7 +189,7 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		public function beforeMatch($callback){
 			if(!is_callable($callback)) {
-				throw new Exception("Before-Match callback is not callable");
+				throw new Exception('Before-Match callback is not callable');
 			}
 			$this->_beforeMatch =$callback;
 			return $this;
