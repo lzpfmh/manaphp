@@ -26,38 +26,48 @@ namespace ManaPHP {
 	 *</code>
 	 */
 
-	class Autoloader implements \ManaPHP\Events\EventsAwareInterface {
-
-		protected $_eventsManager;
-
-		protected $_foundPath;
-
-		protected $_checkedPath;
-
-		protected $_prefixes;
-
-		protected $_classes;
-
-		protected $_extensions;
-
-		protected $_namespaces;
-
-		protected $_directories;
-
-		protected $_registered;
+	class Autoloader{
 
 		/**
-		 * \ManaPHP\Autoloader constructor
+		 * @var \ManaPHP\Events\ManagerInterface
 		 */
-		public function __construct(){ }
+		protected $_eventsManager;
 
+		/**
+		 * @var array
+		 */
+		protected $_classes=[];
+
+		/**
+		 * @var array
+		 */
+		protected $_namespaces=[];
+
+		/**
+		 * @var array
+		 */
+		protected $_directories=[];
+
+		/**
+		 * @var boolean
+		 */
+		protected $_registered=false;
+
+		/**
+		 * @var string|boolean
+		 */
+		protected $_requiredFile=false;
 
 		/**
 		 * Sets the events manager
 		 *
 		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
+		 * @return \ManaPHP\Autoloader
 		 */
-		public function setEventsManager($eventsManager){ }
+		public function setEventsManager($eventsManager){
+			$this->_eventsManager =$eventsManager;
+			return $this;
+		}
 
 
 		/**
@@ -65,35 +75,34 @@ namespace ManaPHP {
 		 *
 		 * @return \ManaPHP\Events\ManagerInterface
 		 */
-		public function getEventsManager(){ }
-
-
-		/**
-		 * Sets an array of extensions that the Autoloader must try in each attempt to locate the file
-		 *
-		 * @param array $extensions
-		 * @param boolean $merge
-		 * @return \ManaPHP\Autoloader
-		 */
-		public function setExtensions($extensions){ }
-
-
-		/**
-		 * Return file extensions registered in the Autoloader
-		 *
-		 * @return boolean
-		 */
-		public function getExtensions(){ }
+		public function getEventsManager(){
+			return $this->_eventsManager;
+		}
 
 
 		/**
 		 * Register namespaces and their related directories
 		 *
+		 * <code>
+		 * $loader->registerNamespaces(array(
+		 * 		’Example\\Base’ => ’vendor/example/base/’,
+		 *		’Example\\Adapter’ => ’vendor/example/adapter/’,
+		 *		’Example’ => ’vendor/example/’
+		 *		));
+		 * </code>
 		 * @param array $namespaces
 		 * @param boolean $merge
 		 * @return \ManaPHP\Autoloader
 		 */
-		public function registerNamespaces($namespaces, $merge=null){ }
+		public function registerNamespaces($namespaces, $merge=false){
+			if($merge ===false){
+				$this->_namespaces =$namespaces;
+			}else{
+				$this->_namespaces=is_array($this->_namespaces)?array_merge($this->_namespaces,$namespaces):$namespaces;
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -101,43 +110,42 @@ namespace ManaPHP {
 		 *
 		 * @return array
 		 */
-		public function getNamespaces(){ }
+		public function getNamespaces(){
+			return $this->_namespaces;
+		}
 
 
 		/**
 		 * Register directories on which "not found" classes could be found
 		 *
-		 * @param array $prefixes
-		 * @param boolean $merge
-		 * @return \ManaPHP\Autoloader
-		 */
-		public function registerPrefixes($prefixes, $merge=null){ }
-
-
-		/**
-		 * Return current prefixes registered in the autoloader
-		 *
-		 * @param array
-		 */
-		public function getPrefixes(){ }
-
-
-		/**
-		 * Register directories on which "not found" classes could be found
-		 *
+		 * <code>
+		 * $loader->registerDirs(
+		 *			array(
+		 *				__DIR__ . ’/models/’,
+		 *				));
+		 * </code>
 		 * @param array $directories
 		 * @param boolean $merge
 		 * @return \ManaPHP\Autoloader
 		 */
-		public function registerDirs($directories, $merge=null){ }
+		public function registerDirs($directories, $merge=false){
+			if($merge ===false){
+				$this->_directories =$directories;
+			}else{
+				$this->_directories=is_array($this->_directories)?array_merge($this->_directories,$directories):$directories;
+			}
+			return $this;
+		}
 
 
 		/**
 		 * Return current directories registered in the autoloader
 		 *
-		 * @param array
+		 * @return array
 		 */
-		public function getDirs(){ }
+		public function getDirs(){
+			return $this->_directories;
+		}
 
 
 		/**
@@ -147,15 +155,23 @@ namespace ManaPHP {
 		 * @param boolean $merge
 		 * @return \ManaPHP\Autoloader
 		 */
-		public function registerClasses($classes, $merge=null){ }
+		public function registerClasses($classes, $merge=false){
+			if($merge ===false){
+				$this->_classes =$classes;
+			}else{
+				$this->_classes=is_array($this->_classes)?array_merge($this->_classes,$classes):$classes;
+			}
+		}
 
 
 		/**
 		 * Return the current class-map registered in the autoloader
 		 *
-		 * @param array
+		 * @return array
 		 */
-		public function getClasses(){ }
+		public function getClasses(){
+			return $this->_classes;
+		}
 
 
 		/**
@@ -163,7 +179,14 @@ namespace ManaPHP {
 		 *
 		 * @return \ManaPHP\Autoloader
 		 */
-		public function register(){ }
+		public function register(){
+			if($this->_registered ===false){
+				spl_autoload_register([$this,'_autoload']);
+				$this->_registered=true;
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -171,8 +194,39 @@ namespace ManaPHP {
 		 *
 		 * @return \ManaPHP\Autoloader
 		 */
-		public function unregister(){ }
+		public function unregister(){
+			if($this->_registered ===true){
+				spl_autoload_unregister([$this,'_autoLoad']);
+				$this->_registered =false;
+			}
+			return $this;
+		}
 
+
+		/**
+		 * If a file exists, require it from the file system.
+		 *
+		 * @param string $file The file to require.
+		 * @return bool True if the file exists, false if not.
+		 */
+		protected function _requireFile($file)
+		{
+			if (file_exists($file)) {
+
+				/** @noinspection PhpIncludeInspection */
+				require $file;
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		 * get the latest loaded file path
+		 * @return string
+		 */
+		public function getRequiredFile(){
+			return $this->_requiredFile;
+		}
 
 		/**
 		 * Makes the work of autoload registered classes
@@ -180,23 +234,81 @@ namespace ManaPHP {
 		 * @param string $className
 		 * @return boolean
 		 */
-		public function autoLoad($className){ }
+		protected function _autoLoad($className){
+			$this->_requiredFile=false;
 
+			if(is_array($this->_classes)){
+				if(isset($this->_classes[$className])){
+					$this->_requiredFile =$this->_classes[$className];
+					return $this->_requireFile($this->_classes[$className]);
+				}
+			}
 
-		/**
-		 * Get the path when a class was found
-		 *
-		 * @return string
-		 */
-		public function getFoundPath(){ }
+			if(is_array($this->_namespaces)){
+				foreach($this->_namespaces as $namespace=>$directory){
+					$len =strlen($namespace);
+					if(strncmp($namespace,$className,$len) !==0){
+						continue;
+					}
+					$file=$directory.substr($className,$len).'.php';
+					$file =str_replace('\\','/',$file);
+					$this->_requiredFile=$file;
+					return $this->_requireFile($file);
+				}
+			}
 
+			if(is_array($this->_directories)){
+				foreach($this->_directories as $directory){
+					$file =$directory.basename($className).'.php';
+					$file =str_replace('\\','/',$file);
+					$r=$this->_requireFile($file);
+					if($r ===true){
+						$this->_requiredFile =$file;
+						return true;
+					}
+				}
+			}
 
-		/**
-		 * Get the path the Autoloader is checking for a path
-		 *
-		 * @return string
-		 */
-		public function getCheckedPath(){ }
+			return false;
+		}
 
+		public static function autoloadFrameWorkClasses(){
+			static $has_registered=false;
+
+			if($has_registered){
+				return;
+			}
+
+			spl_autoload_register(function($className){
+
+				static $frameworkRootPath;
+				static $frameworkName;
+
+				if(!isset($frameworkRootPath)){
+					$frameworkRootPath=__DIR__;
+					$frameworkName=basename($frameworkRootPath);
+					$frameworkRootPath=dirname($frameworkRootPath);
+				}
+
+////				echo $className.'<br/>';
+//				if(strpos($className,'Interface') !==false){
+//					//create_function('','interface '.$className.' {}');
+//					eval('namespace '.str_replace('/','\\',dirname(str_replace('\\',DIRECTORY_SEPARATOR,$className))).'{interface ' . basename(str_replace('\\',DIRECTORY_SEPARATOR,$className)) . ' {}}');
+//					return true;
+//				}
+				if(strncmp($className,$frameworkName, strlen($frameworkName)) ===0){
+					$file =$frameworkRootPath.'/'.$className.'.php';
+					$file =str_replace('\\','/',$file);
+					if(is_file($file)){
+
+						/** @noinspection PhpIncludeInspection */
+						require $file;
+						return true;
+					}
+				}
+
+				return false;
+			});
+		}
 	}
 }
