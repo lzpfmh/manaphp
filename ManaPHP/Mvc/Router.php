@@ -134,6 +134,7 @@ namespace ManaPHP\Mvc {
 		 * ManaPHP\Mvc\Router constructor
 		 *
 		 * @param boolean $defaultRoutes
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function __construct($defaultRoutes=true){
 			$this->_routes=[];
@@ -482,6 +483,7 @@ namespace ManaPHP\Mvc {
 		 * @param array $paths
 		 * @param string $httpMethods
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function add($pattern, $paths, $httpMethods=null){
 			$route =new Route($pattern,$paths,$httpMethods);
@@ -497,6 +499,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addGet($pattern, $paths){
 			return $this->add($pattern,$paths,'GET');
@@ -509,6 +512,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addPost($pattern, $paths){
 			return $this->add($pattern,$paths,'POST');
@@ -521,6 +525,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addPut($pattern, $paths){
 			return $this->add($pattern,$paths,'PUT');
@@ -533,6 +538,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addPatch($pattern, $paths){
 			return $this->add($pattern,$paths,'PATCH');
@@ -545,6 +551,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addDelete($pattern, $paths){
 			return $this->add($pattern,$paths,'DELETE');
@@ -557,6 +564,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addOptions($pattern, $paths){
 			return $this->add($pattern,$paths,'OPTIONS');
@@ -569,6 +577,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addHead($pattern, $paths){
 			return $this->add($pattern,$paths,'HEAD');

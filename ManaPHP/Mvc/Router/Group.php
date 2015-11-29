@@ -169,6 +169,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param array $paths
 		 * @param array $httpMethods
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		protected function _addRoute($pattern, $paths=null, $httpMethods=null){
 			$route =new Route($this->_prefix.$pattern,is_array($paths)?array_merge($this->_paths,$paths):$this->_paths, $httpMethods);
@@ -190,6 +191,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param array $paths
 		 * @param string $httpMethods
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function add($pattern, $paths=null, $httpMethods=null){
 			return $this->_addRoute($pattern,$paths,$httpMethods);
@@ -202,6 +204,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addGet($pattern, $paths=null){
 			return $this->_addRoute($pattern, $paths, 'GET');
@@ -214,6 +217,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addPost($pattern, $paths=null){
 			return $this->_addRoute($pattern, $paths, 'POST');
@@ -226,6 +230,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addPut($pattern, $paths=null){
 			return $this->_addRoute($pattern, $paths, 'PUT');
@@ -238,6 +243,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addPatch($pattern, $paths=null){
 			return $this->_addRoute($pattern, $paths, 'PATCH');
@@ -250,6 +256,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addDelete($pattern, $paths=null){
 			return $this->_addRoute($pattern, $paths, 'DELETE');
@@ -262,6 +269,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addOptions($pattern, $paths=null){
 			return $this->_addRoute($pattern, $paths, 'OPTIONS');
@@ -274,6 +282,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function addHead($pattern, $paths=null){
 			return $this->_addRoute($pattern, $paths, 'HEAD');
