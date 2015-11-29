@@ -10,7 +10,7 @@ namespace ManaPHP\Http\Response {
 	
 	class Headers implements \ManaPHP\Http\Response\HeadersInterface {
 
-		protected $_headers;
+		protected $_headers=[];
 
 		/**
 		 * Sets a header to be sent at the end of the request
@@ -18,32 +18,28 @@ namespace ManaPHP\Http\Response {
 		 * @param string $name
 		 * @param string $value
 		 */
-		public function set($name, $value){ }
-
-
-		/**
-		 * Gets a header value from the internal bag
-		 *
-		 * @param string $name
-		 * @return string
-		 */
-		public function get($name){ }
-
+		public function set($name, $value){
+			$this->_headers[$name]=$value;
+		}
 
 		/**
 		 * Sets a raw header to be sent at the end of the request
 		 *
 		 * @param string $header
 		 */
-		public function setRaw($header){ }
+		public function setRaw($header){
+			$this->_headers[$header]=null;
+		}
 
 
 		/**
 		 * Removes a header to be sent at the end of the request
 		 *
-		 * @param string $header Header name
+		 * @param string $header_index
 		 */
-		public function remove($header_index){ }
+		public function remove($header_index){
+			unset($this->_headers[$header_index]);
+		}
 
 
 		/**
@@ -51,14 +47,20 @@ namespace ManaPHP\Http\Response {
 		 *
 		 * @return boolean
 		 */
-		public function send(){ }
-
-
-		/**
-		 * Reset set headers
-		 *
-		 */
-		public function reset(){ }
+		public function send(){
+			if(!headers_sent()){
+				foreach($this->_headers as $header=>$value){
+					if($value !==null){
+						header($header. ': '.$value,true);
+					}else{
+						header($header,true);
+					}
+				}
+				return true;
+			}else{
+				return false;
+			}
+		}
 
 
 		/**
@@ -66,16 +68,8 @@ namespace ManaPHP\Http\Response {
 		 *
 		 * @return array
 		 */
-		public function toArray(){ }
-
-
-		/**
-		 * Restore a \ManaPHP\Http\Response\Headers object
-		 *
-		 * @param array $data
-		 * @return \ManaPHP\Http\Response\Headers
-		 */
-		public static function __set_state($data){ }
-
+		public function toArray(){
+			return $this->_headers;
+		}
 	}
 }
