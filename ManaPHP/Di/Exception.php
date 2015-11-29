@@ -1,11 +1,11 @@
 <?php 
 
-namespace ManaPHP\DI {
+namespace ManaPHP\Di {
 
 	/**
-	 * ManaPHP\DI\Exception
+	 * \ManaPHP\Di\Exception
 	 *
-	 * Exceptions thrown in ManaPHP\DI will use this class
+	 * Exceptions thrown in \ManaPHP\Di will use this class
 	 *
 	 */
 	
