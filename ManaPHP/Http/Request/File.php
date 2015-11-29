@@ -49,7 +49,30 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @param array $file
 		 */
-		public function __construct($file){ }
+		public function __construct($file, $key=null){
+			if(isset($file['name'])){
+				$this->_name =$file['name'];
+				$this->_extension =pathinfo($file['name'],PATHINFO_EXTENSION);
+			}
+
+			if(isset($file['tmp_name'])){
+				$this->_tmp =$file['tmp_name'];
+			}
+
+			if(isset($file['size'])){
+				$this->_size =$file['size'];
+			}
+
+			if(isset($file['type'])){
+				$this->_type =$file['type'];
+			}
+
+			if(isset($file['error'])){
+				$this->_error =$file['error'];
+			}
+
+			$this->_key =$key;
+		}
 
 
 		/**
@@ -57,7 +80,9 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @return int
 		 */
-		public function getSize(){ }
+		public function getSize(){
+			return $this->_size;
+		}
 
 
 		/**
@@ -65,7 +90,9 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @return string
 		 */
-		public function getName(){ }
+		public function getName(){
+			return $this->_name;
+		}
 
 
 		/**
@@ -73,7 +100,9 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @return string
 		 */
-		public function getTempName(){ }
+		public function getTempName(){
+			return $this->_tmp;
+		}
 
 
 		/**
@@ -82,7 +111,9 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @return string
 		 */
-		public function getType(){ }
+		public function getType(){
+			return $this->_type;
+		}
 
 
 		/**
@@ -90,7 +121,17 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @return string
 		 */
-		public function getRealType(){ }
+		public function getRealType(){
+			$finfo =finfo_open(FILEINFO_MIME_TYPE);
+			if(!is_resource($finfo)){
+				return '';
+			}
+
+			$mime =finfo_file($finfo,$this->_tmp);
+			finfo_close($finfo);
+
+			return $mime;
+		}
 
 
 		/**
@@ -98,7 +139,9 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @return string
 		 */
-		public function getError(){ }
+		public function getError(){
+			return $this->_error;
+		}
 
 
 		/**
@@ -106,7 +149,9 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @return string
 		 */
-		public function getKey(){ }
+		public function getKey(){
+			return $this->_key;
+		}
 
 
 		/**
@@ -114,7 +159,10 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @return boolean
 		 */
-		public function isUploadedFile(){ }
+		public function isUploadedFile(){
+
+			return is_string($this->_tmp) &&is_uploaded_file($this->_tmp);
+		}
 
 
 		/**
@@ -123,10 +171,9 @@ namespace ManaPHP\Http\Request {
 		 * @param string $destination
 		 * @return boolean
 		 */
-		public function moveTo($destination){ }
-
-
-		public static function __set_state($params){ }
+		public function moveTo($destination){
+			return move_uploaded_file($this->_tmp ,$destination);
+		}
 
 
 		/**
@@ -134,7 +181,9 @@ namespace ManaPHP\Http\Request {
 		 *
 		 * @return string
 		 */
-		public function getExtension(){ }
+		public function getExtension(){
+			return $this->_extension;
+		}
 
 	}
 }
