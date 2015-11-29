@@ -1,147 +1,63 @@
 <?php 
 
-namespace ManaPHP\DI {
+namespace ManaPHP\Di {
+
+	use ManaPHP\Di;
+	use \ManaPHP\Events\EventsAwareInterface;
 
 	/**
-	 * ManaPHP\DI\Injectable
+	 * ManaPHP\Di\Injectable
 	 *
-	 * This class allows to access services in the services container by just only accessing a public property
-	 * with the same name of a registered service
+	 * @property \ManaPHP\Mvc\Dispatcher|\ManaPHP\Mvc\DispatcherInterface $dispatcher;
+	 * @property \ManaPHP\Mvc\Router|\ManaPHP\Mvc\RouterInterface $router
+	 * @property \ManaPHP\Mvc\Url|\ManaPHP\Mvc\UrlInterface $url
+	 * @property \ManaPHP\Http\Request|\ManaPHP\Http\RequestInterface $request
+	 * @property \ManaPHP\Http\Response|\ManaPHP\Http\ResponseInterface $response
+	 * @property \ManaPHP\Http\Response\Cookies|\ManaPHP\Http\Response\CookiesInterface $cookies
+	 * @property \ManaPHP\Filter|\ManaPHP\FilterInterface $filter
+	 * @property \ManaPHP\Flash\Direct $flash
+	 * @property \ManaPHP\Flash\Session $flashSession
+	 * @property \ManaPHP\Session\Adapter\Files|\ManaPHP\Session\Adapter|\ManaPHP\Session\AdapterInterface $session
+	 * @property \ManaPHP\Events\Manager|\ManaPHP\Events\ManagerInterface $eventsManager
+	 * @property \ManaPHP\Db\AdapterInterface $db
+	 * @property \ManaPHP\Security $security
+	 * @property \ManaPHP\Crypt|\ManaPHP\CryptInterface $crypt
+	 * @property \ManaPHP\Escaper|\ManaPHP\EscaperInterface $escaper
+	 * @property \ManaPHP\Mvc\Model\Manager|\ManaPHP\Mvc\Model\ManagerInterface $modelsManager
+	 * @property \ManaPHP\Mvc\Model\MetaData\Memory|\ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
+	 * @property \ManaPHP\Mvc\Model\Transaction\Manager|\ManaPHP\Mvc\Model\Transaction\ManagerInterface $transactionManager
+	 * @property \ManaPHP\Assets\Manager $assets
+	 * @property \ManaPHP\Di|\ManaPHP\DiInterface $di
+	 * @property \ManaPHP\Session\Bag|\ManaPHP\Session\BagInterface $persistent
+	 * @property \ManaPHP\Mvc\View|\ManaPHP\Mvc\ViewInterface $view
 	 */
 	
-	abstract class Injectable implements \ManaPHP\DI\InjectionAwareInterface, \ManaPHP\Events\EventsAwareInterface {
-
-		protected $_dependencyInjector;
-
-		protected $_eventsManager;
+	abstract class Injectable implements InjectionAwareInterface, EventsAwareInterface {
 
 		/**
- 		 * @var \ManaPHP\Mvc\Dispatcher|\ManaPHP\Mvc\DispatcherInterface
- 		 */
-		public $dispatcher;
+		 * Dependency Injector
+		 *
+		 * @var \ManaPHP\DiInterface
+		 */
+		protected $_dependencyInjector=null;
 
 		/**
- 		 * @var \ManaPHP\Mvc\Router|\ManaPHP\Mvc\RouterInterface
- 		 */
-		public $router;
+		 * Events Manager
+		 *
+		 * @var \ManaPHP\Events\ManagerInterface
+		 */
+		protected $_eventsManager=null;
 
-		/**
- 		 * @var \ManaPHP\Mvc\Url|\ManaPHP\Mvc\UrlInterface
- 		 */
-		public $url;
-
-		/**
- 		 * @var \ManaPHP\Http\Request|\ManaPHP\HTTP\RequestInterface
- 		 */
-		public $request;
-
-		/**
- 		 * @var \ManaPHP\Http\Response|\ManaPHP\HTTP\ResponseInterface
- 		 */
-		public $response;
-
-		/**
- 		 * @var \ManaPHP\Http\Response\Cookies|\ManaPHP\Http\Response\CookiesInterface
- 		 */
-		public $cookies;
-
-		/**
- 		 * @var \ManaPHP\Filter|\ManaPHP\FilterInterface
- 		 */
-		public $filter;
-
-		/**
- 		 * @var \ManaPHP\Flash\Direct
- 		 */
-		public $flash;
-
-		/**
- 		 * @var \ManaPHP\Flash\Session
- 		 */
-		public $flashSession;
-
-		/**
- 		 * @var \ManaPHP\Session\Adapter\Files|\ManaPHP\Session\Adapter|\ManaPHP\Session\AdapterInterface
- 		 */
-		public $session;
-
-		/**
- 		 * @var \ManaPHP\Events\Manager
- 		 */
-		public $eventsManager;
-
-		/**
- 		 * @var \ManaPHP\Db
- 		 */
-		public $db;
-
-		/**
- 		 * @var \ManaPHP\Security
- 		 */
-		public $security;
-
-		/**
- 		 * @var \ManaPHP\Crypt
- 		 */
-		public $crypt;
-
-		/**
- 		 * @var \ManaPHP\Tag
- 		 */
-		public $tag;
-
-		/**
- 		 * @var \ManaPHP\Escaper|\ManaPHP\EscaperInterface
- 		 */
-		public $escaper;
-
-		/**
- 		 * @var \ManaPHP\Annotations\Adapter\Memory|\ManaPHP\Annotations\Adapter
- 		 */
-		public $annotations;
-
-		/**
- 		 * @var \ManaPHP\Mvc\Model\Manager|\ManaPHP\Mvc\Model\ManagerInterface
- 		 */
-		public $modelsManager;
-
-		/**
- 		 * @var \ManaPHP\Mvc\Model\MetaData\Memory|\ManaPHP\Mvc\Model\MetadataInterface
- 		 */
-		public $modelsMetadata;
-
-		/**
- 		 * @var \ManaPHP\Mvc\Model\Transaction\Manager
- 		 */
-		public $transactionManager;
-
-		/**
- 		 * @var \ManaPHP\Assets\Manager
- 		 */
-		public $assets;
-
-		/**
-		 * @var \ManaPHP\Di|\ManaPHP\DiInterface
-	 	 */
-		public $di;
-
-		/**
-		 * @var \ManaPHP\Session\Bag
-	 	 */
-		public $persistent;
-
-		/**
- 		 * @var \ManaPHP\Mvc\View|\ManaPHP\Mvc\ViewInterface
- 		 */
-		public $view;
-		
 		/**
 		 * Sets the dependency injector
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @throw \ManaPHP\Di\Exception
+		 * @return \ManaPHP\Di\Injectable
 		 */
-		public function setDI($dependencyInjector){ }
+		public function setDI($dependencyInjector){
+			$this->_dependencyInjector =$dependencyInjector;
+			return $this;
+		}
 
 
 		/**
@@ -149,15 +65,25 @@ namespace ManaPHP\DI {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public function getDI(){ }
+		public function getDI(){
+			if(!is_object($this->_dependencyInjector)){
+				$this->_dependencyInjector =Di::getDefault();
+			}
+
+			return $this->_dependencyInjector;
+		}
 
 
 		/**
 		 * Sets the event manager
 		 *
 		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
+		 * @return \ManaPHP\Di\Injectable
 		 */
-		public function setEventsManager($eventsManager){ }
+		public function setEventsManager($eventsManager){
+			$this->_eventsManager =$eventsManager;
+			return $this;
+		}
 
 
 		/**
@@ -165,15 +91,37 @@ namespace ManaPHP\DI {
 		 *
 		 * @return \ManaPHP\Events\ManagerInterface
 		 */
-		public function getEventsManager(){ }
+		public function getEventsManager(){
+			return $this->_eventsManager;
+		}
 
 
 		/**
 		 * Magic method __get
 		 *
 		 * @param string $propertyName
+		 * @return object
+		 * @throws
 		 */
-		public function __get($property){ }
+		public function __get($propertyName){
+			if(!is_object($this->_dependencyInjector)){
+				$this->_dependencyInjector =Di::getDefault();
+				if(!is_object($this->_dependencyInjector)){
+					throw new Exception("A dependency injection object is required to access the application services");
+				}
+			}
 
+			if($this->_dependencyInjector->has($propertyName)){
+				return $this->{$propertyName} =$this->_dependencyInjector->getShared($propertyName);
+			}
+
+			if($propertyName ==='di'){
+				return $this->{'di'}=$this->_dependencyInjector;
+			}
+
+			trigger_error("Access to undefined property " . $propertyName);
+
+			return null;
+		}
 	}
 }
