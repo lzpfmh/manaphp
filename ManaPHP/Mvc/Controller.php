@@ -38,13 +38,17 @@ namespace ManaPHP\Mvc {
 	 *</code>
 	 */
 	
-	abstract class Controller extends \ManaPHP\DI\Injectable implements \ManaPHP\Events\EventsAwareInterface, \ManaPHP\DI\InjectionAwareInterface, \ManaPHP\Mvc\ControllerInterface {
+	abstract class Controller extends \ManaPHP\Di\Injectable implements \ManaPHP\Events\EventsAwareInterface, \ManaPHP\Di\InjectionAwareInterface, \ManaPHP\Mvc\ControllerInterface {
 
 		/**
 		 * \ManaPHP\Mvc\Controller constructor
 		 *
 		 */
-		final public function __construct(){ }
+		final public function __construct(){
+			if(method_exists($this, "onConstruct")) {
+				$this->{"onConstruct"}();
+			}
+		}
 
 	}
 }
