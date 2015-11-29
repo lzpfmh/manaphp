@@ -10,8 +10,10 @@ namespace ManaPHP\Mvc {
 
 		/**
 		 * Registers an autoloader related to the module
+		 *
+		 * * @param \ManaPHP\DiInterface $dependencyInjector
 		 */
-		public function registerAutoloaders();
+		public function registerAutoloaders($dependencyInjector);
 
 
 		/**
