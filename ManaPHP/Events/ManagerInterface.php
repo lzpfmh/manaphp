@@ -3,7 +3,11 @@
 namespace ManaPHP\Events {
 
 	/**
-	 * ManaPHP\Events\ManagerInterface initializer
+	 * ManaPHP\Events\Manager
+	 *
+	 * ManaPHP Events Manager, offers an easy way to intercept and manipulate, if needed,
+	 * the normal flow of operation. With the EventsManager the developer can create hooks or
+	 * plugins that will offer monitoring of data, manipulation, conditional execution and much more.
 	 */
 	
 	interface ManagerInterface {
@@ -11,38 +15,19 @@ namespace ManaPHP\Events {
 		/**
 		 * Attach a listener to the events manager
 		 *
-		 * @param string $eventType
-		 * @param object $handler
+		 * @param string $event
+		 * @param object|callable $handler
 		 */
-		public function attach($eventType, $handler);
+		public function attach($event, $handler);
 
 
 		/**
-		 * Removes all events from the EventsManager
+		 * Fires an event in the events manager causing that the active listeners will be notified about it
 		 *
-		 * @param string $type
-		 */
-		public function detachAll($type=null);
-
-
-		/**
-		 * Fires a event in the events manager causing that the active listeners will be notified about it
-		 *
-		 * @param string $eventType
+		 * @param string $event
 		 * @param object $source
 		 * @param mixed  $data
-		 * @return mixed
 		 */
-		public function fire($eventType, $source, $data=null);
-
-
-		/**
-		 * Returns all the attached listeners of a certain type
-		 *
-		 * @param string $type
-		 * @return array
-		 */
-		public function getListeners($type);
-
+		public function fire($event, $source, $data=null);
 	}
 }
