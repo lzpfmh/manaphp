@@ -2,6 +2,11 @@
 
 namespace ManaPHP\Mvc {
 
+	use ManaPHP\Di\FactoryDefault;
+	use ManaPHP\Di\Injectable;
+	use ManaPHP\Http\ResponseInterface;
+	use ManaPHP\Mvc\Application\Exception;
+
 	/**
 	 * ManaPHP\Mvc\Application
 	 *
@@ -46,22 +51,36 @@ namespace ManaPHP\Mvc {
 	 *</code>
 	 */
 	
-	class Application extends \ManaPHP\DI\Injectable implements \ManaPHP\Events\EventsAwareInterface, \ManaPHP\DI\InjectionAwareInterface {
+	class Application extends Injectable {
 
+		/**
+		 * @var string
+		 */
 		protected $_defaultModule;
 
-		protected $_modules;
+		/**
+		 * @var array
+		 */
+		protected $_modules=[];
 
-		protected $_moduleObject;
-
-		protected $_implicitView;
+		/**
+		 * @var boolean
+		 */
+		protected $_implicitView=true;
 
 		/**
 		 * \ManaPHP\Mvc\Application
 		 *
-		 * @param \ManaPHP\Di $dependencyInjector
+		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 */
-		public function __construct($dependencyInjector=null){ }
+		public function __construct($dependencyInjector=null){
+			if(is_object($dependencyInjector)){
+				$this->_dependencyInjector=$dependencyInjector;
+			}else{
+				$this->_dependencyInjector =new FactoryDefault();
+			}
+			$this->_dependencyInjector->set('application',$this,true);
+		}
 
 
 		/**
@@ -71,7 +90,10 @@ namespace ManaPHP\Mvc {
 		 * @param boolean $implicitView
 		 * @return \ManaPHP\Mvc\Application
 		 */
-		public function useImplicitView($implicitView){ }
+		public function useImplicitView($implicitView){
+			$this->_implicitView=$implicitView;
+			return $this;
+		}
 
 
 		/**
@@ -92,9 +114,12 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $modules
 		 * @param boolean $merge
-		 * @param \ManaPHP\Mvc\Application
+		 * @return \ManaPHP\Mvc\Application
 		 */
-		public function registerModules($modules, $merge=null){ }
+		public function registerModules($modules, $merge=false){
+			$this->_modules =$merge===false?$modules:array_merge($this->_modules,$modules);
+			return $this;
+		}
 
 
 		/**
@@ -102,8 +127,24 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return array
 		 */
-		public function getModules(){ }
+		public function getModules(){
+			return $this->_modules;
+		}
 
+		/**
+		 * Gets the module definition registered in the application via module name
+		 *
+		 * @param string $name
+		 * @return array|callable
+		 * @throws
+		 */
+		public function getModule($name){
+			if(!isset($this->_modules[$name])){
+				throw new Exception("Module '" . $name . "' isn't registered in the application container");
+			}
+
+			return $this->_modules[$name];
+		}
 
 		/**
 		 * Sets the module name to be used if the router doesn't return a valid module
@@ -111,7 +152,10 @@ namespace ManaPHP\Mvc {
 		 * @param string $defaultModule
 		 * @return \ManaPHP\Mvc\Application
 		 */
-		public function setDefaultModule($defaultModule){ }
+		public function setDefaultModule($defaultModule){
+			$this->_defaultModule =$defaultModule;
+			return $this;
+		}
 
 
 		/**
@@ -119,16 +163,183 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return string
 		 */
-		public function getDefaultModule(){ }
+		public function getDefaultModule(){
+			return $this->_defaultModule;
+		}
 
 
 		/**
 		 * Handles a MVC request
 		 *
 		 * @param string $uri
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return \ManaPHP\Http\ResponseInterface|boolean
+		 * @throws
 		 */
-		public function handle($uri=null){ }
+		public function handle($uri=null){
+			/**
+			 * @var $router \ManaPHP\Mvc\RouterInterface
+			 * @var $dispatcher \ManaPHP\Mvc\DispatcherInterface
+			 * @var $view \ManaPHP\Mvc\ViewInterface
+			 * @var $response \ManaPHP\Http\ResponseInterface
+			 * @var $moduleObject \ManaPHP\Mvc\ModuleDefinitionInterface
+			 */
 
+			if(!is_object($this->_dependencyInjector)){
+				throw new Exception("A dependency injection object is required to access internal services");
+			}
+
+			if(is_object($this->_eventsManager)){
+				if($this->_eventsManager->fire('application:boot', $this) ===false){
+					return false;
+				}
+			}
+
+			$router =$this->_dependencyInjector->getShared('router');
+
+			$router->setDefaultModule($this->_defaultModule);
+
+			$router->handle($uri);
+
+			$moduleName =$router->getModuleName();
+			$moduleObject =null;
+
+			if(!empty($moduleName)){
+				if(is_object($this->_eventsManager)){
+					if($this->_eventsManager->fire('application:beforeStartModule', $this, $moduleName) ===false) {
+						return false;
+					}
+				}
+
+				$module =$this->getModule($moduleName);
+
+				/**
+				 * An array module definition contains a path to a module definition class
+				 */
+				if(is_array($module)){
+					/**
+					 * Class name used to load the module definition
+					 */
+					$className =isset($module['className'])?$module['className']:'Module';
+
+					/**
+					 * If developer specify a path try to include the file
+					 */
+					if(isset($module['path'])){
+						if(!class_exists($className,false)){
+							if(file_exists($module['path'])){
+								/** @noinspection PhpIncludeInspection */
+								require($module['path']);
+							}else{
+								throw new Exception("Module definition path '" . $module['path'] . "' doesn't exist");
+							}
+						}
+					}
+
+					$moduleObject=$this->_dependencyInjector->get($className);
+
+					/**
+					 * 'registerAutoloaders' and 'registerServices' are automatically called
+					 */
+					$moduleObject->registerAutoloaders($this->_dependencyInjector);
+					$moduleObject->registerServices($this->_dependencyInjector);
+				}else if($module instanceof \Closure){
+					$moduleObject =call_user_func_array($module,[$this->_dependencyInjector]);
+				}else{
+					throw new Exception("Invalid module definition");
+				}
+
+				if(is_object($this->_eventsManager)){
+					$this->_eventsManager->fire('application:afterStartModule', $this, $moduleObject);
+				}
+			}
+
+			if($this->_implicitView ===true){
+				$view =$this->_dependencyInjector->getShared('view');
+			}
+
+			$dispatcher=$this->_dependencyInjector->getShared('dispatcher');
+			$dispatcher->setModuleName($router->getModuleName());
+			$dispatcher->setNamespaceName($router->getNamespaceName());
+			$dispatcher->setControllerName($router->getControllerName());
+			$dispatcher->setActionName($router->getActionName());
+			$dispatcher->setParams($router->getParams());
+
+			if($this->_implicitView ===true){
+				$view->start();
+			}
+
+			if(is_object($this->_eventsManager)){
+				if($this->_eventsManager->fire('application:beforeHandleRequest', $this, $dispatcher) ===false){
+					return false;
+				}
+			}
+
+			$controller =$dispatcher->dispatch();
+			$possibleResponse=$dispatcher->getReturnedValue();
+
+			if(is_bool($possibleResponse) && $possibleResponse ===false){
+				$response =$this->_dependencyInjector->getShared('response');
+			}else{
+				$returnedResponse=is_object($possibleResponse)?($possibleResponse instanceof ResponseInterface):false;
+
+				if(is_object($this->_eventsManager)){
+					$this->_eventsManager->fire('application:afterHandleRequest',$this,$controller);
+				}
+				/**
+				 * If the dispatcher returns an object we try to render the view in auto-rendering mode
+				 */
+				if($returnedResponse ===false){
+					if($this->_implicitView ===true){
+						if(is_object($controller)){
+							$renderStatus =true;
+
+							if(is_object($this->_eventsManager)){
+								$renderStatus = $this->_eventsManager->fire("application:viewRender", $this, $view);
+							}
+
+							/**
+							 * Check if the view process has been treated by the developer
+							 */
+							if($renderStatus !==false){
+								$view->render($dispatcher->getControllerName(),
+											$dispatcher->getActionName(),
+											$dispatcher->getParams());
+							}
+						}
+					}
+				}
+
+				/**
+				 * Finish the view component (stop output buffering)
+				 */
+				if($this->_implicitView ===true){
+					$view->finish();
+				}
+
+				if($returnedResponse ===false){
+					$response =$this->_dependencyInjector->getShared('response');
+					if($this->_implicitView ===true){
+						/**
+						 * The content returned by the view is passed to the response service
+						 */
+						$response->setContent($view->getContent());
+					}
+				}else{
+					/**
+					 * We don't need to create a response because there is one already created
+					 */
+					$response =$possibleResponse;
+				}
+			}
+
+			if(is_object($this->_eventsManager)){
+				$this->eventsManager->fire('application:beforeSendResponse',$this, $response);
+			}
+
+			$response->sendHeaders();
+			$response->sendCookies();
+
+			return $response;
+		}
 	}
 }
