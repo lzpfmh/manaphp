@@ -2,8 +2,6 @@
 
 namespace ManaPHP\Mvc {
 	use \ManaPHP\Di\Injectable;
-	use \ManaPHP\Events\EventsAwareInterface;
-	use \ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Mvc\Controller
 	 *

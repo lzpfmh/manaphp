@@ -3,8 +3,6 @@
 namespace ManaPHP\Mvc {
 
 	use ManaPHP\Mvc\Dispatcher\Exception;
-	use ManaPHP\Events\EventsAwareInterface;
-	use ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Mvc\Dispatcher
 	 *
