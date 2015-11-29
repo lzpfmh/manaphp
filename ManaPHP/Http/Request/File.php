@@ -48,6 +48,7 @@ namespace ManaPHP\Http\Request {
 		 * \ManaPHP\Http\Request\File constructor
 		 *
 		 * @param array $file
+		 * @param string $key
 		 */
 		public function __construct($file, $key=null){
 			if(isset($file['name'])){
