@@ -2,6 +2,8 @@
 
 namespace ManaPHP\Mvc\Router {
 
+	use ManaPHP\CLI\Router\Exception;
+
 	/**
 	 * ManaPHP\Mvc\Router\Route
 	 *
@@ -52,7 +54,9 @@ namespace ManaPHP\Mvc\Router {
 		 * @param array|string $httpMethods
 		 */
 		public function __construct($pattern, $paths=null, $httpMethods=null){
-			$this->reConfigure($pattern, $paths);
+			$this->_pattern=$pattern;
+			$this->_compiledPattern =$this->compilePattern($pattern);
+			$this->_paths =self::getRoutePaths($paths);
 
 			$this->_methods =$httpMethods;
 		}
@@ -65,7 +69,6 @@ namespace ManaPHP\Mvc\Router {
 		 * @return string
 		 */
 		public function compilePattern($pattern){
-
 			// If a pattern contains ':', maybe there are placeholders to replace
 			if(strpos($pattern,':') !==false){
 				$pattern =str_replace('/:module','/{module:[\w-]+}',$pattern);
@@ -74,6 +77,10 @@ namespace ManaPHP\Mvc\Router {
 				$pattern =str_replace('/:action','/{action:[\w-]+}',$pattern);
 				$pattern=str_replace('/:params','/{params}',$pattern);
 				$pattern=str_replace('/:int','/(\d+)',$pattern);
+			}
+
+			if(strpos($pattern,'{') !==false){
+				$pattern=$this->extractNamedParams($pattern);
 			}
 
 			if(strpos($pattern,'(') !==false ||strpos($pattern,'[') !==false){
@@ -119,8 +126,7 @@ namespace ManaPHP\Mvc\Router {
 			if($need_restore_token){
 				$pattern=str_replace([$left_token,$right_token],['{','}'],$pattern);
 			}
-
-			return '#^'.$pattern.'$#';
+			return $pattern;
 		}
 
 		/**
@@ -172,30 +178,6 @@ namespace ManaPHP\Mvc\Router {
 
 			return $routePaths;
 		}
-		/**
-		 * Reconfigure the route adding a new pattern and a set of paths
-		 *
-		 * @param string $pattern
-		 * @param array $paths
-		 */
-		public function reConfigure($pattern, $paths=null){
-			$this->_pattern =$pattern;
-			$this->_paths =self::getRoutePaths($paths);
-
-			// If the route starts with '#' we assume that it is a regular expression
-			if($pattern[0] !=='#'){
-				if(strpos($pattern,'{') !==false){
-					$pcrePattern=$this->extractNamedParams($pattern);
-				}else{
-					$pcrePattern=$pattern;
-				}
-
-				$this->_compiledPattern=$this->compilePattern($pcrePattern);
-			}else{
-				$this->_compiledPattern =$pattern;
-			}
-		}
-
 
 		/**
 		 * Sets a callback that is called if the route is matched.
@@ -315,6 +297,55 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		public function getGroup(){
 			return $this->_group;
+		}
+
+		/**
+		 * @param string $handle_uri
+		 * @param array $matches
+		 * @return bool
+		 * @throws 
+		 */
+		public function isMatched($handle_uri, &$matches){
+			$matches =null;
+
+			$methods =$this->getHttpMethods();
+			if($methods !==null){
+				if(is_string($methods)){
+					if($methods !==$_SERVER['REQUEST_METHOD']){
+						return false;
+					}
+				}else{
+					if(!in_array($_SERVER['REQUEST_METHOD'],$methods,true)){
+						return false;
+					}
+				}
+			}
+
+			$pattern =$this->getCompiledPattern();
+
+			if(strpos($pattern,'^') !==false){
+				$r=preg_match($pattern,$handle_uri,$matches);
+				if($r ===false){
+					throw new Exception('--invalid PCRE: '.$pattern. ' for '. $this->getPattern());
+				}
+
+				$is_matched =$r===1;
+			}else{
+				$is_matched =$pattern===$handle_uri;
+			}
+
+			if($is_matched){
+				$beforeMatch=$this->getBeforeMatch();
+				if($beforeMatch !==null){
+					if(!is_callable($beforeMatch)) {
+						throw new Exception('Before-Match callback is not callable in matched route');
+					}
+
+					$is_matched=call_user_func_array($this->getBeforeMatch(),[$handle_uri, $this]);
+				}
+			}
+
+			return $is_matched;
 		}
 	}
 }
