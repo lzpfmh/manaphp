@@ -93,7 +93,7 @@ namespace ManaPHP\Mvc\Router {
 		/**
 		 * Extracts parameters from a string
 		 * @param string $pattern
-		 * @return array
+		 * @return string
 		 */
 		public function extractNamedParams($pattern){
 			if(strpos($pattern,'{') ===false){
