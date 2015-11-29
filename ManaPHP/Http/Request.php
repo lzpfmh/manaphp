@@ -95,7 +95,7 @@ namespace ManaPHP\Http {
 				return $defaultValue;
 			}
 
-			if(empty($source[$name]) &&$notAllowEmpty ===true){
+			if($notAllowEmpty ===true &&empty($source[$name])){
 				return $defaultValue;
 			}
 
