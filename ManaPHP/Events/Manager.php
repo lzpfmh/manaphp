@@ -13,81 +13,38 @@ namespace ManaPHP\Events {
 	
 	class Manager implements \ManaPHP\Events\ManagerInterface {
 
-		protected $_events;
-
-		protected $_collect;
-
-		protected $_enablePriorities;
-
-		protected $_responses;
+		/**
+		 * @var array
+		 */
+		protected $_events=[];
 
 		/**
 		 * Attach a listener to the events manager
 		 *
-		 * @param string $eventType
+		 * @param string $event
 		 * @param object|callable $handler
-		 * @param int $priority
+		 * @throws \ManaPHP\Events\Exception
 		 */
-		public function attach($eventType, $handler){ }
+		public function attach($event, $handler){
+			if(!is_object($handler)){
+				throw new Exception("Event handler must be an Object");
+			}
 
+			if(strpos($event,':') !==false) {
+				list($type,$name)=explode(':',$event);
+			}else{
+				$type=$event;
+				$name='';
+			}
 
-		/**
-		 * Set if priorities are enabled in the EventsManager
-		 *
-		 * @param boolean $enablePriorities
-		 */
-		public function enablePriorities($enablePriorities){ }
+			if(!isset($this->_events[$type])){
+				$this->_events[$type]=[];
+			}
 
-
-		/**
-		 * Returns if priorities are enabled
-		 *
-		 * @return boolean
-		 */
-		public function arePrioritiesEnabled(){ }
-
-
-		/**
-		 * Tells the event manager if it needs to collect all the responses returned by every
-		 * registered listener in a single fire
-		 *
-		 * @param boolean $collect
-		 */
-		public function collectResponses($collect){ }
-
-
-		/**
-		 * Check if the events manager is collecting all all the responses returned by every
-		 * registered listener in a single fire
-		 */
-		public function isCollecting(){ }
-
-
-		/**
-		 * Returns all the responses returned by every handler executed by the last 'fire' executed
-		 *
-		 * @return array
-		 */
-		public function getResponses(){ }
-
-
-		/**
-		 * Removes all events from the EventsManager
-		 *
-		 * @param string $type
-		 */
-		public function detachAll($type=null){ }
-
-
-		/**
-		 * Internal handler to call a queue of events
-		 *
-		 * @param \SplPriorityQueue $queue
-		 * @param \ManaPHP\Events\Event $event
-		 * @return mixed
-		 */
-		public function fireQueue($queue, $event){ }
-
+			$this->_events[$type][] =['event'=>$event,
+											'name'=>$name,
+											'handler'=>$handler];
+		}
 
 		/**
 		 * Fires an event in the events manager causing that active listeners be notified about it
@@ -96,34 +53,42 @@ namespace ManaPHP\Events {
 		 *	$eventsManager->fire('db', $connection);
 		 *</code>
 		 *
-		 * @param string $eventType
+		 * @param string $event
 		 * @param object $source
 		 * @param mixed  $data
-		 * @param int $cancelable
-		 * @return mixed
+		 * @throws \ManaPHP\Events\Exception
 		 */
-		public function fire($eventType, $source, $data=null){ }
+		public function fire($event, $source, $data=null){
+			if(strpos($event,':') ===false){
+				throw new Exception("Invalid event type " . $event);
+			}
 
+			list($fire_type,$fire_name)=explode(':',$event,2);
 
-		/**
-		 * Check whether certain type of event has listeners
-		 *
-		 * @param string $type
-		 * @return boolean
-		 */
-		public function hasListeners($type){ }
+			if(isset($this->_events[$fire_type])){
+				$callback_params=[new Event($fire_type), $source, $data];
 
+				foreach($this->_events[$fire_type] as $event_handler){
+					$name =$event_handler['name'];
 
-		/**
-		 * Returns all the attached listeners of a certain type
-		 *
-		 * @param string $type
-		 * @return array
-		 */
-		public function getListeners($type){ }
+					if($name===''||$name===$fire_name){
+						$handler=$event_handler['handler'];
 
-
-		public function dettachAll($type=null){ }
-
+						$callback =null;
+						if($handler instanceof \Closure){
+							$callback=$handler;
+						}else{
+							if(method_exists($handler,$name)){
+								$callback=[$handler,$name];
+							}
+						}
+						
+						if($callback !==null){
+							call_user_func_array($callback,$callback_params);
+						}
+					}
+				}
+			}
+		}
 	}
 }
