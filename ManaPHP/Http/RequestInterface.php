@@ -14,9 +14,21 @@ namespace ManaPHP\Http {
 		 * @param string $name
 		 * @param string|array $filters
 		 * @param mixed $defaultValue
+ 		 * @param boolean $notAllowEmpty
 		 * @return mixed
 		 */
-		public function get($name=null, $filters=null, $defaultValue=null);
+		public function get($name=null, $filters=null, $defaultValue=null,$notAllowEmpty = false);
+
+		/**
+		 * Gets variable from $_GET superglobal applying filters if needed
+		 *
+		 * @param string $name
+		 * @param string|array $filters
+		 * @param mixed $defaultValue
+		 * @param boolean $notAllowEmpty
+		 * @return mixed
+		 */
+		public function getGet($name=null, $filters=null, $defaultValue=null,$notAllowEmpty = false);
 
 
 		/**
@@ -25,12 +37,28 @@ namespace ManaPHP\Http {
 		 * @param string $name
 		 * @param string|array $filters
 		 * @param mixed $defaultValue
+		 * @param boolean $notAllowEmpty
 		 * @return mixed
 		 */
-		public function getPost($name=null, $filters=null, $defaultValue=null);
+		public function getPost($name=null, $filters=null, $defaultValue=null,$notAllowEmpty = false);
 
 
-		public function getPut($name=null, $filters=null, $defaultValue=null);
+		/**
+		 * Gets a variable from put request
+		 *
+		 *<code>
+		 *	$userEmail = $request->getPut("user_email");
+		 *
+		 *	$userEmail = $request->getPut("user_email", "email");
+		 *</code>
+		 *
+		 * @param string $name
+		 * @param string|array $filters
+		 * @param mixed $defaultValue
+		 * @param boolean $notAllowEmpty
+		 * @return mixed
+		 */
+		public function getPut($name=null, $filters=null, $defaultValue=null,$notAllowEmpty = false);
 
 
 		/**
@@ -39,19 +67,10 @@ namespace ManaPHP\Http {
 		 * @param string $name
 		 * @param string|array $filters
 		 * @param mixed $defaultValue
+	 	 * @param boolean $notAllowEmpty
 		 * @return mixed
 		 */
-		public function getQuery($name=null, $filters=null, $defaultValue=null);
-
-
-		/**
-		 * Gets variable from $_SERVER superglobal
-		 *
-		 * @param string $name
-		 * @return mixed
-		 */
-		public function getServer($name);
-
+		public function getQuery($name=null, $filters=null, $defaultValue=null,$notAllowEmpty = false);
 
 		/**
 		 * Checks whether $_SERVER superglobal has certain index
@@ -63,6 +82,15 @@ namespace ManaPHP\Http {
 
 
 		/**
+		 * Checks whether $_GET superglobal has certain index
+		 *
+		 * @param string $name
+		 * @return boolean
+		 */
+		public function hasGet($name);
+
+
+		/**
 		 * Checks whether $_POST superglobal has certain index
 		 *
 		 * @param string $name
@@ -71,34 +99,22 @@ namespace ManaPHP\Http {
 		public function hasPost($name);
 
 
+		/**
+		 * Checks whether has certain index
+		 *
+		 * @param string $name
+		 * @return boolean
+		 */
 		public function hasPut($name);
 
 
 		/**
-		 * Checks whether $_SERVER superglobal has certain index
+		 * Checks whether $_GET superglobal has certain index
 		 *
 		 * @param string $name
 		 * @return boolean
 		 */
 		public function hasQuery($name);
-
-
-		/**
-		 * Checks whether $_SERVER superglobal has certain index
-		 *
-		 * @param string $name
-		 * @return mixed
-		 */
-		public function hasServer($name);
-
-
-		/**
-		 * Gets HTTP header from request data
-		 *
-		 * @param string $header
-		 * @return string
-		 */
-		public function getHeader($header);
 
 
 		/**
@@ -115,15 +131,6 @@ namespace ManaPHP\Http {
 		 * @return boolean
 		 */
 		public function isAjax();
-
-
-		/**
-		 * Checks whether request has been made using SOAP
-		 *
-		 * @return boolean
-		 */
-		public function isSoapRequested();
-
 
 		/**
 		 * Checks whether request has been made using any secure layer
@@ -142,44 +149,12 @@ namespace ManaPHP\Http {
 
 
 		/**
-		 * Gets active server address IP
-		 *
-		 * @return string
-		 */
-		public function getServerAddress();
-
-
-		/**
-		 * Gets active server name
-		 *
-		 * @return string
-		 */
-		public function getServerName();
-
-
-		/**
-		 * Gets information about schema, host and port used by the request
-		 *
-		 * @return string
-		 */
-		public function getHttpHost();
-
-
-		/**
 		 * Gets most possibly client IPv4 Address. This methods search in $_SERVER['REMOTE_ADDR'] and optionally in $_SERVER['HTTP_X_FORWARDED_FOR']
 		 *
 		 * @param boolean $trustForwardedHeader
 		 * @return string
 		 */
-		public function getClientAddress($trustForwardedHeader=null);
-
-
-		/**
-		 * Gets HTTP method which request has been made
-		 *
-		 * @return string
-		 */
-		public function getMethod();
+		public function getClientAddress($trustForwardedHeader=false);
 
 
 		/**
@@ -188,15 +163,6 @@ namespace ManaPHP\Http {
 		 * @return string
 		 */
 		public function getUserAgent();
-
-
-		/**
-		 * Check if HTTP method match any of the passed methods
-		 *
-		 * @param string|array $methods
-		 * @return boolean
-		 */
-		public function isMethod($methods);
 
 
 		/**
@@ -247,23 +213,29 @@ namespace ManaPHP\Http {
 		 */
 		public function isOptions();
 
+		/**
+		 * Checks whether HTTP method is PATCH. if $_SERVER['REQUEST_METHOD']=='PATCH'
+		 *
+		 * @return boolean
+		 */
+		public function isPatch();
 
 		/**
 		 * Checks whether request include attached files
 		 *
-		 * @param boolean $notErrored
+		 * @param boolean $onlySuccessful
 		 * @return boolean
 		 */
-		public function hasFiles($notErrored=null);
+		public function hasFiles($onlySuccessful=false);
 
 
 		/**
 		 * Gets attached files as \ManaPHP\Http\Request\FileInterface compatible instances
 		 *
-		 * @param boolean $notErrored
+		 * @param boolean $onlySuccessful
 		 * @return \ManaPHP\Http\Request\FileInterface[]
 		 */
-		public function getUploadedFiles($notErrored=null);
+		public function getUploadedFiles($onlySuccessful=false);
 
 
 		/**
@@ -272,54 +244,5 @@ namespace ManaPHP\Http {
 		 * @return string
 		 */
 		public function getHTTPReferer();
-
-
-		/**
-		 * Gets array with mime/types and their quality accepted by the browser/client from $_SERVER['HTTP_ACCEPT']
-		 *
-		 * @return array
-		 */
-		public function getAcceptableContent();
-
-
-		/**
-		 * Gets best mime/type accepted by the browser/client from $_SERVER['HTTP_ACCEPT']
-		 *
-		 * @return array
-		 */
-		public function getBestAccept();
-
-
-		/**
-		 * Gets charsets array and their quality accepted by the browser/client from $_SERVER['HTTP_ACCEPT_CHARSET']
-		 *
-		 * @return array
-		 */
-		public function getClientCharsets();
-
-
-		/**
-		 * Gets best charset accepted by the browser/client from $_SERVER['HTTP_ACCEPT_CHARSET']
-		 *
-		 * @return string
-		 */
-		public function getBestCharset();
-
-
-		/**
-		 * Gets languages array and their quality accepted by the browser/client from $_SERVER['HTTP_ACCEPT_LANGUAGE']
-		 *
-		 * @return array
-		 */
-		public function getLanguages();
-
-
-		/**
-		 * Gets best language accepted by the browser/client from $_SERVER['HTTP_ACCEPT_LANGUAGE']
-		 *
-		 * @return string
-		 */
-		public function getBestLanguage();
-
 	}
 }
