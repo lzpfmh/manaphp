@@ -244,7 +244,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string|array $location
 		 * @param boolean $externalRedirect
-		 * @param int $statusCode
+		 * @param int|string $statusCode
 		 * @return \ManaPHP\Http\ResponseInterface
 		 * @throws
 		 */
@@ -257,12 +257,16 @@ namespace ManaPHP\Http {
 				}
 			}
 
+			if(is_string($statusCode)){
+				$statusCode =(int)$statusCode;
+			};
+
 			/**
 			 * The HTTP status is 302 by default, a temporary redirection
 			 */
-			if($statusCode ==301){
+			if($statusCode ===301){
 				$message ='Permanently Moved';
-			}elseif($statusCode ==302){
+			}elseif($statusCode ===302){
 				$message ='Temporarily Moved';
 			}else{
 				throw new Exception('invalid status code: '.$statusCode);
@@ -349,7 +353,7 @@ namespace ManaPHP\Http {
 		 * @return \ManaPHP\Http\ResponseInterface
 		 */
 		public function sendHeaders(){
-			if($this->_status_line !=null){
+			if($this->_status_line !==null){
 				$this->setRawHeader($this->_status_line);
 			}
 

@@ -138,11 +138,11 @@ namespace ManaPHP\Mvc\Router {
 			if($paths !==null){
 				if(is_string($paths)){
 					$parts =explode('::',$paths);
-					if(count($parts) ==3){
+					if(count($parts) ===3){
 						$moduleName =$parts[0];
 						$controllerName=$parts[1];
 						$actionName=$parts[2];
-					}elseif(count($parts)==2){
+					}elseif(count($parts)===2){
 						$controllerName=$parts[0];
 						$actionName=$parts[1];
 					}else{

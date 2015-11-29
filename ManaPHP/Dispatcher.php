@@ -278,7 +278,7 @@ namespace ManaPHP {
 				return $defaultValue;
 			}
 
-			if($filters ==null){
+			if($filters ===null){
 				return $this->_params[$param];
 			}
 
