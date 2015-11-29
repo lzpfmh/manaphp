@@ -9,46 +9,14 @@ namespace ManaPHP\Mvc\Router {
 	interface RouteInterface {
 
 		/**
-		 * Replaces placeholders from pattern returning a valid PCRE regular expression
+		 * Sets a callback that is called if the route is matched.
+		 * The developer can implement any arbitrary conditions here
+		 * If the callback returns false the route is treated as not matched
 		 *
-		 * @param string $pattern
-		 * @return string
+		 * @param callable callback
+		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function compilePattern($pattern);
-
-
-		/**
-		 * Set one or more HTTP methods that constraint the matching of the route
-		 *
-		 * @param string|array $httpMethods
-		 */
-		public function via($httpMethods);
-
-
-		/**
-		 * Reconfigure the route adding a new pattern and a set of paths
-		 *
-		 * @param string $pattern
-		 * @param array $paths
-		 */
-		public function reConfigure($pattern, $paths=null);
-
-
-		/**
-		 * Returns the route's name
-		 *
-		 * @return string
-		 */
-		public function getName();
-
-
-		/**
-		 * Sets the route's name
-		 *
-		 * @param string $name
-		 */
-		public function setName($name);
-
+		public function beforeMatch($callback);
 
 		/**
 		 * Sets a set of HTTP methods that constraint the matching of the route
@@ -57,30 +25,12 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		public function setHttpMethods($httpMethods);
 
-
-		/**
-		 * Returns the route's id
-		 *
-		 * @return string
-		 */
-		public function getRouteId();
-
-
 		/**
 		 * Returns the route's pattern
 		 *
 		 * @return string
 		 */
 		public function getPattern();
-
-
-		/**
-		 * Returns the route's pattern
-		 *
-		 * @return string
-		 */
-		public function getCompiledPattern();
-
 
 		/**
 		 * Returns the paths
@@ -97,11 +47,11 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		public function getHttpMethods();
 
-
 		/**
-		 * Resets the internal route id generator
+		 * @param string $handle_uri
+		 * @param array $matches
+		 * @return bool
 		 */
-		public static function reset();
-
+		public function isMatched($handle_uri, &$matches);
 	}
 }
