@@ -41,12 +41,13 @@ namespace ManaPHP\Mvc {
 
 		const EXCEPTION_ACTION_NOT_FOUND = 5;
 
-		protected $_handlerSuffix='Controller';
+		public function __construct(){
+			parent::__construct();
 
-		protected $_defaultHandler='Index';
-
-		protected $_defaultAction='index';
-
+			$this->_handlerSuffix ='Controller';
+			$this->_defaultHandler ='Index';
+			$this->_defaultAction='index';
+		}
 		/**
 		 * Sets the default controller suffix
 		 *
