@@ -2,7 +2,6 @@
 
 namespace ManaPHP\Mvc\Router {
 
-	use ManaPHP\CLI\Router\Exception;
 
 	/**
 	 * ManaPHP\Mvc\Router\Route
