@@ -245,6 +245,7 @@ namespace ManaPHP {
 			}
 
 			if(is_array($this->_namespaces)){
+				/** @noinspection LoopWhichDoesNotLoopInspection */
 				foreach($this->_namespaces as $namespace=>$directory){
 					$len =strlen($namespace);
 					if(strncmp($namespace,$className,$len) !==0){

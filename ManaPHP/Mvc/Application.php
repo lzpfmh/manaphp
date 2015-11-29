@@ -203,7 +203,7 @@ namespace ManaPHP\Mvc {
 			$moduleName =$router->getModuleName();
 			$moduleObject =null;
 
-			if(!empty($moduleName)){
+			if($moduleName !==null){
 				if(is_object($this->_eventsManager)){
 					if($this->_eventsManager->fire('application:beforeStartModule', $this, $moduleName) ===false) {
 						return false;

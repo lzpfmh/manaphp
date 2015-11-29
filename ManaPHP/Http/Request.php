@@ -318,7 +318,7 @@ namespace ManaPHP\Http {
 		 * @return string
 		 */
 		public function getRawBody(){
-			if(empty($this->_rawBody)){
+			if($this->_rawBody ===null){
 				$this->_rawBody =file_get_contents('php://input');
 			}
 
