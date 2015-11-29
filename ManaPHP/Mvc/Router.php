@@ -192,7 +192,12 @@ namespace ManaPHP\Mvc {
 		public function getRewriteUri(){
 			if($this->_uriSource ===self::URI_SOURCE_GET_URL){
 				if(!isset($_GET['_url'])){
-					throw new Exception('--$_GET["_url"] not set, may be .htaccess has incorrect config.');
+					if($_SERVER['SCRIPT_NAME'] ==='/index.php'){
+						$real_url='/';
+					}else{
+						throw new Exception('--$_GET["_url"] not set, may be .htaccess has incorrect config.');
+					}
+
 				}else{
 					$real_url =$_GET['_url'];
 				}
@@ -338,6 +343,7 @@ namespace ManaPHP\Mvc {
 		 *</code>
 		 *
 		 * @param string $uri
+		 * @return boolean
 		 * @throws
 		 */
 		public function handle($uri=null){
@@ -460,6 +466,8 @@ namespace ManaPHP\Mvc {
 			if(is_object($this->_eventsManager)){
 				$this->_eventsManager->fire('router:afterCheckRoutes',$this);
 			}
+
+			return $route_found;
 		}
 
 
