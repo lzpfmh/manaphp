@@ -12,6 +12,7 @@ namespace ManaPHP {
 		 * Sets the default action suffix
 		 *
 		 * @param string $actionSuffix
+		 * @return \ManaPHP\DispatcherInterface
 		 */
 		public function setActionSuffix($actionSuffix);
 
@@ -20,14 +21,30 @@ namespace ManaPHP {
 		 * Sets the default namespace
 		 *
 		 * @param string $namespace
+		 * @return \ManaPHP\DispatcherInterface
 		 */
 		public function setDefaultNamespace($namespace);
 
 
 		/**
+		 * Sets the namespace which the controller belongs to
+		 * @param string $namespaceName
+		 * @return \ManaPHP\DispatcherInterface
+		 */
+		public function setNamespaceName($namespaceName);
+
+		/**
+		 * Sets the module name which the application belongs to
+		 * @param string $moduleName
+		 * @return \ManaPHP\DispatcherInterface
+		 */
+		public function setModuleName($moduleName);
+
+		/**
 		 * Sets the default action name
 		 *
 		 * @param string $actionName
+		 * @return \ManaPHP\DispatcherInterface
 		 */
 		public function setDefaultAction($actionName);
 
@@ -36,6 +53,7 @@ namespace ManaPHP {
 		 * Sets the action name to be dispatched
 		 *
 		 * @param string $actionName
+		 * @return \ManaPHP\DispatcherInterface
 		 */
 		public function setActionName($actionName);
 
@@ -52,6 +70,7 @@ namespace ManaPHP {
 		 * Sets action params to be dispatched
 		 *
 		 * @param array $params
+		 * @return \ManaPHP\DispatcherInterface
 		 */
 		public function setParams($params);
 
@@ -69,6 +88,7 @@ namespace ManaPHP {
 		 *
 		 * @param  mixed $param
 		 * @param  mixed $value
+		 * @return \ManaPHP\DispatcherInterface
 		 */
 		public function setParam($param, $value);
 
@@ -102,7 +122,7 @@ namespace ManaPHP {
 		/**
 		 * Dispatches a handle action taking into account the routing parameters
 		 *
-		 * @return object
+		 * @return \ManaPHP\Mvc\ControllerInterface
 		 */
 		public function dispatch();
 
