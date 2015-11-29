@@ -5,7 +5,7 @@ namespace ManaPHP {
 	/**
 	 * ManaPHP\DiInterface initializer
 	 */
-	
+
 	interface DiInterface extends \ArrayAccess {
 
 		/**
@@ -14,15 +14,39 @@ namespace ManaPHP {
 		 * @param string $name
 		 * @param mixed $definition
 		 * @param boolean $shared
-		 * @return \ManaPHP\DI\ServiceInterface
+		 * @return \ManaPHP\Di\ServiceInterface
 		 */
-		public function set($name, $definition, $shared=null);
+		public function set($name, $definition, $shared=false);
+
+
+		/**
+		 * Registers an "always shared" service in the services container
+		 *
+		 * @param string $name
+		 * @param mixed $definition
+		 * @return \ManaPHP\Di\ServiceInterface
+		 */
+		public function setShared($name, $definition);
+
+
+		/**
+		 * Attempts to register a service in the services container
+		 * Only is successful if a service hasn't been registered previously
+		 * with the same name
+		 *
+		 * @param string $name
+		 * @param mixed $definition
+		 * @param boolean $shared
+		 * @return \ManaPHP\Di\ServiceInterface
+		 */
+		public function attempt($name, $definition, $shared = false);
 
 
 		/**
 		 * Removes a service from the service container
 		 *
 		 * @param string $name
+		 * @return void
 		 */
 		public function remove($name);
 
@@ -32,7 +56,7 @@ namespace ManaPHP {
 		 *
 		 * @param string $name
 		 * @param array $parameters
-		 * @return object
+		 * @return mixed
 		 */
 		public function get($name, $parameters=null);
 
@@ -42,26 +66,16 @@ namespace ManaPHP {
 		 *
 		 * @param string $name
 		 * @param array $parameters
-		 * @return object
+		 * @return mixed
 		 */
 		public function getShared($name, $parameters=null);
-
-
-		/**
-		 * Sets a service using a raw \ManaPHP\DI\Service definition
-		 *
-		 * @param string $name
-		 * @param \ManaPHP\DI\ServiceInterface $rawDefinition
-		 * @return \ManaPHP\DI\ServiceInterface
-		 */
-		public function setService($rawDefinition);
 
 
 		/**
 		 * Returns the corresponding \ManaPHP\Di\Service instance for a service
 		 *
 		 * @param string $name
-		 * @return \ManaPHP\DI\ServiceInterface
+		 * @return \ManaPHP\Di\ServiceInterface
 		 */
 		public function getService($name);
 
