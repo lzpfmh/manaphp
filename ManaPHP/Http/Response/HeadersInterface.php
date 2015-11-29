@@ -18,21 +18,18 @@ namespace ManaPHP\Http\Response {
 
 
 		/**
-		 * Gets a header value from the internal bag
-		 *
-		 * @param string $name
-		 * @return string
-		 */
-		public function get($name);
-
-
-		/**
 		 * Sets a raw header to be sent at the end of the request
 		 *
 		 * @param string $header
 		 */
 		public function setRaw($header);
 
+		/**
+		 * Removes a header to be sent at the end of the request
+		 *
+		 * @param string $header_index
+		 */
+		public function remove($header_index);
 
 		/**
 		 * Sends the headers to the client
@@ -40,13 +37,6 @@ namespace ManaPHP\Http\Response {
 		 * @return boolean
 		 */
 		public function send();
-
-
-		/**
-		 * Reset set headers
-		 *
-		 */
-		public function reset();
 
 
 		/**
