@@ -109,7 +109,7 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @param callable $beforeMatch
 		 * @return \ManaPHP\Mvc\Router\GroupInterface
-		 * @throws
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function beforeMatch($beforeMatch){
 			if(!is_callable($beforeMatch)) {

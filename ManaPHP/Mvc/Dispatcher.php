@@ -95,7 +95,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $message
 		 * @param int $exceptionCode
 		 * @return boolean
-		 * @throws
+		 * @throws \ManaPHP\Mvc\Dispatcher\Exception
 		 */
 		protected function _throwDispatchException($message, $exceptionCode=0){
 			if(!is_object($this->_dependencyInjector)){

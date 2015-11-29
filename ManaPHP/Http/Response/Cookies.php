@@ -78,7 +78,7 @@ namespace ManaPHP\Http\Response {
 		 * @param string $domain
 		 * @param boolean $httpOnly
 		 * @return \ManaPHP\Http\Response\Cookies
-		 * @throws
+		 * @throws \ManaPHP\Http\Response\Exception
 		 */
 		public function set($name, $value=null, $expire=null, $path=null, $secure=null, $domain=null, $httpOnly=null){
 			/**

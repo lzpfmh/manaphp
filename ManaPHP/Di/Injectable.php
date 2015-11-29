@@ -101,14 +101,10 @@ namespace ManaPHP\Di {
 		 *
 		 * @param string $propertyName
 		 * @return object
-		 * @throws
 		 */
 		public function __get($propertyName){
 			if(!is_object($this->_dependencyInjector)){
 				$this->_dependencyInjector =Di::getDefault();
-				if(!is_object($this->_dependencyInjector)){
-					throw new Exception('A dependency injection object is required to access the application services');
-				}
 			}
 
 			if($this->_dependencyInjector->has($propertyName)){

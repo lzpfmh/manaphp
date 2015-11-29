@@ -183,6 +183,7 @@ namespace ManaPHP {
 		 * @param string $name
 		 * @param array $parameters
 		 * @return mixed
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		public function getShared($name, $parameters=null){
 			if(isset($this->_sharedInstances[$name])){
@@ -305,6 +306,7 @@ namespace ManaPHP {
 		 *
 		 * @param string $name
 		 * @return mixed
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		public function offsetGet($name){
 			return $this->getShared($name);

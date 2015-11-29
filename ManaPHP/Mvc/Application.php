@@ -136,7 +136,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $name
 		 * @return array|callable
-		 * @throws
+		 * @throws \ManaPHP\Mvc\Application\Exception
 		 */
 		public function getModule($name){
 			if(!isset($this->_modules[$name])){
@@ -173,7 +173,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $uri
 		 * @return \ManaPHP\Http\ResponseInterface|boolean
-		 * @throws
+		 * @throws \ManaPHP\Mvc\Application\Exception
 		 */
 		public function handle($uri=null){
 			/**

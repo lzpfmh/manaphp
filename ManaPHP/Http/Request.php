@@ -80,7 +80,7 @@ namespace ManaPHP\Http {
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
 		 * @return string
-		 * @throws
+		 * @throws \ManaPHP\Http\Request\Exception
 		 */
 		protected function _getHelper($source, $name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false){
 			if($filters !==null){
@@ -119,6 +119,7 @@ namespace ManaPHP\Http {
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
 		 * @return mixed
+		 * @throws \ManaPHP\Http\Request\Exception
 		 */
 		public function get($name=null, $filters=null, $defaultValue=null,$notAllowEmpty=false){
 			return $this->_getHelper($_REQUEST,$name,$filters,$defaultValue,$notAllowEmpty);
@@ -144,6 +145,7 @@ namespace ManaPHP\Http {
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
 		 * @return mixed
+		 * @throws \ManaPHP\Http\Request\Exception
 		 */
 		public function getGet($name=null, $filters=null, $defaultValue=null,$notAllowEmpty=false){
 			return $this->_getHelper($_GET,$name,$filters,$defaultValue,$notAllowEmpty);
@@ -167,6 +169,7 @@ namespace ManaPHP\Http {
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
 		 * @return mixed
+		 * @throws \ManaPHP\Http\Request\Exception
 		 */
 		public function getPost($name=null, $filters=null, $defaultValue=null,$notAllowEmpty=false){
 			return $this->_getHelper($_POST,$name,$filters,$defaultValue,$notAllowEmpty);
@@ -187,6 +190,7 @@ namespace ManaPHP\Http {
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
 		 * @return mixed
+		 * @throws \ManaPHP\Http\Request\Exception
 		 */
 		public function getPut($name=null, $filters=null, $defaultValue=null, $notAllowEmpty=false){
 			return $this->_getHelper($this->_putCache,$name,$filters,$defaultValue,$notAllowEmpty);
@@ -213,6 +217,7 @@ namespace ManaPHP\Http {
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
 		 * @return mixed
+		 * @throws \ManaPHP\Http\Request\Exception
 		 */
 		public function getQuery($name=null, $filters=null, $defaultValue=null,$notAllowEmpty=false){
 			return $this->_getHelper($_GET,$name,$filters,$defaultValue,$notAllowEmpty);

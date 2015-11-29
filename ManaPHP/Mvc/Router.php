@@ -187,7 +187,7 @@ namespace ManaPHP\Mvc {
 		 * Get rewrite info. This info is read from $_GET['_url']. This returns '/' if the rewrite information cannot be read
 		 *
 		 * @return string
-		 * @throws
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function getRewriteUri(){
 			if($this->_uriSource ===self::URI_SOURCE_GET_URL){
@@ -344,7 +344,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $uri
 		 * @return boolean
-		 * @throws
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function handle($uri=null){
 			/**

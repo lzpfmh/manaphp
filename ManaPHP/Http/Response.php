@@ -246,7 +246,7 @@ namespace ManaPHP\Http {
 		 * @param boolean $externalRedirect
 		 * @param int|string $statusCode
 		 * @return \ManaPHP\Http\ResponseInterface
-		 * @throws
+		 * @throws \ManaPHP\Http\Response\Exception
 		 */
 		public function redirect($location, $externalRedirect=false, $statusCode=302){
 
@@ -322,7 +322,7 @@ namespace ManaPHP\Http {
 		 * @return \ManaPHP\Http\ResponseInterface
 		 */
 		public function appendContent($content){
-			$this->_content =$this->_content.$content;
+			$this->_content .=$content;
 			return $this;
 		}
 
@@ -381,7 +381,7 @@ namespace ManaPHP\Http {
 		 * Prints out HTTP response to the client
 		 *
 		 * @return \ManaPHP\Http\ResponseInterface
-		 * @throws
+		 * @throws \ManaPHP\Http\Response\Exception
 		 */
 		public function send(){
 			if($this->_sent ===true){

@@ -51,6 +51,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @param array $paths
 		 * @param array|string $httpMethods
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function __construct($pattern, $paths=null, $httpMethods=null){
 			$this->_pattern=$pattern;
@@ -132,7 +133,7 @@ namespace ManaPHP\Mvc\Router {
 		 * Returns routePaths
 		 * @param string|array $paths
 		 * @return array
-		 * @throws
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public static function getRoutePaths($paths=null){
 			if($paths !==null){
@@ -185,7 +186,7 @@ namespace ManaPHP\Mvc\Router {
 		 *
 		 * @param callback $callback
 		 * @return \ManaPHP\Mvc\Router\Route
-		 * @throws
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function beforeMatch($callback){
 			if(!is_callable($callback)) {
@@ -302,7 +303,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $handle_uri
 		 * @param array $matches
 		 * @return bool
-		 * @throws 
+		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function isMatched($handle_uri, &$matches){
 			$matches =null;
