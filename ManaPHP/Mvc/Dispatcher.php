@@ -74,7 +74,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $controllerName
 		 */
-		public function setControllerName($controllerName, $isExact=null){
+		public function setControllerName($controllerName){
 			$this->_handlerName =$controllerName;
 		}
 
