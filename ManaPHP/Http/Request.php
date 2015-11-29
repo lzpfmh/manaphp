@@ -2,6 +2,9 @@
 
 namespace ManaPHP\Http {
 
+	use \ManaPHP\Http\Request\Exception;
+	use \ManaPHP\Di\InjectionAwareInterface;
+
 	/**
 	 * ManaPHP\Http\Request
 	 *
@@ -21,22 +24,45 @@ namespace ManaPHP\Http {
 	 *
 	 */
 	
-	class Request implements \ManaPHP\Http\RequestInterface, \ManaPHP\DI\InjectionAwareInterface {
+	class Request implements RequestInterface,InjectionAwareInterface {
 
+		/**
+		 * @var \ManaPHP\DiInterface
+		 */
 		protected $_dependencyInjector;
 
+		/**
+		 * @var \ManaPHP\FilterInterface
+		 */
 		protected $_filter;
 
 		protected $_rawBody;
 
-		protected $_put;
+		/**
+		 * @var array
+		 */
+		protected $_putCache=null;
 
+		/**
+		 * @var \ManaPHP\Http\Request\FileInterface[]
+		 */
+		protected $_files;
+
+		function __construct(){
+			if($this->isPut()){
+				parse_str($this->getRawBody(),$this->_putCache);
+			}
+		}
 		/**
 		 * Sets the dependency injector
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
+		 * @return \ManaPHP\Http\RequestInterface
 		 */
-		public function setDI($dependencyInjector){ }
+		public function setDI($dependencyInjector){
+			$this->_dependencyInjector =$dependencyInjector;
+			return $this;
+		}
 
 
 		/**
@@ -44,8 +70,41 @@ namespace ManaPHP\Http {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public function getDI(){ }
+		public function getDI(){
+			return $this->_dependencyInjector;
+		}
 
+		/**
+		 * Helper to get data from superglobals, applying filters if needed.
+		 * If no parameters are given the superglobal is returned.
+		 *
+		 * @param array $source
+		 * @param string $name
+		 * @param mixed $filters
+		 * @param mixed $defaultValue
+		 * @param boolean $notAllowEmpty
+		 * @return string
+		 * @throws
+		 */
+		protected function _getHelper($source, $name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false){
+			if($filters !==null){
+				throw new Exception('filter not supported');
+			}
+
+			if($name ===null){
+				return $source;
+			}
+
+			if(!isset($source[$name])){
+				return $defaultValue;
+			}
+
+			if(empty($source[$name]) &&$notAllowEmpty ===true){
+				return $defaultValue;
+			}
+
+			return $source[$name];
+		}
 
 		/**
 		 * Gets a variable from the $_REQUEST superglobal applying filters if needed.
@@ -63,10 +122,36 @@ namespace ManaPHP\Http {
 		 * @param string|array $filters
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
-		 * @param boolean $noRecursive
 		 * @return mixed
 		 */
-		public function get($name=null, $filters=null, $defaultValue=null){ }
+		public function get($name=null, $filters=null, $defaultValue=null,$notAllowEmpty=false){
+			return $this->_getHelper($_REQUEST,$name,$filters,$defaultValue,$notAllowEmpty);
+		}
+
+		/**
+		 * Gets variable from $_GET superglobal applying filters if needed
+		 * If no parameters are given the $_GET superglobal is returned
+		 *
+		 *<code>
+		 *	//Returns value from $_GET["id"] without sanitizing
+		 *	$id = $request->getGet("id");
+		 *
+		 *	//Returns value from $_GET["id"] with sanitizing
+		 *	$id = $request->getGet("id", "int");
+		 *
+		 *	//Returns value from $_GET["id"] with a default value
+		 *	$id = $request->getGet("id", null, 150);
+		 *</code>
+		 *
+		 * @param string $name
+		 * @param string|array $filters
+		 * @param mixed $defaultValue
+		 * @param boolean $notAllowEmpty
+		 * @return mixed
+		 */
+		public function getGet($name=null, $filters=null, $defaultValue=null,$notAllowEmpty=false){
+			return $this->_getHelper($_GET,$name,$filters,$defaultValue,$notAllowEmpty);
+		}
 
 
 		/**
@@ -85,10 +170,11 @@ namespace ManaPHP\Http {
 		 * @param string|array $filters
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
-		 * @param boolean $noRecursive
 		 * @return mixed
 		 */
-		public function getPost($name=null, $filters=null, $defaultValue=null){ }
+		public function getPost($name=null, $filters=null, $defaultValue=null,$notAllowEmpty=false){
+			return $this->_getHelper($_POST,$name,$filters,$defaultValue,$notAllowEmpty);
+		}
 
 
 		/**
@@ -104,10 +190,11 @@ namespace ManaPHP\Http {
 		 * @param string|array $filters
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
-		 * @param boolean $noRecursive
 		 * @return mixed
 		 */
-		public function getPut($name=null, $filters=null, $defaultValue=null){ }
+		public function getPut($name=null, $filters=null, $defaultValue=null, $notAllowEmpty=false){
+			return $this->_getHelper($this->_putCache,$name,$filters,$defaultValue,$notAllowEmpty);
+		}
 
 
 		/**
@@ -129,19 +216,11 @@ namespace ManaPHP\Http {
 		 * @param string|array $filters
 		 * @param mixed $defaultValue
 		 * @param boolean $notAllowEmpty
-		 * @param boolean $noRecursive
 		 * @return mixed
 		 */
-		public function getQuery($name=null, $filters=null, $defaultValue=null){ }
-
-
-		/**
-		 * Gets variable from $_SERVER superglobal
-		 *
-		 * @param string $name
-		 * @return mixed
-		 */
-		public function getServer($name){ }
+		public function getQuery($name=null, $filters=null, $defaultValue=null,$notAllowEmpty=false){
+			return $this->_getHelper($_GET,$name,$filters,$defaultValue,$notAllowEmpty);
+		}
 
 
 		/**
@@ -150,25 +229,9 @@ namespace ManaPHP\Http {
 		 * @param string $name
 		 * @return boolean
 		 */
-		public function has($name){ }
-
-
-		/**
-		 * Checks whether $_POST superglobal has certain index
-		 *
-		 * @param string $name
-		 * @return boolean
-		 */
-		public function hasPost($name){ }
-
-
-		/**
-		 * Checks whether put has certain index
-		 *
-		 * @param string $name
-		 * @return boolean
-		 */
-		public function hasPut($name){ }
+		public function has($name){
+			return isset($_REQUEST[$name]);
+		}
 
 
 		/**
@@ -177,25 +240,41 @@ namespace ManaPHP\Http {
 		 * @param string $name
 		 * @return boolean
 		 */
-		public function hasQuery($name){ }
-
+		public function hasGet($name){
+			return isset($_GET[$name]);
+		}
 
 		/**
-		 * Checks whether $_SERVER superglobal has certain index
+		 * Checks whether $_POST superglobal has certain index
 		 *
 		 * @param string $name
-		 * @return mixed
+		 * @return boolean
 		 */
-		public function hasServer($name){ }
+		public function hasPost($name){
+			return isset($_POST[$name]);
+		}
 
 
 		/**
-		 * Gets HTTP header from request data
+		 * Checks whether put has certain index
 		 *
-		 * @param string $header
-		 * @return string
+		 * @param string $name
+		 * @return boolean
 		 */
-		public function getHeader($header){ }
+		public function hasPut($name){
+			return isset($this->_putCache[$name]);
+		}
+
+
+		/**
+		 * Checks whether $_GET superglobal has certain index
+		 *
+		 * @param string $name
+		 * @return boolean
+		 */
+		public function hasQuery($name){
+			return isset($_GET[$name]);
+		}
 
 
 		/**
@@ -203,7 +282,13 @@ namespace ManaPHP\Http {
 		 *
 		 * @return string
 		 */
-		public function getScheme(){ }
+		public function getScheme(){
+			if(isset($_SERVER['REQUEST_SCHEME'])){
+				return $_SERVER['REQUEST_SCHEME'];
+			}else{
+				return '';
+			}
+		}
 
 
 		/**
@@ -211,15 +296,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return boolean
 		 */
-		public function isAjax(){ }
-
-
-		/**
-		 * Checks whether request has been made using SOAP
-		 *
-		 * @return boolean
-		 */
-		public function isSoapRequested(){ }
+		public function isAjax(){
+			return isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] === "XMLHttpRequest";
+		}
 
 
 		/**
@@ -227,7 +306,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return boolean
 		 */
-		public function isSecureRequest(){ }
+		public function isSecureRequest(){
+			return $this->getScheme()==='https';
+		}
 
 
 		/**
@@ -235,40 +316,13 @@ namespace ManaPHP\Http {
 		 *
 		 * @return string
 		 */
-		public function getRawBody(){ }
+		public function getRawBody(){
+			if(empty($this->_rawBody)){
+				$this->_rawBody =file_get_contents("php://input");
+			}
 
-
-		/**
-		 * Gets decoded JSON HTTP raw request body
-		 *
-		 * @param bool $assoc
-		 * @return string
-		 */
-		public function getJsonRawBody(){ }
-
-
-		/**
-		 * Gets active server address IP
-		 *
-		 * @return string
-		 */
-		public function getServerAddress(){ }
-
-
-		/**
-		 * Gets active server name
-		 *
-		 * @return string
-		 */
-		public function getServerName(){ }
-
-
-		/**
-		 * Gets information about schema, host and port used by the request
-		 *
-		 * @return string
-		 */
-		public function getHttpHost(){ }
+			return $this->_rawBody;
+		}
 
 
 		/**
@@ -277,23 +331,30 @@ namespace ManaPHP\Http {
 		 * @param boolean $trustForwardedHeader
 		 * @return string
 		 */
-		public function getClientAddress($trustForwardedHeader=null){ }
+		public function getClientAddress($trustForwardedHeader=false){
+			$address =null;
+			if($trustForwardedHeader){
+				if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+					$address=$_SERVER['HTTP_X_FORWARDED_FOR'];
+				}else{
+					$address=$_SERVER['HTTP_CLIENT_IP'];
+				}
+			}
 
+			if($address ===null){
+				$address =$_SERVER['REMOTE_ADDR'];
+			}
 
-		/**
-		 * Gets HTTP method which request has been made
-		 *
-		 * @return string
-		 */
-		public function getMethod(){ }
-
-
-		/**
-		 * Gets HTTP URI which request has been made
-		 *
-		 * @return string
-		 */
-		public function getURI(){ }
+			if(is_string($address)){
+				if(strpos($address,',') !==false){
+					return strstr($address,',',true);
+				}else{
+					return $address;
+				}
+			}else{
+				return false;
+			}
+		}
 
 
 		/**
@@ -301,16 +362,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return string
 		 */
-		public function getUserAgent(){ }
-
-
-		/**
-		 * Check if HTTP method match any of the passed methods
-		 *
-		 * @param string|array $methods
-		 * @return boolean
-		 */
-		public function isMethod($methods){ }
+		public function getUserAgent(){
+			return isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
+		}
 
 
 		/**
@@ -318,7 +372,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return boolean
 		 */
-		public function isPost(){ }
+		public function isPost(){
+			return $_SERVER['REQUEST_METHOD'] ==='POST';
+		}
 
 
 		/**
@@ -326,7 +382,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return boolean
 		 */
-		public function isGet(){ }
+		public function isGet(){
+			return $_SERVER['REQUEST_METHOD'] ==='GET';
+		}
 
 
 		/**
@@ -334,7 +392,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return boolean
 		 */
-		public function isPut(){ }
+		public function isPut(){
+			return $_SERVER['REQUEST_METHOD'] ==='PUT';
+		}
 
 
 		/**
@@ -342,7 +402,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return boolean
 		 */
-		public function isPatch(){ }
+		public function isPatch(){
+			return $_SERVER['REQUEST_METHOD'] ==='PATCH';
+		}
 
 
 		/**
@@ -350,7 +412,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return boolean
 		 */
-		public function isHead(){ }
+		public function isHead(){
+			return $_SERVER['REQUEST_METHOD'] ==='HEAD';
+		}
 
 
 		/**
@@ -358,7 +422,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return boolean
 		 */
-		public function isDelete(){ }
+		public function isDelete(){
+			return $_SERVER['REQUEST_METHOD'] ==='DELETE';
+		}
 
 
 		/**
@@ -366,32 +432,41 @@ namespace ManaPHP\Http {
 		 *
 		 * @return boolean
 		 */
-		public function isOptions(){ }
+		public function isOptions(){
+			return $_SERVER['REQUEST_METHOD'] ==='OPTIONS';
+		}
 
 
 		/**
 		 * Checks whether request includes attached files
-		 *
+		 * @param boolean $onlySuccessful
 		 * @return boolean
 		 */
-		public function hasFiles($notErrored=null){ }
+		public function hasFiles($onlySuccessful=false){
+			if($this->_files ===null){
+				$this->_getFilesHelper($onlySuccessful);
+			}
 
+			return count($this->_files)>1;
+		}
+
+		protected function _getFilesHelper($onlySuccessful){
+			throw new Exception('not support hasFiles and getUploadedFiles api '. $onlySuccessful);
+		}
 
 		/**
 		 * Gets attached files as \ManaPHP\Http\Request\File instances
 		 *
-		 * @param boolean $notErrored
+		 * @param boolean $onlySuccessful
 		 * @return \ManaPHP\Http\Request\File[]
 		 */
-		public function getUploadedFiles($notErrored=null){ }
+		public function getUploadedFiles($onlySuccessful=null){
+			if($this->_files ===null){
+				$this->_getFilesHelper($onlySuccessful);
+			}
 
-
-		/**
-		 * Returns the available headers in the request
-		 *
-		 * @return array
-		 */
-		public function getHeaders(){ }
+			return $this->_files;
+		}
 
 
 		/**
@@ -399,91 +474,8 @@ namespace ManaPHP\Http {
 		 *
 		 * @return string
 		 */
-		public function getHTTPReferer(){ }
-
-
-		/**
-		 * Process a request header and return an array of values with their qualities
-		 *
-		 * @param string $serverIndex
-		 * @param string $name
-		 * @return array
-		 */
-		protected function _getQualityHeader(){ }
-
-
-		/**
-		 * Process a request header and return the one with best quality
-		 *
-		 * @param array $qualityParts
-		 * @param string $name
-		 * @return string
-		 */
-		protected function _getBestQuality(){ }
-
-
-		/**
-		 * Gets array with mime/types and their quality accepted by the browser/client from $_SERVER['HTTP_ACCEPT']
-		 *
-		 * @return array
-		 */
-		public function getAcceptableContent(){ }
-
-
-		/**
-		 * Gets best mime/type accepted by the browser/client from $_SERVER['HTTP_ACCEPT']
-		 *
-		 * @return array
-		 */
-		public function getBestAccept(){ }
-
-
-		/**
-		 * Gets charsets array and their quality accepted by the browser/client from $_SERVER['HTTP_ACCEPT_CHARSET']
-		 *
-		 * @return array
-		 */
-		public function getClientCharsets(){ }
-
-
-		/**
-		 * Gets best charset accepted by the browser/client from $_SERVER['HTTP_ACCEPT_CHARSET']
-		 *
-		 * @return string
-		 */
-		public function getBestCharset(){ }
-
-
-		/**
-		 * Gets languages array and their quality accepted by the browser/client from $_SERVER['HTTP_ACCEPT_LANGUAGE']
-		 *
-		 * @return array
-		 */
-		public function getLanguages(){ }
-
-
-		/**
-		 * Gets best language accepted by the browser/client from $_SERVER['HTTP_ACCEPT_LANGUAGE']
-		 *
-		 * @return string
-		 */
-		public function getBestLanguage(){ }
-
-
-		/**
-		 * Gets auth info accepted by the browser/client from $_SERVER['PHP_AUTH_USER']
-		 *
-		 * @return array
-		 */
-		public function getBasicAuth(){ }
-
-
-		/**
-		 * Gets auth info accepted by the browser/client from $_SERVER['PHP_AUTH_DIGEST']
-		 *
-		 * @return array
-		 */
-		public function getDigestAuth(){ }
-
+		public function getHTTPReferer(){
+			return isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'';
+		}
 	}
 }
