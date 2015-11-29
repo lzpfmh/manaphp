@@ -1,60 +1,21 @@
 <?php 
 
-namespace ManaPHP\DI {
+namespace ManaPHP\Di {
 
 	/**
-	 * ManaPHP\DI\ServiceInterface initializer
+	 * ManaPHP\Di\ServiceInterface initializer
 	 */
 	
 	interface ServiceInterface {
 
 		/**
-		 * Returns the name of the service
+		 * Phalcon\Di\ServiceInterface
 		 *
-		 * @return string
-		 */
-		public function getName();
-
-
-		/**
-		 * Sets whether the service is shared or not
-		 *
+		 * @param string $name
+		 * @param string|callable|object $definition
 		 * @param boolean $shared
 		 */
-		public function setShared($shared);
-
-
-		/**
-		 * Check whether the service is shared or not
-		 *
-		 * @return boolean
-		 */
-		public function isShared();
-
-
-		/**
-		 * Set the service definition
-		 *
-		 * @param mixed $definition
-		 */
-		public function setDefinition($definition);
-
-
-		/**
-		 * Returns the service definition
-		 *
-		 * @return mixed
-		 */
-		public function getDefinition();
-
-
-		/**
-		 * Checks if the service was resolved
-		 *
-		 * @return bool
-		 */
-		public function isResolved();
-
+		public function __construct($name, $definition, $shared);
 
 		/**
 		 * Resolves the service
@@ -64,6 +25,5 @@ namespace ManaPHP\DI {
 		 * @return object
 		 */
 		public function resolve($parameters=null, $dependencyInjector=null);
-
 	}
 }
