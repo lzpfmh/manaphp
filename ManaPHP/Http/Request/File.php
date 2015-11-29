@@ -51,6 +51,8 @@ namespace ManaPHP\Http\Request {
 		 * @param string $key
 		 */
 		public function __construct($file, $key=null){
+			parent::__construct($file);
+
 			if(isset($file['name'])){
 				$this->_name =$file['name'];
 				$this->_extension =pathinfo($file['name'],PATHINFO_EXTENSION);
