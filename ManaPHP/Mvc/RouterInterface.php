@@ -4,6 +4,9 @@ namespace ManaPHP\Mvc {
 
 	/**
 	 * ManaPHP\Mvc\RouterInterface initializer
+	 *
+	 * PHP_NOTE:
+	 * 		1. remove the clear method
 	 */
 	
 	interface RouterInterface {
@@ -17,11 +20,26 @@ namespace ManaPHP\Mvc {
 
 
 		/**
+		 * Returns the name of the default module
+		 *
+		 * @return string
+		 */
+		public function getDefaultModule();
+
+		/**
 		 * Sets the default controller name
 		 *
 		 * @param string $controllerName
 		 */
 		public function setDefaultController($controllerName);
+
+
+		/**
+		 * Returns the default controller name
+		 *
+		 * @return string
+		 */
+		public function getDefaultController();
 
 
 		/**
@@ -31,19 +49,19 @@ namespace ManaPHP\Mvc {
 		 */
 		public function setDefaultAction($actionName);
 
-
 		/**
-		 * Sets an array of default paths
+		 * Returns the default action name
 		 *
-		 * @param array $defaults
+		 * @return string
 		 */
-		public function setDefaults($defaults);
+		public function getDefaultAction();
 
 
 		/**
 		 * Handles routing information received from the rewrite engine
 		 *
 		 * @param string $uri
+		 * @return boolean
 		 */
 		public function handle($uri=null);
 
@@ -52,87 +70,88 @@ namespace ManaPHP\Mvc {
 		 * Adds a route to the router on any HTTP method
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
+		 * @param array $paths
 		 * @param string $httpMethods
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function add($pattern, $paths=null, $httpMethods=null);
+		public function add($pattern, $paths, $httpMethods=null);
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is GET
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
+		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addGet($pattern, $paths=null);
+		public function addGet($pattern, $paths);
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is POST
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
+		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addPost($pattern, $paths=null);
+		public function addPost($pattern, $paths);
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is PUT
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
+		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addPut($pattern, $paths=null);
+		public function addPut($pattern, $paths);
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is DELETE
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
+		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addDelete($pattern, $paths=null);
+		public function addDelete($pattern, $paths);
 
 
 		/**
 		 * Add a route to the router that only match if the HTTP method is OPTIONS
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
+		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addOptions($pattern, $paths=null);
+		public function addOptions($pattern, $paths);
 
 
 		/**
 		 * Add a route to the router that only match if the HTTP method is PATCH
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
+		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addPatch($pattern, $paths=null);
+		public function addPatch($pattern, $paths);
 
 
 		/**
 		 * Adds a route to the router that only match if the HTTP method is HEAD
 		 *
 		 * @param string $pattern
-		 * @param string/array $paths
+		 * @param array $paths
 		 * @return \ManaPHP\Mvc\Router\RouteInterface
 		 */
-		public function addHead($pattern, $paths=null);
-
+		public function addHead($pattern, $paths);
 
 		/**
-		 * Removes all the defined routes
+		 * Mounts a group of routes in the router
+		 * @param \ManaPHP\Mvc\Router\GroupInterface
+		 * @return  \ManaPHP\Mvc\RouterInterface
 		 */
-		public function clear();
+		public function mount($group);
 
 
 		/**
@@ -142,6 +161,13 @@ namespace ManaPHP\Mvc {
 		 */
 		public function getModuleName();
 
+
+		/**
+		 * Returns processed namespace name
+		 *
+		 * @return string
+		 */
+		public function getNamespaceName();
 
 		/**
 		 * Returns processed controller name
@@ -176,14 +202,6 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Return the sub expressions in the regular expression matched
-		 *
-		 * @return array
-		 */
-		public function getMatches();
-
-
-		/**
 		 * Check if the router matches any of the defined routes
 		 *
 		 * @return bool
@@ -197,32 +215,5 @@ namespace ManaPHP\Mvc {
 		 * @return \ManaPHP\Mvc\Router\RouteInterface[]
 		 */
 		public function getRoutes();
-
-
-		/**
-		 * Returns a route object by its id
-		 *
-		 * @param string $id
-		 * @return \ManaPHP\Mvc\Router\RouteInterface
-		 */
-		public function getRouteById($id);
-
-
-		/**
-		 * Returns a route object by its name
-		 *
-		 * @param string $name
-		 * @return \ManaPHP\Mvc\Router\RouteInterface
-		 */
-		public function getRouteByName($name);
-
-
-		/**
-		 * Returns whether controller name should not be mangled
-		 *
-		 * @return bool
-		 */
-		public function isExactControllerName();
-
 	}
 }
