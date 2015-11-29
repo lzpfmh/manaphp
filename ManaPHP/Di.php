@@ -2,13 +2,16 @@
 
 namespace ManaPHP {
 
+	use ManaPHP\Di\Exception;
+	use ManaPHP\Di\Service;
+
 	/**
-	 * ManaPHP\DI
+	 * ManaPHP\Di
 	 *
-	 * ManaPHP\DI is a component that implements Dependency Injection/Service Location
+	 * ManaPHP\Di is a component that implements Dependency Injection/Service Location
 	 * of services and it's itself a container for them.
 	 *
-	 * Since ManaPHP is highly decoupled, ManaPHP\DI is essential to integrate the different
+	 * Since ManaPHP is highly decoupled, ManaPHP\Di is essential to integrate the different
 	 * components of the framework. The developer can also use this component to inject dependencies
 	 * and manage global instances of the different classes used in the application.
 	 *
@@ -20,7 +23,7 @@ namespace ManaPHP {
 	 * Additionally, this pattern increases testability in the code, thus making it less prone to errors.
 	 *
 	 *<code>
-	 * $di = new ManaPHP\DI();
+	 * $di = new ManaPHP\Di();
 	 *
 	 * //Using a string definition
 	 * $di->set('request', 'ManaPHP\Http\Request', true);
@@ -37,13 +40,43 @@ namespace ManaPHP {
 	
 	class Di implements \ManaPHP\DiInterface {
 
+		/**
+		 * List of registered services
+		 * @var \ManaPHP\Di\ServiceInterface[]
+		 */
+		protected $_services;
+
+		/**
+		 * List of shared instances
+		 */
+		protected $_sharedInstances;
+
+		/**
+		 * To know if the latest resolved instance was shared or not
+		 */
+		protected $_freshInstance = false;
+
+		/**
+		 * Events Manager
+		 *
+		 * @var \ManaPHP\Events\ManagerInterface
+		 */
+		protected $_eventsManager;
+
+		/**
+		 * Latest DI build
+		 */
 		protected static $_default;
 
 		/**
-		 * \ManaPHP\DI constructor
+		 * \ManaPHP\Di constructor
 		 *
 		 */
-		public function __construct(){ }
+		public function __construct(){
+			if(self::$_default ===null){
+				self::$_default =$this;
+			}
+		}
 
 
 		/**
@@ -52,9 +85,30 @@ namespace ManaPHP {
 		 * @param string $name
 		 * @param mixed $definition
 		 * @param boolean $shared
-		 * @return \ManaPHP\DI\ServiceInterface
+		 * @return \ManaPHP\Di\ServiceInterface
 		 */
-		public function set($name, $definition, $shared=null){ }
+		public function set($name, $definition, $shared=false){
+			return $this->_services[$name] =new Service($name, $definition, $shared);
+		}
+
+
+		/**
+		 * Attempts to register a service in the services container
+		 * Only is successful if a service hasn't been registered previously
+		 * with the same name
+		 *
+		 * @param string $name
+		 * @param mixed $definition
+		 * @param boolean $shared
+		 * @return \ManaPHP\Di\ServiceInterface
+		 */
+		public function attempt($name, $definition, $shared = false){
+			if($this->has($name)){
+				return false;
+			}else{
+				return $this->set($name,$definition,$shared);
+			}
+		}
 
 
 		/**
@@ -62,35 +116,28 @@ namespace ManaPHP {
 		 *
 		 * @param string $name
 		 */
-		public function remove($name){ }
+		public function remove($name){
+			unset($this->_services[$name]);
+			unset($this->_sharedInstances[$name]);
+		}
+
 
 
 		/**
-		 * Returns a service definition without resolving
+		 * Returns a \ManaPHP\Di\Service instance
 		 *
 		 * @param string $name
-		 * @return mixed
+		 * @return \ManaPHP\Di\ServiceInterface
+		 * @throws \ManaPHP\Di\Exception
 		 */
-		public function getRaw($name){ }
+		public function getService($name){
+			if(isset($this->_services[$name])){
+				return $this->_services[$name];
+			}else{
+				throw new Exception("Service '" . $name . "' wasn't found in the dependency injection container");
+			}
+		}
 
-
-		/**
-		 * Returns a \ManaPHP\DI\Service instance
-		 *
-		 * @param string $name
-		 * @return \ManaPHP\DI\ServiceInterface
-		 */
-		public function getService($name){ }
-
-
-		/**
-		 * Sets a service using a raw \ManaPHP\DI\Service definition
-		 *
-		 * @param string|\ManaPHP\Di\ServiceInterface $raw_definition_or_name
-		 * @param \ManaPHP\DI\ServiceInterface $rawDefinition
-		 * @return \ManaPHP\DI\ServiceInterface
-		 */
-		public function setService($rawDefinition){ }
 
 
 		/**
@@ -99,8 +146,35 @@ namespace ManaPHP {
 		 * @param string $name
 		 * @param array $parameters
 		 * @return mixed
+		 * @throws \ManaPHP\Di\Exception
 		 */
-		public function get($name, $parameters=null){ }
+		public function get($name, $parameters=null){
+			if(isset($this->_services[$name])){
+				/**
+				 * The service is registered in the DI
+				 */
+				$instance =$this->_services[$name]->resolve($parameters, $this);
+			}else{
+				/**
+				 * The DI also acts as builder for any class even if it isn't defined in the DI
+				 */
+				if(!class_exists($name)){
+					throw new Exception("Service '" . $name . "' wasn't found in the dependency injection container");
+				}
+
+				if(is_array($parameters)){
+					$instance=new $name($parameters);
+				}else{
+					$instance =new $name();
+				}
+			}
+
+			if(is_object($instance) &&$instance instanceof \ManaPHP\Di\InjectionAwareInterface){
+				$instance->setDI($this);
+			}
+
+			return $instance;
+		}
 
 
 		/**
@@ -110,7 +184,19 @@ namespace ManaPHP {
 		 * @param array $parameters
 		 * @return mixed
 		 */
-		public function getShared($name, $parameters=null){ }
+		public function getShared($name, $parameters=null){
+			if(isset($this->_sharedInstances[$name])){
+				$instance =$this->_sharedInstances[$name];
+				$this->_freshInstance =false;
+			}else{
+				$instance =$this->get($name, $parameters);
+
+				$this->_sharedInstances[$name]=$instance;
+				$this->_freshInstance =true;
+			}
+
+			return $instance;
+		}
 
 
 		/**
@@ -119,23 +205,27 @@ namespace ManaPHP {
 		 * @param string $name
 		 * @return boolean
 		 */
-		public function has($name){ }
-
-
+		public function has($name){
+			return isset($this->_services[$name]);
+		}
 		/**
 		 * Check whether the last service obtained via getShared produced a fresh instance or an existing one
 		 *
 		 * @return boolean
 		 */
-		public function wasFreshInstance(){ }
+		public function wasFreshInstance(){
+			return $this->_freshInstance;
+		}
 
 
 		/**
 		 * Return the services registered in the DI
 		 *
-		 * @return \ManaPHP\DI\Service[]
+		 * @return \ManaPHP\Di\Service[]
 		 */
-		public function getServices(){ }
+		public function getServices(){
+			return $this->_services;
+		}
 
 
 		/**
@@ -143,7 +233,9 @@ namespace ManaPHP {
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 */
-		public static function setDefault($dependencyInjector){ }
+		public static function setDefault($dependencyInjector){
+			self::$_default =$dependencyInjector;
+		}
 
 
 		/**
@@ -151,26 +243,17 @@ namespace ManaPHP {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public static function getDefault(){ }
+		public static function getDefault(){
+			return self::$_default;
+		}
 
 
 		/**
 		 * Resets the internal default DI
 		 */
-		public static function reset(){ }
-
-
-		/**
-		 * Attempts to register a service in the services container
-		 * Only is successful if a service has not been registered previously
-		 * with the same name
-		 *
-		 * @param string $name
-		 * @param mixed $definition
-		 * @param boolean $shared
-		 * @return \ManaPHP\DI\ServiceInterface
-		 */
-		public function attempt($name, $definition, $shared=null){ }
+		public static function reset(){
+			unset(self::$_default);
+		}
 
 
 		/**
@@ -178,14 +261,11 @@ namespace ManaPHP {
 		 *
 		 * @param string $name
 		 * @param mixed $definition
-		 * @return \ManaPHP\DI\ServiceInterface
+		 * @return \ManaPHP\Di\ServiceInterface
 		 */
-		public function setShared($name, $definition){ }
-
-
-		public function setRaw($rawDefinition){ }
-
-
+		public function setShared($name, $definition){
+			return $this->_services[$name] =new Service($name, $definition, true);
+		}
 		/**
 		 * Check if a service is registered using the array syntax.
 		 * Alias for \ManaPHP\Di::has()
@@ -193,7 +273,9 @@ namespace ManaPHP {
 		 * @param string $name
 		 * @return boolean
 		 */
-		public function offsetExists($property){ }
+		public function offsetExists($name){
+			return $this->has($name);
+		}
 
 
 		/**
@@ -205,9 +287,12 @@ namespace ManaPHP {
 		 *</code>
 		 *
 		 * @param string $name
-		 * @param mixed $definition
+		 * @param callable|string $definition
+		 * @return void
 		 */
-		public function offsetSet($property, $value){ }
+		public function offsetSet($name, $definition){
+			$this->setShared($name,$definition);
+		}
 
 
 		/**
@@ -221,7 +306,9 @@ namespace ManaPHP {
 		 * @param string $name
 		 * @return mixed
 		 */
-		public function offsetGet($property){ }
+		public function offsetGet($name){
+			return $this->getShared($name);
+		}
 
 
 		/**
@@ -230,7 +317,9 @@ namespace ManaPHP {
 		 *
 		 * @param string $name
 		 */
-		public function offsetUnset($property){ }
+		public function offsetUnset($name){
+			$this->remove($name);
+		}
 
 
 		/**
@@ -238,12 +327,11 @@ namespace ManaPHP {
 		 *
 		 * @param string $method
 		 * @param array $arguments
-		 * @return mixed
+		 * @return void
+		 * @throws \ManaPHP\Di\Exception
 		 */
-		public function __call($method, $arguments=null){ }
-
-
-		public function __clone(){ }
-
+		public function __call($method, $arguments=null){
+			throw new Exception("Call to undefined method or service '" . $method . "'");
+		}
 	}
 }
