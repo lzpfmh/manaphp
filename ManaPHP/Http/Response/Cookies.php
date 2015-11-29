@@ -1,7 +1,7 @@
 <?php 
 
 namespace ManaPHP\Http\Response {
-
+	use \ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Http\Response\Cookies
 	 *
@@ -9,7 +9,7 @@ namespace ManaPHP\Http\Response {
 	 * A cookies bag is automatically registered as part of the 'response' service in the DI
 	 */
 	
-	class Cookies implements \ManaPHP\Http\Response\CookiesInterface, \ManaPHP\Di\InjectionAwareInterface {
+	class Cookies implements CookiesInterface, InjectionAwareInterface {
 
 		/**
 		 * @var \ManaPHP\DiInterface

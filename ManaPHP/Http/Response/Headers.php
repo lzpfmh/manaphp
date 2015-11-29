@@ -8,7 +8,7 @@ namespace ManaPHP\Http\Response {
 	 * This class is a bag to manage the response headers
 	 */
 	
-	class Headers implements \ManaPHP\Http\Response\HeadersInterface {
+	class Headers implements HeadersInterface {
 
 		protected $_headers=[];
 

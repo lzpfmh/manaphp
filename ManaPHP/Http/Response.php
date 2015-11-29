@@ -6,7 +6,8 @@ namespace ManaPHP\Http {
 	use ManaPHP\Http\Response\Headers;
 	use ManaPHP\Mvc\View;
 	use ManaPHP\Mvc\ViewInterface;
-	use \ManaPHP\Di\InjectionAwareInterface;
+	use ManaPHP\Di\InjectionAwareInterface;
+	use ManaPHP\Di;
 
 	/**
 	 * ManaPHP\Http\Response
@@ -80,7 +81,7 @@ namespace ManaPHP\Http {
 		 */
 		public function getDI(){
 			if(!is_object($this->_dependencyInjector)){
-				$this->_dependencyInjector =\ManaPHP\Di::getDefault();
+				$this->_dependencyInjector =Di::getDefault();
 			}
 			return $this->_dependencyInjector;
 		}

@@ -3,7 +3,8 @@
 namespace ManaPHP\Mvc {
 
 	use ManaPHP\Mvc\Dispatcher\Exception;
-
+	use ManaPHP\Events\EventsAwareInterface;
+	use ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Mvc\Dispatcher
 	 *
@@ -28,7 +29,7 @@ namespace ManaPHP\Mvc {
 	 *</code>
 	 */
 	
-	class Dispatcher extends \ManaPHP\Dispatcher implements \ManaPHP\Events\EventsAwareInterface, \ManaPHP\Di\InjectionAwareInterface, \ManaPHP\DispatcherInterface, \ManaPHP\Mvc\DispatcherInterface {
+	class Dispatcher extends \ManaPHP\Dispatcher implements EventsAwareInterface, InjectionAwareInterface, DispatcherInterface {
 
 		const EXCEPTION_NO_DI = 0;
 

@@ -11,7 +11,7 @@ namespace ManaPHP\Events {
 	 *
 	 */
 	
-	class Manager implements \ManaPHP\Events\ManagerInterface {
+	class Manager implements ManagerInterface {
 
 		/**
 		 * @var array

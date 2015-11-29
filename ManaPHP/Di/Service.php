@@ -14,7 +14,7 @@ namespace ManaPHP\Di {
 	 *
 	 */
 	
-	class Service implements \ManaPHP\Di\ServiceInterface {
+	class Service implements ServiceInterface {
 
 		/**
 		 * @var string

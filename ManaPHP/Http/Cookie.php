@@ -1,6 +1,7 @@
 <?php 
 
 namespace ManaPHP\Http {
+	use \ManaPHP\Di\InjectionAwareInterface;
 
 	/**
 	 * ManaPHP\Http\Cookie
@@ -8,7 +9,7 @@ namespace ManaPHP\Http {
 	 * Provide OO wrappers to manage a HTTP cookie
 	 */
 	
-	class Cookie implements \ManaPHP\Di\InjectionAwareInterface {
+	class Cookie implements InjectionAwareInterface {
 
 		protected $_readed;
 

@@ -4,7 +4,7 @@ namespace ManaPHP {
 
 	use ManaPHP\Di\Exception;
 	use ManaPHP\Di\Service;
-
+	use ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Di
 	 *
@@ -38,7 +38,7 @@ namespace ManaPHP {
 	 *</code>
 	 */
 	
-	class Di implements \ManaPHP\DiInterface {
+	class Di implements DiInterface {
 
 		/**
 		 * List of registered services
@@ -169,7 +169,7 @@ namespace ManaPHP {
 				}
 			}
 
-			if(is_object($instance) &&$instance instanceof \ManaPHP\Di\InjectionAwareInterface){
+			if(is_object($instance) &&$instance instanceof InjectionAwareInterface){
 				$instance->setDI($this);
 			}
 

@@ -1,6 +1,7 @@
 <?php 
 
 namespace ManaPHP\Di {
+	use ManaPHP\Di;
 
 	/**
 	 * ManaPHP\Di\FactoryDefault
@@ -10,7 +11,7 @@ namespace ManaPHP\Di {
 	 * to register each service individually providing a full stack framework
 	 */
 	
-	class FactoryDefault extends \ManaPHP\Di {
+	class FactoryDefault extends Di {
 
 		/**
 		 * \ManaPHP\Di\FactoryDefault constructor

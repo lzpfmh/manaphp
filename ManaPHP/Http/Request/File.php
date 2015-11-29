@@ -26,7 +26,7 @@ namespace ManaPHP\Http\Request {
 	 *</code>
 	 */
 	
-	class File extends \SplFileInfo implements \ManaPHP\Http\Request\FileInterface {
+	class File extends \SplFileInfo implements FileInterface {
 
 		protected $_name;
 
