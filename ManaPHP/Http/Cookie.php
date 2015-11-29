@@ -8,7 +8,7 @@ namespace ManaPHP\Http {
 	 * Provide OO wrappers to manage a HTTP cookie
 	 */
 	
-	class Cookie implements \ManaPHP\DI\InjectionAwareInterface {
+	class Cookie implements \ManaPHP\Di\InjectionAwareInterface {
 
 		protected $_readed;
 
@@ -20,6 +20,9 @@ namespace ManaPHP\Http {
 
 		protected $_filter;
 
+		/**
+		 * @var string
+		 */
 		protected $_name;
 
 		protected $_value;
@@ -45,15 +48,27 @@ namespace ManaPHP\Http {
 		 * @param string $domain
 		 * @param boolean $httpOnly
 		 */
-		public function __construct($name, $value=null, $expire=null, $path=null, $secure=null, $domain=null, $httpOnly=null){ }
+		public function __construct($name, $value=null, $expire=null, $path=null, $secure=null, $domain=null, $httpOnly=null){
+			$this->_name =$name;
+			$this->_value =$value;
+			$this->_expire =$expire;
+			$this->_path =$path;
+			$this->_secure=$secure;
+			$this->_domain=$domain;
+			$this->_httpOnly=$httpOnly;
+		}
 
 
 		/**
 		 * Sets the dependency injector
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
+		 * @return \ManaPHP\Http\CookieInterface
 		 */
-		public function setDI($dependencyInjector){ }
+		public function setDI($dependencyInjector){
+			$this->_dependencyInjector =$dependencyInjector;
+			return $this;
+		}
 
 
 		/**
@@ -61,7 +76,9 @@ namespace ManaPHP\Http {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public function getDI(){ }
+		public function getDI(){
+			return $this->_dependencyInjector;
+		}
 
 
 		/**
@@ -70,7 +87,9 @@ namespace ManaPHP\Http {
 		 * @param string $value
 		 * @return \ManaPHP\Http\Cookie
 		 */
-		public function setValue($value){ }
+		public function setValue($value){
+			$this->_value =$value;
+		}
 
 
 		/**
@@ -80,7 +99,9 @@ namespace ManaPHP\Http {
 		 * @param string $defaultValue
 		 * @return mixed
 		 */
-		public function getValue($filters=null, $defaultValue=null){ }
+		public function getValue($filters=null, $defaultValue=null){
+
+		}
 
 
 		/**
