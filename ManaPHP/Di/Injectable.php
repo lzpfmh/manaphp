@@ -8,28 +8,28 @@ namespace ManaPHP\Di {
 	/**
 	 * ManaPHP\Di\Injectable
 	 *
-	 * @property \ManaPHP\Mvc\Dispatcher|\ManaPHP\Mvc\DispatcherInterface $dispatcher;
-	 * @property \ManaPHP\Mvc\Router|\ManaPHP\Mvc\RouterInterface $router
-	 * @property \ManaPHP\Mvc\Url|\ManaPHP\Mvc\UrlInterface $url
-	 * @property \ManaPHP\Http\Request|\ManaPHP\Http\RequestInterface $request
-	 * @property \ManaPHP\Http\Response|\ManaPHP\Http\ResponseInterface $response
-	 * @property \ManaPHP\Http\Response\Cookies|\ManaPHP\Http\Response\CookiesInterface $cookies
-	 * @property \ManaPHP\Filter|\ManaPHP\FilterInterface $filter
+	 * @property \ManaPHP\Mvc\DispatcherInterface $dispatcher;
+	 * @property \ManaPHP\Mvc\RouterInterface $router
+	 * @property \ManaPHP\Mvc\UrlInterface $url
+	 * @property \ManaPHP\Http\RequestInterface $request
+	 * @property \ManaPHP\Http\ResponseInterface $response
+	 * @property \ManaPHP\Http\Response\CookiesInterface $cookies
+	 * @property \ManaPHP\FilterInterface $filter
 	 * @property \ManaPHP\Flash\Direct $flash
 	 * @property \ManaPHP\Flash\Session $flashSession
 	 * @property \ManaPHP\Session\Adapter\Files|\ManaPHP\Session\Adapter|\ManaPHP\Session\AdapterInterface $session
-	 * @property \ManaPHP\Events\Manager|\ManaPHP\Events\ManagerInterface $eventsManager
+	 * @property \ManaPHP\Events\ManagerInterface $eventsManager
 	 * @property \ManaPHP\Db\AdapterInterface $db
 	 * @property \ManaPHP\Security $security
-	 * @property \ManaPHP\Crypt|\ManaPHP\CryptInterface $crypt
-	 * @property \ManaPHP\Escaper|\ManaPHP\EscaperInterface $escaper
-	 * @property \ManaPHP\Mvc\Model\Manager|\ManaPHP\Mvc\Model\ManagerInterface $modelsManager
-	 * @property \ManaPHP\Mvc\Model\MetaData\Memory|\ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
-	 * @property \ManaPHP\Mvc\Model\Transaction\Manager|\ManaPHP\Mvc\Model\Transaction\ManagerInterface $transactionManager
+	 * @property \ManaPHP\CryptInterface $crypt
+	 * @property \ManaPHP\EscaperInterface $escaper
+	 * @property \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
+	 * @property \ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
+	 * @property \ManaPHP\Mvc\Model\Transaction\ManagerInterface $transactionManager
 	 * @property \ManaPHP\Assets\Manager $assets
 	 * @property \ManaPHP\Di|\ManaPHP\DiInterface $di
-	 * @property \ManaPHP\Session\Bag|\ManaPHP\Session\BagInterface $persistent
-	 * @property \ManaPHP\Mvc\View|\ManaPHP\Mvc\ViewInterface $view
+	 * @property \ManaPHP\Session\BagInterface $persistent
+	 * @property \ManaPHP\Mvc\ViewInterface $view
 	 */
 	
 	abstract class Injectable implements InjectionAwareInterface, EventsAwareInterface {
