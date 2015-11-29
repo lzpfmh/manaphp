@@ -19,14 +19,6 @@ namespace ManaPHP\Http {
 
 
 		/**
-		 * Returns headers set by the user
-		 *
-		 * @return \ManaPHP\Http\Response\Headers
-		 */
-		public function getHeaders();
-
-
-		/**
 		 * Overwrites a header in the response
 		 *
 		 * @param string $name
@@ -43,14 +35,6 @@ namespace ManaPHP\Http {
 		 * @return \ManaPHP\Http\ResponseInterface
 		 */
 		public function setRawHeader($header);
-
-
-		/**
-		 * Resets all the stablished headers
-		 *
-		 * @return \ManaPHP\Http\ResponseInterface
-		 */
-		public function resetHeaders();
 
 
 		/**
@@ -88,7 +72,7 @@ namespace ManaPHP\Http {
 		 * @param int $statusCode
 		 * @return \ManaPHP\Http\ResponseInterface
 		 */
-		public function redirect($location=null, $externalRedirect=null, $statusCode=null);
+		public function redirect($location, $externalRedirect=null, $statusCode=null);
 
 
 		/**
@@ -108,9 +92,10 @@ namespace ManaPHP\Http {
 		 *</code>
 		 *
 		 * @param string $content
+		 * @param int $jsonOptions
 		 * @return \ManaPHP\Http\ResponseInterface
 		 */
-		public function setJsonContent($content);
+		public function setJsonContent($content, $jsonOptions=null);
 
 
 		/**
@@ -137,7 +122,12 @@ namespace ManaPHP\Http {
 		 */
 		public function sendHeaders();
 
-
+		/**
+		 * Sets a cookies bag for the response externally
+		 * @param \ManaPHP\Http\Response\CookiesInterface $cookies
+		 * @return \ManaPHP\Http\ResponseInterface
+		 */
+		public function setCookies($cookies);
 		/**
 		 * Sends cookies to the client
 		 *
@@ -159,6 +149,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string $filePath
 		 * @param string $attachmentName
+		 * @return \ManaPHP\Http\ResponseInterface
 		 */
 		public function setFileToSend($filePath, $attachmentName=null);
 
