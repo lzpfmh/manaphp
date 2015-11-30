@@ -2,6 +2,12 @@
 
 namespace ManaPHP\Mvc {
 
+	use ManaPHP\Di;
+	use ManaPHP\Mvc\Model\Exception;
+	use \ManaPHP\Mvc\Model\ResultInterface;
+	use \ManaPHP\Di\InjectionAwareInterface;
+	use ManaPHP\Mvc\Model\Resultset;
+
 	/**
 	 * ManaPHP\Mvc\Model
 	 *
@@ -35,7 +41,7 @@ namespace ManaPHP\Mvc {
 	 *
 	 */
 	
-	abstract class Model implements \ManaPHP\Mvc\ModelInterface, \ManaPHP\Mvc\Model\ResultInterface, \ManaPHP\Di\InjectionAwareInterface, \Serializable {
+	abstract class Model implements ModelInterface, ResultInterface, InjectionAwareInterface, \Serializable {
 
 		const OP_NONE = 0;
 
@@ -53,6 +59,9 @@ namespace ManaPHP\Mvc {
 
 		protected $_dependencyInjector;
 
+		/**
+		 * @var \ManaPHP\Mvc\Model\ManagerInterface
+		 */
 		protected $_modelsManager;
 
 		protected $_modelsMetaData;
@@ -83,15 +92,31 @@ namespace ManaPHP\Mvc {
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 * @param \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
 		 */
-		final public function __construct($dependencyInjector=null, $modelsManager=null){ }
+		final public function __construct($dependencyInjector=null, $modelsManager=null){
+			$this->_dependencyInjector=$dependencyInjector===null?Di::getDefault():$dependencyInjector;
+			$this->_modelsManager=$modelsManager ===null?$this->_dependencyInjector->getShared('modelsManager'):$modelsManager;
+
+			/**
+			 * The manager always initializes the object
+			 */
+			$this->_modelsManager->initialize($this);
+
+			if(method_exists($this,'onConstruct')){
+				$this->onConstruct();
+			}
+		}
 
 
 		/**
 		 * Sets the dependency injection container
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
+		 * @return \ManaPHP\Mvc\ModelInterface
 		 */
-		public function setDI($dependencyInjector){ }
+		public function setDI($dependencyInjector){
+			$this->_dependencyInjector =$dependencyInjector;
+			return $this;
+		}
 
 
 		/**
@@ -99,15 +124,21 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public function getDI(){ }
+		public function getDI(){
+			return $this->_dependencyInjector;
+		}
 
 
 		/**
 		 * Sets a custom events manager
 		 *
 		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
+		 * @return \ManaPHP\Mvc\ModelInterface
 		 */
-		protected function setEventsManager(){ }
+		protected function setEventsManager($eventsManager){
+			$this->_modelsManager->setCustomEventsManager($this,$eventsManager);
+			return $this;
+		}
 
 
 		/**
@@ -115,15 +146,19 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return \ManaPHP\Events\ManagerInterface
 		 */
-		protected function getEventsManager(){ }
+		protected function getEventsManager(){
+			return $this->_modelsManager->getCustomEventsManager($this);
+		}
 
 
 		/**
 		 * Returns the models meta-data service related to the entity instance
 		 *
 		 * @return \ManaPHP\Mvc\Model\MetaDataInterface
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function getModelsMetaData(){ }
+		public function getModelsMetaData(){
+		}
 
 
 		/**
@@ -131,7 +166,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return \ManaPHP\Mvc\Model\ManagerInterface
 		 */
-		public function getModelsManager(){ }
+		public function getModelsManager(){
+			return $this->_modelsManager;
+		}
 
 
 		/**
@@ -182,7 +219,8 @@ namespace ManaPHP\Mvc {
 		 * @param string $source
 		 * @return \ManaPHP\Mvc\Model
 		 */
-		protected function setSource($source){ }
+		protected function setSource($source){
+		}
 
 
 		/**
@@ -214,27 +252,36 @@ namespace ManaPHP\Mvc {
 		 * Sets the DependencyInjection connection service name
 		 *
 		 * @param string $connectionService
-		 * @return \ManaPHP\Mvc\Model
+		 * @return \ManaPHP\Mvc\ModelInterface
 		 */
-		public function setConnectionService($connectionService){ }
+		public function setConnectionService($connectionService){
+			$this->_modelsManager->setConnectionService($this,$connectionService);
+			return $this;
+		}
 
 
 		/**
 		 * Sets the DependencyInjection connection service name used to read data
 		 *
 		 * @param string $connectionService
-		 * @return \ManaPHP\Mvc\Model
+		 * @return \ManaPHP\Mvc\ModelInterface
 		 */
-		public function setReadConnectionService($connectionService){ }
+		public function setReadConnectionService($connectionService){
+			$this->_modelsManager->setReadConnectionService($this,$connectionService);
+			return $this;
+		}
 
 
 		/**
 		 * Sets the DependencyInjection connection service name used to write data
 		 *
 		 * @param string $connectionService
-		 * @return \ManaPHP\Mvc\Model
+		 * @return \ManaPHP\Mvc\ModelInterface
 		 */
-		public function setWriteConnectionService($connectionService){ }
+		public function setWriteConnectionService($connectionService){
+			$this->_modelsManager->setWriteConnectionService($this,$connectionService);
+			return $this;
+		}
 
 
 		/**
@@ -242,7 +289,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return string
 		 */
-		public function getReadConnectionService(){ }
+		public function getReadConnectionService(){
+			return $this->_modelsManager->getReadConnectionService($this);
+		}
 
 
 		/**
@@ -250,16 +299,21 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return string
 		 */
-		public function getWriteConnectionService(){ }
+		public function getWriteConnectionService(){
+			return $this->_modelsManager->getWriteConnectionService($this);
+		}
 
 
 		/**
 		 * Sets the dirty state of the object using one of the DIRTY_STATE_* constants
 		 *
 		 * @param int $dirtyState
-		 * @return \ManaPHP\Mvc\Model
+		 * @return \ManaPHP\Mvc\ModelInterface
 		 */
-		public function setDirtyState($dirtyState){ }
+		public function setDirtyState($dirtyState){
+			$this->_dirtyState =$dirtyState;
+			return $this;
+		}
 
 
 		/**
@@ -267,7 +321,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return int
 		 */
-		public function getDirtyState(){ }
+		public function getDirtyState(){
+			return $this->_dirtyState;
+		}
 
 
 		/**
@@ -275,7 +331,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return \ManaPHP\Db\AdapterInterface
 		 */
-		public function getReadConnection(){ }
+		public function getReadConnection(){
+			return $this->_modelsManager->getReadConnection($this);
+		}
 
 
 		/**
@@ -283,7 +341,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return \ManaPHP\Db\AdapterInterface
 		 */
-		public function getWriteConnection(){ }
+		public function getWriteConnection(){
+			return $this->_modelsManager->getWriteConnection($this);
+		}
 
 
 		/**
@@ -300,9 +360,42 @@ namespace ManaPHP\Mvc {
 		 * @param \ManaPHP\Mvc\Model $object
 		 * @param array $data
 		 * @param array $columnMap
+		 * @param array $whiteList
 		 * @return \ManaPHP\Mvc\Model
 		 */
-		public function assign($data, $columnMap=null){ }
+		public function assign($data, $columnMap=null,$whiteList=null){
+			if(is_array($columnMap)){
+				$data_mapped=[];
+				foreach($data as $k=>$v){
+					if(isset($columnMap[$k])){
+						$data_mapped[$columnMap[$k]]=$v;
+					}
+				}
+			}else{
+				$data_mapped=$data;
+			}
+
+			if(count($data_mapped) ===0){
+				return $this;
+			}
+
+			$metaData =$this->getModelsMetaData();
+			foreach($metaData->getAttributes($this) as $attribute){
+				$attributeField=$attribute;
+
+				if(isset($data_mapped[$attributeField])){
+					if(is_array($whiteList)){
+						if(!in_array($attributeField,$whiteList,true)){
+							continue;
+						}
+					}
+					$this->$attributeField=$data_mapped[$attributeField];
+
+				}
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -322,8 +415,44 @@ namespace ManaPHP\Mvc {
 		 * @param int $dirtyState
 		 * @param boolean $keepSnapshots
 		 * @return \ManaPHP\Mvc\Model
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public static function cloneResultMap($base, $data, $columnMap, $dirtyState=null, $keepSnapshots=null){ }
+		public static function cloneResultMap($base, $data, $columnMap, $dirtyState=null, $keepSnapshots=null){
+			$instance =clone $base;
+
+			$instance->setDirtyState($dirtyState);
+
+			foreach($data as $k=>$v){
+				if(is_string($k)){
+					if(!is_array($columnMap)){
+						$instance->$k=$v;
+						continue;
+					}
+
+					if(!isset($columnMap[$k])){
+						throw new Exception("Column '" . $k . "' doesn't make part of the column map");
+					}
+
+					$instance->{$columnMap[$k]}=$v;
+				}
+			}
+
+			/**
+			 * Models that keep snapshots store the original data
+			 */
+			if($keepSnapshots){
+				$instance->setSnapshotData($data,$columnMap);
+			}
+
+			/**
+			 * Call afterFetch, this allows the developer to execute actions after a record is fetched from the database
+			 */
+			if(method_exists($instance, 'afterFetch')) {
+				$instance->afterFetch();
+			}
+
+			return $instance;
+		}
 
 
 		/**
@@ -333,8 +462,35 @@ namespace ManaPHP\Mvc {
 		 * @param array $columnMap
 		 * @param int $hydrationMode
 		 * @return mixed
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public static function cloneResultMapHydrate($data, $columnMap, $hydrationMode){ }
+		public static function cloneResultMapHydrate($data, $columnMap, $hydrationMode){
+			if(!is_array($columnMap)){
+				if($hydrationMode ===Resultset::HYDRATE_ARRAYS){
+					return $data;
+				}
+			}
+
+			$hydrate=new \stdClass();
+
+			foreach($data as $k=>$v){
+				if(is_string($k)){
+					if(is_array($columnMap)){
+						if(!isset($columnMap[$k])){
+							throw new Exception("Column '" . $k . "' doesn't make part of the column map")
+						}
+
+						$hydrate->{$columnMap[$k]}=$v;
+					}
+				}
+			}
+
+			if($hydrationMode ===Resultset::HYDRATE_ARRAYS){
+				return (array)$hydrate;
+			}else{
+				return $hydrate;
+			}
+		}
 
 
 		/**
@@ -351,9 +507,30 @@ namespace ManaPHP\Mvc {
 		 * @param \ManaPHP\Mvc\Model $base
 		 * @param array $data
 		 * @param int $dirtyState
-		 * @return \ManaPHP\Mvc\Model
+		 * @return \ManaPHP\Mvc\ModelInterface
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public static function cloneResult($base, $data, $dirtyState=null){ }
+		public static function cloneResult($base, $data, $dirtyState=null){
+			$instance =clone $base;
+
+			$instance->setDirtyState($dirtyState);
+
+			foreach($data as $k=>$v){
+				if(!is_string($k)){
+					throw new Exception('Invalid key in array data provided to dumpResult()');
+				}
+				$instance->{$k} =$v;
+			}
+
+			/**
+			 * Call afterFetch, this allows the developer to execute actions after a record is fetched from the database
+			 */
+			if(method_exists($instance,'afterFetch')){
+				$instance->afterFetch();
+			}
+
+			return $instance;
+		}
 
 
 		/**
@@ -385,7 +562,32 @@ namespace ManaPHP\Mvc {
 		 * @param 	array $parameters
 		 * @return  \ManaPHP\Mvc\Model\ResultsetInterface
 		 */
-		public static function find($parameters=null){ }
+		public static function find($parameters=null){
+			/**
+			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
+			 */
+			$dependencyInjector=Di::getDefault();
+			$modelsManager =$dependencyInjector->getShared('modelsManager');
+
+			if(is_array($parameters)){
+				$params =$parameters;
+			}elseif(is_null($parameters)){
+				$params=[];
+			}else{
+				$params=[];
+				$params[]=$parameters;
+			}
+
+			$builder =$modelsManager->createBuilder($params);
+			$builder->from(get_called_class());
+			$query =$builder->getQuery();
+
+			if(isset($params['bind'])){
+				if(is_array($params['bind'])){
+					$query->
+				}
+			}
+		}
 
 
 		/**
