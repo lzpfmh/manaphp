@@ -31,8 +31,25 @@ namespace ManaPHP\Mvc\Model {
 		 * Set default bind parameters
 		 *
 		 * @param array $bindParams
-		 * @return \ManaPHP\Mvc\Model\Query
+		 * @param boolean $merge
+		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
-		public function setBindParams($bindParams){ }
+		public function setBindParams($bindParams,$merge = false);
+
+		/**
+		 * Sets the cache parameters of the query
+		 *
+		 * @param array $cacheOptions
+		 * @return \ManaPHP\Mvc\Model\QueryInterface
+		 */
+		public function cache($cacheOptions);
+
+		/**
+		 * Tells to the query if only the first row in the resultset must be returned
+		 *
+		 * @param boolean $uniqueRow
+		 * @return \ManaPHP\Mvc\Model\QueryInterface
+		 */
+		public function setUniqueRow($uniqueRow);
 	}
 }
