@@ -9,15 +9,6 @@ namespace ManaPHP\Mvc {
 	interface ModelInterface {
 
 		/**
-		 * Sets a transaction related to the Model instance
-		 *
-		 * @param \ManaPHP\Mvc\Model\TransactionInterface $transaction
-		 * @return \ManaPHP\Mvc\ModelInterface
-		 */
-		public function setTransaction($transaction);
-
-
-		/**
 		 * Returns table name mapped in the model
 		 *
 		 * @return string
