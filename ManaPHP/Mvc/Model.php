@@ -80,8 +80,6 @@ namespace ManaPHP\Mvc {
 
 		protected $_dirtyState;
 
-		protected $_transaction;
-
 		protected $_uniqueKey;
 
 		protected $_uniqueParams;
@@ -92,6 +90,9 @@ namespace ManaPHP\Mvc {
 
 		protected $_related;
 
+		/**
+		 * @var array
+		 */
 		protected $_snapshot;
 
 		/**
@@ -167,14 +168,7 @@ namespace ManaPHP\Mvc {
 		 */
 		public function getModelsMetaData(){
 			if(!is_object($this->_modelsMetaData)){
-				if(!is_object($this->_dependencyInjector)){
-					throw new Exception('A dependency injector container is required to obtain the services related to the ORM');
-				}
-
 				$this->_modelsMetaData =$this->_dependencyInjector->getShared('modelsMetadata');
-				if(!$this->_modelsMetaData instanceof MetaDataInterface){
-					throw new Exception("The injected service 'modelsMetadata' is not valid");
-				}
 			}
 
 			return $this->_modelsMetaData;
@@ -365,17 +359,12 @@ namespace ManaPHP\Mvc {
 			}
 
 			$metaData =$this->getModelsMetaData();
-			foreach($metaData->getAttributes($this) as $attribute){
-				$attributeField=$attribute;
-
+			foreach($metaData->getAttributes($this) as $attributeField){
 				if(isset($data_mapped[$attributeField])){
-					if(is_array($whiteList)){
-						if(!in_array($attributeField,$whiteList,true)){
-							continue;
-						}
+					if(is_array($whiteList) &&!in_array($attributeField,$whiteList,true)){
+						continue;
 					}
-					$this->$attributeField=$data_mapped[$attributeField];
-
+					$this->{$attributeField}=$data_mapped[$attributeField];
 				}
 			}
 
@@ -402,7 +391,7 @@ namespace ManaPHP\Mvc {
 		 * @return \ManaPHP\Mvc\Model
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public static function cloneResultMap($base, $data, $columnMap, $dirtyState=null, $keepSnapshots=null){
+		public static function cloneResultMap($base, $data, $columnMap=null, $dirtyState=0, $keepSnapshots=null){
 			$instance =clone $base;
 
 			$instance->setDirtyState($dirtyState);
@@ -410,7 +399,7 @@ namespace ManaPHP\Mvc {
 			foreach($data as $k=>$v){
 				if(is_string($k)){
 					if(!is_array($columnMap)){
-						$instance->$k=$v;
+						$instance->{$k}=$v;
 						continue;
 					}
 
@@ -441,44 +430,6 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Returns an hydrated result based on the data and the column map
-		 *
-		 * @param array $data
-		 * @param array $columnMap
-		 * @param int $hydrationMode
-		 * @return mixed
-		 * @throws \ManaPHP\Mvc\Model\Exception
-		 */
-		public static function cloneResultMapHydrate($data, $columnMap, $hydrationMode){
-			if(!is_array($columnMap)){
-				if($hydrationMode ===Resultset::HYDRATE_ARRAYS){
-					return $data;
-				}
-			}
-
-			$hydrate=new \stdClass();
-
-			foreach($data as $k=>$v){
-				if(is_string($k)){
-					if(is_array($columnMap)){
-						if(!isset($columnMap[$k])){
-							throw new Exception("Column '" . $k . "' doesn't make part of the column map");
-						}
-
-						$hydrate->{$columnMap[$k]}=$v;
-					}
-				}
-			}
-
-			if($hydrationMode ===Resultset::HYDRATE_ARRAYS){
-				return (array)$hydrate;
-			}else{
-				return $hydrate;
-			}
-		}
-
-
-		/**
 		 * Assigns values to a model from an array returning a new model
 		 *
 		 *<code>
@@ -495,7 +446,7 @@ namespace ManaPHP\Mvc {
 		 * @return \ManaPHP\Mvc\ModelInterface
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public static function cloneResult($base, $data, $dirtyState=null){
+		public static function cloneResult($base, $data, $dirtyState=0){
 			$instance =clone $base;
 
 			$instance->setDirtyState($dirtyState);
@@ -629,6 +580,8 @@ namespace ManaPHP\Mvc {
 
 			$builder =$modelsManager->createBuilder($params);
 			$builder->from(get_called_class());
+			$builder->limit(1);
+
 			$query =$builder->getQuery();
 
 			if(isset($params['bind'])){
@@ -643,7 +596,7 @@ namespace ManaPHP\Mvc {
 
 			$query->setUniqueRow(true);
 
-			return$query->execute();
+			return $query->execute();
 		}
 
 
@@ -658,14 +611,9 @@ namespace ManaPHP\Mvc {
 				$dependencyInjector=Di::getDefault();
 			}
 
-			if($dependencyInjector instanceof DiInterface){
-				$criteria=$dependencyInjector->get('ManaPHP\Mvc\Model\Criteria');
-			}else{
-				$criteria =new Criteria();
-				$criteria->setDI($dependencyInjector);
-			}
-
+			$criteria=$dependencyInjector->get('ManaPHP\Mvc\Model\Criteria');
 			$criteria->setModelName(get_called_class());
+
 			return $criteria;
 		}
 
