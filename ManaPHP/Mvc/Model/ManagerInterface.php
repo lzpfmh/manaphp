@@ -14,7 +14,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
 		 */
-		public function setCustomEventsManager($model, $eventsManager){ }
+		public function setCustomEventsManager($model, $eventsManager);
 
 
 		/**
@@ -23,7 +23,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return \ManaPHP\Events\ManagerInterface
 		 */
-		public function getCustomEventsManager($model){ }
+		public function getCustomEventsManager($model);
 
 		
 		/**
@@ -52,6 +52,44 @@ namespace ManaPHP\Mvc\Model {
 
 
 		/**
+		 * Sets the mapped source for a model
+		 *
+		 * @param \ManaPHP\Mvc\Model $model
+		 * @param string $source
+		 * @return string
+		 */
+		public function setModelSource($model, $source);
+
+
+		/**
+		 * Returns the mapped source for a model
+		 *
+		 * @param \ManaPHP\Mvc\Model $model
+		 * @return string
+		 */
+		public function getModelSource($model);
+
+
+		/**
+		 * Sets the mapped schema for a model
+		 *
+		 * @param \ManaPHP\Mvc\Model $model
+		 * @param string $schema
+		 * @return string
+		 */
+		public function setModelSchema($model, $schema);
+
+
+		/**
+		 * Returns the mapped schema for a model
+		 *
+		 * @param \ManaPHP\Mvc\Model $model
+		 * @return string
+		 */
+		public function getModelSchema($model);
+
+
+		/**
 		 * Loads a model throwing an exception if it does't exist
 		 *
 		 * @param string $modelName
@@ -66,7 +104,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @param string $connectionService
 		 */
-		public function setConnectionService($model, $connectionService){ }
+		public function setConnectionService($model, $connectionService);
 
 
 		/**
@@ -75,7 +113,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @param string $connectionService
 		 */
-		public function setWriteConnectionService($model, $connectionService){ }
+		public function setWriteConnectionService($model, $connectionService);
 
 
 		/**
@@ -84,7 +122,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @param string $connectionService
 		 */
-		public function setReadConnectionService($model, $connectionService){ }
+		public function setReadConnectionService($model, $connectionService);
 
 
 		/**
@@ -93,7 +131,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return \ManaPHP\Db\AdapterInterface
 		 */
-		public function getWriteConnection($model){ }
+		public function getWriteConnection($model);
 
 
 		/**
@@ -102,7 +140,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return \ManaPHP\Db\AdapterInterface
 		 */
-		public function getReadConnection($model){ }
+		public function getReadConnection($model);
 
 
 		/**
@@ -111,7 +149,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @param string
 		 */
-		public function getReadConnectionService($model){ }
+		public function getReadConnectionService($model);
 
 
 		/**
@@ -120,7 +158,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @param string
 		 */
-		public function getWriteConnectionService($model){ }
+		public function getWriteConnectionService($model);
 
 
 		/**
@@ -130,7 +168,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $eventName
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 */
-		public function notifyEvent($eventName, $model){ }
+		public function notifyEvent($eventName, $model);
 
 
 		/**
@@ -143,16 +181,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $data
 		 * @return boolean
 		 */
-		public function missingMethod($model, $eventName, $data){ }
-
-
-		/**
-		 * Binds a behavior to a model
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param \ManaPHP\Mvc\Model\BehaviorInterface $behavior
-		 */
-		public function addBehavior($model, $behavior){ }
+		public function missingMethod($model, $eventName, $data);
 
 
 		/**
@@ -161,7 +190,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\Model $model
 		 * @param boolean $keepSnapshots
 		 */
-		public function keepSnapshots($model, $keepSnapshots){ }
+		public function keepSnapshots($model, $keepSnapshots);
 
 
 		/**
@@ -169,7 +198,7 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return boolean
 		 */
-		public function isKeepingSnapshots($model){ }
+		public function isKeepingSnapshots($model);
 
 
 		/**
@@ -178,7 +207,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\Model $model
 		 * @param boolean $dynamicUpdate
 		 */
-		public function useDynamicUpdate($model, $dynamicUpdate){ }
+		public function useDynamicUpdate($model, $dynamicUpdate);
 
 
 		/**
@@ -186,170 +215,8 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return boolean
 		 */
-		public function isUsingDynamicUpdate($model){ }
+		public function isUsingDynamicUpdate($model);
 
-
-		/**
-		 * Setup a 1-1 relation between two models
-		 *
-		 * @param   \ManaPHP\Mvc\ModelInterface $model
-		 * @param mixed $fields
-		 * @param string $referencedModel
-		 * @param mixed $referencedFields
-		 * @param array $options
-		 * @return  \ManaPHP\Mvc\Model\RelationInterface
-		 */
-		public function addHasOne($model, $fields, $referencedModel, $referencedFields, $options=null);
-
-
-		/**
-		 * Setup a relation reverse 1-1  between two models
-		 *
-		 * @param 	\ManaPHP\Mvc\ModelInterface $model
-		 * @param mixed $fields
-		 * @param string $referencedModel
-		 * @param mixed $referencedFields
-		 * @param array $options
-		 * @return 	\ManaPHP\Mvc\Model\RelationInterface
-		 */
-		public function addBelongsTo($model, $fields, $referencedModel, $referencedFields, $options=null);
-
-
-		/**
-		 * Setup a relation 1-n between two models
-		 *
-		 * @param 	\ManaPHP\Mvc\ModelInterface $model
-		 * @param mixed $fields
-		 * @param string $referencedModel
-		 * @param mixed $referencedFields
-		 * @param array $options
-		 * @return 	\ManaPHP\Mvc\Model\RelationInterface
-		 */
-		public function addHasMany($model, $fields, $referencedModel, $referencedFields, $options=null);
-
-
-		/**
-		 * Checks whether a model has a belongsTo relation with another model
-		 *
-		 * @param 	string $modelName
-		 * @param 	string $modelRelation
-		 * @return 	boolean
-		 */
-		public function existsBelongsTo($modelName, $modelRelation);
-
-
-		/**
-		 * Checks whether a model has a hasMany relation with another model
-		 *
-		 * @param 	string $modelName
-		 * @param 	string $modelRelation
-		 * @return 	boolean
-		 */
-		public function existsHasMany($modelName, $modelRelation);
-
-
-		/**
-		 * Checks whether a model has a hasOne relation with another model
-		 *
-		 * @param 	string $modelName
-		 * @param 	string $modelRelation
-		 * @return 	boolean
-		 */
-		public function existsHasOne($modelName, $modelRelation);
-
-
-		/**
-		 * Gets belongsTo related records from a model
-		 *
-		 * @param string $method
-		 * @param string $modelName
-		 * @param string $modelRelation
-		 * @param \ManaPHP\Mvc\Model $record
-		 * @param array $parameters
-		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
-		 */
-		public function getBelongsToRecords($method, $modelName, $modelRelation, $record, $parameters=null);
-
-
-		/**
-		 * Gets hasMany related records from a model
-		 *
-		 * @param string $method
-		 * @param string $modelName
-		 * @param string $modelRelation
-		 * @param \ManaPHP\Mvc\Model $record
-		 * @param array $parameters
-		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
-		 */
-		public function getHasManyRecords($method, $modelName, $modelRelation, $record, $parameters=null);
-
-
-		/**
-		 * Gets belongsTo related records from a model
-		 *
-		 * @param string $method
-		 * @param string $modelName
-		 * @param string $modelRelation
-		 * @param \ManaPHP\Mvc\Model $record
-		 * @param array $parameters
-		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
-		 */
-		public function getHasOneRecords($method, $modelName, $modelRelation, $record, $parameters=null);
-
-
-		/**
-		 * Gets belongsTo relations defined on a model
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getBelongsTo($model);
-
-
-		/**
-		 * Gets hasMany relations defined on a model
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getHasMany($model);
-
-
-		/**
-		 * Gets hasOne relations defined on a model
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getHasOne($model);
-
-
-		/**
-		 * Gets hasOne relations defined on a model
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getHasOneAndHasMany($model);
-
-
-		/**
-		 * Query all the relationships defined on a model
-		 *
-		 * @param string $modelName
-		 * @return \ManaPHP\Mvc\Model\RelationInterface[]
-		 */
-		public function getRelations($modelName);
-
-
-		/**
-		 * Query the relations between two models
-		 *
-		 * @param string $first
-		 * @param string $second
-		 * @return array
-		 */
-		public function getRelationsBetween($first, $second);
 
 
 		/**
@@ -390,34 +257,10 @@ namespace ManaPHP\Mvc\Model {
 
 
 		/**
-		 * Receives events generated in the models and dispatches them to a events-manager if available
-		 * Notify the behaviors that are listening in the model
-		 *
-		 * @param string $eventName
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 */
-		public function notifyEvent($eventName, $model);
-
-
-		/**
-		 * Dispatch a event to the listeners and behaviors
-		 * This method expects that the endpoint listeners/behaviors returns true
-		 * meaning that a least one is implemented
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param string $eventName
-		 * @param array $data
-		 * @return boolean
-		 */
-		public function missingMethod($model, $eventName, $data);
-
-
-		/**
 		 * Returns the last query created or executed in the
 		 *
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
 		public function getLastQuery();
-
 	}
 }

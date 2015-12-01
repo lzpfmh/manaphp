@@ -3,10 +3,15 @@
 namespace ManaPHP\Mvc {
 
 	use ManaPHP\Di;
+	use ManaPHP\DiInterface;
+	use ManaPHP\Mvc\Model\Criteria;
 	use ManaPHP\Mvc\Model\Exception;
+	use ManaPHP\Mvc\Model\Message;
+	use ManaPHP\Mvc\Model\MetaDataInterface;
 	use \ManaPHP\Mvc\Model\ResultInterface;
 	use \ManaPHP\Di\InjectionAwareInterface;
 	use ManaPHP\Mvc\Model\Resultset;
+	use ManaPHP\Mvc\Model\ValidationFailed;
 
 	/**
 	 * ManaPHP\Mvc\Model
@@ -66,6 +71,9 @@ namespace ManaPHP\Mvc {
 
 		protected $_modelsMetaData;
 
+		/**
+		 * @var \ManaPHP\Mvc\Model\MessageInterface[]
+		 */
 		protected $_errorMessages;
 
 		protected $_operationMade;
@@ -158,6 +166,18 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function getModelsMetaData(){
+			if(!is_object($this->_modelsMetaData)){
+				if(!is_object($this->_dependencyInjector)){
+					throw new Exception('A dependency injector container is required to obtain the services related to the ORM');
+				}
+
+				$this->_modelsMetaData =$this->_dependencyInjector->getShared('modelsMetadata');
+				if(!$this->_modelsMetaData instanceof MetaDataInterface){
+					throw new Exception("The injected service 'modelsMetadata' is not valid");
+				}
+			}
+
+			return $this->_modelsMetaData;
 		}
 
 
@@ -172,54 +192,13 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Sets a transaction related to the Model instance
-		 *
-		 *<code>
-		 *use \ManaPHP\Mvc\Model\Transaction\Manager as TxManager;
-		 *use \ManaPHP\Mvc\Model\Transaction\Failed as TxFailed;
-		 *
-		 *try {
-		 *
-		 *  $txManager = new TxManager();
-		 *
-		 *  $transaction = $txManager->get();
-		 *
-		 *  $robot = new Robots();
-		 *  $robot->setTransaction($transaction);
-		 *  $robot->name = 'WALL·E';
-		 *  $robot->created_at = date('Y-m-d');
-		 *  if ($robot->save() == false) {
-		 *    $transaction->rollback("Can't save robot");
-		 *  }
-		 *
-		 *  $robotPart = new RobotParts();
-		 *  $robotPart->setTransaction($transaction);
-		 *  $robotPart->type = 'head';
-		 *  if ($robotPart->save() == false) {
-		 *    $transaction->rollback("Robot part cannot be saved");
-		 *  }
-		 *
-		 *  $transaction->commit();
-		 *
-		 *} catch (TxFailed $e) {
-		 *  echo 'Failed, reason: ', $e->getMessage();
-		 *}
-		 *
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\Model\TransactionInterface $transaction
-		 * @return \ManaPHP\Mvc\Model
-		 */
-		public function setTransaction($transaction){ }
-
-
-		/**
 		 * Sets table name which model should be mapped
 		 *
 		 * @param string $source
 		 * @return \ManaPHP\Mvc\Model
 		 */
 		protected function setSource($source){
+			$this->_modelsManager->setModelSource($this,$source);
 		}
 
 
@@ -228,7 +207,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return string
 		 */
-		public function getSource(){ }
+		public function getSource(){
+			return $this->_modelsManager->getModelSource($this);
+		}
 
 
 		/**
@@ -237,7 +218,9 @@ namespace ManaPHP\Mvc {
 		 * @param string $schema
 		 * @return \ManaPHP\Mvc\Model
 		 */
-		protected function setSchema($schema){ }
+		protected function setSchema($schema){
+			$this->_modelsManager->setModelSchema($this,$schema);
+		}
 
 
 		/**
@@ -245,7 +228,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return string
 		 */
-		public function getSchema(){ }
+		public function getSchema(){
+			return $this->_modelsManager->getModelSchema($this);
+		}
 
 
 		/**
@@ -357,11 +342,11 @@ namespace ManaPHP\Mvc {
 		 *));
 		 *</code>
 		 *
-		 * @param \ManaPHP\Mvc\Model $object
 		 * @param array $data
 		 * @param array $columnMap
 		 * @param array $whiteList
 		 * @return \ManaPHP\Mvc\Model
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function assign($data, $columnMap=null,$whiteList=null){
 			if(is_array($columnMap)){
@@ -477,7 +462,7 @@ namespace ManaPHP\Mvc {
 				if(is_string($k)){
 					if(is_array($columnMap)){
 						if(!isset($columnMap[$k])){
-							throw new Exception("Column '" . $k . "' doesn't make part of the column map")
+							throw new Exception("Column '" . $k . "' doesn't make part of the column map");
 						}
 
 						$hydrate->{$columnMap[$k]}=$v;
@@ -571,7 +556,7 @@ namespace ManaPHP\Mvc {
 
 			if(is_array($parameters)){
 				$params =$parameters;
-			}elseif(is_null($parameters)){
+			}elseif($parameters===null){
 				$params=[];
 			}else{
 				$params=[];
@@ -584,9 +569,23 @@ namespace ManaPHP\Mvc {
 
 			if(isset($params['bind'])){
 				if(is_array($params['bind'])){
-					$query->
+					$query->setBindParams($params['bind'],true);
 				}
 			}
+
+			if(isset($params['cache'])){
+				$query->cache($params['cache']);
+			}
+
+			$resultset=$query->execute();
+
+			if(is_object($resultset)){
+				if(isset($params['hydration'])){
+					$resultset->setHydrateMode($params['hydration']);
+				}
+			}
+
+			return $resultset;
 		}
 
 
@@ -612,7 +611,40 @@ namespace ManaPHP\Mvc {
 		 * @param array $parameters
 		 * @return \ManaPHP\Mvc\Model
 		 */
-		public static function findFirst($parameters=null){ }
+		public static function findFirst($parameters=null){
+			/**
+			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
+			 */
+			$dependencyInjector=Di::getDefault();
+			$modelsManager =$dependencyInjector->getShared('modelsManager');
+
+			if(is_array($parameters)){
+				$params =$parameters;
+			}elseif($parameters===null){
+				$params=[];
+			}else{
+				$params=[];
+				$params[]=$parameters;
+			}
+
+			$builder =$modelsManager->createBuilder($params);
+			$builder->from(get_called_class());
+			$query =$builder->getQuery();
+
+			if(isset($params['bind'])){
+				if(is_array($params['bind'])){
+					$query->setBindParams($params['bind'],true);
+				}
+			}
+
+			if(isset($params['cache'])){
+				$query->cache($params['cache']);
+			}
+
+			$query->setUniqueRow(true);
+
+			return$query->execute();
+		}
 
 
 		/**
@@ -621,7 +653,21 @@ namespace ManaPHP\Mvc {
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 * @return \ManaPHP\Mvc\Model\Criteria
 		 */
-		public static function query($dependencyInjector=null){ }
+		public static function query($dependencyInjector=null){
+			if(!is_object($dependencyInjector)){
+				$dependencyInjector=Di::getDefault();
+			}
+
+			if($dependencyInjector instanceof DiInterface){
+				$criteria=$dependencyInjector->get('ManaPHP\Mvc\Model\Criteria');
+			}else{
+				$criteria =new Criteria();
+				$criteria->setDI($dependencyInjector);
+			}
+
+			$criteria->setModelName(get_called_class());
+			return $criteria;
+		}
 
 
 		/**
@@ -629,9 +675,12 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
 		 * @param \ManaPHP\Db\AdapterInterface $connection
+		 * @param string|array table
 		 * @return boolean
 		 */
-		protected function _exists(){ }
+		protected function _exists($metaData,$connection,$table=null){
+
+		}
 
 
 		/**
@@ -642,7 +691,67 @@ namespace ManaPHP\Mvc {
 		 * @param array $parameters
 		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
 		 */
-		protected static function _groupResult(){ }
+		protected static function _groupResult($function, $alias, $parameters){
+			$dependencyInjector =Di::getDefault();
+			/**
+ 			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
+			 */
+			$modelsManager =$dependencyInjector->getShared('modelsManager');
+
+			if(is_array($parameters)){
+				$params =$parameters;
+			}elseif($parameters===null){
+				$params=[];
+			}else{
+				$params=[];
+				$params[]=$parameters;
+			}
+
+			if(!isset($params['column'])){
+				$params['column']='*';
+			}
+
+			if(isset($params['distinct'])){
+				$columns =$function .'(DISTINCT '.$params['distinct'].') AS '.$alias;
+			}else{
+				if(isset($params['group'])){
+					$columns =$params['group'].', '.$function.'('.$params['group'].') AS '  .$alias;
+				}else{
+					$columns =$function.'('.$params['column'].') AS '.$alias;
+				}
+			}
+
+			$builder =$modelsManager->createBuilder($params);
+			$builder->columns($columns);
+			$builder->from(get_called_class());
+
+			$query =$builder->getQuery();
+
+			if(isset($params['cache'])){
+				$query->cache($params['cache']);
+			}
+
+			if(isset($params['bind'])){
+				$resultset =$query->execute([$params['bind']]);
+			}else{
+				$resultset=$query->execute();
+			}
+
+			/**
+			 * Return the full resultset if the query is grouped
+			 */
+			if(isset($params['group'])){
+				return $resultset;
+			}
+
+
+			/**
+			 * Return only the value in the first result
+			 */
+
+			$firstRow=$resultset->getFirst();
+			return $firstRow->{$alias};
+		}
 
 
 		/**
@@ -663,7 +772,14 @@ namespace ManaPHP\Mvc {
 		 * @param array $parameters
 		 * @return int
 		 */
-		public static function count($parameters=null){ }
+		public static function count($parameters=null){
+			$result =self::_groupResult('COUNT','rowcount',$parameters);
+			if(is_string($result)){
+				return (int)$result;
+			}else{
+				return $result;
+			}
+		}
 
 
 		/**
@@ -684,7 +800,9 @@ namespace ManaPHP\Mvc {
 		 * @param array $parameters
 		 * @return double
 		 */
-		public static function sum($parameters=null){ }
+		public static function sum($parameters=null){
+			return self::_groupResult('SUM','sumatory',$parameters);
+		}
 
 
 		/**
@@ -705,7 +823,9 @@ namespace ManaPHP\Mvc {
 		 * @param array $parameters
 		 * @return mixed
 		 */
-		public static function maximum($parameters=null){ }
+		public static function maximum($parameters=null){
+			return self::_groupResult('MAX','maximum',$parameters);
+		}
 
 
 		/**
@@ -726,7 +846,9 @@ namespace ManaPHP\Mvc {
 		 * @param array $parameters
 		 * @return mixed
 		 */
-		public static function minimum($parameters=null){ }
+		public static function minimum($parameters=null){
+			return self::_groupResult('MIN', 'minimum', $parameters);
+		}
 
 
 		/**
@@ -747,7 +869,9 @@ namespace ManaPHP\Mvc {
 		 * @param array $parameters
 		 * @return double
 		 */
-		public static function average($parameters=null){ }
+		public static function average($parameters=null){
+			return self::_groupResult('AVG','average',$parameters);
+		}
 
 
 		/**
@@ -756,25 +880,26 @@ namespace ManaPHP\Mvc {
 		 * @param string $eventName
 		 * @return boolean
 		 */
-		public function fireEvent($eventName){ }
+		public function fireEvent($eventName){
+			if(method_exists($this,$eventName)){
+				$this->{$eventName}();
+			}
 
-
-		/**
-		 * Fires an event, implicitly calls behaviors and listeners in the events manager are notified
-		 * This method stops if one of the callbacks/listeners returns boolean false
-		 *
-		 * @param string $eventName
-		 * @return boolean
-		 */
-		public function fireEventCancel($eventName){ }
-
+			return $this->_modelsManager->notifyEvent($eventName,$this);
+		}
 
 		/**
 		 * Cancel the current operation
 		 *
 		 * @return boolean
 		 */
-		protected function _cancelOperation(){ }
+		protected function _cancelOperation(){
+			if($this->_operationMade ===self::OP_DELETE){
+				$this->fireEvent('notDeleted');
+			}else{
+				$this->fireEvent('notSaved');
+			}
+		}
 
 
 		/**
@@ -799,7 +924,10 @@ namespace ManaPHP\Mvc {
 		 * @param \ManaPHP\Mvc\Model\MessageInterface $message
 		 * @return \ManaPHP\Mvc\Model
 		 */
-		public function appendMessage($message){ }
+		public function appendMessage($message){
+			$this->_errorMessages[]=$message;
+			return $this;
+		}
 
 
 		/**
@@ -828,7 +956,12 @@ namespace ManaPHP\Mvc {
 		 * @param \ManaPHP\Mvc\Model\ValidatorInterface $validator
 		 * @return \ManaPHP\Mvc\Model
 		 */
-		protected function validate($validator){ }
+		protected function validate($validator){
+			if($validator->validate($this) ===false){
+				$this->_errorMessages =array_merge($this->_errorMessages,$validator->getMessages());
+			}
+			return $this;
+		}
 
 
 		/**
@@ -856,7 +989,13 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return boolean
 		 */
-		public function validationHasFailed(){ }
+		public function validationHasFailed(){
+			if(is_array($this->_errorMessages)){
+				return count($this->_errorMessages)>0;
+			}else{
+				return false;
+			}
+		}
 
 
 		/**
@@ -876,36 +1015,22 @@ namespace ManaPHP\Mvc {
 		 *  	echo "Great, a new robot was saved successfully!";
 		 *	}
 		 * </code>
-		 *
+		 * @param string $filter
 		 * @return \ManaPHP\Mvc\Model\MessageInterface[]
 		 */
-		public function getMessages($filter=null){ }
+		public function getMessages($filter=null){
+			if(is_string($filter) && $filter !==''){
+				$filtered =[];
+				foreach($this->_errorMessages as $message){
+					if($message->getField() ===$filter){
+						$filtered[] =$message;
+					}
+				}
+				return $filtered;
+			}
 
-
-		/**
-		 * Reads "belongs to" relations and check the virtual foreign keys when inserting or updating records
-		 * to verify that inserted/updated values are present in the related entity
-		 *
-		 * @return boolean
-		 */
-		protected function _checkForeignKeysRestrict(){ }
-
-
-		/**
-		 * Reads both "hasMany" and "hasOne" relations and checks the virtual foreign keys (restrict) when deleting records
-		 *
-		 * @return boolean
-		 */
-		protected function _checkForeignKeysReverseRestrict(){ }
-
-
-		/**
-		 * Reads both "hasMany" and "hasOne" relations and checks the virtual foreign keys (cascade) when deleting records
-		 *
-		 * @return boolean
-		 */
-		protected function _checkForeignKeysReverseCascade(){ }
-
+			return $this->_errorMessages;
+		}
 
 		/**
 		 * Executes internal hooks before save a record
@@ -915,7 +1040,9 @@ namespace ManaPHP\Mvc {
 		 * @param string $identityField
 		 * @return boolean
 		 */
-		protected function _preSave(){ }
+		protected function _preSave($metaData,$exists,$identityField){
+			return true;
+		}
 
 
 		/**
@@ -925,7 +1052,17 @@ namespace ManaPHP\Mvc {
 		 * @param boolean $exists
 		 * @return boolean
 		 */
-		protected function _postSave(){ }
+		protected function _postSave($success,$exists){
+			if($success ===true){
+				if($exists){
+					$this->fireEvent('afterUpdate');
+				}else{
+					$this->fireEvent('afterCreate');
+				}
+			}
+
+			return $success;
+		}
 
 
 		/**
@@ -936,7 +1073,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $table
 		 * @return boolean
 		 */
-		protected function _doLowInsert(){ }
+		protected function _doLowInsert($metaData,$connection,$table){ }
 
 
 		/**
@@ -947,27 +1084,7 @@ namespace ManaPHP\Mvc {
 		 * @param string|array $table
 		 * @return boolean
 		 */
-		protected function _doLowUpdate(){ }
-
-
-		/**
-		 * Saves related records that must be stored prior to save the master record
-		 *
-		 * @param \ManaPHP\Db\AdapterInterface $connection
-		 * @param \ManaPHP\Mvc\ModelInterface[] $related
-		 * @return boolean
-		 */
-		protected function _preSaveRelatedRecords(){ }
-
-
-		/**
-		 * Save the related records assigned in the has-one/has-many relations
-		 *
-		 * @param \ManaPHP\Db\AdapterInterface $connection
-		 * @param \ManaPHP\Mvc\ModelInterface[] $related
-		 * @return boolean
-		 */
-		protected function _postSaveRelatedRecords(){ }
+		protected function _doLowUpdate($metaData,$connection,$table){}
 
 
 		/**
@@ -990,8 +1107,53 @@ namespace ManaPHP\Mvc {
 		 * @param array $data
 		 * @param array $whiteList
 		 * @return boolean
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function save($data=null, $whiteList=null){ }
+		public function save($data=null, $whiteList=null){
+			if(is_array($data) && count($data) >0){
+				$this->assign($data,null,$whiteList);
+			}
+
+			$metaData =$this->getModelsMetaData();
+
+			$schema=$this->getSchema();
+			$source =$this->getSource();
+			if($schema){
+				$table=[$schema,$source];
+			}else{
+				$table =$source;
+			}
+
+			$exists =$this->_exists($metaData, $this->getReadConnection(),$table);
+			if($exists){
+				$this->_operationMade =self::OP_UPDATE;
+			}else{
+				$this->_operationMade=self::OP_CREATE;
+			}
+
+			$this->_errorMessages=[];
+
+			/**
+			 * Query the identity field
+			 */
+			$identityField =$metaData->getIdentityField($this);
+
+			if($this->_preSave($metaData,$exists,$identityField) ===false){
+				throw new ValidationFailed($this,$this->_errorMessages);
+			}
+
+			if($exists){
+				$success =$this->_doLowUpdate($metaData,$this->getWriteConnection(),$table);
+			}else{
+				$success=$this->_doLowInsert($metaData,$this->getWriteConnection(),$identityField);
+			}
+
+			if($success){
+				$this->_dirtyState =self::DIRTY_STATE_PERSISTENT;
+			}
+
+			return $success;
+		}
 
 
 		/**
@@ -1018,8 +1180,21 @@ namespace ManaPHP\Mvc {
 		 * @param array $data
 		 * @param array $whiteList
 		 * @return boolean
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function create($data=null, $whiteList=null){ }
+		public function create($data=null, $whiteList=null){
+			$metaData =$this->getModelsMetaData();
+
+			if($this->_exists($metaData,$this->getReadConnection())){
+				$this->_errorMessages=[
+					new Message('Record cannot be created because it already exists', null, 'InvalidCreateAttempt')
+				];
+
+				return false;
+			}
+
+			return $this->save($data,$whiteList);
+		}
 
 
 		/**
@@ -1036,8 +1211,19 @@ namespace ManaPHP\Mvc {
 		 * @param array $data
 		 * @param array $whiteList
 		 * @return boolean
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function update($data=null, $whiteList=null){ }
+		public function update($data=null, $whiteList=null){
+			if($this->_dirtyState){
+				$metaData =$this->getModelsMetaData();
+				if(!$this->_exists($metaData, $this->getReadConnection())){
+					$this->_errorMessages=[new Message('Record cannot be updated because it does not exist', null, 'InvalidUpdateAttempt')];
+					return false;
+				}
+			}
+
+			return $this->save($data,$whiteList);
+		}
 
 
 		/**
@@ -1053,8 +1239,51 @@ namespace ManaPHP\Mvc {
 		 * </code>
 		 *
 		 * @return boolean
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function delete(){ }
+		public function delete(){
+			$metaData =$this->getModelsMetaData();
+			$writeConnection=$this->getWriteConnection();
+			$this->_operationMade =self::OP_DELETE;
+			$this->_errorMessages=[];
+
+			$primaryKeys=$metaData->getPrimaryKeyAttributes($this);
+			if(count($primaryKeys) ===0){
+				throw new Exception('A primary key must be defined in the model in order to perform the operation');
+			}
+
+			$values=[];
+			$conditions=[];
+			foreach($primaryKeys as $primaryKey){
+				$attributeField =$primaryKey;
+
+				/**
+				 * If the attribute is currently set in the object add it to the conditions
+				 */
+				if(!isset($this->{$attributeField})){
+					throw new Exception("Cannot delete the record because the primary key attribute: '" . $attributeField . "' wasn't set");
+				}
+
+				$values[]=$this->{$attributeField};
+				$conditions =$writeConnection->escapeIdentifier($attributeField).' = ?';
+			}
+			$schema =$this->getSchema();
+			$source =$this->getSource();
+			if(isset($schema)){
+				$table=[$schema,$source];
+			}else{
+				$table=$source;
+			}
+
+			$success =$writeConnection->delete($table,implode(' AND ',$conditions),$values);
+
+			/**
+			 * Force perform the record existence checking again
+			 */
+			$this->_dirtyState =self::DIRTY_STATE_DETACHED;
+
+			return $success;
+		}
 
 
 		/**
@@ -1063,13 +1292,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return int
 		 */
-		public function getOperationMade(){ }
-
-
-		/**
-		 * Refreshes the model attributes re-querying the record from the database
-		 */
-		public function refresh(){ }
+		public function getOperationMade(){
+			return $this->_operationMade;
+		}
 
 
 		/**
@@ -1077,7 +1302,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param boolean $skip
 		 */
-		public function skipOperation($skip){ }
+		public function skipOperation($skip){
+			$this->_skipped=$skip;
+		}
 
 
 		/**
@@ -1090,7 +1317,9 @@ namespace ManaPHP\Mvc {
 		 * @param string $attribute
 		 * @return mixed
 		 */
-		public function readAttribute($attribute){ }
+		public function readAttribute($attribute){
+			return isset($this->{$attribute})?$this->{$attribute}:null;
+		}
 
 
 		/**
@@ -1103,237 +1332,107 @@ namespace ManaPHP\Mvc {
 		 * @param string $attribute
 		 * @param mixed $value
 		 */
-		public function writeAttribute($attribute, $value){ }
+		public function writeAttribute($attribute, $value){
+			$this->{$attribute}=$value;
+		}
 
 
 		/**
-		 * Sets a list of attributes that must be skipped from the
-		 * generated INSERT/UPDATE statement
+		 * Check if a specific attribute has changed
+		 * This only works if the model is keeping data snapshots
 		 *
-		 *<code>
-		 *
-		 *class Robots extends \ManaPHP\Mvc\Model
-		 *{
-		 *
-		 *   public function initialize()
-		 *   {
-		 *       $this->skipAttributes(array('price'));
-		 *   }
-		 *
-		 *}
-		 *</code>
-		 *
-		 * @param array $attributes
-		 * @param boolean $replace
+		 * @param string $fieldName
+		 * @return bool
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		protected function skipAttributes($attributes, $replace=null){ }
+		public function hasChanged($fieldName=null){
+			if(!is_array($this->_snapshot)){
+				throw new Exception("The record doesn't have a valid data snapshot");
+			}
+
+			if($this->_dirtyState !==self::DIRTY_STATE_PERSISTENT){
+				throw new Exception('Change checking cannot be performed because the object has not been persisted or is deleted');
+			}
+
+			$metaData=$this->getModelsMetaData();
+			$allAttributes=$metaData->getDataTypes($this);
+
+			if(is_string($fieldName)){
+				if(!isset($allAttributes[$fieldName])){
+					throw new Exception("The field '" . $fieldName . "' is not part of the model");
+				}
+
+				if(!isset($this->{$fieldName})){
+					throw new Exception("The field '" . $fieldName . "' is not defined on the model");
+				}
+
+				if(!isset($this->_snapshot[$fieldName])){
+					throw new Exception("The field '" . $fieldName . "' was not found in the snapshot");
+				}
+
+				return ($this->{$fieldName} !==$this->_snapshot[$fieldName]);
+			}
+
+			foreach($allAttributes as $name){
+				if(!isset($this->_snapshot[$fieldName])){
+					throw new Exception("The field '" . $name . "' was not found in the snapshot");
+				}
+
+				if(!isset($this->{$name})){
+					return true;
+				}
+
+				if($this->{$fieldName} !==$this->_snapshot[$fieldName]){
+					return true;
+				}
+			}
+
+			return false;
+		}
 
 
 		/**
-		 * Sets a list of attributes that must be skipped from the
-		 * generated INSERT statement
+		 * Returns a list of changed values
 		 *
-		 *<code>
-		 *
-		 *class Robots extends \ManaPHP\Mvc\Model
-		 *{
-		 *
-		 *   public function initialize()
-		 *   {
-		 *       $this->skipAttributesOnCreate(array('created_at'));
-		 *   }
-		 *
-		 *}
-		 *</code>
-		 *
-		 * @param array $attributes
-		 * @param boolean $replace
+		 * @return array
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		protected function skipAttributesOnCreate($attributes, $replace=null){ }
+		public function getChangedFields(){
+			if(!is_object($this->_snapshot)){
+				throw new Exception("The record doesn't have a valid data snapshot");
+			}
 
+			if($this->_dirtyState !==self::DIRTY_STATE_PERSISTENT){
+				throw new Exception('Change checking cannot be performed because the object has not been persisted or is deleted');
+			}
 
-		/**
-		 * Sets a list of attributes that must be skipped from the
-		 * generated UPDATE statement
-		 *
-		 *<code>
-		 *
-		 *class Robots extends \ManaPHP\Mvc\Model
-		 *{
-		 *
-		 *   public function initialize()
-		 *   {
-		 *       $this->skipAttributesOnUpdate(array('modified_in'));
-		 *   }
-		 *
-		 *}
-		 *</code>
-		 *
-		 * @param array $attributes
-		 * @param boolean $replace
-		 */
-		protected function skipAttributesOnUpdate($attributes, $replace=null){ }
+			$metaData=$this->getModelsMetaData();
+			$allAttributes=$metaData->getDataTypes($this);
 
+			$changed=[];
 
-		/**
-		 * Setup a 1-1 relation between two models
-		 *
-		 *<code>
-		 *
-		 *class Robots extends \ManaPHP\Mvc\Model
-		 *{
-		 *
-		 *   public function initialize()
-		 *   {
-		 *       $this->hasOne('id', 'RobotsDescription', 'robots_id');
-		 *   }
-		 *
-		 *}
-		 *</code>
-		 *
-		 * @param mixed $fields
-		 * @param string $referenceModel
-		 * @param mixed $referencedFields
-		 * @param   array $options
-		 * @return  \ManaPHP\Mvc\Model\Relation
-		 */
-		public function hasOne($fields, $referenceModel, $referencedFields, $options=null){ }
+			foreach($allAttributes as $k){
+				/**
+				 * If some attribute is not present in the snapshot, we assume the record as changed
+				 */
+				if(!isset($this->_snapshot[$k])){
+					$changed[]=$k;
+					continue;
+				}
 
+				if(!isset($this->{$k})){
+					$changed[]=$k;
+					continue;
+				}
 
-		/**
-		 * Setup a relation reverse 1-1  between two models
-		 *
-		 *<code>
-		 *
-		 *class RobotsParts extends \ManaPHP\Mvc\Model
-		 *{
-		 *
-		 *   public function initialize()
-		 *   {
-		 *       $this->belongsTo('robots_id', 'Robots', 'id');
-		 *   }
-		 *
-		 *}
-		 *</code>
-		 *
-		 * @param mixed $fields
-		 * @param string $referenceModel
-		 * @param mixed $referencedFields
-		 * @param   array $options
-		 * @return  \ManaPHP\Mvc\Model\Relation
-		 */
-		public function belongsTo($fields, $referenceModel, $referencedFields, $options=null){ }
+				if($this->_snapshot[$k] !==$this->{$k}){
+					$changed[]=$k;
+					continue;
+				}
+			}
 
-
-		/**
-		 * Setup a relation 1-n between two models
-		 *
-		 *<code>
-		 *
-		 *class Robots extends \ManaPHP\Mvc\Model
-		 *{
-		 *
-		 *   public function initialize()
-		 *   {
-		 *       $this->hasMany('id', 'RobotsParts', 'robots_id');
-		 *   }
-		 *
-		 *}
-		 *</code>
-		 *
-		 * @param mixed $fields
-		 * @param string $referenceModel
-		 * @param mixed $referencedFields
-		 * @param   array $options
-		 * @return  \ManaPHP\Mvc\Model\Relation
-		 */
-		public function hasMany($fields, $referenceModel, $referencedFields, $options=null){ }
-
-
-		/**
-		 * Setup a relation n-n between two models through an intermediate relation
-		 *
-		 *<code>
-		 *
-		 *class Robots extends \ManaPHP\Mvc\Model
-		 *{
-		 *
-		 *   public function initialize()
-		 *   {
-		 *       //Setup a many-to-many relation to Parts through RobotsParts
-		 *       $this->hasManyToMany(
-		 *			'id',
-		 *			'RobotsParts',
-		 *			'robots_id',
-		 *			'parts_id',
-		 *			'Parts',
-		 *			'id'
-		 *		);
-		 *   }
-		 *
-		 *}
-		 *</code>
-		 *
-		 * @param string $fields
-		 * @param string $intermediateModel
-		 * @param string $intermediateFields
-		 * @param string $intermediateReferencedFields
-		 * @param string $referencedModel
-		 * @param   string $referencedFields
-		 * @param   array $options
-		 * @return  \ManaPHP\Mvc\Model\Relation
-		 */
-		public function hasManyToMany($fields, $intermediateModel, $intermediateFields, $intermediateReferencedFields, $referenceModel, $referencedFields, $options=null){ }
-
-
-		/**
-		 * Setups a behavior in a model
-		 *
-		 *<code>
-		 *
-		 *use \ManaPHP\Mvc\Model\Behavior\Timestampable;
-		 *
-		 *class Robots extends \ManaPHP\Mvc\Model
-		 *{
-		 *
-		 *   public function initialize()
-		 *   {
-		 *		$this->addBehavior(new Timestampable(array(
-		 *			'onCreate' => array(
-		 *				'field' => 'created_at',
-		 *				'format' => 'Y-m-d'
-		 *			)
-		 *		)));
-		 *   }
-		 *
-		 *}
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\Model\BehaviorInterface $behavior
-		 */
-		public function addBehavior($behavior){ }
-
-
-		/**
-		 * Sets if the model must keep the original record snapshot in memory
-		 *
-		 *<code>
-		 *
-		 *class Robots extends \ManaPHP\Mvc\Model
-		 *{
-		 *
-		 *   public function initialize()
-		 *   {
-		 *		$this->keepSnapshots(true);
-		 *   }
-		 *
-		 *}
-		 *</code>
-		 *
-		 * @param boolean $keepSnapshots
-		 */
-		protected function keepSnapshots($keepSnapshots){ }
-
+			return $changed;
+		}
 
 		/**
 		 * Sets the record's snapshot data.
@@ -1342,41 +1441,9 @@ namespace ManaPHP\Mvc {
 		 * @param array $data
 		 * @param array $columnMap
 		 */
-		public function setSnapshotData($data, $columnMap=null){ }
+		public function setSnapshotData($data, $columnMap=null){
 
-
-		/**
-		 * Checks if the object has internal snapshot data
-		 *
-		 * @return boolean
-		 */
-		public function hasSnapshotData(){ }
-
-
-		/**
-		 * Returns the internal snapshot data
-		 *
-		 * @return array
-		 */
-		public function getSnapshotData(){ }
-
-
-		/**
-		 * Check if a specific attribute has changed
-		 * This only works if the model is keeping data snapshots
-		 *
-		 * @param boolean $fieldName
-		 */
-		public function hasChanged($fieldName=null){ }
-
-
-		/**
-		 * Returns a list of changed values
-		 *
-		 * @return array
-		 */
-		public function getChangedFields(){ }
-
+		}
 
 		/**
 		 * Sets if a model must use dynamic update instead of the all-field update
@@ -1396,90 +1463,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param boolean $dynamicUpdate
 		 */
-		protected function useDynamicUpdate($dynamicUpdate){ }
-
-
-		/**
-		 * Returns related records based on defined relations
-		 *
-		 * @param string $alias
-		 * @param array $arguments
-		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
-		 */
-		public function getRelated($alias, $arguments=null){ }
-
-
-		/**
-		 * Returns related records defined relations depending on the method name
-		 *
-		 * @param string $modelName
-		 * @param string $method
-		 * @param array $arguments
-		 * @return mixed
-		 */
-		protected function _getRelatedRecords(){ }
-
-
-		/**
-		 * Handles method calls when a method is not implemented
-		 *
-		 * @param string $method
-		 * @param array $arguments
-		 * @return mixed
-		 */
-		public function __call($method, $arguments=null){ }
-
-
-		/**
-		 * Handles method calls when a static method is not implemented
-		 *
-		 * @param string $method
-		 * @param array $arguments
-		 * @return mixed
-		 */
-		public static function __callStatic($method, $arguments=null){ }
-
-
-		/**
-		 * Magic method to assign values to the the model
-		 *
-		 * @param string $property
-		 * @param mixed $value
-		 */
-		public function __set($property, $value){ }
-
-
-		/**
-		 * Magic method to get related records using the relation alias as a property
-		 *
-		 * @param string $property
-		 * @return \ManaPHP\Mvc\Model\Resultset
-		 */
-		public function __get($property){ }
-
-
-		/**
-		 * Magic method to check if a property is a valid relation
-		 *
-		 * @param string $property
-		 */
-		public function __isset($property){ }
-
-
-		/**
-		 * Serializes the object ignoring connections, services, related objects or static properties
-		 *
-		 * @return string
-		 */
-		public function serialize(){ }
-
-
-		/**
-		 * Unserializes the object from a serialized string
-		 *
-		 * @param string $data
-		 */
-		public function unserialize($data){ }
+		protected function useDynamicUpdate($dynamicUpdate){
+			$this->_modelsManager->useDynamicUpdate($this,$dynamicUpdate);
+		}
 
 
 		/**
@@ -1491,7 +1477,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return array
 		 */
-		public function dump(){ }
+		public function dump(){
+			return get_object_vars($this);
+		}
 
 
 		/**
@@ -1503,8 +1491,22 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $columns
 		 * @return array
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function toArray($columns=null){ }
+		public function toArray($columns=null){
+			$data =[];
+			$metaData =$this->getModelsMetaData();
+
+			foreach($metaData->getAttributes($this) as $attributeField){
+				if(is_array($columns) && !in_array($attributeField, $columns,true)){
+					continue;
+				}
+
+				$data[$attributeField]=isset($this->{$attributeField})?$this->{$attributeField}:null;
+			}
+
+			return $data;
+		}
 
 
 		/**
@@ -1520,17 +1522,5 @@ namespace ManaPHP\Mvc {
 		 * @param array $options
 		 */
 		public static function setup($options){ }
-
-
-		/**
-		 * Reset the model data
-		 *
-		 * <code>
-		 * $robot = Robots::findFirst();
-		 * $robot->reset();
-		 * </code>
-		 */
-		public function reset(){ }
-
 	}
 }
