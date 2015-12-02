@@ -50,7 +50,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param int $index
 		 * @param mixed $data
 		 */
-		public function writeMetaDataIndex($model, $index, $data, $replace);
+		public function writeMetaDataIndex($model, $index, $data);
 
 
 		/**
@@ -167,7 +167,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param  \ManaPHP\Mvc\ModelInterface $model
 		 * @param  array $attributes
 		 */
-		public function setAutomaticCreateAttributes($model, $attributes, $replace);
+		public function setAutomaticCreateAttributes($model, $attributes);
 
 
 		/**

@@ -1,7 +1,7 @@
 <?php 
 
 namespace ManaPHP\Mvc\Model {
-
+	use \ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Mvc\Model\MetaData
 	 *
@@ -19,7 +19,7 @@ namespace ManaPHP\Mvc\Model {
 	 *
 	 */
 	
-	abstract class MetaData implements \ManaPHP\Di\InjectionAwareInterface, \ManaPHP\Mvc\Model\MetaDataInterface {
+	abstract class MetaData implements InjectionAwareInterface, MetaDataInterface {
 
 		const MODELS_ATTRIBUTES = 0;
 
@@ -57,23 +57,15 @@ namespace ManaPHP\Mvc\Model {
 
 		protected $_columnMap;
 
-		/**
-		 * Initialize the metadata for certain table
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param string $key
-		 * @param string $table
-		 * @param string $schema
-		 */
-		protected function _initialize(){ }
-
 
 		/**
 		 * Sets the DependencyInjector container
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 */
-		public function setDI($dependencyInjector){ }
+		public function setDI($dependencyInjector){
+			$this->_dependencyInjector =$dependencyInjector;
+		}
 
 
 		/**
@@ -81,23 +73,31 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public function getDI(){ }
-
-
-		/**
-		 * Set the meta-data extraction strategy
-		 *
-		 * @param \ManaPHP\Mvc\Model\MetaData\Strategy\Introspection $strategy
-		 */
-		public function setStrategy($strategy){ }
-
+		public function getDI(){
+			return $this->_dependencyInjector;
+		}
 
 		/**
-		 * Return the strategy to obtain the meta-data
-		 *
-		 * @return \ManaPHP\Mvc\Model\MetaData\Strategy\Introspection
+		 * @param \ManaPHP\Mvc\ModelInterface $model
+		 * @return array
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function getStrategy(){ }
+		protected function _getMetaData($model){
+			$schema =$model->getSchema();
+			$table =$model->getSource();
+
+			if(!$model->getReadConnection()->tableExists($table,$schema)){
+				if($schema !==''){
+					$complete_table =$schema."'.'".$table;
+				}else{
+					$complete_table =$table;
+				}
+				throw new Exception("Table '" . $complete_table . "' doesn't exist in database when dumping meta-data for " . get_called_class(model));
+			}
+
+
+
+		}
 
 
 		/**
@@ -110,62 +110,17 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return array
 		 */
-		public function readMetaData($model){ }
+		public function readMetaData($model){
+			$source =$model->getSource();
+			$schema =$model->getSchema();
 
+			$key=strtolower(get_called_class()).'-'.$schema.$source;
+			if(!isset($this->_metaData[$key])){
+				$this->_metaData[$key]=$this->_getMetaData($model);
+			}
 
-		/**
-		 * Reads meta-data for certain model using a MODEL_* constant
-		 *
-		 *<code>
-		 *	print_r($metaData->writeColumnMapIndex(new Robots(), MetaData::MODELS_REVERSE_COLUMN_MAP, array('leName' => 'name')));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param int $index
-		 * @return array
-		 */
-		public function readMetaDataIndex($model, $index){ }
-
-
-		/**
-		 * Writes meta-data for certain model using a MODEL_* constant
-		 *
-		 *<code>
-		 *	print_r($metaData->writeColumnMapIndex(new Robots(), MetaData::MODELS_REVERSE_COLUMN_MAP, array('leName' => 'name')));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param int $index
-		 * @param mixed $data
-		 */
-		public function writeMetaDataIndex($model, $index, $data, $replace){ }
-
-
-		/**
-		 * Reads the ordered/reversed column map for certain model
-		 *
-		 *<code>
-		 *	print_r($metaData->readColumnMap(new Robots()));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function readColumnMap($model){ }
-
-
-		/**
-		 * Reads column-map information for certain model using a MODEL_* constant
-		 *
-		 *<code>
-		 *	print_r($metaData->readColumnMapIndex(new Robots(), MetaData::MODELS_REVERSE_COLUMN_MAP));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param int $index
-		 */
-		public function readColumnMapIndex($model, $index){ }
-
+			return $this->_metaData[$key];
+		}
 
 		/**
 		 * Returns table attributes names (fields)
@@ -176,8 +131,15 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return array
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function getAttributes($model){ }
+		public function getAttributes($model){
+			$data =$this->readMetaData($model)[self::MODELS_ATTRIBUTES];
+			if(!is_array($data)){
+				throw new Exception('The meta-data is invalid or is corrupt');
+			}
+			return $data;
+		}
 
 
 		/**
@@ -190,33 +152,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return array
 		 */
-		public function getPrimaryKeyAttributes($model){ }
-
-
-		/**
-		 * Returns an array of fields which are not part of the primary key
-		 *
-		 *<code>
-		 *	print_r($metaData->getNonPrimaryKeyAttributes(new Robots()));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return 	array
-		 */
-		public function getNonPrimaryKeyAttributes($model){ }
-
-
-		/**
-		 * Returns an array of not null attributes
-		 *
-		 *<code>
-		 *	print_r($metaData->getNotNullAttributes(new Robots()));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getNotNullAttributes($model){ }
+		public function getPrimaryKeyAttributes($model){
+			return $this->readMetaData($model)[self::MODELS_NON_PRIMARY_KEY];
+		}
 
 
 		/**
@@ -228,34 +166,11 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return array
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function getDataTypes($model){ }
-
-
-		/**
-		 * Returns attributes which types are numerical
-		 *
-		 *<code>
-		 *	print_r($metaData->getDataTypesNumeric(new Robots()));
-		 *</code>
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getDataTypesNumeric($model){ }
-
-
-		/**
-		 * Returns the name of identity field (if one is present)
-		 *
-		 *<code>
-		 *	print_r($metaData->getIdentityField(new Robots()));
-		 *</code>
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @return string
-		 */
-		public function getIdentityField($model){ }
+		public function getDataTypes($model){
+			return $this->readMetaData($model)[self::MODELS_DATA_TYPES];
+		}
 
 
 		/**
@@ -267,86 +182,11 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return array
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function getBindTypes($model){ }
-
-
-		/**
-		 * Returns attributes that must be ignored from the INSERT SQL generation
-		 *
-		 *<code>
-		 *	print_r($metaData->getAutomaticCreateAttributes(new Robots()));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getAutomaticCreateAttributes($model){ }
-
-
-		/**
-		 * Returns attributes that must be ignored from the UPDATE SQL generation
-		 *
-		 *<code>
-		 *	print_r($metaData->getAutomaticUpdateAttributes(new Robots()));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getAutomaticUpdateAttributes($model){ }
-
-
-		/**
-		 * Set the attributes that must be ignored from the INSERT SQL generation
-		 *
-		 *<code>
-		 *	$metaData->setAutomaticCreateAttributes(new Robots(), array('created_at' => true));
-		 *</code>
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @param  array $attributes
-		 */
-		public function setAutomaticCreateAttributes($model, $attributes, $replace){ }
-
-
-		/**
-		 * Set the attributes that must be ignored from the UPDATE SQL generation
-		 *
-		 *<code>
-		 *	$metaData->setAutomaticUpdateAttributes(new Robots(), array('modified_at' => true));
-		 *</code>
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @param  array $attributes
-		 */
-		public function setAutomaticUpdateAttributes($model, $attributes, $replace){ }
-
-
-		/**
-		 * Returns the column map if any
-		 *
-		 *<code>
-		 *	print_r($metaData->getColumnMap(new Robots()));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getColumnMap($model){ }
-
-
-		/**
-		 * Returns the reverse column map if any
-		 *
-		 *<code>
-		 *	print_r($metaData->getReverseColumnMap(new Robots()));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getReverseColumnMap($model){ }
+		public function getBindTypes($model){
+			return $this->readMetaData($model)[self::MODELS_DATA_TYPES_BIND];
+		}
 
 
 		/**
@@ -360,29 +200,8 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $attribute
 		 * @return boolean
 		 */
-		public function hasAttribute($model, $attribute){ }
-
-
-		/**
-		 * Checks if the internal meta-data container is empty
-		 *
-		 *<code>
-		 *	var_dump($metaData->isEmpty());
-		 *</code>
-		 *
-		 * @return boolean
-		 */
-		public function isEmpty(){ }
-
-
-		/**
-		 * Resets internal meta-data in order to regenerate it
-		 *
-		 *<code>
-		 *	$metaData->reset();
-		 *</code>
-		 */
-		public function reset(){ }
-
+		public function hasAttribute($model, $attribute){
+			return isset($this->readMetaData($model)[self::MODELS_DATA_TYPES][$attribute]);
+		}
 	}
 }
