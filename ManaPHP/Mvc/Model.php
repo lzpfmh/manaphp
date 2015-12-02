@@ -627,7 +627,67 @@ namespace ManaPHP\Mvc {
 		 * @return boolean
 		 */
 		protected function _exists($metaData,$connection,$table=null){
+			if($this->_uniqueKey ===null){
+				$primaryKeys=$metaData->getPrimaryKeyAttributes($this);
+				if(count($primaryKeys) ===0){
+					return false;
+				}
 
+				$numberEmpty=0;
+				$uniqueParams=[];
+				$wherePk=[];
+				foreach($primaryKeys as $attributeField){
+					$value =null;
+					if(isset($this->{$attributeField})){
+						$value=$this->{$attributeField};
+
+						if($value ===null ||$value===''){
+							$numberEmpty++;
+						}
+
+						$uniqueParams[]=$value;
+					}else{
+						$uniqueParams[]=null;
+						$numberEmpty++;
+					}
+
+					$wherePk[]=$connection->escapeIdentifier($attributeField).' =?';
+				}
+
+				if($numberEmpty ===count($primaryKeys)){
+					return false;
+				}
+
+				$joinWhere=implode(' AND ', $wherePk);
+
+				$this->_uniqueKey=$joinWhere;
+				$this->_uniqueParams=$uniqueParams;
+			}
+
+			if(!$this->_dirtyState){
+				return true;
+			}
+
+			$schema =$this->getSchema();
+			$source=$this->getSource();
+			if($schema !==''){
+				$table =[$schema, $source];
+			}else{
+				$table=$source;
+			}
+
+			$num =$connection->fetchOne('SELECT COUNT(*) as rowcount'.
+						' FROM '. $connection->escapeIdentifier($table).
+						'WHERE '. $this->_uniqueKey,
+							null, $this->uniqueParams);
+
+			if(isset($num['rowcount'])){
+				$this->_dirtyState =self::DIRTY_STATE_PERSISTENT;
+				return true;
+			}else{
+				$this->_dirtyState =self::DIRTY_STATE_TRANSIENT;
+				return false;
+			}
 		}
 
 
