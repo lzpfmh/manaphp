@@ -9,7 +9,7 @@ namespace ManaPHP\Db {
 	 * common methods to transform intermediate code into its RDBMS related syntax
 	 */
 	
-	abstract class Dialect implements \ManaPHP\Db\DialectInterface {
+	abstract class Dialect implements DialectInterface {
 
 		protected $_escapeChar;
 
@@ -96,49 +96,5 @@ namespace ManaPHP\Db {
 		 * @return string
 		 */
 		public function select($definition){ }
-
-
-		/**
-		 * Checks whether the platform supports savepoints
-		 *
-		 * @return boolean
-		 */
-		public function supportsSavepoints(){ }
-
-
-		/**
-		 * Checks whether the platform supports releasing savepoints.
-		 *
-		 * @return boolean
-		 */
-		public function supportsReleaseSavepoints(){ }
-
-
-		/**
-		 * Generate SQL to create a new savepoint
-		 *
-		 * @param string $name
-		 * @return string
-		 */
-		public function createSavepoint($name){ }
-
-
-		/**
-		 * Generate SQL to release a savepoint
-		 *
-		 * @param string $name
-		 * @return string
-		 */
-		public function releaseSavepoint($name){ }
-
-
-		/**
-		 * Generate SQL to rollback a savepoint
-		 *
-		 * @param string $name
-		 * @return string
-		 */
-		public function rollbackSavepoint($name){ }
-
 	}
 }
