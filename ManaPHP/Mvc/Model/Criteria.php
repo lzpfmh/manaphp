@@ -31,7 +31,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 */
-		public function setDI($dependencyInjector){ }
+		public function setDI($dependencyInjector){
+			$this->_params['di']=$dependencyInjector;
+		}
 
 
 		/**
@@ -39,7 +41,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public function getDI(){ }
+		public function getDI(){
+			return isset($this->_params['di'])?$this->_params['di']:null;
+		}
 
 
 		/**
@@ -48,7 +52,10 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $modelName
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function setModelName($modelName){ }
+		public function setModelName($modelName){
+			$this->_model =$modelName;
+			return $this;
+		}
 
 
 		/**
@@ -56,7 +63,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return string
 		 */
-		public function getModelName(){ }
+		public function getModelName(){
+			return $this->_model;
+		}
 
 
 		/**
@@ -66,7 +75,10 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $bindParams
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function bind($bindParams){ }
+		public function bind($bindParams){
+			$this->_params['bind']=$bindParams;
+			return $this;
+		}
 
 
 		/**
@@ -76,7 +88,21 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $bindTypes
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function bindTypes($bindTypes){ }
+		public function bindTypes($bindTypes){
+			$this->_params['bindTypes']=$$bindTypes;
+			return $this;
+		}
+
+		/**
+		 * Sets SELECT DISTINCT / SELECT ALL flag
+		 *
+		 * @param mixed $distinct
+		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 */
+		public function distinct($distinct){
+	 		$this->_params["distinct"] = $distinct;
+	 		return $this;
+	 	}
 
 
 		/**
@@ -89,7 +115,10 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string|array $columns
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function columns($columns){ }
+		public function columns($columns){
+			$this->_params['columns']=$columns;
+			return $this;
+		}
 
 
 		/**
@@ -108,7 +137,13 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $type
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function join($model, $conditions=null, $alias=null, $type=null){ }
+		public function join($model, $conditions=null, $alias=null, $type=null){
+			if(!isset($this->_params['joins'])){
+				$this->_params=[];
+			}
+			$this->_params[]=[$model, $conditions,$alias,$type];
+			return $this;
+		}
 
 
 		/**
@@ -126,7 +161,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $alias
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function innerJoin($model, $conditions=null, $alias=null){ }
+		public function innerJoin($model, $conditions=null, $alias=null){
+			return $this->join($model, $conditions, $alias, 'INNER');
+		}
 
 
 		/**
@@ -141,7 +178,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $alias
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function leftJoin($model, $conditions=null, $alias=null){ }
+		public function leftJoin($model, $conditions=null, $alias=null){
+			return $this->join($model, $conditions, $alias, 'LEFT');
+		}
 
 
 		/**
@@ -156,7 +195,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $alias
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function rightJoin($model, $conditions=null, $alias=null){ }
+		public function rightJoin($model, $conditions=null, $alias=null){
+			return $this->join($model, $conditions, $alias, 'RIGHT');
+		}
 
 
 		/**
@@ -166,19 +207,20 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $bindParams
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function where($conditions,$bindParams,$bindTypes){ }
+		public function where($conditions,$bindParams=null,$bindTypes=null){
+			$this->_params['conditions']=$conditions;
 
+			if(is_array($bindParams)){
+				if(!isset($this->_params['bind'])){
+					$this->_params['bind']=[];
+				}
+				$this->_params['bind']=array_merge($this->_params['bind'],$bindParams);
+			}
 
-		/**
-		 * Appends a condition to the current conditions using an AND operator (deprecated)
-		 *
-		 * @param string $conditions
-		 * @param array $bindParams
-		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
-		 */
-		public function addWhere($conditions, $bindParams=null, $bindTypes=null){ }
+			throw new Exception('bindTypes not support.');
+		}
 
 
 		/**
@@ -188,8 +230,28 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $bindParams
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function andWhere($conditions, $bindParams=null, $bindTypes=null){ }
+		public function andWhere($conditions, $bindParams=null, $bindTypes=null){
+			if(isset($this->_params['conditions'])){
+				$this->_params['conditions']='('.$this->_params['conditions'].') AND ('.$conditions.')';
+			}else{
+				$this->_params['conditions']=$conditions;
+			}
+
+			if(is_array($bindParams)){
+				if(!isset($this->_params['bind'])){
+					$this->_params['bind']=[];
+				}
+				$this->_params['bind']=array_merge($this->_params['bind'],$bindParams);
+			}
+
+			if($bindTypes !==null){
+				throw new Exception('bindTypes not support.');
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -199,8 +261,28 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $bindParams
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function orWhere($conditions, $bindParams=null, $bindTypes=null){ }
+		public function orWhere($conditions, $bindParams=null, $bindTypes=null){
+			if(isset($this->_params['conditions'])){
+				$this->_params['conditions']='('.$this->_params['conditions'].') OR ('.$conditions.')';
+			}else{
+				$this->_params['conditions']=$conditions;
+			}
+
+			if(is_array($bindParams)){
+				if(!isset($this->_params['bind'])){
+					$this->_params['bind']=[];
+				}
+				$this->_params['bind']=array_merge($this->_params['bind'],$bindParams);
+			}
+
+			if($bindTypes !==null){
+				throw new Exception('bindTypes not support.');
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -215,7 +297,16 @@ namespace ManaPHP\Mvc\Model {
 		 * @param mixed $maximum
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function betweenWhere($expr, $minimum, $maximum){ }
+		public function betweenWhere($expr, $minimum, $maximum){
+			$min_key='ABP'.$this->_hiddenParamNumber++;
+			$max_key='ABP'.$this->_hiddenParamNumber++;
+
+			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+			$this->andWhere($expr. 'BETWEEN :'.$min_key.': AND :'.$max_key.':',
+						[$min_key=>$minimum,$max_key=>$maximum]);
+
+			return $this;
+		}
 
 
 		/**
@@ -230,7 +321,15 @@ namespace ManaPHP\Mvc\Model {
 		 * @param mixed $maximum
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function notBetweenWhere($expr, $minimum, $maximum){ }
+		public function notBetweenWhere($expr, $minimum, $maximum){
+			$min_key='ABP'.$this->_hiddenParamNumber++;
+			$max_key='ABP'.$this->_hiddenParamNumber++;
+
+			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+			$this->andWhere($expr.' NOT BETWEEN :'.$min_key.': AND :'.$max_key.':',
+					[$min_key=>$minimum,$max_key=>$maximum]);
+			return $this;
+		}
 
 
 		/**
@@ -244,7 +343,20 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $values
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function inWhere($expr, $values){ }
+		public function inWhere($expr, $values){
+			$bind_params=[];
+			$bind_keys=[];
+
+			foreach($values as $value){
+				$key ='ABP'.$this->_hiddenParamNumber++;
+				$bind_keys[]=':'.$key.':';
+				$bind_params[$key]=$value;
+			}
+
+			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+			$this->andWhere($expr,' IN ('.implode(',',$bind_keys).')', $bind_params);
+			return $this;
+		}
 
 
 		/**
@@ -258,7 +370,20 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $values
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function notInWhere($expr, $values){ }
+		public function notInWhere($expr, $values){
+			$bind_params=[];
+			$bind_keys=[];
+
+			foreach($values as $value){
+				$key ='ABP'.$this->_hiddenParamNumber++;
+				$bind_keys[]=':'.$key.':';
+				$bind_params[$key]=$value;
+			}
+
+			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+			$this->andWhere($expr,' NOT IN ('.implode(',',$bind_keys).')', $bind_params);
+			return $this;
+		}
 
 
 		/**
@@ -267,17 +392,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $conditions
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function conditions($conditions){ }
-
-
-		/**
-		 * Adds the order-by parameter to the criteria (deprecated)
-		 *
-		 * @param string $orderColumns
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
-		 */
-		public function order($orderColumns){ }
-
+		public function conditions($conditions){
+			$this->_params['conditions']=$conditions;
+		}
 
 		/**
 		 * Adds the order-by parameter to the criteria
@@ -285,7 +402,10 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $orderColumns
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function orderBy($orderColumns){ }
+		public function orderBy($orderColumns){
+			$this->_params['order']=$orderColumns;
+			return $this;
+		}
 
 
 		/**
@@ -295,7 +415,15 @@ namespace ManaPHP\Mvc\Model {
 		 * @param int $offset
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function limit($limit, $offset=null){ }
+		public function limit($limit, $offset=null){
+			if($offset ===null){
+				$this->_params['limit']=$limit;
+			}else{
+				$this->_params['limit']=['number'=>$limit,'offset'=>$offset];
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -304,7 +432,10 @@ namespace ManaPHP\Mvc\Model {
 		 * @param boolean $forUpdate
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function forUpdate($forUpdate=null){ }
+		public function forUpdate($forUpdate=null){
+			$this->_params['for_update']=$forUpdate;
+			return $this;
+		}
 
 
 		/**
@@ -313,7 +444,10 @@ namespace ManaPHP\Mvc\Model {
 		 * @param boolean $sharedLock
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function sharedLock($sharedLock=null){ }
+		public function sharedLock($sharedLock=null){
+			$this->_params['shared_lock']=$sharedLock;
+			return $this;
+		}
 
 
 		/**
@@ -321,7 +455,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return string
 		 */
-		public function getWhere(){ }
+		public function getWhere(){
+			return isset($this->_params['conditions'])?$this->_params['conditions']:null;
+		}
 
 
 		/**
@@ -329,7 +465,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return string|array
 		 */
-		public function getColumns(){ }
+		public function getColumns(){
+			return isset($this->_params['columns'])?$this->_params['columns']:null;
+		}
 
 
 		/**
@@ -337,7 +475,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return string
 		 */
-		public function getConditions(){ }
+		public function getConditions(){
+			return isset($this->_params['conditions'])?$this->_params['conditions']:null;
+		}
 
 
 		/**
@@ -345,7 +485,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return string
 		 */
-		public function getLimit(){ }
+		public function getLimit(){
+			return isset($this->_params['limit'])?$this->_params['limit']:null;
+		}
 
 
 		/**
@@ -353,7 +495,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return string
 		 */
-		public function getOrder(){ }
+		public function getOrder(){
+			return isset($this->_params['order'])?$this->_params['order']:null;
+		}
 
 
 		/**
@@ -361,7 +505,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return array
 		 */
-		public function getParams(){ }
+		public function getParams(){
+			return $this->_params;
+		}
 
 
 		/**
@@ -380,7 +526,14 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
 		 */
-		public function execute(){ }
+		public function execute(){
+			/**
+			 * @var \ManaPHP\Mvc\ModelInterface $model
+			 */
+			$model=$this->_model;
+
+			return $model::find($this->getParams());
+		}
 
 
 		/**
@@ -390,7 +543,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $options
 		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
 		 */
-		public function cache($options){ }
+		public function cache($options){
+			$this->_params['cache']=$options;
+		}
 
 	}
 }
