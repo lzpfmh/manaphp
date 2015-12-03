@@ -187,14 +187,6 @@ namespace ManaPHP\Db {
 
 
 		/**
-		 * Closes active connection returning success. \ManaPHP automatically closes and destroys active connections within \ManaPHP\Db\Pool
-		 *
-		 * @return boolean
-		 */
-		public function close();
-
-
-		/**
 		 * Escapes a column/table/schema name
 		 *
 		 * @param string $identifier
