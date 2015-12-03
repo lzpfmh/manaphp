@@ -87,26 +87,6 @@ namespace ManaPHP\Db {
 
 
 		/**
-		 * Generates SQL checking for the existence of a schema.table
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @return string
-		 */
-		public function tableExists($tableName, $schemaName=null);
-
-
-		/**
-		 * Generates SQL checking for the existence of a schema.view
-		 *
-		 * @param string $viewName
-		 * @param string $schemaName
-		 * @return string
-		 */
-		public function viewExists($viewName, $schemaName=null);
-
-
-		/**
 		 * Returns a SQL modified with a FOR UPDATE clause
 		 *
 		 * @param string $sqlQuery
@@ -122,22 +102,6 @@ namespace ManaPHP\Db {
 		 * @return string
 		 */
 		public function sharedLock($sqlQuery);
-
-
-		/**
-		 * Return descriptor used to connect to the active database
-		 *
-		 * @return array
-		 */
-		public function getDescriptor();
-
-
-		/**
-		 * Gets the active connection unique identifier
-		 *
-		 * @return string
-		 */
-		public function getConnectionId();
 
 
 		/**
@@ -165,27 +129,11 @@ namespace ManaPHP\Db {
 
 
 		/**
-		 * Active SQL statement in the object
-		 *
-		 * @return array
-		 */
-		public function getSQLBindTypes();
-
-
-		/**
 		 * Returns type of database system the adapter is used for
 		 *
 		 * @return string
 		 */
 		public function getType();
-
-
-		/**
-		 * Returns the name of the dialect used
-		 *
-		 * @return string
-		 */
-		public function getDialectType();
 
 
 		/**
@@ -253,25 +201,6 @@ namespace ManaPHP\Db {
 		 * @return string
 		 */
 		public function escapeIdentifier($identifier);
-
-
-		/**
-		 * Escapes a value to avoid SQL injections
-		 *
-		 * @param string $str
-		 * @return string
-		 */
-		public function escapeString($str);
-
-
-		/**
-		 * Converts bound params like :name: or ?1 into ? bind params
-		 *
-		 * @param string $sqlStatement
-		 * @param array $params
-		 * @return array
-		 */
-		public function convertBoundParams($sqlStatement, $params);
 
 
 		/**
