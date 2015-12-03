@@ -129,22 +129,6 @@ namespace ManaPHP\Db {
 
 
 		/**
-		 * Returns type of database system the adapter is used for
-		 *
-		 * @return string
-		 */
-		public function getType();
-
-
-		/**
-		 * Returns internal dialect instance
-		 *
-		 * @return \ManaPHP\Db\DialectInterface
-		 */
-		public function getDialect();
-
-
-		/**
 		 * This method is automatically called in \ManaPHP\Db\Adapter\Pdo constructor.
 		 * Call it when you need to restore a database connection
 		 *

@@ -2,6 +2,8 @@
 
 namespace ManaPHP\Db {
 
+	use ManaPHP\Db;
+
 	/**
 	 * ManaPHP\Db\Adapter
 	 *
@@ -80,10 +82,13 @@ namespace ManaPHP\Db {
 		 * @param array $bindTypes
 		 * @return array
 		 */
-		public function fetchOne($sqlQuery, $fetchMode=, $bindParams=null){
+		public function fetchOne($sqlQuery, $fetchMode=Db::FETCH_ASSOC, $bindParams=null){
 			$result =$this->query($sqlQuery, $bindParams, null);
 			if(is_object($result)){
 				$result->setFetchMode($fetchMode);
+				return $result->fetch();
+			}else{
+				return [];
 			}
 		}
 
@@ -114,7 +119,17 @@ namespace ManaPHP\Db {
 		 * @param array $bindTypes
 		 * @return array
 		 */
-		public function fetchAll($sqlQuery, $fetchMode=null, $placeholders=null){ }
+		public function fetchAll($sqlQuery, $fetchMode=Db::FETCH_ASSOC, $bindParams=null){
+			$result =[];
+			$result =$this->query($sqlQuery,$bindParams, null);
+			if($result !==null){
+				$result->setFetchMode($fetchMode);
+			}
+
+			while(1){
+				$row =$result->fetch();
+			}
+		}
 
 
 		/**
@@ -214,34 +229,6 @@ namespace ManaPHP\Db {
 
 
 		/**
-		 * Generates SQL checking for the existence of a schema.table
-		 *
-		 * <code>
-		 * 	var_dump($connection->tableExists("blog", "posts"));
-		 * </code>
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @return string
-		 */
-		public function tableExists($tableName, $schemaName=null){ }
-
-
-		/**
-		 * Generates SQL checking for the existence of a schema.view
-		 *
-		 *<code>
-		 * var_dump($connection->viewExists("active_users", "posts"));
-		 *</code>
-		 *
-		 * @param string $viewName
-		 * @param string $schemaName
-		 * @return string
-		 */
-		public function viewExists($viewName, $schemaName=null){ }
-
-
-		/**
 		 * Returns a SQL modified with a FOR UPDATE clause
 		 *
 		 * @param string $sqlQuery
@@ -259,147 +246,6 @@ namespace ManaPHP\Db {
 		public function sharedLock($sqlQuery){ }
 
 
-		/**
-		 * Creates a table
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @param array $definition
-		 * @return boolean
-		 */
-		public function createTable($tableName, $schemaName, $definition){ }
-
-
-		/**
-		 * Drops a table from a schema/database
-		 *
-		 * @param string $tableName
-		 * @param   string $schemaName
-		 * @param boolean $ifExists
-		 * @return boolean
-		 */
-		public function dropTable($tableName, $schemaName=null, $ifExists=null){ }
-
-
-		/**
-		 * Creates a view
-		 *
-		 * @param string $tableName
-		 * @param array $definition
-		 * @param string $schemaName
-		 * @return boolean
-		 */
-		public function createView($viewName, $definition, $schemaName=null){ }
-
-
-		/**
-		 * Drops a view
-		 *
-		 * @param string $viewName
-		 * @param   string $schemaName
-		 * @param boolean $ifExists
-		 * @return boolean
-		 */
-		public function dropView($viewName, $schemaName=null, $ifExists=null){ }
-
-
-		/**
-		 * Adds a column to a table
-		 *
-		 * @param string $tableName
-		 * @param 	string $schemaName
-		 * @param \ManaPHP\Db\ColumnInterface $column
-		 * @return boolean
-		 */
-		public function addColumn($tableName, $schemaName, $column){ }
-
-
-		/**
-		 * Modifies a table column based on a definition
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @param \ManaPHP\Db\ColumnInterface $column
-		 * @return 	boolean
-		 */
-		public function modifyColumn($tableName, $schemaName, $column){ }
-
-
-		/**
-		 * Drops a column from a table
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @param string $columnName
-		 * @return 	boolean
-		 */
-		public function dropColumn($tableName, $schemaName, $columnName){ }
-
-
-		/**
-		 * Adds an index to a table
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @param \ManaPHP\Db\IndexInterface $index
-		 * @return 	boolean
-		 */
-		public function addIndex($tableName, $schemaName, $index){ }
-
-
-		/**
-		 * Drop an index from a table
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @param string $indexName
-		 * @return 	boolean
-		 */
-		public function dropIndex($tableName, $schemaName, $indexName){ }
-
-
-		/**
-		 * Adds a primary key to a table
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @param \ManaPHP\Db\IndexInterface $index
-		 * @return 	boolean
-		 */
-		public function addPrimaryKey($tableName, $schemaName, $index){ }
-
-
-		/**
-		 * Drops a table's primary key
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @return 	boolean
-		 */
-		public function dropPrimaryKey($tableName, $schemaName){ }
-
-
-		/**
-		 * Adds a foreign key to a table
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @param \ManaPHP\Db\ReferenceInterface $reference
-		 * @return boolean true
-		 */
-		public function addForeignKey($tableName, $schemaName, $reference){ }
-
-
-		/**
-		 * Drops a foreign key from a table
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @param string $referenceName
-		 * @return boolean true
-		 */
-		public function dropForeignKey($tableName, $schemaName, $referenceName){ }
-
 
 		/**
 		 * Returns the SQL column definition from a column
@@ -410,165 +256,6 @@ namespace ManaPHP\Db {
 		public function getColumnDefinition($column){ }
 
 
-		/**
-		 * List all tables on a database
-		 *
-		 *<code>
-		 * 	print_r($connection->listTables("blog"));
-		 *</code>
-		 *
-		 * @param string $schemaName
-		 * @return array
-		 */
-		public function listTables($schemaName=null){ }
-
-
-		/**
-		 * List all views on a database
-		 *
-		 *<code>
-		 *	print_r($connection->listViews("blog")); ?>
-		 *</code>
-		 *
-		 * @param string $schemaName
-		 * @return array
-		 */
-		public function listViews($schemaName=null){ }
-
-
-		/**
-		 * Lists table indexes
-		 *
-		 *<code>
-		 *	print_r($connection->describeIndexes('robots_parts'));
-		 *</code>
-		 *
-		 * @param string $table
-		 * @param string $schema
-		 * @return \ManaPHP\Db\Index[]
-		 */
-		public function describeIndexes($table, $schema=null){ }
-
-
-		/**
-		 * Lists table references
-		 *
-		 *<code>
-		 * print_r($connection->describeReferences('robots_parts'));
-		 *</code>
-		 *
-		 * @param string $table
-		 * @param string $schema
-		 * @return \ManaPHP\Db\Reference[]
-		 */
-		public function describeReferences($table, $schema=null){ }
-
-
-		/**
-		 * Gets creation options from a table
-		 *
-		 *<code>
-		 * print_r($connection->tableOptions('robots'));
-		 *</code>
-		 *
-		 * @param string $tableName
-		 * @param string $schemaName
-		 * @return array
-		 */
-		public function tableOptions($tableName, $schemaName=null){ }
-
-
-		/**
-		 * Creates a new savepoint
-		 *
-		 * @param string $name
-		 * @return boolean
-		 */
-		public function createSavepoint($name){ }
-
-
-		/**
-		 * Releases given savepoint
-		 *
-		 * @param string $name
-		 * @return boolean
-		 */
-		public function releaseSavepoint($name){ }
-
-
-		/**
-		 * Rollbacks given savepoint
-		 *
-		 * @param string $name
-		 * @return boolean
-		 */
-		public function rollbackSavepoint($name){ }
-
-
-		/**
-		 * Set if nested transactions should use savepoints
-		 *
-		 * @param boolean $nestedTransactionsWithSavepoints
-		 * @return \ManaPHP\Db\AdapterInterface
-		 */
-		public function setNestedTransactionsWithSavepoints($nestedTransactionsWithSavepoints){ }
-
-
-		/**
-		 * Returns if nested transactions should use savepoints
-		 *
-		 * @return boolean
-		 */
-		public function isNestedTransactionsWithSavepoints(){ }
-
-
-		/**
-		 * Returns the savepoint name to use for nested transactions
-		 *
-		 * @return string
-		 */
-		public function getNestedTransactionSavepointName(){ }
-
-
-		/**
-		 * Returns the default identity value to be inserted in an identity column
-		 *
-		 *<code>
-		 * //Inserting a new robot with a valid default value for the column 'id'
-		 * $success = $connection->insert(
-		 *     "robots",
-		 *     array($connection->getDefaultIdValue(), "Astro Boy", 1952),
-		 *     array("id", "name", "year")
-		 * );
-		 *</code>
-		 *
-		 * @return \ManaPHP\Db\RawValue
-		 */
-		public function getDefaultIdValue(){ }
-
-
-		/**
-		 * Check whether the database system requires a sequence to produce auto-numeric values
-		 *
-		 * @return boolean
-		 */
-		public function supportSequences(){ }
-
-
-		/**
-		 * Check whether the database system requires an explicit value for identity columns
-		 *
-		 * @return boolean
-		 */
-		public function useExplicitIdValue(){ }
-
-
-		/**
-		 * Return descriptor used to connect to the active database
-		 *
-		 * @return array
-		 */
-		public function getDescriptor(){ }
 
 
 		/**
@@ -617,14 +304,6 @@ namespace ManaPHP\Db {
 		 * @return string
 		 */
 		public function getType(){ }
-
-
-		/**
-		 * Returns the name of the dialect used
-		 *
-		 * @return string
-		 */
-		public function getDialectType(){ }
 
 	}
 }
