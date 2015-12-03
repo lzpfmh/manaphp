@@ -64,9 +64,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $model
 		 * @param string $conditions
 		 * @param string $alias
+		 * @param string $type
 		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
 		 */
-		public function join($model, $conditions=null, $alias=null);
+		public function join($model, $conditions=null, $alias=null,$type=null);
 
 
 		/**

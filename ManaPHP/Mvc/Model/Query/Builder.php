@@ -1,6 +1,9 @@
 <?php 
 
 namespace ManaPHP\Mvc\Model\Query {
+	use \ManaPHP\Di\InjectionAwareInterface;
+	use ManaPHP\Mvc\Model\Exception;
+	use ManaPHP\Mvc\Model\Query;
 
 	/**
 	 * ManaPHP\Mvc\Model\Query\Builder
@@ -18,7 +21,7 @@ namespace ManaPHP\Mvc\Model\Query {
 	 *</code>
 	 */
 	
-	class Builder implements \ManaPHP\Mvc\Model\Query\BuilderInterface, \ManaPHP\Di\InjectionAwareInterface {
+	class Builder implements BuilderInterface, InjectionAwareInterface {
 
 		protected $_dependencyInjector;
 
@@ -77,10 +80,96 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *$queryBuilder = new \ManaPHP\Mvc\Model\Query\Builder($params);
 		 *</code> 
 		 *
-		 * @param array $params
+		 * @param array|string $params
 		 * @param \ManaPHP\Di $dependencyInjector
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function __construct($params=null){ }
+		public function __construct($params=null, $dependencyInjector){
+			if(is_array($params)){
+				if(isset($params[0])){
+					$this->_conditions =$params[0];
+				}else{
+					if(isset($params['condition'])){
+						$this->_conditions =$params['condition'];
+					}
+				}
+
+				if(is_array($this->_conditions)){
+					$mergedConditions=[];
+					$mergedParams=[];
+
+					foreach($this->_conditions as $condition){
+						if(is_string($condition[0])){
+							$mergedConditions[]=$condition[0];
+						}
+
+						if(is_array($condition[1])){
+							$mergedParams=array_merge($mergedParams,$condition[1]);
+						}
+					}
+
+					$this->_conditions=implode(' AND ',$mergedConditions);
+
+					$this->_bindParams=$mergedParams;
+				}
+
+				if(isset($params['bind'])){
+					$this->_bindParams=$params['bind'];
+				}
+
+				if(isset($params['distinct'])){
+					$this->_distinct =$params['distinct'];
+				}
+
+				if(isset($params['models'])){
+					$this->_models=$params['models'];
+				}
+
+				if(isset($params['columns'])){
+					$this->_columns =$params['columns'];
+				}
+
+				if(isset($params['joins'])){
+					$this->_joins=$params['joins'];
+				}
+
+				if(isset($params['group'])){
+					$this->_group=$params['group'];
+				}
+
+				if(isset($params['having'])){
+					$this->_having =$params['having'];
+				}
+
+				if(isset($params['order'])){
+					$this->_order =$params['order'];
+				}
+
+				if(isset($params['limit'])){
+					if(is_array($params['limit'])){
+						throw new Exception('limit not support array format: '.$params['limit']);
+					}else{
+						$this->_limit =$params['limit'];
+					}
+				}
+
+				if(isset($params['offset'])){
+					$this->_offset=$params['offset'];
+				}
+
+				if(isset($params['for_update'])){
+					$this->_forUpdate =$params['for_update'];
+				}
+
+				if(isset($params['shared_lock'])){
+					$this->_sharedLock =$params['shared_lock'];
+				}
+			}else{
+				if(is_string($params) && $params !==''){
+					$this->_conditions=$params;
+				}
+			}
+		}
 
 
 		/**
@@ -89,7 +178,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param bool|null distinct
 		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
 		 */
-		public function distinct($distinct){ }
+		public function distinct($distinct){
+			$this->_distinct =$distinct;
+		}
 
 
 		/**
@@ -97,7 +188,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return bool
 		 */
-		public function getDistinct(){ }
+		public function getDistinct(){
+			return $this->_distinct;
+		}
 
 
 		/**
@@ -106,7 +199,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function setDI($dependencyInjector){ }
+		public function setDI($dependencyInjector){
+			$this->_dependencyInjector =$dependencyInjector;
+		}
 
 
 		/**
@@ -114,7 +209,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public function getDI(){ }
+		public function getDI(){
+			return $this->_dependencyInjector;
+		}
 
 
 		/**
@@ -127,7 +224,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string|array $columns
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function columns($columns){ }
+		public function columns($columns){
+			$this->_columns =$columns;
+		}
 
 
 		/**
@@ -135,7 +234,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return string|array
 		 */
-		public function getColumns(){ }
+		public function getColumns(){
+			return $this->_columns;
+		}
 
 
 		/**
@@ -149,7 +250,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string|array $models
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function from($models){ }
+		public function from($models){
+			$this->_models =$models;
+			return $this;
+		}
 
 
 		/**
@@ -163,7 +267,23 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $alias
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function addFrom($model, $alias=null){ }
+		public function addFrom($model, $alias=null){
+			if(!is_array($this->_models)){
+				if($this->_models !==null){
+					$this->_models=[$this->_models];
+				}else{
+					$this->_models=[];
+				}
+			}
+
+			if(is_string($alias)){
+				$this->_models[$alias]=$model;
+			}else{
+				$this->_models[]=$model;
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -171,7 +291,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return string|array
 		 */
-		public function getFrom(){ }
+		public function getFrom(){
+			return $this->_models;
+		}
 
 
 		/**
@@ -190,7 +312,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $type
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function join($model, $conditions=null, $alias=null){ }
+		public function join($model, $conditions=null, $alias=null, $type=null){
+			$this->_joins[]=[$model,$conditions,$alias,$type];
+			return $this;
+		}
 
 
 		/**
@@ -207,7 +332,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $alias
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function innerJoin($model, $conditions=null, $alias=null){ }
+		public function innerJoin($model, $conditions=null, $alias=null){
+			$this->_joins[]=[$model, $conditions,$alias,'INNER'];
+			return $this;
+		}
 
 
 		/**
@@ -222,7 +350,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $alias
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function leftJoin($model, $conditions=null, $alias=null){ }
+		public function leftJoin($model, $conditions=null, $alias=null){
+			$this->_joins[]=[$model, $conditions,$alias,'LEFT'];
+			return $this;
+		}
 
 
 		/**
@@ -237,7 +368,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $alias
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function rightJoin($model, $conditions=null, $alias=null){ }
+		public function rightJoin($model, $conditions=null, $alias=null){
+			$this->_joins[]=[$model, $conditions,$alias,'RIGHT'];
+			return $this;
+		}
 
 
 		/**
@@ -253,7 +387,19 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function where($conditions, $bindParams=null, $bindTypes=null){ }
+		public function where($conditions, $bindParams=null, $bindTypes=null){
+			$this->_conditions =$conditions;
+
+			if(is_array($bindParams)){
+				if(is_array($this->_bindParams)){
+					$this->_bindParams=array_merge($this->_bindParams ,$bindParams);
+				}else{
+					$this->_bindParams =$bindParams;
+				}
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -269,7 +415,23 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function andWhere($conditions, $bindParams=null, $bindTypes=null){ }
+		public function andWhere($conditions, $bindParams=null, $bindTypes=null){
+			if(isset($this->_conditions)){
+				$this->_conditions ='(' .$this->_conditions .') AND ('.$conditions.')';
+			}else{
+				$this->_conditions =$conditions;
+			}
+
+			if(is_array($bindParams)){
+				if(is_array($this->_bindParams)){
+					$this->_bindParams=array_merge($this->_bindParams ,$bindParams);
+				}else{
+					$this->_bindParams =$bindParams;
+				}
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -285,7 +447,23 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function orWhere($conditions, $bindParams=null, $bindTypes=null){ }
+		public function orWhere($conditions, $bindParams=null, $bindTypes=null){
+			if(isset($this->_conditions)){
+				$this->_conditions ='(' .$this->_conditions .') OR ('.$conditions.')';
+			}else{
+				$this->_conditions =$conditions;
+			}
+
+			if(is_array($bindParams)){
+				if(is_array($this->_bindParams)){
+					$this->_bindParams=array_merge($this->_bindParams ,$bindParams);
+				}else{
+					$this->_bindParams =$bindParams;
+				}
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -300,7 +478,15 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param mixed $maximum
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function betweenWhere($expr, $minimum, $maximum){ }
+		public function betweenWhere($expr, $minimum, $maximum){
+			$min_key ='ABP'.$this->_hiddenParamNumber++;
+			$max_key ='ABP'.$this->_hiddenParamNumber++;
+
+			$this->andWhere($expr. ' BETWEEN :'.$min_key. ': AND :'.$max_key.':',
+					[$min_key=>$minimum,$max_key=>$maximum]);
+
+			return $this;
+		}
 
 
 		/**
@@ -315,7 +501,15 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param mixed $maximum
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function notBetweenWhere($expr, $minimum, $maximum){ }
+		public function notBetweenWhere($expr, $minimum, $maximum){
+			$min_key ='ABP'.$this->_hiddenParamNumber++;
+			$max_key ='ABP'.$this->_hiddenParamNumber++;
+
+			$this->andWhere($expr. ' NOT BETWEEN :'.$min_key. ': AND :'.$max_key.':',
+				[$min_key=>$minimum,$max_key=>$maximum]);
+
+			return $this;
+		}
 
 
 		/**
@@ -329,7 +523,24 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param array $values
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function inWhere($expr, $values){ }
+		public function inWhere($expr, $values){
+			if(count($values) ===0){
+				$this->andWhere($expr .' != '.$expr);
+				return $this;
+			}
+
+			$bindParams =[];
+			$bindKeys=[];
+
+			foreach($values as $value){
+				$key ='ABP'.$this->_hiddenParamNumber++;
+				$bindKeys[]=':'.$key.':';
+				$bindParams[$key]=$value;
+			}
+			$this->andWhere($expr.' IN ('.implode(', ',$bindKeys).')',$bindParams);
+
+			return $this;
+		}
 
 
 		/**
@@ -343,7 +554,24 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param array $values
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function notInWhere($expr, $values){ }
+		public function notInWhere($expr, $values){
+			if(count($values) ===0){
+				$this->andWhere($expr .' != '.$expr);
+				return $this;
+			}
+
+			$bindParams =[];
+			$bindKeys=[];
+
+			foreach($values as $value){
+				$key ='ABP'.$this->_hiddenParamNumber++;
+				$bindKeys[]=':'.$key.':';
+				$bindParams[$key]=$value;
+			}
+			$this->andWhere($expr.' NOT IN ('.implode(', ',$bindKeys).')',$bindParams);
+
+			return $this;
+		}
 
 
 		/**
@@ -351,7 +579,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return string|array
 		 */
-		public function getWhere(){ }
+		public function getWhere(){
+			return $this->_conditions;
+		}
 
 
 		/**
@@ -365,7 +595,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $orderBy
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function orderBy($orderBy){ }
+		public function orderBy($orderBy){
+			$this->_order =$orderBy;
+			return $this;
+		}
 
 
 		/**
@@ -373,7 +606,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return string|array
 		 */
-		public function getOrderBy(){ }
+		public function getOrderBy(){
+			return $this->_order;
+		}
 
 
 		/**
@@ -386,7 +621,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $having
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function having($having){ }
+		public function having($having){
+			$this->_having =$having;
+			return $this;
+		}
 
 
 		/**
@@ -394,7 +632,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return string|array
 		 */
-		public function getHaving(){ }
+		public function getHaving(){
+			return $this->_having;
+		}
 
 
 		/**
@@ -409,7 +649,14 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param int $offset
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function limit($limit, $offset=null){ }
+		public function limit($limit, $offset=null){
+			$this->_limit =$limit;
+			if(isset($offset)){
+				$this->_offset =$offset;
+			}
+
+			return $this;
+		}
 
 
 		/**
@@ -417,7 +664,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return string|array
 		 */
-		public function getLimit(){ }
+		public function getLimit(){
+			return $this->_limit;
+		}
 
 
 		/**
@@ -431,15 +680,20 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param int $offset
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function offset($offset){ }
+		public function offset($offset){
+			$this->_offset =$offset;
+			return $this;
+		}
 
 
 		/**
 		 * Returns the current OFFSET clause
 		 *
-		 * @return string|array
+		 * @return string|null
 		 */
-		public function getOffset(){ }
+		public function getOffset(){
+			return $this->_offset;
+		}
 
 
 		/**
@@ -452,7 +706,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $group
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
-		public function groupBy($group){ }
+		public function groupBy($group){
+			$this->_group=$group;
+			return $this;
+		}
 
 
 		/**
@@ -460,7 +717,9 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return string
 		 */
-		public function getGroupBy(){ }
+		public function getGroupBy(){
+			return $this->_group;
+		}
 
 
 		/**
@@ -474,9 +733,15 @@ namespace ManaPHP\Mvc\Model\Query {
 		/**
 		 * Returns the query built
 		 *
-		 * @return \ManaPHP\Mvc\Model\Query
+		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
-		public function getQuery(){ }
+		public function getQuery(){
+			$query = new Query($this->getPhql(),$this->_dependencyInjector);
+			if(is_array($this->_bindParams)){
+				$query->setBindParams($this->_bindParams);
+			}
 
+			return $query;
+		}
 	}
 }
