@@ -3,6 +3,7 @@
 namespace ManaPHP\Db {
 
 	use ManaPHP\Db;
+	use \ManaPHP\Events\EventsAwareInterface;
 
 	/**
 	 * ManaPHP\Db\Adapter
@@ -10,7 +11,7 @@ namespace ManaPHP\Db {
 	 * Base class for ManaPHP\Db adapters
 	 */
 	
-	abstract class Adapter implements \ManaPHP\Events\EventsAwareInterface, \ManaPHP\Db\AdapterInterface {
+	abstract class Adapter implements EventsAwareInterface, AdapterInterface {
 
 		protected $_eventsManager;
 
@@ -41,7 +42,7 @@ namespace ManaPHP\Db {
 		 *
 		 * @param array $descriptor
 		 */
-		protected function __construct(){ }
+		public function __construct(){ }
 
 
 		/**
