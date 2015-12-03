@@ -125,15 +125,6 @@ namespace ManaPHP\Db {
 
 
 		/**
-		 * Returns the SQL column definition from a column
-		 *
-		 * @param \ManaPHP\Db\ColumnInterface $column
-		 * @return string
-		 */
-		public function getColumnDefinition($column);
-
-
-		/**
 		 * Return descriptor used to connect to the active database
 		 *
 		 * @return array
