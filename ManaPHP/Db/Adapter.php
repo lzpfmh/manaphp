@@ -34,12 +34,6 @@ namespace ManaPHP\Db {
 
 		protected $_sqlBindTypes;
 
-		protected $_transactionLevel;
-
-		protected $_transactionsWithSavepoints;
-
-		protected static $_connectionConsecutive;
-
 		/**
 		 * @var \PDO
 		 */
