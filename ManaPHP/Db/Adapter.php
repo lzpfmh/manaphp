@@ -18,20 +18,24 @@ namespace ManaPHP\Db {
 		 */
 		protected $_eventsManager;
 
+		/**
+		 * @var array
+		 */
 		protected $_descriptor;
 
-		protected $_dialectType;
-
-		protected $_type;
-
-		protected $_dialect;
-
-		protected $_connectionId;
-
+		/**
+		 * @var string
+		 */
 		protected $_sqlStatement;
 
+		/**
+		 * @var array
+		 */
 		protected $_sqlVariables;
 
+		/**
+		 * @var array
+		 */
 		protected $_sqlBindTypes;
 
 		/**
@@ -41,6 +45,7 @@ namespace ManaPHP\Db {
 
 		/**
 		 * Last affected rows
+		 * @var int
 		 */
 		protected $_affectedRows;
 
