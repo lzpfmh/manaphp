@@ -13,6 +13,9 @@ namespace ManaPHP\Db {
 	
 	abstract class Adapter implements EventsAwareInterface, AdapterInterface {
 
+		/**
+		 * @var \ManaPHP\Events\ManagerInterface
+		 */
 		protected $_eventsManager;
 
 		protected $_descriptor;
@@ -38,11 +41,23 @@ namespace ManaPHP\Db {
 		protected static $_connectionConsecutive;
 
 		/**
+		 * @var \PDO
+		 */
+		protected $_pdo;
+
+		/**
+		 * Last affected rows
+		 */
+		protected $_affectedRows;
+
+		/**
 		 * \ManaPHP\Db\Adapter constructor
 		 *
 		 * @param array $descriptor
 		 */
-		public function __construct(){ }
+		public function __construct($descriptor){
+			$this->connect($descriptor);
+		}
 
 
 		/**
@@ -64,6 +79,219 @@ namespace ManaPHP\Db {
 			return $this->_eventsManager;
 		}
 
+		/**
+		 * This method is automatically called in Phalcon\Db\Adapter\Pdo constructor.
+		 * Call it when you need to restore a database connection
+		 *
+		 *<code>
+		 * //Make a connection
+		 * $connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+		 *  'host' => '192.168.0.11',
+		 *  'username' => 'sigma',
+		 *  'password' => 'secret',
+		 *  'dbname' => 'blog',
+		 * ));
+		 *
+		 * //Reconnect
+		 * $connection->connect();
+		 * </code>
+		 *
+		 * @param 	array descriptor
+		 * @return 	boolean
+		 */
+		public function connect($descriptor){
+			if($descriptor ===null){
+				$descriptor =$this->_descriptor;
+			}
+
+			if(isset($descriptor['username'])){
+				$username =$descriptor['username'];
+				unset($descriptor['username']);
+			}else{
+				$username =null;
+			}
+
+			if(isset($descriptor['password'])){
+				$password =$descriptor['password'];
+				unset($descriptor['password']);
+			}else{
+				$password =null;
+			}
+
+			if(isset($descriptor['options'])){
+				$options =$descriptor['options'];
+				unset($descriptor['options']);
+			}else{
+				$options =[];
+			}
+
+			if(isset($descriptor['persistent'])){
+				if($descriptor['persistent']){
+					$options[\PDO::ATTR_PERSISTENT] =true;
+				}
+				unset($descriptor['persistent']);
+			}
+
+			if(isset($descriptor['dsn'])){
+				$dsn =$descriptor['dsn'];
+			}else{
+				$dsn_parts=[];
+				foreach($descriptor as $k=>$v){
+					$dsn_parts[]=$k.'='.$v;
+				}
+				$dsn=implode(';',$dsn_parts);
+			}
+
+			$this->_pdo=new \PDO($this->_type.':'.$dsn,$username,$password,$options);
+		}
+
+		/**
+		 * Returns a PDO prepared statement to be executed with 'executePrepared'
+		 *
+		 *<code>
+		 * $statement = $db->prepare('SELECT * FROM robots WHERE name = :name');
+		 * $result = $connection->executePrepared($statement, array('name' => 'Voltron'));
+		 *</code>
+		 *
+		 * @param string $sqlStatement
+		 * @return \PDOStatement
+		 */
+		public function prepare($sqlStatement)
+		{
+			return $this->_pdo->prepare($sqlStatement);
+		}
+
+		/**
+		 * Executes a prepared statement binding. This function uses integer indexes starting from zero
+		 *
+		 *<code>
+		 * $statement = $db->prepare('SELECT * FROM robots WHERE name = :name');
+		 * $result = $connection->executePrepared($statement, array('name' => 'Voltron'));
+		 *</code>
+		 *
+		 * @param \PDOStatement statement
+		 * @param array $placeholders
+		 * @param array $dataTypes
+		 * @return \PDOStatement
+		 * @throws \ManaPHP\Db\Exception
+		 */
+		public function executePrepared($statement, $placeholders, $dataTypes)
+		{
+			foreach($placeholders as $k=>$v){
+				if(is_string($k)){
+					$parameter =$k;
+				}else{
+					throw new Exception('Invalid bind parameter: '.$k);
+				}
+
+				if(!is_array($v)){
+					$statement->bindValue($parameter,$v);
+				}else{
+					foreach($v as $position=>$itemValue){
+						$statement->bindValue($parameter.$position,$itemValue);
+					}
+				}
+			}
+			$statement->execute();
+			return $statement;
+		}
+
+
+		/**
+		 * Sends SQL statements to the database server returning the success state.
+		 * Use this method only when the SQL statement sent to the server is returning rows
+		 *
+		 *<code>
+		 *	//Querying data
+		 *	$resultset = $connection->query("SELECT * FROM robots WHERE type='mechanical'");
+		 *	$resultset = $connection->query("SELECT * FROM robots WHERE type=?", array("mechanical"));
+		 *</code>
+		 *
+		 * @param string $sqlStatement
+		 * @param array $bindParams
+		 * @param array $bindTypes
+		 */
+		public function query($sqlStatement, $bindParams = null, $bindTypes = null){
+			if(is_object($this->_eventsManager)) {
+				$this->_sqlStatement = $sqlStatement;
+				$this->_sqlVariables = $bindParams;
+				$this->_sqlBindTypes = $bindTypes;
+			}
+			if($this->_eventsManager->fire('db:beforeQuery',$this,$bindParams) ===false){
+				return false;
+			}
+
+			$statement =$this->_pdo->query($sqlStatement);
+
+			if(is_array($bindParams) &&is_object($statement)){
+				$statement =$this->executePrepared($statement,$bindParams,$bindTypes);
+			}
+
+			if(is_object($statement)){
+				if(is_object($this->_eventsManager)){
+					$this->_eventsManager->fire('db:afterQuery',$this,$bindParams);
+				}
+
+				return new Re
+			}
+
+			return $statement;
+		}
+
+		/**
+		 * Sends SQL statements to the database server returning the success state.
+		 * Use this method only when the SQL statement sent to the server doesn't return any rows
+		 *
+		 *<code>
+		 *	//Inserting data
+		 *	$success = $connection->execute("INSERT INTO robots VALUES (1, 'Astro Boy')");
+		 *	$success = $connection->execute("INSERT INTO robots VALUES (?, ?)", array(1, 'Astro Boy'));
+		 *</code>
+		 * @param string $sqlStatement
+		 * @param array $bindParams
+		 * @param array $bindTypes
+		 */
+		public function execute($sqlStatement, $bindParams = null, $bindTypes = null){
+			if(is_object($this->_eventsManager)){
+				$this->_sqlStatement =$sqlStatement;
+				$this->_sqlVariables =$bindParams;
+				$this->_sqlBindTypes =$bindTypes;
+
+				if($this->_eventsManager->fire('db:beforeQuery',$this,$bindParams) ===false){
+					return false;
+				}
+			}
+
+			$affectedRows=0;
+
+			if(is_array($bindParams)){
+				$statement =$this->_pdo->prepare($sqlStatement);
+				if(is_object($sqlStatement)){
+					$newStatement=$this->executePrepared($statement,$bindParams,$bindTypes);
+					$affectedRows =$newStatement->rowCount();
+				}
+			}else{
+				$affectedRows =$this->_pdo->exec($sqlStatement);
+			}
+
+			if(is_int($affectedRows)){
+				$this->_affectedRows =$affectedRows;
+				if(is_object($this->_eventsManager)){
+					$this->_eventsManager->fire('db:afterQuery',$this,$bindParams);
+				}
+			}
+
+			return true;
+		}
+
+		/**
+		 * Returns the number of affected rows by the last INSERT/UPDATE/DELETE reported by the database system
+		 *
+		 * @return int
+		 */
+		public function affectedRows(){
+			return $this->_affectedRows;
+		}
 		/**
 		 * Returns the first row in a SQL query result
 		 *
@@ -257,8 +485,6 @@ namespace ManaPHP\Db {
 		public function getColumnDefinition($column){ }
 
 
-
-
 		/**
 		 * Gets the active connection unique identifier
 		 *
@@ -272,15 +498,18 @@ namespace ManaPHP\Db {
 		 *
 		 * @return string
 		 */
-		public function getSQLStatement(){ }
-
+		public function getSQLStatement(){
+			return $this->_sqlStatement;
+		}
 
 		/**
-		 * Active SQL statement in the object without replace bound parameters
+		 * Active SQL statement in the object
 		 *
-		 * @return string
+		 * @return array
 		 */
-		public function getRealSQLStatement(){ }
+		public function getSQLVariables(){
+			return $this->_sqlStatement;
+		}
 
 
 		/**
@@ -288,15 +517,9 @@ namespace ManaPHP\Db {
 		 *
 		 * @return array
 		 */
-		public function getSQLVariables(){ }
-
-
-		/**
-		 * Active SQL statement in the object
-		 *
-		 * @return array
-		 */
-		public function getSQLBindTypes(){ }
+		public function getSQLBindTypes(){
+			return $this->_sqlBindTypes;
+		}
 
 
 		/**
@@ -306,5 +529,67 @@ namespace ManaPHP\Db {
 		 */
 		public function getType(){ }
 
+		/**
+		 * Starts a transaction in the connection
+		 *
+		 * @return boolean
+		 */
+		public function begin(){
+			if(!is_object($this->_pdo)){
+				return false;
+			}
+
+			if(is_object($this->_eventsManager)){
+				$this->_eventsManager->fire('db:beginTransaction',$this);
+			}
+			return $this->_pdo->beginTransaction();
+		}
+
+		/**
+		 * Checks whether the connection is under a transaction
+		 *
+		 *<code>
+		 *	$connection->begin();
+		 *	var_dump($connection->isUnderTransaction()); //true
+		 *</code>
+		 */
+		public function isUnderTransaction(){
+			if($this->_pdo ===null){
+				return false;
+			}
+
+			return $this->_pdo->inTransaction();
+		}
+
+		/**
+		 * Rollbacks the active transaction in the connection
+		 *
+		 * @return boolean
+		 */
+		public function rollback(){
+			if(!is_object($this->_pdo)){
+				return false;
+			}
+
+			if(is_object($this->_eventsManager)){
+				$this->_eventsManager->fire('db:rollbackTransaction',$this);
+			}
+
+			return $this->_pdo->rollBack();
+		}
+
+
+		/**
+		 * Commits the active transaction in the connection
+		 *
+		 * @return boolean
+		 */
+		public function commit(){
+			if($this->_pdo ===null){
+				return false;
+			}
+
+			return $this->commit();
+		}
 	}
 }

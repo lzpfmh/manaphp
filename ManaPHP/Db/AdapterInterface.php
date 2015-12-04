@@ -135,7 +135,7 @@ namespace ManaPHP\Db {
 		 * @param 	array $descriptor
 		 * @return 	boolean
 		 */
-		public function connect($descriptor=null);
+		public function connect($descriptor);
 
 
 		/**
@@ -196,6 +196,15 @@ namespace ManaPHP\Db {
 		public function begin();
 
 
+		/**
+		 * Checks whether the connection is under a transaction
+		 *
+		 *<code>
+		 *	$connection->begin();
+		 *	var_dump($connection->isUnderTransaction()); //true
+		 *</code>
+		 */
+		public function isUnderTransaction();
 		/**
 		 * Rollbacks the active transaction in the connection
 		 *
