@@ -14,26 +14,36 @@ namespace ManaPHP\Db {
 	abstract class Adapter implements EventsAwareInterface, AdapterInterface {
 
 		/**
+		 * Event Manager
+		 *
 		 * @var \ManaPHP\Events\ManagerInterface
 		 */
 		protected $_eventsManager;
 
 		/**
+		 * Descriptor used to connect to a database
+		 *
 		 * @var array
 		 */
 		protected $_descriptor;
 
 		/**
+		 * Active SQL Statement
+		 *
 		 * @var string
 		 */
 		protected $_sqlStatement;
 
 		/**
+		 * Active SQL bound parameter variables
+		 *
 		 * @var array
 		 */
 		protected $_sqlVariables;
 
 		/**
+		 * Active SQL Bind Types
+		 *
 		 * @var array
 		 */
 		protected $_sqlBindTypes;
@@ -95,7 +105,7 @@ namespace ManaPHP\Db {
 		 * $connection->connect();
 		 * </code>
 		 *
-		 * @param 	array descriptor
+		 * @param 	array $descriptor
 		 * @return 	boolean
 		 */
 		public function connect($descriptor){
