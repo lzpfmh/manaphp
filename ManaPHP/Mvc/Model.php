@@ -530,6 +530,20 @@ namespace ManaPHP\Mvc {
 				$bindParams[$bindKey]=$this->{$attributeField};
 			}
 
+			if(is_array($this->_snapshot)){
+				$primaryKeyEqual=true;
+				foreach($primaryKeys as $attributeField){
+					if(!isset($this->_snapshot[$attributeField])
+						||$this->_snapshot[$attributeField] !==$this->{$attributeField}){
+						$primaryKeyEqual =false;
+					}
+				}
+
+				if($primaryKeyEqual){
+					return true;
+				}
+			}
+
 			$schema =$this->getSchema();
 			$source=$this->getSource();
 			if($schema !=='' &&$schema !==null){
