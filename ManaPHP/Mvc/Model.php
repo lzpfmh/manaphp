@@ -143,7 +143,6 @@ namespace ManaPHP\Mvc {
 		 * Returns the models meta-data service related to the entity instance
 		 *
 		 * @return \ManaPHP\Mvc\Model\MetaDataInterface
-		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function getModelsMetaData(){
 			if(!is_object($this->_modelsMetaData)){
@@ -1081,6 +1080,33 @@ namespace ManaPHP\Mvc {
 			return $success;
 		}
 
+		/**
+		 * Serializes the object ignoring connections, services, related objects or static properties
+		 *
+		 * @return string
+		 */
+		public function serialize(){
+			return serialize($this->toArray());
+		}
+
+
+		/**
+		 * Unserializes the object from a serialized string
+		 *
+		 * @param string $data
+		 */
+		public function unserialize($data){
+			$attributes=unserialize($data);
+			if(is_array($attributes)){
+				$this->_modelsManager=Di::getDefault()->getShared('modelsManager');
+
+				$this->_modelsManager->initialize($this);
+
+				foreach($attributes as $k=>$v){
+					$this->{$k}=$v;
+				}
+			}
+		}
 
 		/**
 		 * Returns a simple representation of the object that can be used with var_dump
@@ -1105,7 +1131,6 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $columns
 		 * @return array
-		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function toArray($columns=null){
 			$data =[];
