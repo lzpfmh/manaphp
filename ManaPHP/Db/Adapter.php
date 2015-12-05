@@ -293,6 +293,24 @@ namespace ManaPHP\Db {
 		}
 
 		/**
+		 * Escapes a column/table/schema name
+		 *
+		 * <code>
+		 * echo $connection->escapeIdentifier('my_table'); // `my_table`
+		 * echo $connection->escapeIdentifier(['companies', 'name']); // `companies`.`name`
+		 * <code>
+		 *
+		 * @param string|array identifier
+		 * @return string
+		 */
+		public function escapeIdentifier($identifier){
+			if(is_array($identifier)){
+				return '`'.$identifier[0].'`.`'.$identifier[1].'`';
+			}else{
+				return '`'.$identifier.'`';
+			}
+		}
+		/**
 		 * Returns the number of affected rows by the last INSERT/UPDATE/DELETE reported by the database system
 		 *
 		 * @return int
@@ -396,7 +414,41 @@ namespace ManaPHP\Db {
 				throw new Exception('Unable to insert into ' . $table . ' without data');
 			}
 
-			$place
+			if($fields !==null &&count($values) !==count($fields)){
+				throw new Exception('The number of values in the insert is not the same as fields');
+			}
+
+			$value_parts=[];
+			$bindParams=[];
+
+			foreach($values as $k=>$v){
+				if(is_object($v)){
+					$v =(string)$v;
+				}
+
+				if($fields ===null){
+					$value_parts[]='?';
+					$bindParams[$k+1]=$v;
+				}else{
+					$bindKey =':'.$fields[$k];
+					$value_parts[]=$fields[$k];
+					$bindParams[$bindKey]=$v;
+				}
+			}
+
+			if(is_array($fields)){
+				$field_parts=[];
+
+				foreach($fields as $field){
+					$field_parts[]=$this->escapeIdentifier($field);
+				}
+
+				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).' ('. implode(', ',$field_parts).') VALUES '. $value_parts .')';
+			}else{
+				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).' VALUES ('. implode(', ',$value_parts).')';
+			}
+
+			return $this->execute($insertSql,$bindParams);
 		}
 
 
@@ -422,9 +474,14 @@ namespace ManaPHP\Db {
 		 * @param 	string $whereCondition
 		 * @param 	array $dataTypes
 		 * @return 	boolean
+		 * @throws \ManaPHP\Db\Exception
 		 */
 		public function update($table, $fields, $values, $whereCondition=null, $dataTypes=null){
+			if(count($fields) !==count($values)){
+				throw new Exception('The number of values in the update is not the same as fields');
+			}
 
+			
 		}
 
 
