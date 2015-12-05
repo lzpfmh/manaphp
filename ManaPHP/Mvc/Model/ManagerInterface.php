@@ -56,7 +56,6 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param \ManaPHP\Mvc\Model $model
 		 * @param string $source
-		 * @return string
 		 */
 		public function setModelSource($model, $source);
 
@@ -185,41 +184,6 @@ namespace ManaPHP\Mvc\Model {
 
 
 		/**
-		 * Sets if a model must keep snapshots
-		 *
-		 * @param \ManaPHP\Mvc\Model $model
-		 * @param boolean $keepSnapshots
-		 */
-		public function keepSnapshots($model, $keepSnapshots);
-
-
-		/**
-		 * Checks if a model is keeping snapshots for the queried records
-		 *
-		 * @return boolean
-		 */
-		public function isKeepingSnapshots($model);
-
-
-		/**
-		 * Sets if a model must use dynamic update instead of the all-field update
-		 *
-		 * @param \ManaPHP\Mvc\Model $model
-		 * @param boolean $dynamicUpdate
-		 */
-		public function useDynamicUpdate($model, $dynamicUpdate);
-
-
-		/**
-		 * Checks if a model is using dynamic update instead of all-field update
-		 *
-		 * @return boolean
-		 */
-		public function isUsingDynamicUpdate($model);
-
-
-
-		/**
 		 * Creates a \ManaPHP\Mvc\Model\Query without execute it
 		 *
 		 * @param string $phql
@@ -245,15 +209,6 @@ namespace ManaPHP\Mvc\Model {
 		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
 		 */
 		public function createBuilder($params=null);
-
-
-		/**
-		 * Binds a behavior to a model
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param \ManaPHP\Mvc\Model\BehaviorInterface $behavior
-		 */
-		public function addBehavior($model, $behavior);
 
 
 		/**
