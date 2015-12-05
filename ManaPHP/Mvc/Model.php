@@ -894,7 +894,7 @@ namespace ManaPHP\Mvc {
 				$table =$source;
 			}
 
-			$exists =$this->_exists($metaData, $this->getReadConnection(),$table);
+			$exists =$this->_exists($metaData, $this->getReadConnection());
 			if($exists){
 				$this->_operationMade =self::OP_UPDATE;
 			}else{
