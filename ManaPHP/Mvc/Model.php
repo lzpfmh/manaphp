@@ -508,48 +508,26 @@ namespace ManaPHP\Mvc {
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
 		 * @param \ManaPHP\Db\AdapterInterface $connection
 		 * @return boolean
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		protected function _exists($metaData,$connection){
-			if($this->_uniqueKey ===null){
-				$primaryKeys=$metaData->getPrimaryKeyAttributes($this);
-				if(count($primaryKeys) ===0){
-					return false;
-				}
-
-				$numberEmpty=0;
-				$uniqueParams=[];
-				$wherePk=[];
-
-				foreach($primaryKeys as $attributeField){
-					$value =null;
-					if(isset($this->{$attributeField})){
-						$value=$this->{$attributeField};
-
-						if($value ===null ||$value===''){
-							$numberEmpty++;
-						}
-
-						$uniqueParams[]=$value;
-					}else{
-						$uniqueParams[]=null;
-						$numberEmpty++;
-					}
-
-					$wherePk[]=$connection->escapeIdentifier($attributeField).' = ?';
-				}
-
-				if($numberEmpty ===count($primaryKeys)){
-					return false;
-				}
-
-				$joinWhere=implode(' AND ', $wherePk);
-
-				$this->_uniqueKey=$joinWhere;
-				$this->_uniqueParams=$uniqueParams;
+			$primaryKeys=$metaData->getPrimaryKeyAttributes($this);
+			if(count($primaryKeys) ===0){
+				return false;
 			}
 
-			if($this->_dirtyState ===self::DIRTY_STATE_PERSISTENT){
-				return true;
+			$conditions=[];
+			$bindParams=[];
+
+			foreach($primaryKeys as $attributeField){
+				if(!isset($this->{$attributeField})){
+					throw new Exception('Record cannot be updated because it\'s some primary key has invalid value.');
+				}
+
+				$bindKey =':'.$attributeField;
+
+				$conditions[]=$attributeField.' ='.$bindKey;
+				$bindParams[$bindKey]=$this->{$attributeField};
 			}
 
 			$schema =$this->getSchema();
@@ -561,17 +539,11 @@ namespace ManaPHP\Mvc {
 			}
 
 			$num =$connection->fetchOne('SELECT COUNT(*) as rowcount'.
-						' FROM '. $connection->escapeIdentifier($table).
-						' WHERE '. $this->_uniqueKey,
-							null, $this->_uniqueParams);
+										' FROM '. $connection->escapeIdentifier($table).
+										' WHERE '. implode(' AND ',$conditions),
+							null, $bindParams);
 
-			if(isset($num['rowcount'])){
-				$this->_dirtyState =self::DIRTY_STATE_PERSISTENT;
-				return true;
-			}else{
-				$this->_dirtyState =self::DIRTY_STATE_TRANSIENT;
-				return false;
-			}
+			return isset($num['rowcount']);
 		}
 
 
