@@ -7,7 +7,6 @@ namespace ManaPHP\Mvc {
 	use ManaPHP\Mvc\Model\Message;
 	use \ManaPHP\Mvc\Model\ResultInterface;
 	use \ManaPHP\Di\InjectionAwareInterface;
-	use ManaPHP\Mvc\Model\ValidationFailed;
 
 	/**
 	 * ManaPHP\Mvc\Model
