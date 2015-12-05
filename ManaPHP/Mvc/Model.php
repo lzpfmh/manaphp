@@ -839,11 +839,17 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
 		 * @param \ManaPHP\Db\AdapterInterface $connection
-		 * @param string $table
 		 * @return boolean
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		protected function _doLowInsert($metaData,$connection,$table){
+		protected function _doLowInsert($metaData,$connection){
+			$schema=$this->getSchema();
+			$source =$this->getSource();
+			if($schema !==null){
+				$table=[$schema,$source];
+			}else{
+				$table =$source;
+			}
 			$attributes=$metaData->getAttributes($this);
 
 			$fields=[];
@@ -873,10 +879,17 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
 		 * @param \ManaPHP\Db\AdapterInterface $connection
-		 * @param string|array $table
 		 * @return boolean
 		 */
-		protected function _doLowUpdate($metaData,$connection,$table){
+		protected function _doLowUpdate($metaData,$connection){
+			$schema=$this->getSchema();
+			$source =$this->getSource();
+			if($schema !==null){
+				$table=[$schema,$source];
+			}else{
+				$table =$source;
+			}
+
 			$nonPrimary=$metaData->getNonPrimaryKeyAttributes($this);
 
 			$fields=[];
@@ -932,23 +945,15 @@ namespace ManaPHP\Mvc {
 
 			$metaData =$this->getModelsMetaData();
 
-			$schema=$this->getSchema();
-			$source =$this->getSource();
-			if($schema){
-				$table=[$schema,$source];
-			}else{
-				$table =$source;
-			}
-
 			$exists =$this->_exists($metaData, $this->getReadConnection());
 			if($this->_preSave($exists) ===false){
 				throw new Exception('save failed');
 			}
 
 			if($exists){
-				$success =$this->_doLowUpdate($metaData,$this->getWriteConnection(),$table);
+				$success =$this->_doLowUpdate($metaData,$this->getWriteConnection());
 			}else{
-				$success=$this->_doLowInsert($metaData,$this->getWriteConnection(),$table);
+				$success=$this->_doLowInsert($metaData,$this->getWriteConnection());
 			}
 
 			if($success){
@@ -1013,14 +1018,12 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function update($data=null, $whiteList=null){
-			if($this->_dirtyState){
-				$metaData =$this->getModelsMetaData();
-				if(!$this->_exists($metaData, $this->getReadConnection())){
-					throw new Exception('Record cannot be updated because it does not exist');
-				}
+			$metaData =$this->getModelsMetaData();
+			if(!$this->_exists($metaData, $this->getReadConnection())){
+				throw new Exception('Record cannot be updated because it does not exist');
 			}
 
-			return $this->save($data,$whiteList);
+			return $this->save($data, $whiteList);
 		}
 
 
@@ -1043,14 +1046,18 @@ namespace ManaPHP\Mvc {
 			$metaData =$this->getModelsMetaData();
 			$writeConnection=$this->getWriteConnection();
 			$primaryKeys=$metaData->getPrimaryKeyAttributes($this);
+
 			if(count($primaryKeys) ===0){
 				throw new Exception('A primary key must be defined in the model in order to perform the operation');
 			}
 
-			$values=[];
+			if($this->fireEventCancel('beforeDelete') ===false){
+				return false;
+			}
+
+			$bindParams=[];
 			$conditions=[];
-			foreach($primaryKeys as $primaryKey){
-				$attributeField =$primaryKey;
+			foreach($primaryKeys as $attributeField){
 
 				/**
 				 * If the attribute is currently set in the object add it to the conditions
@@ -1059,23 +1066,24 @@ namespace ManaPHP\Mvc {
 					throw new Exception("Cannot delete the record because the primary key attribute: '" . $attributeField . "' wasn't set");
 				}
 
-				$values[]=$this->{$attributeField};
-				$conditions =$writeConnection->escapeIdentifier($attributeField).' = ?';
+				$bindKey=':'.$attributeField;
+				$bindParams[$bindKey]=$this->{$attributeField};
+				$conditions =$writeConnection->escapeIdentifier($attributeField).' ='.$bindKey;
 			}
+
 			$schema =$this->getSchema();
 			$source =$this->getSource();
-			if(isset($schema)){
+			if($schema !==null){
 				$table=[$schema,$source];
 			}else{
 				$table=$source;
 			}
 
-			$success =$writeConnection->delete($table,implode(' AND ',$conditions),$values);
+			$success =$writeConnection->delete($table,implode(' AND ',$conditions),$bindParams);
 
-			/**
-			 * Force perform the record existence checking again
-			 */
-			$this->_dirtyState =self::DIRTY_STATE_DETACHED;
+			if($success ===true){
+				$this->fireEvent('afterDelete');
+			}
 
 			return $success;
 		}
