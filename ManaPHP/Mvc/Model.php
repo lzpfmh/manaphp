@@ -4,7 +4,6 @@ namespace ManaPHP\Mvc {
 
 	use ManaPHP\Di;
 	use ManaPHP\Mvc\Model\Exception;
-	use ManaPHP\Mvc\Model\Message;
 	use \ManaPHP\Mvc\Model\ResultInterface;
 	use \ManaPHP\Di\InjectionAwareInterface;
 
@@ -65,11 +64,6 @@ namespace ManaPHP\Mvc {
 		protected $_modelsManager;
 
 		protected $_modelsMetaData;
-
-		/**
-		 * @var \ManaPHP\Mvc\Model\MessageInterface[]
-		 */
-		protected $_errorMessages;
 
 		protected $_operationMade;
 
@@ -1015,11 +1009,7 @@ namespace ManaPHP\Mvc {
 			$metaData =$this->getModelsMetaData();
 
 			if($this->_exists($metaData,$this->getReadConnection())){
-				$this->_errorMessages=[
-					new Message('Record cannot be created because it already exists', null, 'InvalidCreateAttempt')
-				];
-
-				return false;
+				throw new Exception('Record cannot be created because it already exists');
 			}
 
 			return $this->save($data,$whiteList);
@@ -1046,8 +1036,7 @@ namespace ManaPHP\Mvc {
 			if($this->_dirtyState){
 				$metaData =$this->getModelsMetaData();
 				if(!$this->_exists($metaData, $this->getReadConnection())){
-					$this->_errorMessages=[new Message('Record cannot be updated because it does not exist', null, 'InvalidUpdateAttempt')];
-					return false;
+					throw new Exception('Record cannot be updated because it does not exist');
 				}
 			}
 
@@ -1074,7 +1063,6 @@ namespace ManaPHP\Mvc {
 			$metaData =$this->getModelsMetaData();
 			$writeConnection=$this->getWriteConnection();
 			$this->_operationMade =self::OP_DELETE;
-			$this->_errorMessages=[];
 
 			$primaryKeys=$metaData->getPrimaryKeyAttributes($this);
 			if(count($primaryKeys) ===0){
