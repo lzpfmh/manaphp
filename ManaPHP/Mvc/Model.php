@@ -803,6 +803,19 @@ namespace ManaPHP\Mvc {
 
 
 		/**
+		 * Fires an internal event that cancels the operation
+		 *
+		 * @param string $eventName
+		 * @return bool
+		 */
+		public function fireEventCancel($eventName){
+			if(method_exists($this,$eventName)){
+				return $this->{$eventName}();
+			}else{
+				return null;
+			}
+		}
+		/**
 		 * Executes internal hooks before save a record
 		 *
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
@@ -811,27 +824,36 @@ namespace ManaPHP\Mvc {
 		 * @return boolean
 		 */
 		protected function _preSave($metaData,$exists,$identityField){
+			if($this->fireEventCancel('beforeSave') ===false){
+				return false;
+			}
+
+			if($exists){
+				if($this->fireEventCancel('beforeUpdate') ===false){
+					return false;
+				}
+			}else{
+				if($this->fireEventCancel('beforeCreate') ===false){
+					return false;
+				}
+			}
+
 			return true;
 		}
-
 
 		/**
 		 * Executes internal events after save a record
 		 *
-		 * @param boolean $success
 		 * @param boolean $exists
-		 * @return boolean
 		 */
-		protected function _postSave($success,$exists){
-			if($success ===true){
-				if($exists){
-					$this->fireEvent('afterUpdate');
-				}else{
-					$this->fireEvent('afterCreate');
-				}
+		protected function _postSave($exists){
+			if($exists){
+				$this->fireEvent('afterUpdate');
+			}else{
+				$this->fireEvent('afterCreate');
 			}
 
-			return $success;
+			$this->fireEvent('afterSave');
 		}
 
 
