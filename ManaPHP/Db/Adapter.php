@@ -28,6 +28,13 @@ namespace ManaPHP\Db {
 		protected $_descriptor;
 
 		/**
+		 * Type of database system driver is used for
+		 *
+		 * @var string
+		 */
+		protected $_type;
+
+		/**
 		 * Active SQL Statement
 		 *
 		 * @var string
@@ -48,6 +55,7 @@ namespace ManaPHP\Db {
 		 */
 		protected $_sqlBindTypes;
 
+
 		/**
 		 * @var \PDO
 		 */
@@ -65,7 +73,9 @@ namespace ManaPHP\Db {
 		 * @param array $descriptor
 		 */
 		public function __construct($descriptor){
-			$this->connect($descriptor);
+			$this->_type ='mysql';
+			$this->_descriptor =$descriptor;
+			$this->connect();
 		}
 
 
@@ -105,41 +115,15 @@ namespace ManaPHP\Db {
 		 * $connection->connect();
 		 * </code>
 		 *
-		 * @param 	array $descriptor
 		 * @return 	boolean
 		 */
-		public function connect($descriptor){
-			if($descriptor ===null){
-				$descriptor =$this->_descriptor;
-			}
+		protected function connect(){
+			$descriptor =$this->_descriptor;
 
-			if(isset($descriptor['username'])){
-				$username =$descriptor['username'];
-				unset($descriptor['username']);
-			}else{
-				$username =null;
-			}
-
-			if(isset($descriptor['password'])){
-				$password =$descriptor['password'];
-				unset($descriptor['password']);
-			}else{
-				$password =null;
-			}
-
-			if(isset($descriptor['options'])){
-				$options =$descriptor['options'];
-				unset($descriptor['options']);
-			}else{
-				$options =[];
-			}
-
-			if(isset($descriptor['persistent'])){
-				if($descriptor['persistent']){
-					$options[\PDO::ATTR_PERSISTENT] =true;
-				}
-				unset($descriptor['persistent']);
-			}
+			$username =isset($descriptor['username'])?$descriptor['username']:null;
+			$password =isset($descriptor['password'])?$descriptor['password']:null;
+			$options =isset($descriptor['options'])?$descriptor['options']:[];
+			unset($descriptor['username'],$descriptor['password'],$descriptor['options']);
 
 			if(isset($descriptor['dsn'])){
 				$dsn =$descriptor['dsn'];
@@ -151,7 +135,9 @@ namespace ManaPHP\Db {
 				$dsn=implode(';',$dsn_parts);
 			}
 
-			$this->_pdo=new \PDO($this->_type.':'.$dsn,$username,$password,$options);
+ 			$options[\PDO::ATTR_ERRMODE]=\PDO::ERRMODE_EXCEPTION;
+
+			$this->_pdo=new \PDO($this->_type.':'.$dsn, $username, $password, $options);
 		}
 
 		/**
@@ -186,21 +172,22 @@ namespace ManaPHP\Db {
 		 */
 		public function executePrepared($statement, $placeholders, $dataTypes)
 		{
-			foreach($placeholders as $k=>$v){
-				if(is_string($k)){
-					$parameter =$k;
-				}else{
-					throw new Exception('Invalid bind parameter: '.$k);
+			foreach($placeholders as $parameter=>$v){
+				if(!is_string($parameter)){
+					throw new Exception('Invalid bind parameter: '.$parameter);
+				}
+
+				if(is_array($dataTypes)){
+					throw new Exception('dataTypes not support');
 				}
 
 				if(!is_array($v)){
 					$statement->bindValue($parameter,$v);
 				}else{
-					foreach($v as $position=>$itemValue){
-						$statement->bindValue($parameter.$position,$itemValue);
-					}
+					throw new Exception('array data bind not support: '.$parameter);
 				}
 			}
+
 			$statement->execute();
 			return $statement;
 		}
@@ -219,29 +206,37 @@ namespace ManaPHP\Db {
 		 * @param string $sqlStatement
 		 * @param array $bindParams
 		 * @param array $bindTypes
+		 * @return \PdoStatement
+		 * @throws \ManaPHP\Db\Exception
 		 */
 		public function query($sqlStatement, $bindParams = null, $bindTypes = null){
+			$this->_sqlStatement = $sqlStatement;
+			$this->_sqlVariables = $bindParams;
+			$this->_sqlBindTypes = $bindTypes;
+
 			if(is_object($this->_eventsManager)) {
-				$this->_sqlStatement = $sqlStatement;
-				$this->_sqlVariables = $bindParams;
-				$this->_sqlBindTypes = $bindTypes;
-			}
-			if($this->_eventsManager->fire('db:beforeQuery',$this,$bindParams) ===false){
-				return false;
+				if($this->_eventsManager->fire('db:beforeQuery',$this,$bindParams) ===false){
+					return false;
+				}
 			}
 
-			$statement =$this->_pdo->query($sqlStatement);
+			if(is_array($bindParams)){
+				$statement =$this->_pdo->prepare($sqlStatement);
 
-			if(is_array($bindParams) &&is_object($statement)){
-				$statement =$this->executePrepared($statement,$bindParams,$bindTypes);
+				if(is_object($statement)){
+					$statement =$this->executePrepared($statement,$bindParams,$bindTypes);
+				}
+			}else{
+				$statement =$this->_pdo->query($sqlStatement);
 			}
+
 
 			if(is_object($statement)){
 				if(is_object($this->_eventsManager)){
 					$this->_eventsManager->fire('db:afterQuery',$this,$bindParams);
 				}
 
-				return new Re
+				return $statement;
 			}
 
 			return $statement;

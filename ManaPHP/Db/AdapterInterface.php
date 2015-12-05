@@ -129,16 +129,6 @@ namespace ManaPHP\Db {
 
 
 		/**
-		 * This method is automatically called in \ManaPHP\Db\Adapter\Pdo constructor.
-		 * Call it when you need to restore a database connection
-		 *
-		 * @param 	array $descriptor
-		 * @return 	boolean
-		 */
-		public function connect($descriptor);
-
-
-		/**
 		 * Sends SQL statements to the database server returning the success state.
 		 * Use this method only when the SQL statement sent to the server return rows
 		 *
