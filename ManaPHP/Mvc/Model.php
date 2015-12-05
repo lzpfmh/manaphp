@@ -818,12 +818,10 @@ namespace ManaPHP\Mvc {
 		/**
 		 * Executes internal hooks before save a record
 		 *
-		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
 		 * @param boolean $exists
-		 * @param string $identityField
 		 * @return boolean
 		 */
-		protected function _preSave($metaData,$exists,$identityField){
+		protected function _preSave($exists){
 			if($this->fireEventCancel('beforeSave') ===false){
 				return false;
 			}
@@ -864,8 +862,31 @@ namespace ManaPHP\Mvc {
 		 * @param \ManaPHP\Db\AdapterInterface $connection
 		 * @param string $table
 		 * @return boolean
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		protected function _doLowInsert($metaData,$connection,$table){ }
+		protected function _doLowInsert($metaData,$connection,$table){
+			$attributes=$metaData->getAttributes($this);
+
+			$fields=[];
+			$values=[];
+			foreach($attributes as $attributeField){
+				if($this->{$attributeField} !==null){
+					$fields[]=$attributeField;
+					$values[]=$this->{$attributeField};
+				}
+			}
+
+			if(count($fields) ===0){
+				throw new Exception('Unable to insert into ' . $table . ' without data');
+			}
+
+			$success =$connection->insert($table,$values,$fields);
+			if($success ===true){
+				$this->refresh();
+			}
+
+			return $success;
+		}
 
 
 		/**
@@ -876,7 +897,31 @@ namespace ManaPHP\Mvc {
 		 * @param string|array $table
 		 * @return boolean
 		 */
-		protected function _doLowUpdate($metaData,$connection,$table){}
+		protected function _doLowUpdate($metaData,$connection,$table){
+			$nonPrimary=$metaData->getNonPrimaryKeyAttributes($this);
+
+			$fields=[];
+			$values=[];
+			foreach($nonPrimary as $attributeField){
+				if($this->{$attributeField} !==null){
+					if(!is_array($this->_snapshot)
+					||$this->{$attributeField} !==$this->_snapshot[$attributeField]){
+							$fields[]=$attributeField;
+							$values[]=$this->{$attributeField};
+					}
+				}
+			}
+
+			if(count($fields) ===0){
+				return true;
+			}
+
+			$uniqueKey=[];
+			$uniqueParams=[];
+			return $connection->update($table,$fields,$values,
+				['conditions'=>$uniqueKey,
+					'bind'=>$uniqueParams]);
+		}
 
 
 		/**
@@ -923,21 +968,14 @@ namespace ManaPHP\Mvc {
 				$this->_operationMade=self::OP_CREATE;
 			}
 
-			$this->_errorMessages=[];
-
-			/**
-			 * Query the identity field
-			 */
-			$identityField =$metaData->getIdentityField($this);
-
-			if($this->_preSave($metaData,$exists,$identityField) ===false){
-				throw new ValidationFailed($this,$this->_errorMessages);
+			if($this->_preSave($exists) ===false){
+				throw new Exception('save failed');
 			}
 
 			if($exists){
 				$success =$this->_doLowUpdate($metaData,$this->getWriteConnection(),$table);
 			}else{
-				$success=$this->_doLowInsert($metaData,$this->getWriteConnection(),$identityField);
+				$success=$this->_doLowInsert($metaData,$this->getWriteConnection(),$table);
 			}
 
 			if($success){
