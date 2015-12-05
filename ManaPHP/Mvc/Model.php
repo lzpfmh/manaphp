@@ -42,14 +42,6 @@ namespace ManaPHP\Mvc {
 	
 	abstract class Model implements ModelInterface, ResultInterface, InjectionAwareInterface, \Serializable {
 
-		const OP_NONE = 0;
-
-		const OP_CREATE = 1;
-
-		const OP_UPDATE = 2;
-
-		const OP_DELETE = 3;
-
 		const DIRTY_STATE_PERSISTENT = 0;
 
 		const DIRTY_STATE_TRANSIENT = 1;
@@ -65,8 +57,6 @@ namespace ManaPHP\Mvc {
 
 		protected $_modelsMetaData;
 
-		protected $_operationMade;
-
 		protected $_dirtyState;
 
 		protected $_uniqueKey;
@@ -75,9 +65,6 @@ namespace ManaPHP\Mvc {
 
 		protected $_uniqueTypes;
 
-		protected $_skipped;
-
-		protected $_related;
 
 		/**
 		 * @var array
@@ -955,12 +942,6 @@ namespace ManaPHP\Mvc {
 			}
 
 			$exists =$this->_exists($metaData, $this->getReadConnection());
-			if($exists){
-				$this->_operationMade =self::OP_UPDATE;
-			}else{
-				$this->_operationMade=self::OP_CREATE;
-			}
-
 			if($this->_preSave($exists) ===false){
 				throw new Exception('save failed');
 			}
@@ -1062,8 +1043,6 @@ namespace ManaPHP\Mvc {
 		public function delete(){
 			$metaData =$this->getModelsMetaData();
 			$writeConnection=$this->getWriteConnection();
-			$this->_operationMade =self::OP_DELETE;
-
 			$primaryKeys=$metaData->getPrimaryKeyAttributes($this);
 			if(count($primaryKeys) ===0){
 				throw new Exception('A primary key must be defined in the model in order to perform the operation');
