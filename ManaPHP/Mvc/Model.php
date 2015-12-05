@@ -772,7 +772,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $eventName
 		 * @return boolean
 		 */
-		public function fireEvent($eventName){
+		protected function _fireEvent($eventName){
 			if(method_exists($this,$eventName)){
 				$this->{$eventName}();
 			}
@@ -787,7 +787,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $eventName
 		 * @return bool
 		 */
-		public function fireEventCancel($eventName){
+		protected function _fireEventCancel($eventName){
 			if(method_exists($this,$eventName)){
 				return $this->{$eventName}();
 			}else{
@@ -801,16 +801,16 @@ namespace ManaPHP\Mvc {
 		 * @return boolean
 		 */
 		protected function _preSave($exists){
-			if($this->fireEventCancel('beforeSave') ===false){
+			if($this->_fireEventCancel('beforeSave') ===false){
 				return false;
 			}
 
 			if($exists){
-				if($this->fireEventCancel('beforeUpdate') ===false){
+				if($this->_fireEventCancel('beforeUpdate') ===false){
 					return false;
 				}
 			}else{
-				if($this->fireEventCancel('beforeCreate') ===false){
+				if($this->_fireEventCancel('beforeCreate') ===false){
 					return false;
 				}
 			}
@@ -825,12 +825,12 @@ namespace ManaPHP\Mvc {
 		 */
 		protected function _postSave($exists){
 			if($exists){
-				$this->fireEvent('afterUpdate');
+				$this->_fireEvent('afterUpdate');
 			}else{
-				$this->fireEvent('afterCreate');
+				$this->_fireEvent('afterCreate');
 			}
 
-			$this->fireEvent('afterSave');
+			$this->_fireEvent('afterSave');
 		}
 
 
@@ -850,11 +850,10 @@ namespace ManaPHP\Mvc {
 			}else{
 				$table =$source;
 			}
-			$attributes=$metaData->getAttributes($this);
 
 			$fields=[];
 			$values=[];
-			foreach($attributes as $attributeField){
+			foreach($metaData->getAttributes($this) as $attributeField){
 				if($this->{$attributeField} !==null){
 					$fields[]=$attributeField;
 					$values[]=$this->{$attributeField};
@@ -862,7 +861,7 @@ namespace ManaPHP\Mvc {
 			}
 
 			if(count($fields) ===0){
-				throw new Exception('Unable to insert into ' . $table . ' without data');
+				throw new Exception('Unable to insert into ' . $source . ' without data');
 			}
 
 			$success =$connection->insert($table,$values,$fields);
@@ -880,6 +879,7 @@ namespace ManaPHP\Mvc {
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
 		 * @param \ManaPHP\Db\AdapterInterface $connection
 		 * @return boolean
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		protected function _doLowUpdate($metaData,$connection){
 			$schema=$this->getSchema();
@@ -890,14 +890,25 @@ namespace ManaPHP\Mvc {
 				$table =$source;
 			}
 
-			$nonPrimary=$metaData->getNonPrimaryKeyAttributes($this);
+			$conditions=[];
+			$bindParams=[];
+			foreach($metaData->getPrimaryKeyAttributes($this) as $attributeField){
+				if(!isset($this->{$attributeField})){
+					throw new Exception('Record cannot be updated because it\'s some primary key has invalid value.');
+				}
+				$bindKey =':'.$attributeField;
+
+				$conditions[]=$attributeField.' ='.$bindKey;
+				$bindParams[$bindKey]=$this->{$attributeField};
+			}
 
 			$fields=[];
 			$values=[];
-			foreach($nonPrimary as $attributeField){
-				if($this->{$attributeField} !==null){
+			foreach($metaData->getAttributes($this) as $attributeField){
+				if(isset($this->{$attributeField})){
 					if(!is_array($this->_snapshot)
-					||$this->{$attributeField} !==$this->_snapshot[$attributeField]){
+						||!isset($this->_snapshot[$attributeField])
+						||$this->{$attributeField} !==$this->_snapshot[$attributeField]){
 							$fields[]=$attributeField;
 							$values[]=$this->{$attributeField};
 					}
@@ -908,11 +919,14 @@ namespace ManaPHP\Mvc {
 				return true;
 			}
 
-			$uniqueKey=[];
-			$uniqueParams=[];
-			return $connection->update($table,$fields,$values,
-				['conditions'=>$uniqueKey,
-					'bind'=>$uniqueParams]);
+			$success =$connection->update($table,$fields,$values,
+				['conditions'=>implode(' AND ',$conditions), 'bind'=>$bindParams]);
+
+			if($success){
+				$this->_snapshot=$this->toArray();
+			}
+
+			return $success;
 		}
 
 
@@ -944,20 +958,21 @@ namespace ManaPHP\Mvc {
 			}
 
 			$metaData =$this->getModelsMetaData();
+			$writeConnection=$this->getWriteConnection();
 
-			$exists =$this->_exists($metaData, $this->getReadConnection());
+			$exists =$this->_exists($metaData, $writeConnection);
 			if($this->_preSave($exists) ===false){
-				throw new Exception('save failed');
+				throw new Exception('Record cannot be saved because it has been cancel.');
 			}
 
 			if($exists){
-				$success =$this->_doLowUpdate($metaData,$this->getWriteConnection());
+				$success =$this->_doLowUpdate($metaData,$writeConnection);
 			}else{
-				$success=$this->_doLowInsert($metaData,$this->getWriteConnection());
+				$success=$this->_doLowInsert($metaData, $writeConnection);
 			}
 
 			if($success){
-				$this->_dirtyState =self::DIRTY_STATE_PERSISTENT;
+				$this->_fireEvent('afterSave');
 			}
 
 			return $success;
@@ -991,9 +1006,7 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function create($data=null, $whiteList=null){
-			$metaData =$this->getModelsMetaData();
-
-			if($this->_exists($metaData,$this->getReadConnection())){
+			if($this->_exists($this->getModelsMetaData(),$this->getReadConnection())){
 				throw new Exception('Record cannot be created because it already exists');
 			}
 
@@ -1018,8 +1031,7 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function update($data=null, $whiteList=null){
-			$metaData =$this->getModelsMetaData();
-			if(!$this->_exists($metaData, $this->getReadConnection())){
+			if(!$this->_exists($this->getModelsMetaData(), $this->getReadConnection())){
 				throw new Exception('Record cannot be updated because it does not exist');
 			}
 
@@ -1051,7 +1063,7 @@ namespace ManaPHP\Mvc {
 				throw new Exception('A primary key must be defined in the model in order to perform the operation');
 			}
 
-			if($this->fireEventCancel('beforeDelete') ===false){
+			if($this->_fireEventCancel('beforeDelete') ===false){
 				return false;
 			}
 
@@ -1082,7 +1094,7 @@ namespace ManaPHP\Mvc {
 			$success =$writeConnection->delete($table,implode(' AND ',$conditions),$bindParams);
 
 			if($success ===true){
-				$this->fireEvent('afterDelete');
+				$this->_fireEvent('afterDelete');
 			}
 
 			return $success;
