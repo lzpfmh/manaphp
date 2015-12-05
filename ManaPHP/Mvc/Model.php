@@ -110,6 +110,9 @@ namespace ManaPHP\Mvc {
 			 */
 			$this->_modelsManager->initialize($this);
 
+			/**
+			 * This allows the developer to execute initialization stuff every time an instance is created
+			 */
 			if(method_exists($this,'onConstruct')){
 				$this->onConstruct();
 			}
@@ -189,10 +192,11 @@ namespace ManaPHP\Mvc {
 		 * Sets table name which model should be mapped
 		 *
 		 * @param string $source
-		 * @return \ManaPHP\Mvc\Model
+		 * @return $this
 		 */
 		protected function setSource($source){
 			$this->_modelsManager->setModelSource($this,$source);
+			return $this;
 		}
 
 
@@ -210,10 +214,11 @@ namespace ManaPHP\Mvc {
 		 * Sets schema name where table mapped is located
 		 *
 		 * @param string $schema
-		 * @return \ManaPHP\Mvc\Model
+		 * @return $this
 		 */
 		protected function setSchema($schema){
 			$this->_modelsManager->setModelSchema($this,$schema);
+			return $this;
 		}
 
 
@@ -231,7 +236,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the DependencyInjection connection service name
 		 *
 		 * @param string $connectionService
-		 * @return \ManaPHP\Mvc\ModelInterface
+		 * @return $this
 		 */
 		public function setConnectionService($connectionService){
 			$this->_modelsManager->setConnectionService($this,$connectionService);
@@ -243,7 +248,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the DependencyInjection connection service name used to read data
 		 *
 		 * @param string $connectionService
-		 * @return \ManaPHP\Mvc\ModelInterface
+		 * @return $this
 		 */
 		public function setReadConnectionService($connectionService){
 			$this->_modelsManager->setReadConnectionService($this,$connectionService);
@@ -255,7 +260,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the DependencyInjection connection service name used to write data
 		 *
 		 * @param string $connectionService
-		 * @return \ManaPHP\Mvc\ModelInterface
+		 * @return $this
 		 */
 		public function setWriteConnectionService($connectionService){
 			$this->_modelsManager->setWriteConnectionService($this,$connectionService);
@@ -287,7 +292,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the dirty state of the object using one of the DIRTY_STATE_* constants
 		 *
 		 * @param int $dirtyState
-		 * @return \ManaPHP\Mvc\ModelInterface
+		 * @return $this
 		 */
 		public function setDirtyState($dirtyState){
 			$this->_dirtyState =$dirtyState;
@@ -339,135 +344,38 @@ namespace ManaPHP\Mvc {
 		 * @param array $data
 		 * @param array $columnMap
 		 * @param array $whiteList
-		 * @return \ManaPHP\Mvc\Model
+		 * @return $this
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function assign($data, $columnMap=null,$whiteList=null){
 			if(is_array($columnMap)){
-				$data_mapped=[];
+				$dataMapped=[];
 				foreach($data as $k=>$v){
 					if(isset($columnMap[$k])){
-						$data_mapped[$columnMap[$k]]=$v;
+						$dataMapped[$columnMap[$k]]=$v;
 					}
 				}
 			}else{
-				$data_mapped=$data;
+				$dataMapped=$data;
 			}
 
-			if(count($data_mapped) ===0){
+			if(count($dataMapped) ===0){
 				return $this;
 			}
 
 			$metaData =$this->getModelsMetaData();
 			foreach($metaData->getAttributes($this) as $attributeField){
-				if(isset($data_mapped[$attributeField])){
+				if(isset($dataMapped[$attributeField])){
 					if(is_array($whiteList) &&!in_array($attributeField,$whiteList,true)){
 						continue;
 					}
-					$this->{$attributeField}=$data_mapped[$attributeField];
+					$this->{$attributeField}=$dataMapped[$attributeField];
 				}
 			}
 
 			return $this;
 		}
-
-
-		/**
-		 * Assigns values to a model from an array returning a new model.
-		 *
-		 *<code>
-		 *$robot = \ManaPHP\Mvc\Model::cloneResultMap(new Robots(), array(
-		 *  'type' => 'mechanical',
-		 *  'name' => 'Astro Boy',
-		 *  'year' => 1952
-		 *));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\Model $base
-		 * @param array $data
-		 * @param array $columnMap
-		 * @param int $dirtyState
-		 * @param boolean $keepSnapshots
-		 * @return \ManaPHP\Mvc\Model
-		 * @throws \ManaPHP\Mvc\Model\Exception
-		 */
-		public static function cloneResultMap($base, $data, $columnMap=null, $dirtyState=0, $keepSnapshots=null){
-			$instance =clone $base;
-
-			$instance->setDirtyState($dirtyState);
-
-			foreach($data as $k=>$v){
-				if(is_string($k)){
-					if(!is_array($columnMap)){
-						$instance->{$k}=$v;
-						continue;
-					}
-
-					if(!isset($columnMap[$k])){
-						throw new Exception("Column '" . $k . "' doesn't make part of the column map");
-					}
-
-					$instance->{$columnMap[$k]}=$v;
-				}
-			}
-
-			/**
-			 * Models that keep snapshots store the original data
-			 */
-			if($keepSnapshots){
-				$instance->setSnapshotData($data,$columnMap);
-			}
-
-			/**
-			 * Call afterFetch, this allows the developer to execute actions after a record is fetched from the database
-			 */
-			if(method_exists($instance, 'afterFetch')) {
-				$instance->afterFetch();
-			}
-
-			return $instance;
-		}
-
-
-		/**
-		 * Assigns values to a model from an array returning a new model
-		 *
-		 *<code>
-		 *$robot = \ManaPHP\Mvc\Model::cloneResult(new Robots(), array(
-		 *  'type' => 'mechanical',
-		 *  'name' => 'Astro Boy',
-		 *  'year' => 1952
-		 *));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\Model $base
-		 * @param array $data
-		 * @param int $dirtyState
-		 * @return \ManaPHP\Mvc\ModelInterface
-		 * @throws \ManaPHP\Mvc\Model\Exception
-		 */
-		public static function cloneResult($base, $data, $dirtyState=0){
-			$instance =clone $base;
-
-			$instance->setDirtyState($dirtyState);
-
-			foreach($data as $k=>$v){
-				if(!is_string($k)){
-					throw new Exception('Invalid key in array data provided to dumpResult()');
-				}
-				$instance->{$k} =$v;
-			}
-
-			/**
-			 * Call afterFetch, this allows the developer to execute actions after a record is fetched from the database
-			 */
-			if(method_exists($instance,'afterFetch')){
-				$instance->afterFetch();
-			}
-
-			return $instance;
-		}
-
+		
 
 		/**
 		 * Allows to query a set of records that match the specified conditions
