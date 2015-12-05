@@ -3,14 +3,10 @@
 namespace ManaPHP\Mvc {
 
 	use ManaPHP\Di;
-	use ManaPHP\DiInterface;
-	use ManaPHP\Mvc\Model\Criteria;
 	use ManaPHP\Mvc\Model\Exception;
 	use ManaPHP\Mvc\Model\Message;
-	use ManaPHP\Mvc\Model\MetaDataInterface;
 	use \ManaPHP\Mvc\Model\ResultInterface;
 	use \ManaPHP\Di\InjectionAwareInterface;
-	use ManaPHP\Mvc\Model\Resultset;
 	use ManaPHP\Mvc\Model\ValidationFailed;
 
 	/**
@@ -375,7 +371,7 @@ namespace ManaPHP\Mvc {
 
 			return $this;
 		}
-		
+
 
 		/**
 		 * Allows to query a set of records that match the specified conditions
@@ -424,6 +420,7 @@ namespace ManaPHP\Mvc {
 
 			$builder =$modelsManager->createBuilder($params);
 			$builder->from(get_called_class());
+
 			$query =$builder->getQuery();
 
 			if(isset($params['bind'])){
@@ -531,10 +528,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
 		 * @param \ManaPHP\Db\AdapterInterface $connection
-		 * @param string|array table
 		 * @return boolean
 		 */
-		protected function _exists($metaData,$connection,$table=null){
+		protected function _exists($metaData,$connection){
 			if($this->_uniqueKey ===null){
 				$primaryKeys=$metaData->getPrimaryKeyAttributes($this);
 				if(count($primaryKeys) ===0){
@@ -544,6 +540,7 @@ namespace ManaPHP\Mvc {
 				$numberEmpty=0;
 				$uniqueParams=[];
 				$wherePk=[];
+
 				foreach($primaryKeys as $attributeField){
 					$value =null;
 					if(isset($this->{$attributeField})){
@@ -559,7 +556,7 @@ namespace ManaPHP\Mvc {
 						$numberEmpty++;
 					}
 
-					$wherePk[]=$connection->escapeIdentifier($attributeField).' =?';
+					$wherePk[]=$connection->escapeIdentifier($attributeField).' = ?';
 				}
 
 				if($numberEmpty ===count($primaryKeys)){
@@ -572,13 +569,13 @@ namespace ManaPHP\Mvc {
 				$this->_uniqueParams=$uniqueParams;
 			}
 
-			if(!$this->_dirtyState){
+			if($this->_dirtyState ===self::DIRTY_STATE_PERSISTENT){
 				return true;
 			}
 
 			$schema =$this->getSchema();
 			$source=$this->getSource();
-			if($schema !==''){
+			if($schema !=='' &&$schema !==null){
 				$table =[$schema, $source];
 			}else{
 				$table=$source;
@@ -586,8 +583,8 @@ namespace ManaPHP\Mvc {
 
 			$num =$connection->fetchOne('SELECT COUNT(*) as rowcount'.
 						' FROM '. $connection->escapeIdentifier($table).
-						'WHERE '. $this->_uniqueKey,
-							null, $this->uniqueParams);
+						' WHERE '. $this->_uniqueKey,
+							null, $this->_uniqueParams);
 
 			if(isset($num['rowcount'])){
 				$this->_dirtyState =self::DIRTY_STATE_PERSISTENT;
