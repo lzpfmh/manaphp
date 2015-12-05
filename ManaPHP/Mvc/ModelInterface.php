@@ -206,23 +206,5 @@ namespace ManaPHP\Mvc {
 		 * Refreshes the model attributes re-querying the record from the database
 		 */
 		public function refresh();
-
-
-		/**
-		 * Reads an attribute value by its name
-		 *
-		 * @param string $attribute
-		 * @return mixed
-		 */
-		public function readAttribute($attribute);
-
-
-		/**
-		 * Writes an attribute value by its name
-		 *
-		 * @param string $attribute
-		 * @param mixed $value
-		 */
-		public function writeAttribute($attribute, $value);
 	}
 }
