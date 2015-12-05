@@ -83,46 +83,11 @@ namespace ManaPHP\Mvc {
 		/**
 		 * Assigns values to a model from an array
 		 *
-		 * @param \ManaPHP\Mvc\Model $object
 		 * @param array $data
 		 * @param array $columnMap
 		 * @return \ManaPHP\Mvc\Model
 		 */
 		public function assign($data, $columnMap=null);
-
-
-		/**
-		 * Assigns values to a model from an array returning a new model
-		 *
-		 * @param \ManaPHP\Mvc\Model $base
-		 * @param array $data
-		 * @param array $columnMap
-		 * @param int $dirtyState
-		 * @param boolean $keepSnapshots
-		 * @return \ManaPHP\Mvc\Model $result
-		 */
-		public static function cloneResultMap($base, $data, $columnMap, $dirtyState=null, $keepSnapshots=null);
-
-
-		/**
-		 * Assigns values to a model from an array returning a new model
-		 *
-		 * @param \ManaPHP\Mvc\Model $base
-		 * @param array $data
-		 * @param int $dirtyState
-		 * @return \ManaPHP\Mvc\Model
-		 */
-		public static function cloneResult($base, $data, $dirtyState=null);
-
-
-		/**
-		 * Returns an hydrated result based on the data and the column map
-		 *
-		 * @param array $data
-		 * @param array $columnMap
-		 * @param int $hydrationMode
-		 */
-		public static function cloneResultMapHydrate($data, $columnMap, $hydrationMode);
 
 
 		/**
@@ -198,49 +163,6 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Fires an event, implicitly calls behaviors and listeners in the events manager are notified
-		 *
-		 * @param string $eventName
-		 * @return boolean
-		 */
-		public function fireEvent($eventName);
-
-
-		/**
-		 * Fires an event, implicitly calls behaviors and listeners in the events manager are notified
-		 * This method stops if one of the callbacks/listeners returns boolean false
-		 *
-		 * @param string $eventName
-		 * @return boolean
-		 */
-		public function fireEventCancel($eventName);
-
-
-		/**
-		 * Appends a customized message on the validation process
-		 *
-		 * @param \ManaPHP\Mvc\Model\MessageInterface $message
-		 */
-		public function appendMessage($message);
-
-
-		/**
-		 * Check whether validation process has generated any messages
-		 *
-		 * @return boolean
-		 */
-		public function validationHasFailed();
-
-
-		/**
-		 * Returns all the validation messages
-		 *
-		 * @return \ManaPHP\Mvc\Model\MessageInterface[]
-		 */
-		public function getMessages($filter=null);
-
-
-		/**
 		 * Inserts or updates a model instance. Returning true on success or false otherwise.
 		 *
 		 * @param  array $data
@@ -281,15 +203,6 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Returns the type of the latest operation performed by the ORM
-		 * Returns one of the OP_* class constants
-		 *
-		 * @return int
-		 */
-		public function getOperationMade();
-
-
-		/**
 		 * Refreshes the model attributes re-querying the record from the database
 		 */
 		public function refresh();
@@ -311,22 +224,5 @@ namespace ManaPHP\Mvc {
 		 * @param mixed $value
 		 */
 		public function writeAttribute($attribute, $value);
-
-
-		/**
-		 * Returns related records based on defined relations
-		 *
-		 * @param string $alias
-		 * @param array $arguments
-		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
-		 */
-		public function getRelated($alias, $arguments=null);
-
-
-		/**
-		 * Reset a model instance data
-		 */
-		public function reset();
-
 	}
 }
