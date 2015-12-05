@@ -55,6 +55,10 @@ namespace ManaPHP\Db {
 		 */
 		protected $_sqlBindTypes;
 
+		/**
+		 * Current transaction level
+		 */
+		protected $_transactionLevel = 0;
 
 		/**
 		 * @var \PDO
@@ -385,8 +389,15 @@ namespace ManaPHP\Db {
 		 * @param 	array $fields
 		 * @param 	array $dataTypes
 		 * @return 	boolean
+		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function insert($table, $values, $fields=null, $dataTypes=null){ }
+		public function insert($table, $values, $fields=null, $dataTypes=null){
+			if(count($values) ===0){
+				throw new Exception('Unable to insert into ' . $table . ' without data');
+			}
+
+			$place
+		}
 
 
 		/**
@@ -412,7 +423,9 @@ namespace ManaPHP\Db {
 		 * @param 	array $dataTypes
 		 * @return 	boolean
 		 */
-		public function update($table, $fields, $values, $whereCondition=null, $dataTypes=null){ }
+		public function update($table, $fields, $values, $whereCondition=null, $dataTypes=null){
+
+		}
 
 
 		/**
@@ -434,17 +447,19 @@ namespace ManaPHP\Db {
 		 * @param  array $placeholders
 		 * @param  array $dataTypes
 		 * @return boolean
+		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function delete($table, $whereCondition=null, $placeholders=null, $dataTypes=null){ }
+		public function delete($table, $whereCondition, $placeholders=null, $dataTypes=null){
+			$escapedTable=$table;
 
+			if($whereCondition ===''){
+				throw new Exception('Danger DELETE operation without any condition');
+			}
 
-		/**
-		 * Gets a list of columns
-		 *
-		 * @param array $columnList
-		 * @return string
-		 */
-		public function getColumnList($columnList){ }
+			$sql ='DELETE FROM '.$escapedTable.'WHERE '.$whereCondition;
+
+			return $this->execute($sql,$placeholders,$dataTypes);
+		}
 
 
 		/**
@@ -456,9 +471,12 @@ namespace ManaPHP\Db {
 		 *
 		 * @param  	string $sqlQuery
 		 * @param 	int $number
+		 * @param   int $offset
 		 * @return 	string
 		 */
-		public function limit($sqlQuery, $number){ }
+		public function limit($sqlQuery, $number,$offset=null){
+			return $sqlQuery.' LIMIT '.$number.($offset ===null?'':(' OFFSET '.$offset));
+		}
 
 
 		/**
@@ -467,7 +485,9 @@ namespace ManaPHP\Db {
 		 * @param string $sqlQuery
 		 * @return string
 		 */
-		public function forUpdate($sqlQuery){ }
+		public function forUpdate($sqlQuery){
+			return $sqlQuery.' FOR UPDATE';
+		}
 
 
 		/**
@@ -476,25 +496,9 @@ namespace ManaPHP\Db {
 		 * @param string $sqlQuery
 		 * @return string
 		 */
-		public function sharedLock($sqlQuery){ }
-
-
-
-		/**
-		 * Returns the SQL column definition from a column
-		 *
-		 * @param \ManaPHP\Db\ColumnInterface $column
-		 * @return string
-		 */
-		public function getColumnDefinition($column){ }
-
-
-		/**
-		 * Gets the active connection unique identifier
-		 *
-		 * @return string
-		 */
-		public function getConnectionId(){ }
+		public function sharedLock($sqlQuery){
+			return $sqlQuery .' LOCK IN SHARE MODE';
+		}
 
 
 		/**
@@ -527,25 +531,21 @@ namespace ManaPHP\Db {
 
 
 		/**
-		 * Returns type of database system the adapter is used for
-		 *
-		 * @return string
-		 */
-		public function getType(){ }
-
-		/**
 		 * Starts a transaction in the connection
 		 *
 		 * @return boolean
+		 * @throws \ManaPHP\Db\Exception
 		 */
 		public function begin(){
-			if(!is_object($this->_pdo)){
-				return false;
+			if($this->_transactionLevel !==0){
+				throw new Exception('There is in a active transaction already.');
 			}
 
 			if(is_object($this->_eventsManager)){
 				$this->_eventsManager->fire('db:beginTransaction',$this);
 			}
+
+			$this->_transactionLevel++;
 			return $this->_pdo->beginTransaction();
 		}
 
@@ -556,12 +556,9 @@ namespace ManaPHP\Db {
 		 *	$connection->begin();
 		 *	var_dump($connection->isUnderTransaction()); //true
 		 *</code>
+		 * @return bool
 		 */
 		public function isUnderTransaction(){
-			if($this->_pdo ===null){
-				return false;
-			}
-
 			return $this->_pdo->inTransaction();
 		}
 
@@ -569,16 +566,18 @@ namespace ManaPHP\Db {
 		 * Rollbacks the active transaction in the connection
 		 *
 		 * @return boolean
+		 * @throws \ManaPHP\Db\Exception
 		 */
 		public function rollback(){
-			if(!is_object($this->_pdo)){
-				return false;
+			if($this->_transactionLevel ===0){
+				throw new Exception('There is no active transaction');
 			}
 
 			if(is_object($this->_eventsManager)){
 				$this->_eventsManager->fire('db:rollbackTransaction',$this);
 			}
 
+			$this->_transactionLevel--;
 			return $this->_pdo->rollBack();
 		}
 
@@ -587,13 +586,19 @@ namespace ManaPHP\Db {
 		 * Commits the active transaction in the connection
 		 *
 		 * @return boolean
+		 * @throws \ManaPHP\Db\Exception
 		 */
 		public function commit(){
-			if($this->_pdo ===null){
-				return false;
+			if($this->_transactionLevel ===0){
+				throw new Exception('There is no active transaction');
 			}
 
-			return $this->commit();
+			if(is_object($this->_eventsManager)){
+				$this->_eventsManager->fire('db:commitTransaction',$this);
+			}
+
+			$this->_transactionLevel--;
+			return $this->_pdo->commit();
 		}
 	}
 }

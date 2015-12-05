@@ -64,7 +64,7 @@ namespace ManaPHP\Db {
 		 * @param  array $dataTypes
 		 * @return boolean
 		 */
-		public function delete($table, $whereCondition=null, $placeholders=null, $dataTypes=null);
+		public function delete($table, $whereCondition, $placeholders=null, $dataTypes=null);
 
 
 		/**
@@ -81,9 +81,10 @@ namespace ManaPHP\Db {
 		 *
 		 * @param  	string $sqlQuery
 		 * @param 	int $number
+		 * @param   int $offset
 		 * @return 	string
 		 */
-		public function limit($sqlQuery, $number);
+		public function limit($sqlQuery, $number, $offset=null);
 
 
 		/**
