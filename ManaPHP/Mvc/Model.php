@@ -116,29 +116,6 @@ namespace ManaPHP\Mvc {
 			return $this->_dependencyInjector;
 		}
 
-
-		/**
-		 * Sets a custom events manager
-		 *
-		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
-		 * @return \ManaPHP\Mvc\ModelInterface
-		 */
-		protected function setEventsManager($eventsManager){
-			$this->_modelsManager->setCustomEventsManager($this,$eventsManager);
-			return $this;
-		}
-
-
-		/**
-		 * Returns the custom events manager
-		 *
-		 * @return \ManaPHP\Events\ManagerInterface
-		 */
-		protected function getEventsManager(){
-			return $this->_modelsManager->getCustomEventsManager($this);
-		}
-
-
 		/**
 		 * Returns the models meta-data service related to the entity instance
 		 *

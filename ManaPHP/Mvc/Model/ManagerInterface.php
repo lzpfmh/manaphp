@@ -9,24 +9,6 @@ namespace ManaPHP\Mvc\Model {
 	interface ManagerInterface {
 
 		/**
-		 * Sets a custom events manager for a specific model
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
-		 */
-		public function setCustomEventsManager($model, $eventsManager);
-
-
-		/**
-		 * Returns a custom events manager related to a model
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return \ManaPHP\Events\ManagerInterface
-		 */
-		public function getCustomEventsManager($model);
-
-		
-		/**
 		 * Initializes a model in the model manager
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
@@ -141,16 +123,6 @@ namespace ManaPHP\Mvc\Model {
 		 * @return string
 		 */
 		public function getWriteConnectionService($model);
-
-
-		/**
-		 * Receives events generated in the models and dispatches them to a events-manager if available
-		 * Notify the behaviors that are listening in the model
-		 *
-		 * @param string $eventName
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 */
-		public function notifyEvent($eventName, $model);
 
 
 		/**

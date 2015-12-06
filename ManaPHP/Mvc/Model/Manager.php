@@ -31,8 +31,6 @@ namespace ManaPHP\Mvc\Model {
 
 		protected $_eventsManager;
 
-		protected $_customEventsManager;
-
 		protected $_readConnectionServices;
 
 		protected $_writeConnectionServices;
@@ -112,35 +110,6 @@ namespace ManaPHP\Mvc\Model {
 		 */
 		public function getEventsManager(){
 			return $this->_eventsManager;
-		}
-
-
-		/**
-		 * Sets a custom events manager for a specific model
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
-		 */
-		public function setCustomEventsManager($model, $eventsManager){
-			$this->_customEventsManager[strtolower(get_class($model))]=$eventsManager;
-		}
-
-
-		/**
-		 * Returns a custom events manager related to a model
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return \ManaPHP\Events\ManagerInterface
-		 */
-		public function getCustomEventsManager($model){
-			$className =strtolower(get_class($model));
-			if(is_array($this->_customEventsManager)){
-				if(isset($this->_customEventsManager[$className])){
-					return $this->_customEventsManager[$className];
-				}
-			}
-
-			return false;
 		}
 
 
