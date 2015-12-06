@@ -126,19 +126,6 @@ namespace ManaPHP\Mvc\Model {
 
 
 		/**
-		 * Dispatch a event to the listeners and behaviors
-		 * This method expects that the endpoint listeners/behaviors returns true
-		 * meaning that a least one is implemented
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param string $eventName
-		 * @param array $data
-		 * @return boolean
-		 */
-		public function missingMethod($model, $eventName, $data);
-
-
-		/**
 		 * Creates a \ManaPHP\Mvc\Model\Query without execute it
 		 *
 		 * @param string $phql
