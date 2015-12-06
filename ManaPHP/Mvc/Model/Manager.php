@@ -43,15 +43,7 @@ namespace ManaPHP\Mvc\Model {
 
 		protected $_schemas;
 
-		protected $_behaviors;
-
 		protected $_lastQuery;
-
-		protected $_reusable;
-
-		protected $_keepSnapshots;
-
-		protected $_dynamicUpdate;
 
 		protected $_namespaceAliases;
 
