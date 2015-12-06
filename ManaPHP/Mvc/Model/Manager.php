@@ -31,17 +31,17 @@ namespace ManaPHP\Mvc\Model {
 
 		protected $_eventsManager;
 
-		protected $_readConnectionServices;
+		protected $_readConnectionServices=[];
 
-		protected $_writeConnectionServices;
+		protected $_writeConnectionServices=[];
 
 		protected $_aliases;
 
-		protected $_initialized;
+		protected $_initialized=[];
 
-		protected $_sources;
+		protected $_sources=[];
 
-		protected $_schemas;
+		protected $_schemas=[];
 
 		protected $_lastQuery;
 
@@ -96,11 +96,18 @@ namespace ManaPHP\Mvc\Model {
 		 * @return boolean
 		 */
 		public function initialize($model){
-			$className =strtolower(get_class($model));
+			$className =get_class($model);
+
+			/**
+			 * Models are just initialized once per request
+			 */
 			if(isset($this->_initialized[$className])){
 				return false;
 			}
 
+			/**
+			 * Update the model as initialized, this avoid cyclic initializations
+			 */
 			$this->_initialized[$className]=$model;
 
 			if(method_exists($model,'initialize')){
@@ -112,24 +119,28 @@ namespace ManaPHP\Mvc\Model {
 
 
 		/**
-		 * Check whether a model is already initialized
-		 *
-		 * @param string $modelName
-		 * @return bool
-		 */
-		public function isInitialized($modelName){
-			return isset($this->_initialized[strtolower($modelName)]);
-		}
-
-		/**
 		 * Loads a model throwing an exception if it does't exist
 		 *
 		 * @param  string $modelName
 		 * @param  boolean $newInstance
 		 * @return \ManaPHP\Mvc\ModelInterface
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function load($modelName, $newInstance){
+			if(isset($this->_initialized[$modelName])){
+				if($newInstance){
+					return new $modelName($this->_dependencyInjector,$this);
+				}
+				$model =$this->_initialized[$modelName];
+				$model->reset();
+				return $model;
+			}else{
+				if(class_exists($modelName)){
+					return new $modelName($this->_dependencyInjector, $this);
+				}
 
+				throw new Exception("Model '" . $modelName . "' could not be loaded");
+			}
 		}
 
 
@@ -140,7 +151,8 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $source
 		 */
 		public function setModelSource($model, $source){
-			$this->_sources[strtolower(get_class($model))]=$source;
+			$modelName =get_class($model);
+			$this->_sources[$modelName]=$source;
 		}
 
 
@@ -149,15 +161,15 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param \ManaPHP\Mvc\Model $model
 		 * @return string
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function getModelSource($model){
-			$className =strtolower(get_class($model));
-			if(is_array($this->_sources)){
-				if(isset($this->_sources[$className])){
-					return $this->_sources[$className];
-				}
+			$className =get_class($model);
+
+			if(!isset($this->_sources[$className])){
+				$this->_sources[$className]=$model;
 			}
-			$this->_sources[$className]=s;
+			throw new Exception('The source is not provided: '.get_class($model));
 		}
 
 
@@ -169,7 +181,8 @@ namespace ManaPHP\Mvc\Model {
 		 * @return string
 		 */
 		public function setModelSchema($model, $schema){
-			$this->_schemas[get_class($model)]=$schema;
+			$className=get_class($model);
+			$this->_schemas[$className]=$schema;
 		}
 
 
@@ -234,12 +247,7 @@ namespace ManaPHP\Mvc\Model {
 		 */
 		protected function _getConnection($model, $connectionServices){
 			$className =get_class($model);
-			if(is_array($connectionServices) &&isset($connectionServices[$className])){
-				$serviceName =$connectionServices[$className];
-			}else{
-				$serviceName ='db';
-			}
-
+			$serviceName=isset($connectionServices[$className])?$connectionServices[$className]:'db';
 			$connection =$this->_dependencyInjector->getShared($serviceName);
 
 			return $connection;
@@ -273,13 +281,7 @@ namespace ManaPHP\Mvc\Model {
 		 */
 		public function _getConnectionService($model, $connectionServices){
 			$className=get_class($model);
-			if(is_array($connectionServices)){
-				if(isset($connectionServices[$className])){
-					return $connectionServices[$className];
-				}
-			}
-
-			return 'db';
+			return isset($connectionServices[$className])?$connectionServices[$className]:'db';
 		}
 		/**
 		 * Returns the connection service name used to read data related to a model
@@ -361,7 +363,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
-		public function getLastQuery(){ }
+		public function getLastQuery(){
+			return $this->_lastQuery;
+		}
 
 
 		/**
@@ -370,7 +374,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $alias
 		 * @param string $namespace
 		 */
-		public function registerNamespaceAlias($alias, $namespace){ }
+		public function registerNamespaceAlias($alias, $namespace){
+			$this->_namespaceAliases[$alias]=$namespace;
+		}
 
 
 		/**
@@ -378,17 +384,15 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param string $alias
 		 * @return string
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function getNamespaceAlias($alias){ }
-
-
-		/**
-		 * Returns all the registered namespace aliases
-		 *
-		 * @return array
-		 */
-		public function getNamespaceAliases(){ }
-
+		public function getNamespaceAlias($alias){
+			if(isset($this->_namespaceAliases[$alias])){
+				return $this->_namespaceAliases[$alias];
+			}else{
+				throw new Exception("Namespace alias '" . $alias . "' is not registered");
+			}
+		}
 
 		/**
 		 * Destroys the PHQL cache
