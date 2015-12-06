@@ -393,11 +393,5 @@ namespace ManaPHP\Mvc\Model {
 				throw new Exception("Namespace alias '" . $alias . "' is not registered");
 			}
 		}
-
-		/**
-		 * Destroys the PHQL cache
-		 */
-		public function __destruct(){ }
-
 	}
 }
