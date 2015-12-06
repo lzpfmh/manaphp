@@ -1,7 +1,8 @@
 <?php 
 
 namespace ManaPHP\Mvc\Model {
-
+	use \ManaPHP\Di\InjectionAwareInterface;
+	use \ManaPHP\Events\EventsAwareInterface;
 	/**
 	 * ManaPHP\Mvc\Model\Manager
 	 *
@@ -21,7 +22,7 @@ namespace ManaPHP\Mvc\Model {
 	 * </code>
 	 */
 	
-	class Manager implements \ManaPHP\Mvc\Model\ManagerInterface, \ManaPHP\Di\InjectionAwareInterface, \ManaPHP\Events\EventsAwareInterface {
+	class Manager implements ManagerInterface, InjectionAwareInterface, EventsAwareInterface {
 
 		protected $_dependencyInjector;
 

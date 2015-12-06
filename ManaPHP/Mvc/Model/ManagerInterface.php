@@ -35,23 +35,6 @@ namespace ManaPHP\Mvc\Model {
 
 
 		/**
-		 * Check of a model is already initialized
-		 *
-		 * @param string $modelName
-		 * @return boolean
-		 */
-		public function isInitialized($modelName);
-
-
-		/**
-		 * Get last initialized model
-		 *
-		 * @return \ManaPHP\Mvc\ModelInterface
-		 */
-		public function getLastInitialized();
-
-
-		/**
 		 * Sets the mapped source for a model
 		 *
 		 * @param \ManaPHP\Mvc\Model $model
