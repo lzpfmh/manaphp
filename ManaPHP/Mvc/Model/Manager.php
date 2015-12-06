@@ -304,58 +304,6 @@ namespace ManaPHP\Mvc\Model {
 
 
 		/**
-		 * Receives events generated in the models and dispatches them to a events-manager if available
-		 * Notify the behaviors that are listening in the model
-		 *
-		 * @param string $eventName
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 */
-		public function notifyEvent($eventName, $model){ }
-
-
-		/**
-		 * Dispatch a event to the listeners and behaviors
-		 * This method expects that the endpoint listeners/behaviors returns true
-		 * meaning that a least one is implemented
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param string $eventName
-		 * @param array $data
-		 * @return boolean
-		 */
-		public function missingMethod($model, $eventName, $data){ }
-
-
-
-		/**
-		 * Returns a reusable object from the internal list
-		 *
-		 * @param string $modelName
-		 * @param string $key
-		 * @return object
-		 */
-		public function getReusableRecords($modelName, $key){ }
-
-
-		/**
-		 * Stores a reusable record in the internal list
-		 *
-		 * @param string $modelName
-		 * @param string $key
-		 * @param mixed $records
-		 */
-		public function setReusableRecords($modelName, $key, $records){ }
-
-
-		/**
-		 * Clears the internal reusable list
-		 *
-		 * @param
-		 */
-		public function clearReusableObjects(){ }
-
-
-		/**
 		 * Creates a \ManaPHP\Mvc\Model\Query without execute it
 		 *
 		 * @param string $phql
