@@ -129,7 +129,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Returns the connection service name used to read data related to a model
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param string
+		 * @return string
 		 */
 		public function getReadConnectionService($model);
 
@@ -138,7 +138,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Returns the connection service name used to write data related to a model
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param string
+		 * @return string
 		 */
 		public function getWriteConnectionService($model);
 
@@ -180,9 +180,10 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param string $phql
 		 * @param array $placeholders
+		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
-		public function executeQuery($phql, $placeholders=null);
+		public function executeQuery($phql, $placeholders=null,$bindTypes=null);
 
 
 		/**

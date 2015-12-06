@@ -24,6 +24,9 @@ namespace ManaPHP\Mvc\Model {
 	
 	class Manager implements ManagerInterface, InjectionAwareInterface, EventsAwareInterface {
 
+		/**
+		 * @var \ManaPHP\DiInterface
+		 */
 		protected $_dependencyInjector;
 
 		protected $_eventsManager;
@@ -280,9 +283,21 @@ namespace ManaPHP\Mvc\Model {
 
 		/**
 		 * Returns the connection to read or write data related to a model depending on the connection services.
+		 * @param \ManaPHP\Mvc\ModelInterface $model
+		 * @param string[] $connectionServices
+		 * @return \ManaPHP\Db\AdapterInterface
 		 */
 		protected function _getConnection($model, $connectionServices){
+			$className =get_class($model);
+			if(is_array($connectionServices) &&isset($connectionServices[$className])){
+				$serviceName =$connectionServices[$className];
+			}else{
+				$serviceName ='db';
+			}
 
+			$connection =$this->_dependencyInjector->getShared($serviceName);
+
+			return $connection;
 		}
 		/**
 		 * Returns the connection to write data related to a model
@@ -307,15 +322,25 @@ namespace ManaPHP\Mvc\Model {
 
 		/**
 		 * Returns the connection service name used to read or write data related to a model depending on the connection services
+		 * @param \ManaPHP\Mvc\ModelInterface $model
+		 * @param string[] $connectionServices
+		 * @return string
 		 */
 		public function _getConnectionService($model, $connectionServices){
+			$className=get_class($model);
+			if(is_array($connectionServices)){
+				if(isset($connectionServices[$className])){
+					return $connectionServices[$className];
+				}
+			}
 
+			return 'db';
 		}
 		/**
 		 * Returns the connection service name used to read data related to a model
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param string
+		 * @return string
 		 */
 		public function getReadConnectionService($model){
 			return $this->_getConnectionService($model,$this->_readConnectionServices);
@@ -326,7 +351,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Returns the connection service name used to write data related to a model
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param string
+		 * @return string
 		 */
 		public function getWriteConnectionService($model){
 			return $this->_getConnectionService($model,$this->_writeConnectionServices);
@@ -391,7 +416,14 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $phql
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
-		public function createQuery($phql){ }
+		public function createQuery($phql){
+			/**
+			 * @var $query \ManaPHP\Mvc\Model\Query
+			 */
+			$query =$this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query',[$phql, $this->_dependencyInjector]);
+			$this->_lastQuery =$query;
+			return $query;
+		}
 
 
 		/**
@@ -399,9 +431,25 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param string $phql
 		 * @param array $placeholders
+		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
-		public function executeQuery($phql, $placeholders=null){ }
+		public function executeQuery($phql, $placeholders=null,$bindTypes=null){
+			/**
+			 * @var $query \ManaPHP\Mvc\Model\Query
+			 */
+			$query =$this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query',[$phql, $this->_dependencyInjector]);
+			$this->_lastQuery =$query;
+			if(is_array($placeholders)){
+				$query->setBindParams($placeholders);
+			}
+
+			if(is_array($bindTypes)){
+				$query->setBindTypes($bindTypes);
+			}
+
+			return $query->execute();
+		}
 
 
 		/**
@@ -410,7 +458,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $params
 		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
 		 */
-		public function createBuilder($params=null){ }
+		public function createBuilder($params=null){
+			return $this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query\Builder',[$params, $this->_dependencyInjector]);
+		}
 
 
 		/**
