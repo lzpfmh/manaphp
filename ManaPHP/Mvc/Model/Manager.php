@@ -37,22 +37,6 @@ namespace ManaPHP\Mvc\Model {
 
 		protected $_aliases;
 
-		protected $_hasMany;
-
-		protected $_hasManySingle;
-
-		protected $_hasOne;
-
-		protected $_hasOneSingle;
-
-		protected $_belongsTo;
-
-		protected $_belongsToSingle;
-
-		protected $_hasManyToMany;
-
-		protected $_hasManyToManySingle;
-
 		protected $_initialized;
 
 		protected $_sources;
