@@ -71,7 +71,7 @@ namespace ManaPHP\Mvc\Model {
                 $completeTable=$table;
             }
             $readConnection=$model->getReadConnection();
-            $columns=$readConnection->fetchAll('DESCRIBE '.$readConnection->escapeIdentifier($table));
+            $columns=$readConnection->fetchAll('DESCRIBE '.$readConnection->escapeIdentifier($table),\PDO::FETCH_NUM);
             if(count($columns) ===0){
                 throw new Exception("Cannot obtain table columns for the mapped source '" . $completeTable . "' used in model " . get_class($model));
             }
@@ -115,11 +115,12 @@ namespace ManaPHP\Mvc\Model {
                 $prefixKey='meta-'.$className;
                 $data =$this->read($prefixKey);
                 if($data !==null){
-                    $this->_metaData[$className]=$data;
+                    return $data;
                 }else{
-                    $this->_metaData[$className] =$this->_fetchMetaDataFromRDBMS($model);
+                    $data =$this->_fetchMetaDataFromRDBMS($model);
+                    $this->write($prefixKey,$data);
+                    return $data;
                 }
-                $this->write($prefixKey,$this->_metaData[$className]);
             }
         }
 
@@ -223,5 +224,15 @@ namespace ManaPHP\Mvc\Model {
 		public function hasAttribute($model, $attribute){
 			return isset($this->_readMetaData($model)[self::MODELS_ATTRIBUTES][$attribute]);
 		}
+
+        /**
+         * Returns attributes which types are numerical
+         *
+         * @param  \ManaPHP\Mvc\ModelInterface $model
+         * @return array
+         */
+        public function getDataTypesNumeric($model){
+            return null;
+        }
 	}
 }
