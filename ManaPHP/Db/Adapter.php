@@ -340,8 +340,8 @@ namespace ManaPHP\Db {
 		 * @throws \ManaPHP\Db\Exception
 		 * @return array
 		 */
-		public function fetchOne($sqlQuery, $fetchMode=\PDO::FETCH_ASSOC, $bindParams=null){
-			$result =$this->query($sqlQuery, $bindParams, null);
+		public function fetchOne($sqlQuery, $fetchMode=\PDO::FETCH_ASSOC, $bindParams=null,$bindTypes=null){
+			$result =$this->query($sqlQuery, $bindParams, $bindTypes);
 			if(is_object($result)){
 				$result->setFetchMode($fetchMode);
 				return $result->fetch();
@@ -375,11 +375,12 @@ namespace ManaPHP\Db {
 		 * @param int $fetchMode
 		 * @param array $bindParams
 		 * @param array $bindTypes
+		 * @throws \ManaPHP\Db\Exception
 		 * @return array
 		 */
-		public function fetchAll($sqlQuery, $fetchMode=\PDO::FETCH_ASSOC, $bindParams=null){
+		public function fetchAll($sqlQuery, $fetchMode=\PDO::FETCH_ASSOC, $bindParams=null,$bindTypes=null){
 			$results =[];
-			$result =$this->query($sqlQuery,$bindParams, null);
+			$result =$this->query($sqlQuery,$bindParams, $bindTypes);
 			if(is_object($result)){
 				$result->setFetchMode($fetchMode);
 			}

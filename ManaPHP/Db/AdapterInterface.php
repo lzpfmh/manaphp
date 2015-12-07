@@ -13,10 +13,11 @@ namespace ManaPHP\Db {
 		 *
 		 * @param string $sqlQuery
 		 * @param int $fetchMode
-		 * @param int $placeholders
+		 * @param array $placeholders
+		 * @param array $bindTypes
 		 * @return array
 		 */
-		public function fetchOne($sqlQuery, $fetchMode=null, $placeholders=null);
+		public function fetchOne($sqlQuery, $fetchMode=null, $placeholders=null,$bindTypes=null);
 
 
 		/**
@@ -24,10 +25,11 @@ namespace ManaPHP\Db {
 		 *
 		 * @param string $sqlQuery
 		 * @param int $fetchMode
-		 * @param int $placeholders
+		 * @param array $placeholders
+		 * @param array $bindTypes
 		 * @return array
 		 */
-		public function fetchAll($sqlQuery, $fetchMode=null, $placeholders=null);
+		public function fetchAll($sqlQuery, $fetchMode=null, $placeholders=null,$bindTypes=null);
 
 
 		/**
