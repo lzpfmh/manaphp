@@ -518,13 +518,13 @@ namespace ManaPHP\Db {
 		 * @throws \ManaPHP\Db\Exception
 		 */
 		public function delete($table, $whereCondition, $placeholders=null, $dataTypes=null){
-			$escapedTable=$table;
+			$escapedTable=$this->escapeIdentifier($table);
 
-			if($whereCondition ===''){
-				throw new Exception('Danger DELETE operation without any condition');
+			if($whereCondition ==='' ||$whereCondition==null){
+				throw new Exception('Danger DELETE \''. $escapedTable.'\'operation without any condition');
 			}
 
-			$sql ='DELETE FROM '.$escapedTable.'WHERE '.$whereCondition;
+			$sql ='DELETE FROM '.$this->escapeIdentifier($table).' WHERE '.$whereCondition;
 
 			return $this->execute($sql,$placeholders,$dataTypes);
 		}
