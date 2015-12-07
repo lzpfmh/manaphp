@@ -57,6 +57,71 @@ namespace ManaPHP\Mvc\Model {
 
 		protected $_columnMap;
 
+        /**
+         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @return array
+         * @throws \ManaPHP\Mvc\Model\Exception
+         */
+        protected function _fetchMetaDataFromRDBMS($model){
+            $schema=$model->getSchema();
+            $table=$model->getSource();
+            if($schema){
+                $completeTable=$schema."''".$table;
+            }else{
+                $completeTable=$table;
+            }
+            $readConnection=$model->getReadConnection();
+            $columns=$readConnection->fetchAll('DESCRIBE '.$readConnection->escapeIdentifier($table));
+            if(count($columns) ===0){
+                throw new Exception("Cannot obtain table columns for the mapped source '" . $completeTable . "' used in model " . get_class($model));
+            }
+
+            $attributes=[];
+            $primaryKeys=[];
+            $nonPrimaryKeys=[];
+            $numericTyped=[];
+            foreach($columns as $column){
+                $columnName =$column[0];
+
+                $attributes[]=$columnName;
+
+                if($column[3]==='PRI'){
+                    $primaryKeys[]=$columnName;
+                }else{
+                    $nonPrimaryKeys=$columnName;
+                }
+
+                $columnType=$column[1];
+                if(strpos($columnType,'int') !==false
+                ||strpos($columnType,'decimal') !==false
+                ||strpos($columnType,'double') !==false
+                ||strpos($columnType,'float') !==false) {
+                    $numericTyped[]=$columnName;
+                }
+            }
+
+            return [self::MODELS_ATTRIBUTES=>$attributes,
+                    self::MODELS_PRIMARY_KEY=>$primaryKeys,
+                    self::MODELS_NON_PRIMARY_KEY=>$nonPrimaryKeys,
+                    self::MODELS_DATA_TYPES_NUMERIC=>$numericTyped];
+        }
+        /**
+         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @return array
+         */
+        protected function _initialize($model){
+            $className =get_class($model);
+            if(!isset($this->_metaData[$className])){
+                $prefixKey='meta-'.$className;
+                $data =$this->read($prefixKey);
+                if($data !==null){
+                    $this->_metaData[$className]=$data;
+                }else{
+                    $this->_metaData[$className] =$this->_fetchMetaDataFromRDBMS($model);
+                }
+                $this->write($prefixKey,$this->_metaData[$className]);
+            }
+        }
 
 		/**
 		 * Sets the DependencyInjector container
@@ -77,27 +142,7 @@ namespace ManaPHP\Mvc\Model {
 			return $this->_dependencyInjector;
 		}
 
-		/**
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 * @throws \ManaPHP\Mvc\Model\Exception
-		 */
-		protected function _getMetaData($model){
-			$schema =$model->getSchema();
-			$table =$model->getSource();
 
-			if(!$model->getReadConnection()->tableExists($table,$schema)){
-				if($schema !==''){
-					$complete_table =$schema."'.'".$table;
-				}else{
-					$complete_table =$table;
-				}
-				throw new Exception("Table '" . $complete_table . "' doesn't exist in database when dumping meta-data for " . get_called_class(model));
-			}
-
-
-
-		}
 
 
 		/**
@@ -110,13 +155,13 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return array
 		 */
-		public function readMetaData($model){
+		protected function _readMetaData($model){
 			$source =$model->getSource();
 			$schema =$model->getSchema();
 
-			$key=strtolower(get_called_class()).'-'.$schema.$source;
+			$key=get_class($model).'-'.$schema.$source;
 			if(!isset($this->_metaData[$key])){
-				$this->_metaData[$key]=$this->_getMetaData($model);
+				$this->_metaData[$key]=$this->_initialize($model);
 			}
 
 			return $this->_metaData[$key];
@@ -134,11 +179,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function getAttributes($model){
-			$data =$this->readMetaData($model)[self::MODELS_ATTRIBUTES];
-			if(!is_array($data)){
-				throw new Exception('The meta-data is invalid or is corrupt');
-			}
-			return $data;
+			return $this->_readMetaData($model)[self::MODELS_ATTRIBUTES];
 		}
 
 
@@ -153,40 +194,19 @@ namespace ManaPHP\Mvc\Model {
 		 * @return array
 		 */
 		public function getPrimaryKeyAttributes($model){
-			return $this->readMetaData($model)[self::MODELS_NON_PRIMARY_KEY];
+			return $this->_readMetaData($model)[self::MODELS_PRIMARY_KEY];
 		}
 
 
-		/**
-		 * Returns attributes and their data types
-		 *
-		 *<code>
-		 *	print_r($metaData->getDataTypes(new Robots()));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 * @throws \ManaPHP\Mvc\Model\Exception
-		 */
-		public function getDataTypes($model){
-			return $this->readMetaData($model)[self::MODELS_DATA_TYPES];
-		}
-
-
-		/**
-		 * Returns attributes and their bind data types
-		 *
-		 *<code>
-		 *	print_r($metaData->getBindTypes(new Robots()));
-		 *</code>
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 * @throws \ManaPHP\Mvc\Model\Exception
-		 */
-		public function getBindTypes($model){
-			return $this->readMetaData($model)[self::MODELS_DATA_TYPES_BIND];
-		}
+        /**
+         * Returns an array of fields which are not part of the primary key
+         *
+         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @return 	array
+         */
+        public function getNonPrimaryKeyAttributes($model){
+            return $this->_readMetaData($model)[self::MODELS_NON_PRIMARY_KEY];
+        }
 
 
 		/**
@@ -201,7 +221,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @return boolean
 		 */
 		public function hasAttribute($model, $attribute){
-			return isset($this->readMetaData($model)[self::MODELS_DATA_TYPES][$attribute]);
+			return isset($this->_readMetaData($model)[self::MODELS_ATTRIBUTES][$attribute]);
 		}
 	}
 }

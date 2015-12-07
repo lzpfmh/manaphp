@@ -80,8 +80,19 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param string $phql
 		 * @param \ManaPHP\DiInterface $dependencyInjector
+		 * @param array $options
 		 */
-		public function __construct($phql){ }
+		public function __construct($phql=null,$dependencyInjector=null,$options=null){
+			if($phql !==null){
+				$this->_phql =$phql;
+			}
+
+			if($dependencyInjector !==null){
+				$this->setDI($dependencyInjector);
+			}
+
+
+		}
 
 
 		/**
@@ -89,7 +100,11 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 */
-		public function setDI($dependencyInjector){ }
+		public function setDI($dependencyInjector){
+			$this->_manager =$dependencyInjector->getShared('modelsManager');
+			$this->_metaData =$dependencyInjector->getShared('modelsMetadata');
+			$this->_dependencyInjector =$dependencyInjector;
+		}
 
 
 		/**
@@ -97,7 +112,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return \ManaPHP\DiInterface
 		 */
-		public function getDI(){ }
+		public function getDI(){
+			return $this->_dependencyInjector;
+		}
 
 
 		/**
@@ -106,7 +123,10 @@ namespace ManaPHP\Mvc\Model {
 		 * @param boolean $uniqueRow
 		 * @return \ManaPHP\Mvc\Model\Query
 		 */
-		public function setUniqueRow($uniqueRow){ }
+		public function setUniqueRow($uniqueRow){
+			$this->_uniqueRow =$uniqueRow;
+			return $this;
+		}
 
 
 		/**
@@ -114,7 +134,9 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @return boolean
 		 */
-		public function getUniqueRow(){ }
+		public function getUniqueRow(){
+			return $this->_uniqueRow;
+		}
 
 
 		/**
@@ -123,7 +145,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $expr
 		 * @return string
 		 */
-		protected function _getQualified(){ }
+		protected function _getQualified($expr){
+
+		}
 
 
 		/**

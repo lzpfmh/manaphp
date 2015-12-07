@@ -9,69 +9,6 @@ namespace ManaPHP\Mvc\Model {
 	interface MetaDataInterface {
 
 		/**
-		 * Set the meta-data extraction strategy
-		 *
-		 * @param \ManaPHP\Mvc\Model\MetaData\Strategy\Introspection $strategy
-		 */
-		public function setStrategy($strategy);
-
-
-		/**
-		 * Return the strategy to obtain the meta-data
-		 *
-		 * @return \ManaPHP\Mvc\Model\MetaData\Strategy\Introspection
-		 */
-		public function getStrategy();
-
-
-		/**
-		 * Reads meta-data for certain model
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function readMetaData($model);
-
-
-		/**
-		 * Reads meta-data for certain model using a MODEL_* constant
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param int $index
-		 * @return mixed
-		 */
-		public function readMetaDataIndex($model, $index);
-
-
-		/**
-		 * Writes meta-data for certain model using a MODEL_* constant
-		 *
-		 * @param \ManaPHP\Mvc\Model $model
-		 * @param int $index
-		 * @param mixed $data
-		 */
-		public function writeMetaDataIndex($model, $index, $data);
-
-
-		/**
-		 * Reads the ordered/reversed column map for certain model
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function readColumnMap($model);
-
-
-		/**
-		 * Reads column-map information for certain model using a MODEL_* constant
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @param int $index
-		 */
-		public function readColumnMapIndex($model, $index);
-
-
-		/**
 		 * Returns table attributes names (fields)
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
@@ -99,102 +36,12 @@ namespace ManaPHP\Mvc\Model {
 
 
 		/**
-		 * Returns an array of not null attributes
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getNotNullAttributes($model);
-
-
-		/**
-		 * Returns attributes and their data types
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getDataTypes($model);
-
-
-		/**
 		 * Returns attributes which types are numerical
 		 *
 		 * @param  \ManaPHP\Mvc\ModelInterface $model
 		 * @return array
 		 */
 		public function getDataTypesNumeric($model);
-
-
-		/**
-		 * Returns the name of identity field (if one is present)
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @return string
-		 */
-		public function getIdentityField($model);
-
-
-		/**
-		 * Returns attributes and their bind data types
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getBindTypes($model);
-
-
-		/**
-		 * Returns attributes that must be ignored from the INSERT SQL generation
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getAutomaticCreateAttributes($model);
-
-
-		/**
-		 * Returns attributes that must be ignored from the UPDATE SQL generation
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getAutomaticUpdateAttributes($model);
-
-
-		/**
-		 * Set the attributes that must be ignored from the INSERT SQL generation
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @param  array $attributes
-		 */
-		public function setAutomaticCreateAttributes($model, $attributes);
-
-
-		/**
-		 * Set the attributes that must be ignored from the UPDATE SQL generation
-		 *
-		 * @param  \ManaPHP\Mvc\ModelInterface $model
-		 * @param  array $attributes
-		 */
-		public function setAutomaticUpdateAttributes($model, $attributes, $replace);
-
-
-		/**
-		 * Returns the column map if any
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getColumnMap($model);
-
-
-		/**
-		 * Returns the reverse column map if any
-		 *
-		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return array
-		 */
-		public function getReverseColumnMap($model);
 
 
 		/**
@@ -206,19 +53,6 @@ namespace ManaPHP\Mvc\Model {
 		 */
 		public function hasAttribute($model, $attribute);
 
-
-		/**
-		 * Checks if the internal meta-data container is empty
-		 *
-		 * @return boolean
-		 */
-		public function isEmpty();
-
-
-		/**
-		 * Resets internal meta-data in order to regenerate it
-		 */
-		public function reset();
 
 
 		/**
