@@ -231,9 +231,13 @@ namespace ManaPHP\Db {
 					$statement =$this->executePrepared($statement,$bindParams,$bindTypes);
 				}
 			}else{
-				$statement =$this->_pdo->query($sqlStatement);
-			}
+				try{
+					$statement =$this->_pdo->query($sqlStatement);
+				}catch (\PDOException $e){
+					throw new Exception($e->getMessage());
+				}
 
+			}
 
 			if(is_object($statement)){
 				if(is_object($this->_eventsManager)){
@@ -258,38 +262,36 @@ namespace ManaPHP\Db {
 		 * @param string $sqlStatement
 		 * @param array $bindParams
 		 * @param array $bindTypes
+		 * @return int
+		 * @throws \ManaPHP\Db\Exception
 		 */
 		public function execute($sqlStatement, $bindParams = null, $bindTypes = null){
-			if(is_object($this->_eventsManager)){
-				$this->_sqlStatement =$sqlStatement;
-				$this->_sqlVariables =$bindParams;
-				$this->_sqlBindTypes =$bindTypes;
+			$this->_sqlStatement =$sqlStatement;
+			$this->_sqlVariables =$bindParams;
+			$this->_sqlBindTypes =$bindTypes;
 
-				if($this->_eventsManager->fire('db:beforeQuery',$this,$bindParams) ===false){
-					return false;
-				}
+			if(is_object($this->_eventsManager)){
+				$this->_eventsManager->fire('db:beforeQuery',$this,$bindParams);
 			}
 
-			$affectedRows=0;
+			$this->_affectedRows=0;
 
 			if(is_array($bindParams)){
 				$statement =$this->_pdo->prepare($sqlStatement);
-				if(is_object($sqlStatement)){
+				if(is_object($statement)){
 					$newStatement=$this->executePrepared($statement,$bindParams,$bindTypes);
-					$affectedRows =$newStatement->rowCount();
+					$this->_affectedRows =$newStatement->rowCount();
 				}
 			}else{
-				$affectedRows =$this->_pdo->exec($sqlStatement);
+				$this->_affectedRows =$this->_pdo->exec($sqlStatement);
 			}
 
-			if(is_int($affectedRows)){
-				$this->_affectedRows =$affectedRows;
+			if(is_int($this->_affectedRows)){
 				if(is_object($this->_eventsManager)){
 					$this->_eventsManager->fire('db:afterQuery',$this,$bindParams);
 				}
 			}
-
-			return true;
+			return $this->_affectedRows;
 		}
 
 		/**
@@ -335,9 +337,10 @@ namespace ManaPHP\Db {
 		 * @param int $fetchMode
 		 * @param array $bindParams
 		 * @param array $bindTypes
+		 * @throws \ManaPHP\Db\Exception
 		 * @return array
 		 */
-		public function fetchOne($sqlQuery, $fetchMode=Db::FETCH_ASSOC, $bindParams=null){
+		public function fetchOne($sqlQuery, $fetchMode=\PDO::FETCH_ASSOC, $bindParams=null){
 			$result =$this->query($sqlQuery, $bindParams, null);
 			if(is_object($result)){
 				$result->setFetchMode($fetchMode);
@@ -374,16 +377,23 @@ namespace ManaPHP\Db {
 		 * @param array $bindTypes
 		 * @return array
 		 */
-		public function fetchAll($sqlQuery, $fetchMode=Db::FETCH_ASSOC, $bindParams=null){
-			$result =[];
+		public function fetchAll($sqlQuery, $fetchMode=\PDO::FETCH_ASSOC, $bindParams=null){
+			$results =[];
 			$result =$this->query($sqlQuery,$bindParams, null);
-			if($result !==null){
+			if(is_object($result)){
 				$result->setFetchMode($fetchMode);
 			}
 
-			while(1){
+			while(true){
 				$row =$result->fetch();
+				if($row ===false){
+					break;
+				}else{
+					$results[]=$row;
+				}
 			}
+
+			return $results;
 		}
 
 
@@ -431,7 +441,7 @@ namespace ManaPHP\Db {
 					$bindParams[$k+1]=$v;
 				}else{
 					$bindKey =':'.$fields[$k];
-					$value_parts[]=$fields[$k];
+					$value_parts[]=$bindKey;
 					$bindParams[$bindKey]=$v;
 				}
 			}
@@ -443,7 +453,7 @@ namespace ManaPHP\Db {
 					$field_parts[]=$this->escapeIdentifier($field);
 				}
 
-				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).' ('. implode(', ',$field_parts).') VALUES '. $value_parts .')';
+				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).' ('. implode(', ',$field_parts).') VALUES ('. implode(',', $value_parts) .')';
 			}else{
 				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).' VALUES ('. implode(', ',$value_parts).')';
 			}
