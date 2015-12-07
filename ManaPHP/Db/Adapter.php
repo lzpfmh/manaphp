@@ -11,7 +11,7 @@ namespace ManaPHP\Db {
 	 * Base class for ManaPHP\Db adapters
 	 */
 	
-	abstract class Adapter implements EventsAwareInterface, AdapterInterface {
+	class Adapter implements EventsAwareInterface, AdapterInterface {
 
 		/**
 		 * Event Manager
@@ -657,5 +657,36 @@ namespace ManaPHP\Db {
 			$this->_transactionLevel--;
 			return $this->_pdo->commit();
 		}
+
+		/**
+		 * Returns insert id for the auto_increment column inserted in the last SQL statement
+		 *
+		 * @param string $sequenceName
+		 * @return int
+		 */
+		public function lastInsertId($sequenceName=null){
+			return $this->_pdo->lastInsertId($sequenceName);
+		}
+
+		/**
+		 * Active SQL statement in the object without replace bound parameters
+		 *
+		 * @return string
+		 */
+		public function getRealSQLStatement(){
+			return $this->_sqlStatement;
+		}
+
+
+
+		/**
+		 * Return internal PDO handler
+		 *
+		 * @return \PDO
+		 */
+		public function getInternalHandler(){
+			return $this->_pdo;
+		}
 	}
+
 }

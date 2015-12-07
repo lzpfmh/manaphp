@@ -129,6 +129,12 @@ namespace ManaPHP\Mvc {
 			return $this->_modelsMetaData;
 		}
 
+		/**
+		 * Refreshes the model attributes re-querying the record from the database
+		 */
+		public function refresh(){
+
+		}
 
 		/**
 		 * Returns the models manager related to the entity instance

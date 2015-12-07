@@ -68,15 +68,6 @@ namespace ManaPHP\Db {
 
 
 		/**
-		 * Gets a list of columns
-		 *
-		 * @param array $columnList
-		 * @return string
-		 */
-		public function getColumnList($columnList);
-
-
-		/**
 		 * Appends a LIMIT clause to $sqlQuery argument
 		 *
 		 * @param  	string $sqlQuery
@@ -218,16 +209,5 @@ namespace ManaPHP\Db {
 		 * @return \PDO
 		 */
 		public function getInternalHandler();
-
-
-		/**
-		 * Returns an array of \ManaPHP\Db\Column objects describing a table
-		 *
-		 * @param string $table
-		 * @param string $schema
-		 * @return \ManaPHP\Db\ColumnInterface[]
-		 */
-		public function describeColumns($table, $schema=null);
-
 	}
 }
