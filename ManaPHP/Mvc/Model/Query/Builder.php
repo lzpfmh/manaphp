@@ -1,6 +1,8 @@
 <?php 
 
 namespace ManaPHP\Mvc\Model\Query {
+
+	use ManaPHP\Di;
 	use \ManaPHP\Di\InjectionAwareInterface;
 	use ManaPHP\Mvc\Model\Exception;
 	use ManaPHP\Mvc\Model\Query;
@@ -84,33 +86,43 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param \ManaPHP\Di $dependencyInjector
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function __construct($params=null, $dependencyInjector){
+		public function __construct($params=null, $dependencyInjector=null){
 			if(is_array($params)){
 				if(isset($params[0])){
 					$this->_conditions =$params[0];
 				}else{
-					if(isset($params['condition'])){
-						$this->_conditions =$params['condition'];
+					if(isset($params['conditions'])){
+						$this->_conditions =$params['conditions'];
 					}
 				}
 
 				if(is_array($this->_conditions)){
 					$mergedConditions=[];
 					$mergedParams=[];
+					$mergedTypes=[];
 
 					foreach($this->_conditions as $condition){
-						if(is_string($condition[0])){
-							$mergedConditions[]=$condition[0];
-						}
+						if(is_array($condition)){
+							if(is_string($condition[0])){
+								$mergedConditions[]=$condition[0];
+							}
 
-						if(is_array($condition[1])){
-							$mergedParams=array_merge($mergedParams,$condition[1]);
+							if(is_array($condition[1])){
+								/** @noinspection SlowArrayOperationsInLoopInspection */
+								$mergedParams=array_merge($mergedParams,$condition[1]);
+							}
+
+							if(is_array($condition[2])){
+								/** @noinspection SlowArrayOperationsInLoopInspection */
+								$mergedTypes =array_merge($mergedTypes,$condition[2]);
+							}
 						}
 					}
 
 					$this->_conditions=implode(' AND ',$mergedConditions);
 
 					$this->_bindParams=$mergedParams;
+					$this->_bindTypes =$mergedTypes;
 				}
 
 				if(isset($params['bind'])){
@@ -168,6 +180,10 @@ namespace ManaPHP\Mvc\Model\Query {
 				if(is_string($params) && $params !==''){
 					$this->_conditions=$params;
 				}
+			}
+
+			if($dependencyInjector !==null){
+				$this->_dependencyInjector =$dependencyInjector;
 			}
 		}
 
@@ -390,11 +406,19 @@ namespace ManaPHP\Mvc\Model\Query {
 		public function where($conditions, $bindParams=null, $bindTypes=null){
 			$this->_conditions =$conditions;
 
-			if(is_array($bindParams)){
-				if(is_array($this->_bindParams)){
-					$this->_bindParams=array_merge($this->_bindParams ,$bindParams);
+			if($bindParams !==null){
+				if($this->_bindParams ===null){
+					$this->_bindParams=$bindParams;
 				}else{
-					$this->_bindParams =$bindParams;
+					$this->_bindParams=array_merge($this->_bindParams,$bindParams);
+				}
+			}
+
+			if($bindTypes !==null){
+				if($this->_bindTypes ===null){
+					$this->_bindTypes=$bindTypes;
+				}else{
+					$this->_bindTypes=array_merge($this->_bindTypes, $bindTypes);
 				}
 			}
 
@@ -422,11 +446,19 @@ namespace ManaPHP\Mvc\Model\Query {
 				$this->_conditions =$conditions;
 			}
 
-			if(is_array($bindParams)){
-				if(is_array($this->_bindParams)){
-					$this->_bindParams=array_merge($this->_bindParams ,$bindParams);
+			if($bindParams !==null){
+				if($this->_bindParams ===null){
+					$this->_bindParams=$bindParams;
 				}else{
-					$this->_bindParams =$bindParams;
+					$this->_bindParams=array_merge($this->_bindParams,$bindParams);
+				}
+			}
+
+			if($bindTypes !==null){
+				if($this->_bindTypes ===null){
+					$this->_bindTypes=$bindTypes;
+				}else{
+					$this->_bindTypes=array_merge($this->_bindTypes, $bindTypes);
 				}
 			}
 
@@ -454,11 +486,19 @@ namespace ManaPHP\Mvc\Model\Query {
 				$this->_conditions =$conditions;
 			}
 
-			if(is_array($bindParams)){
-				if(is_array($this->_bindParams)){
-					$this->_bindParams=array_merge($this->_bindParams ,$bindParams);
+			if($bindParams !==null){
+				if($this->_bindParams ===null){
+					$this->_bindParams=$bindParams;
 				}else{
-					$this->_bindParams =$bindParams;
+					$this->_bindParams=array_merge($this->_bindParams,$bindParams);
+				}
+			}
+
+			if($bindTypes !==null){
+				if($this->_bindTypes ===null){
+					$this->_bindTypes=$bindTypes;
+				}else{
+					$this->_bindTypes=array_merge($this->_bindTypes, $bindTypes);
 				}
 			}
 
@@ -726,9 +766,163 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * Returns a PHQL statement built based on the builder parameters
 		 *
 		 * @return string
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function getPhql(){
-			return '';
+			if($this->_dependencyInjector ===null){
+				$dependencyInjector=Di::getDefault();
+			}else{
+				$dependencyInjector=$this->_dependencyInjector;
+			}
+
+			if($this->_models ===null){
+				throw new Exception('At least one model is required to build the query');
+			}else{
+				if(count($this->_models) ===0){
+					throw new Exception('At least one model is required to build the query');
+				}
+			}
+
+			$conditions=$this->_conditions;
+
+			/**
+			 * Generate PHQL for SELECT
+			 */
+			if($this->_distinct !==null && is_bool($this->_distinct)){
+				if($this->_distinct){
+					$sql='SELECT DISTINCT ';
+				}else{
+					$sql='SELECT ALL ';
+				}
+			}else{
+				$sql ='SELECT ';
+			}
+
+			/**
+			 * Generate PHQL for columns
+			 */
+			if($this->_columns !==null){
+				if(is_array($this->_columns)){
+					$selectedColumns=[];
+					foreach($this->_columns as $key=>$column){
+						if(is_int($key)){
+							$selectedColumns[]=$column;
+						}else{
+
+							if(strpos($key,'[') !==false){
+								$selectedColumns[]= $column. ' AS '.$key;
+							}else{
+								$selectedColumns[]=$column. ' AS ['.$key.']';
+							}
+						}
+					}
+					$sql .=implode(', ',$selectedColumns);
+				}else{
+					$sql .=$this->_columns;
+				}
+			}else{
+				if(is_array($this->_models)){
+					$selectedColumns=[];
+					foreach($this->_models as $alias=>$model){
+						if(is_int($alias)){
+							$selectedColumns[]='['.$model.'].*';
+						}else{
+							$selectedColumns[]='['.$alias.'].*';
+						}
+					}
+					$sql .=implode(', ',$selectedColumns);
+				}else{
+					$sql .='['.$this->_models.'].*';
+				}
+			}
+
+			/**
+			 *  Join multiple models or use a single one if it is a string
+			 */
+			if(is_array($this->_models)){
+				$selectedModels=[];
+				foreach($this->_models as $alias=>$model){
+					if(is_string($alias)){
+						if(strpos($model, '[') !==false){
+							$selectedModels[]=$model. ' AS ['.$alias.']';
+						}else{
+							$selectedModels[]='['.$model.'] AS ['.$alias.']';
+						}
+					}else{
+						if(strpos($model,'[') !==false){
+							$selectedModels[]=$model;
+						}else{
+							$selectedModels[]='['.$model.']';
+						}
+					}
+				}
+				$sql .=' FROM '.implode(', ',$selectedModels);
+			}else{
+				if(strpos($this->_models,'[') !==false){
+					$sql .=' FROM '.$this->_models;
+				}else{
+					$sql.=' FROM [' .$this->_models.']';
+				}
+			}
+
+			if(is_array($this->_joins)){
+				foreach($this->_joins as $join){
+					list($joinModel, $joinCondition, $joinAlias, $joinType)=$join;
+					if($joinType){
+						if(strpos($joinModel,'[') !==false){
+							$sql .=' '.$joinType .' JOIN '.$joinModel;
+						}else{
+							$sql.=' '.$joinType.' JOIN ['.$joinModel.']';
+						}
+					}else{
+						if(strpos($joinModel,']') !==false){
+							$sql .=' JOIN '.$joinModel;
+						}else{
+							$sql.=' JOIN ['.$joinModel.']';
+						}
+					}
+
+					if($joinAlias){
+						$sql .=' AS ['.$joinAlias.']';
+					}
+
+					if($joinCondition){
+						$sql .=' ON '.$joinCondition;
+					}
+				}
+			}
+
+			if(is_string($conditions) && $conditions !==''){
+				$sql .=' WHERE '.$conditions;
+			}
+
+			/**
+			 * Process group parameters
+			 * todo
+			 */
+
+			/**
+			 * Process group parameters
+			 * todo
+			 */
+
+			/**
+			 * Process order clause
+			 * todo
+			 */
+
+			/**
+			 * Process limit parameters
+			 * todo
+			 */
+
+			/**
+			 * Process forUPDATE clause
+			 * todo
+			 */
+
+			return $sql;
+
 		}
 
 

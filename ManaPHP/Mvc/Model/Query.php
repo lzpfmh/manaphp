@@ -1,7 +1,7 @@
 <?php 
 
 namespace ManaPHP\Mvc\Model {
-
+	use \ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Mvc\Model\Query
 	 *
@@ -25,7 +25,7 @@ namespace ManaPHP\Mvc\Model {
 	 *</code>
 	 */
 	
-	class Query implements \ManaPHP\Mvc\Model\QueryInterface, \ManaPHP\Di\InjectionAwareInterface {
+	class Query implements QueryInterface, InjectionAwareInterface {
 
 		const TYPE_SELECT = 309;
 
@@ -35,6 +35,9 @@ namespace ManaPHP\Mvc\Model {
 
 		const TYPE_DELETE = 303;
 
+		/**
+		 * @var \ManaPHP\DiInterface
+		 */
 		protected $_dependencyInjector;
 
 		protected $_manager;
@@ -347,7 +350,9 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
 		 */
-		protected function _executeSelect(){ }
+		protected function _executeSelect($intermediate,$bindParams,$bindTypes){
+
+		}
 
 
 		/**
@@ -401,8 +406,24 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $bindParams
 		 * @param array $bindTypes
 		 * @return mixed
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function execute($bindParams=null, $bindTypes=null){ }
+		public function execute($bindParams=null, $bindTypes=null){
+			if(is_array($this->_bindParams) && $bindParams !==null){
+				$mergedParams =array_merge($this->_bindParams, $bindParams);
+			}else{
+				$mergedParams =$this->_bindParams;
+			}
+
+			if(is_array($this->_bindTypes) &&$bindTypes !==null){
+				$mergedTypes=array_merge($this->_bindTypes,$bindTypes);
+			}else{
+				$mergedTypes =$this->_bindTypes;
+			}
+
+			$result =$this->_executeSelect($this->_phql,$mergedParams,$mergedTypes);
+
+		}
 
 
 		/**
@@ -416,37 +437,14 @@ namespace ManaPHP\Mvc\Model {
 
 
 		/**
-		 * Sets the type of PHQL statement to be executed
-		 *
-		 * @param int $type
-		 * @return \ManaPHP\Mvc\Model\Query
-		 */
-		public function setType($type){ }
-
-
-		/**
-		 * Gets the type of PHQL statement executed
-		 *
-		 * @return int
-		 */
-		public function getType(){ }
-
-
-		/**
 		 * Set default bind parameters
 		 *
 		 * @param array $bindParams
+		 * @param bool $merge
 		 * @return \ManaPHP\Mvc\Model\Query
 		 */
-		public function setBindParams($bindParams){ }
-
-
-		/**
-		 * Returns default bind params
-		 *
-		 * @return array
-		 */
-		public function getBindParams(){ }
+		public function setBindParams($bindParams, $merge = false){
+		}
 
 
 		/**
@@ -456,31 +454,6 @@ namespace ManaPHP\Mvc\Model {
 		 * @return \ManaPHP\Mvc\Model\Query
 		 */
 		public function setBindTypes($bindTypes){ }
-
-
-		/**
-		 * Returns default bind types
-		 *
-		 * @return array
-		 */
-		public function getBindTypes(){ }
-
-
-		/**
-		 * Allows to set the IR to be executed
-		 *
-		 * @param array $intermediate
-		 * @return \ManaPHP\Mvc\Model\Query
-		 */
-		public function setIntermediate($intermediate){ }
-
-
-		/**
-		 * Returns the intermediate representation of the PHQL statement
-		 *
-		 * @return array
-		 */
-		public function getIntermediate(){ }
 
 	}
 }
