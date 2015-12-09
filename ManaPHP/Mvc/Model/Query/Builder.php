@@ -910,6 +910,22 @@ namespace ManaPHP\Mvc\Model\Query {
 			 * Process order clause
 			 * todo
 			 */
+			if($this->_order !==null){
+				if(is_array($this->_order)){
+					$orderItems=[];
+
+					foreach($this->_order as $item){
+						if(strpos($item,'.')){
+							$orderItems[]=$item;
+						}else{
+							$orderItems[]='['.$item.']';
+						}
+					}
+					$sql .=' ORDER BY '.implode(', ',$orderItems);
+				}else{
+					$sql .=' ORDER BY '.$this->_order;
+				}
+			}
 
 			/**
 			 * Process limit parameters
@@ -943,6 +959,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param array $bindParams
 		 * @param array $bindTypes
 		 * @return mixed
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function execute($bindParams=null, $bindTypes=null){
 //			$query = new Query($this->getPhql(),$this->_dependencyInjector);
@@ -1008,8 +1025,12 @@ namespace ManaPHP\Mvc\Model\Query {
 			}else{
 				$finalBindParams=null;
 			}
-			$result =$readConnection->fetchAll($sql,\PDO::FETCH_ASSOC,$finalBindParams,$mergedTypes);
-			var_dump($result);
+			try{
+				$result =$readConnection->fetchAll($sql,\PDO::FETCH_ASSOC,$finalBindParams,$mergedTypes);
+			}catch (\Exception $e){
+				throw new Exception($e->getMessage().':'.$sql);
+			}
+
 			return $result;
 		}
 
