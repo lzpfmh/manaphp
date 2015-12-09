@@ -1,7 +1,11 @@
 <?php 
 
 namespace ManaPHP\Mvc\Model {
+
+	use Application\Home\Models\User;
 	use \ManaPHP\Di\InjectionAwareInterface;
+	use ManaPHP\Mvc\Application;
+
 	/**
 	 * ManaPHP\Mvc\Model\Query
 	 *
@@ -93,8 +97,6 @@ namespace ManaPHP\Mvc\Model {
 			if($dependencyInjector !==null){
 				$this->setDI($dependencyInjector);
 			}
-
-
 		}
 
 
@@ -420,9 +422,9 @@ namespace ManaPHP\Mvc\Model {
 			}else{
 				$mergedTypes =$this->_bindTypes;
 			}
-
+			$this->_phql=str_replace('[Application\Home\Models\User]','user',$this->_phql);
+			$result=$this->_dependencyInjector->getShared('modelsManager')->getReadConnection(new User())->fetchAll($this->_phql,\PDO::FETCH_ASSOC,$mergedParams,$mergedTypes);
 			$result =$this->_executeSelect($this->_phql,$mergedParams,$mergedTypes);
-
 		}
 
 

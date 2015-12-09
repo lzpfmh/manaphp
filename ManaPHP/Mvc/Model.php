@@ -76,8 +76,9 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 * @param \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
+         * @param array $data
 		 */
-		final public function __construct($dependencyInjector=null, $modelsManager=null){
+		final public function __construct($dependencyInjector=null, $modelsManager=null,$data=null){
 			$this->_dependencyInjector=$dependencyInjector===null?Di::getDefault():$dependencyInjector;
 			$this->_modelsManager=$modelsManager ===null?$this->_dependencyInjector->getShared('modelsManager'):$modelsManager;
 
@@ -92,6 +93,13 @@ namespace ManaPHP\Mvc {
 			if(method_exists($this,'onConstruct')){
 				$this->onConstruct();
 			}
+
+            if($data !==null){
+                $this->_snapshot =$data;
+                foreach($data as $k=>$v){
+                    $this->{$k}=$v;
+                }
+            }
 		}
 
 
@@ -397,13 +405,19 @@ namespace ManaPHP\Mvc {
 
 			$resultset=$query->execute();
 
-			if(is_object($resultset)){
-				if(isset($params['hydration'])){
-					$resultset->setHydrateMode($params['hydration']);
-				}
-			}
+			if(is_array($resultset)){
+                $objs=[];
+                foreach($resultset as $result){
+                    $class =get_called_class();
+                    $objs[]=new $class(null, null,$result);
 
-			return $resultset;
+                }
+                return $objs;
+			}else{
+                return false;
+            }
+
+
 		}
 
 

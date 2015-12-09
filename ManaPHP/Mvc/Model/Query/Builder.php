@@ -56,7 +56,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		protected $_distinct;
 
 		protected $_hiddenParamNumber;
-
+		protected $_lastSQL;
 		/**
 		 * \ManaPHP\Mvc\Model\Query\Builder constructor
 		 *
@@ -930,14 +930,105 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * Returns the query built
 		 *
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function getQuery(){
-			$query = new Query($this->getPhql(),$this->_dependencyInjector);
-			if(is_array($this->_bindParams)){
-				$query->setBindParams($this->_bindParams);
+			$this->_lastSQL=$this->getPhql();
+			return $this;
+		}
+
+		/**
+		 * Executes a parsed PHQL statement
+		 *
+		 * @param array $bindParams
+		 * @param array $bindTypes
+		 * @return mixed
+		 */
+		public function execute($bindParams=null, $bindTypes=null){
+//			$query = new Query($this->getPhql(),$this->_dependencyInjector);
+//			if(is_array($this->_bindParams)){
+//				$query->setBindParams($this->_bindParams);
+//			}
+//
+//			if(is_array($this->_bindTypes)){
+//				$query->setBindTypes($this->_bindTypes);
+//			}
+
+			if($bindParams !==null &&is_array($bindParams)){
+				$mergedParams=array_merge($this->_bindParams,$bindParams);
+			} else{
+				$mergedParams=$this->_bindParams;
 			}
 
-			return $query;
+			if($bindTypes !==null &&is_array($bindTypes)){
+				$mergedTypes=array_merge($this->_bindTypes, $bindTypes);
+			}else{
+				$mergedTypes=$this->_bindTypes;
+			}
+
+			$sql=$this->_lastSQL;
+			/**
+			 * @var \ManaPHP\Mvc\Model\MetaDataInterface
+			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
+			 */
+			$modelsMetadata =$this->_dependencyInjector->getShared('modelsMetadata');
+			$modelsManager =$this->_dependencyInjector->getShared('modelsManager');
+
+			if(is_string($this->_models)){
+				$models=[$this->_models];
+			}else{
+				$models=$this->_models;
+			}
+			foreach($models as $model){
+				$modelInstance=$modelsManager->load($model,false);
+
+				$schema =$modelInstance->getSchema();
+				$source =$modelInstance->getSource();
+				if($schema){
+					$table=[$schema,$source];
+				}else{
+					$table=$source;
+				}
+				$readConnection=$modelInstance->getReadConnection();
+				$escapedTable=$readConnection->escapeIdentifier($table);
+				$sql =str_replace('['.$model.']',$escapedTable,$sql);
+			}
+
+			$sql=strtr($sql,'[]','``');
+
+			if(is_array($mergedParams)){
+				$sql_replaces=[];
+				$finalBindParams=[];
+				foreach($mergedParams as $key=>$value){
+					$sql_replaces[':'.$key.':']=':'.$key;
+					$finalBindParams[':'.$key]=$value;
+				}
+
+				$sql =strtr($sql,$sql_replaces);
+			}else{
+				$finalBindParams=null;
+			}
+			$result =$readConnection->fetchAll($sql,\PDO::FETCH_ASSOC,$finalBindParams,$mergedTypes);
+			var_dump($result);
+			return $result;
 		}
+
+		/**
+		 * Set default bind parameters
+		 *
+		 * @param array $bindParams
+		 * @param bool $merge
+		 * @return \ManaPHP\Mvc\Model\Query
+		 */
+		public function setBindParams($bindParams, $merge = false){
+			if($merge ===false){
+				$this->_bindParams=$bindParams;
+			}else{
+				$this->_bindParams=array_merge($this->_bindParams,$bindParams);
+			}
+
+			return $this;
+		}
+
 	}
 }

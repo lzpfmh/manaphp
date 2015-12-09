@@ -7,20 +7,16 @@
  */
 namespace Application\Home\Controllers;
 
+use Application\Home\Models\User;
 use ManaPHP\Mvc\Controller;
 
 class IndexController extends Controller{
     public function indexAction(){
-      //  $this->dispatcher->forward(['action'=>'index2']);
-        echo date('Y-m-d H:i:s');
-        var_dump(memory_get_usage(true));
-        var_dump(memory_get_usage(false));
-//        echo json_encode(get_defined_functions(),JSON_PRETTY_PRINT);
-//        echo json_encode(xdebug_get_function_stack(),JSON_PRETTY_PRINT);
-       // var_dump(get_included_files());
-       // xdebug_var_dump($this);
-
         error_reporting(E_ALL);
+//        var_dump($this->db->fetchAll('SELECT * FROM test.user'));
+//        var_dump($this->db->fetchAll('SELECT * FROM test.user WHERE id=:id',\PDO::FETCH_ASSOC,[':id'=>2]));
+//        var_dump($this->db->getSQLStatement());
+        $user=User::find(['id >:id:','bind'=>['id'=>3]]);
     }
 
     public function index2Action(){
