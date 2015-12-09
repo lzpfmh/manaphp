@@ -520,7 +520,7 @@ namespace ManaPHP\Db {
 		public function delete($table, $whereCondition, $placeholders=null, $dataTypes=null){
 			$escapedTable=$this->escapeIdentifier($table);
 
-			if($whereCondition ==='' ||$whereCondition==null){
+			if($whereCondition ==='' ||$whereCondition===null){
 				throw new Exception('Danger DELETE \''. $escapedTable.'\'operation without any condition');
 			}
 
