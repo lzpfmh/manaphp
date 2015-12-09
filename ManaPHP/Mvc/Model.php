@@ -406,18 +406,16 @@ namespace ManaPHP\Mvc {
 			$resultset=$query->execute();
 
 			if(is_array($resultset)){
-                $objs=[];
+                $modelInstances=[];
                 foreach($resultset as $result){
                     $class =get_called_class();
-                    $objs[]=new $class(null, null,$result);
+                    $modelInstances[]=new $class(null, null,$result);
 
                 }
-                return $objs;
+                return $modelInstances;
 			}else{
                 return false;
             }
-
-
 		}
 
 
