@@ -206,5 +206,17 @@ namespace ManaPHP\Mvc {
 		 * Refreshes the model attributes re-querying the record from the database
 		 */
 		public function refresh();
+
+		/**
+		 * Returns the instance as an array representation
+		 *
+		 *<code>
+		 * print_r($robot->toArray());
+		 *</code>
+		 *
+		 * @param array $columns
+		 * @return array
+		 */
+		public function toArray($columns=null);
 	}
 }
