@@ -622,8 +622,7 @@ namespace ManaPHP\Mvc {
 			 * Return only the value in the first result
 			 */
 
-			$firstRow=$resultset->getFirst();
-			return $firstRow->{$alias};
+			return $resultset[0][$alias];
 		}
 
 

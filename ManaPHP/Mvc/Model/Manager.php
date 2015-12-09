@@ -132,7 +132,6 @@ namespace ManaPHP\Mvc\Model {
 					return new $modelName($this->_dependencyInjector,$this);
 				}
 				$model =$this->_initialized[$modelName];
-				$model->reset();
 				return $model;
 			}else{
 				if(class_exists($modelName)){

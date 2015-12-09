@@ -1011,6 +1011,7 @@ namespace ManaPHP\Mvc\Model\Query {
 				$sql =str_replace('['.$model.']',$escapedTable,$sql);
 			}
 
+			/** @noinspection StrTrUsageAsStrReplaceInspection */
 			$sql=strtr($sql,'[]','``');
 
 			if(is_array($mergedParams)){
