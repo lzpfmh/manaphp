@@ -439,7 +439,7 @@ namespace ManaPHP\Mvc {
 		 * </code>
 		 *
 		 * @param array $parameters
-		 * @return \ManaPHP\Mvc\Model
+		 * @return static
 		 */
 		public static function findFirst($parameters=null){
 			/**
@@ -474,8 +474,14 @@ namespace ManaPHP\Mvc {
 			}
 
 			$query->setUniqueRow(true);
+			$result =$query->execute();
 
-			return $query->execute();
+			if(is_array($result)){
+				$class =get_called_class();
+				return new $class(null, null,$result);
+			}else{
+				return $result;
+			}
 		}
 
 

@@ -56,7 +56,13 @@ namespace ManaPHP\Mvc\Model\Query {
 		protected $_distinct;
 
 		protected $_hiddenParamNumber;
+
 		protected $_lastSQL;
+
+		/**
+		 * @var boolean
+		 */
+		protected $_uniqueRow;
 		/**
 		 * \ManaPHP\Mvc\Model\Query\Builder constructor
 		 *
@@ -931,7 +937,22 @@ namespace ManaPHP\Mvc\Model\Query {
 			 * Process limit parameters
 			 * todo
 			 */
+			if($this->_limit !==null){
+				$key ='ABP0';
+				$sql .=' LIMIT :'.$key.':';
+				$this->_bindParams[$key]=(int)$this->_limit;
+				//$this->_bindTypes[$key]=\PDO::PARAM_INT;
+			}
 
+			if($this->_offset !==null){
+				if($this->_limit ===null){
+					throw new Exception('offset is invalid: limit is missing');
+				}
+				$key ='ABP1';
+				$sql .=' OFFSET :'.$key.':';
+				$this->_bindParams[$key]=(int)$this->_offset;
+				$this->_bindTypes[$key]=\PDO::PARAM_INT;
+			}
 			/**
 			 * Process forUPDATE clause
 			 * todo
@@ -953,6 +974,14 @@ namespace ManaPHP\Mvc\Model\Query {
 			return $this;
 		}
 
+		/**
+		 * Tells to the query if only the first row in the resultset must be returned
+		 */
+		public function setUniqueRow($uniqueRow)
+		{
+			$this->_uniqueRow = $uniqueRow;
+			return $this;
+		}
 		/**
 		 * Executes a parsed PHQL statement
 		 *
@@ -1027,7 +1056,12 @@ namespace ManaPHP\Mvc\Model\Query {
 				$finalBindParams=null;
 			}
 			try{
-				$result =$readConnection->fetchAll($sql,\PDO::FETCH_ASSOC,$finalBindParams,$mergedTypes);
+				if($this->_uniqueRow){
+					$result=$readConnection->fetchOne($sql,\PDO::FETCH_ASSOC,$finalBindParams,$mergedTypes);
+				}else{
+					$result =$readConnection->fetchAll($sql,\PDO::FETCH_ASSOC,$finalBindParams,$mergedTypes);
+				}
+
 			}catch (\Exception $e){
 				throw new Exception($e->getMessage().':'.$sql);
 			}

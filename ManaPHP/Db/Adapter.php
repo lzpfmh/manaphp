@@ -140,7 +140,6 @@ namespace ManaPHP\Db {
 			}
 
  			$options[\PDO::ATTR_ERRMODE]=\PDO::ERRMODE_EXCEPTION;
-
 			$this->_pdo=new \PDO($this->_type.':'.$dsn, $username, $password, $options);
 		}
 
@@ -186,7 +185,17 @@ namespace ManaPHP\Db {
 				}
 
 				if(!is_array($v)){
-					$statement->bindValue($parameter,$v);
+					if(isset($dataTypes[$parameter])){
+						$data_type =$dataTypes[$parameter];
+					}else{
+						if(is_int($v)){
+							$data_type =\PDO::PARAM_INT;
+						}else{
+							$data_type=\PDO::PARAM_STR;
+						}
+					}
+
+					$statement->bindValue($parameter,$v,$dataTypes[$parameter]);
 				}else{
 					throw new Exception('array data bind not support: '.$parameter);
 				}
