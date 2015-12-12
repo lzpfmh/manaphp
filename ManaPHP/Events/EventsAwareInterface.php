@@ -22,6 +22,5 @@ namespace ManaPHP\Events {
 		 * @return \ManaPHP\Events\ManagerInterface
 		 */
 		public function getEventsManager();
-
 	}
 }

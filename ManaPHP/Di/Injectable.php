@@ -19,15 +19,15 @@ namespace ManaPHP\Di {
 	 //* @property \ManaPHP\Flash\Session $flashSession
 	 //* @property \ManaPHP\Session\Adapter\Files|\ManaPHP\Session\Adapter|\ManaPHP\Session\AdapterInterface $session
 	 * @property \ManaPHP\Events\ManagerInterface $eventsManager
-	 //* @property \ManaPHP\Db\AdapterInterface $db
+	 * @property \ManaPHP\Db\AdapterInterface $db
 	 //* @property \ManaPHP\Security $security
 	 //* @property \ManaPHP\CryptInterface $crypt
 	 //* @property \ManaPHP\EscaperInterface $escaper
-	 //* @property \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
-	 //* @property \ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
+	 * @property \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
+	 * @property \ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
 	 //* @property \ManaPHP\Mvc\Model\Transaction\ManagerInterface $transactionManager
 	 //* @property \ManaPHP\Assets\Manager $assets
-	 //* @property \ManaPHP\Di|\ManaPHP\DiInterface $di
+	 * @property \ManaPHP\Di|\ManaPHP\DiInterface $di
 	 //* @property \ManaPHP\Session\BagInterface $persistent
 	 * @property \ManaPHP\Mvc\ViewInterface $view
 	 */

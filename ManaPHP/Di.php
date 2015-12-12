@@ -163,7 +163,8 @@ namespace ManaPHP {
 				}
 
 				if(is_array($parameters)){
-					$instance=new $name($parameters);
+					$reflection=new \ReflectionClass($name);
+					$instance=$reflection->newInstanceArgs($parameters);
 				}else{
 					$instance =new $name();
 				}
