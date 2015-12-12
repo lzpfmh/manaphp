@@ -370,7 +370,7 @@ namespace ManaPHP\Mvc {
 		 * </code>
 		 *
 		 * @param 	array $parameters
-		 * @return  \ManaPHP\Mvc\ModelInterface[]
+		 * @return  static[]
 		 */
 		public static function find($parameters=null){
 			/**

@@ -16,7 +16,16 @@ class IndexController extends Controller{
 //        var_dump($this->db->fetchAll('SELECT * FROM test.user'));
 //        var_dump($this->db->fetchAll('SELECT * FROM test.user WHERE id=:id',\PDO::FETCH_ASSOC,[':id'=>2]));
 //        var_dump($this->db->getSQLStatement());
-        $user=User::find(['id >:id:','bind'=>['id'=>3]]);
+        $users=User::find(['id >:id:','bind'=>['id'=>3],
+                    'order'=>'id desc',
+                    'columns'=>'id, age']);
+        foreach($users as $user){
+            var_dump($user->toArray());
+            echo $user->id;
+        }
+
+
+      //  var_dump(User::count(['id >1']));
     }
 
     public function index2Action(){
