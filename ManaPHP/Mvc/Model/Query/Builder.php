@@ -938,7 +938,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			 * todo
 			 */
 			if($this->_limit !==null){
-				$key ='ABP0';
+				$key ='ABP_LIMIT';
 				$sql .=' LIMIT :'.$key.':';
 				$this->_bindParams[$key]=(int)$this->_limit;
 				//$this->_bindTypes[$key]=\PDO::PARAM_INT;
@@ -948,7 +948,7 @@ namespace ManaPHP\Mvc\Model\Query {
 				if($this->_limit ===null){
 					throw new Exception('offset is invalid: limit is missing');
 				}
-				$key ='ABP1';
+				$key ='ABP_OFFSET';
 				$sql .=' OFFSET :'.$key.':';
 				$this->_bindParams[$key]=(int)$this->_offset;
 				$this->_bindTypes[$key]=\PDO::PARAM_INT;
