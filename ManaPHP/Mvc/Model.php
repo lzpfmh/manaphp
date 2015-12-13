@@ -72,6 +72,11 @@ namespace ManaPHP\Mvc {
 		protected $_snapshot;
 
 		/**
+		 * @var array
+		 */
+		protected static $_primaryKeys;
+
+		/**
 		 * \ManaPHP\Mvc\Model constructor
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
@@ -438,12 +443,14 @@ namespace ManaPHP\Mvc {
 		 *
 		 * </code>
 		 *
-		 * @param array $parameters
+		 * @param int|string|array $parameters
 		 * @return static
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public static function findFirst($parameters=null){
 			/**
 			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
+			 * @var \ManaPHP\Mvc\Model\MetaDataInterface $modelsMetadata
 			 */
 			$dependencyInjector=Di::getDefault();
 			$modelsManager =$dependencyInjector->getShared('modelsManager');
@@ -452,7 +459,19 @@ namespace ManaPHP\Mvc {
 				$params =$parameters;
 			}elseif($parameters===null){
 				$params=[];
-			}else{
+			}elseif(is_int($parameters)){
+				if(self::$_primaryKeys ===null){
+					$modelsMetadata=$dependencyInjector->getShared('modelsMetadata');
+					self::$_primaryKeys=$modelsMetadata->getPrimaryKeyAttributes(new static);
+				}
+
+				if(count(self::$_primaryKeys) !==1){
+					throw new Exception('parameter is integer, but the model\'s primary key has more than one column');
+				}
+				$key=self::$_primaryKeys[0];
+				$params['conditions']='['.$key.']=:'.$key.':';
+				$params['bind']=[$key=>$parameters];
+			} else{
 				$params=[];
 				$params[]=$parameters;
 			}

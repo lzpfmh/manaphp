@@ -722,7 +722,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *	$builder->offset(30);
 		 *</code>
 		 *
-		 * @param int $limit
 		 * @param int $offset
 		 * @return \ManaPHP\Mvc\Model\Query\Builder
 		 */
