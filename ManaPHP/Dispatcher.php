@@ -37,45 +37,86 @@ namespace ManaPHP {
 
 		protected $_activeHandler;
 
+		/**
+		 * @var boolean
+		 */
 		protected $_finished=false;
 
+		/**
+		 * @var boolean
+		 */
 		protected $_forwarded=false;
 
+		/**
+		 * @var string
+		 */
 		protected $_moduleName;
 
+		/**
+		 * @var string
+		 */
 		protected $_namespaceName;
 
+		/**
+		 * @var string
+		 */
 		protected $_handlerName;
 
+		/**
+		 * @var string
+		 */
 		protected $_actionName;
 
-		protected $_params;
+		/**
+		 * @var array
+		 */
+		protected $_params=[];
 
 		protected $_returnedValue;
 
 		protected $_lastHandler;
 
+		/**
+		 * @var string
+		 */
 		protected $_defaultNamespace;
 
 		protected $_defaultHandler;
 
+		/**
+		 * @var string
+		 */
 		protected $_defaultAction='';
 
+		/**
+		 * @var string
+		 */
 		protected $_handlerSuffix='';
 
+		/**
+		 * @var string
+		 */
 		protected $_actionSuffix='Action';
 
+		/**
+		 * @var boolean
+		 */
 		protected $_isExactHandler;
 
+		/**
+		 * @var string
+		 */
 		protected $_previousHandlerName;
 
+		/**
+		 * @var string
+		 */
 		protected $_previousActionName;
 
 		/**
 		 * \ManaPHP\Dispatcher constructor
 		 */
 		public function __construct(){
-			$this->_params=[];
 		}
 
 		/**
@@ -255,7 +296,7 @@ namespace ManaPHP {
 		/**
 		 * Set a param by its name or numeric index
 		 *
-		 * @param  mixed $param
+		 * @param  string|int $param
 		 * @param  mixed $value
 		 * @return static
 		 */
@@ -268,7 +309,7 @@ namespace ManaPHP {
 		/**
 		 * Gets a param by its name or numeric index
 		 *
-		 * @param  mixed $param
+		 * @param  string|int $param
 		 * @param  string|array $filters
 		 * @param  mixed $defaultValue
 		 * @return mixed

@@ -86,7 +86,7 @@ namespace ManaPHP {
 		/**
 		 * Set a param by its name or numeric index
 		 *
-		 * @param  mixed $param
+		 * @param  string|int $param
 		 * @param  mixed $value
 		 * @return static
 		 */
@@ -96,11 +96,12 @@ namespace ManaPHP {
 		/**
 		 * Gets a param by its name or numeric index
 		 *
-		 * @param  mixed $param
+		 * @param  string|int $param
 		 * @param  string|array $filters
+		 * @param mixed $defaultValue
 		 * @return mixed
 		 */
-		public function getParam($param, $filters=null);
+		public function getParam($param, $filters=null,$defaultValue=null);
 
 
 		/**
