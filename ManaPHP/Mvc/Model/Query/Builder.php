@@ -978,6 +978,8 @@ namespace ManaPHP\Mvc\Model\Query {
 
 		/**
 		 * Tells to the query if only the first row in the resultset must be returned
+		 * @param boolean $uniqueRow
+		 * @return static
 		 */
 		public function setUniqueRow($uniqueRow)
 		{
@@ -990,7 +992,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param array $bindParams
 		 * @param array $bindTypes
 		 * @return mixed
-		 * @throws \ManaPHP\Mvc\Model\Exception
+		 * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
 		 */
 		public function execute($bindParams=null, $bindTypes=null){
 //			$query = new Query($this->getPhql(),$this->_dependencyInjector);
@@ -1016,10 +1018,8 @@ namespace ManaPHP\Mvc\Model\Query {
 
 			$sql=$this->_lastSQL;
 			/**
-			 * @var \ManaPHP\Mvc\Model\MetaDataInterface
 			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
 			 */
-			$modelsMetadata =$this->_dependencyInjector->getShared('modelsMetadata');
 			$modelsManager =$this->_dependencyInjector->getShared('modelsManager');
 
 			if(is_string($this->_models)){

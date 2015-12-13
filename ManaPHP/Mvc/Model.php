@@ -691,7 +691,7 @@ namespace ManaPHP\Mvc {
 		 * @return double
 		 */
 		public static function sum($parameters=null){
-			return self::_groupResult('SUM','sumatory',$parameters);
+			return self::_groupResult('SUM','summary',$parameters);
 		}
 
 
