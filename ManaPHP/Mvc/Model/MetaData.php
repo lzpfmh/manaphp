@@ -201,6 +201,7 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return array
+         * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function getPrimaryKeyAttributes($model){
 			return $this->_readMetaData($model)[self::MODELS_PRIMARY_KEY];
@@ -210,6 +211,7 @@ namespace ManaPHP\Mvc\Model {
          * Returns attribute which is auto increment or null
          * @param $model
          * @return string |null
+         * @throws \ManaPHP\Mvc\Model\Exception
          */
         public function getAutoIncrementAttribute($model){
             return $this->_readMetaData($model)[self::MODELS_IDENTITY_COLUMN];
@@ -220,6 +222,7 @@ namespace ManaPHP\Mvc\Model {
          *
          * @param \ManaPHP\Mvc\ModelInterface $model
          * @return 	array
+         * @throws \ManaPHP\Mvc\Model\Exception
          */
         public function getNonPrimaryKeyAttributes($model){
             return $this->_readMetaData($model)[self::MODELS_NON_PRIMARY_KEY];
@@ -236,6 +239,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @param string $attribute
 		 * @return boolean
+         * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function hasAttribute($model, $attribute){
 			return isset($this->_readMetaData($model)[self::MODELS_ATTRIBUTES][$attribute]);
