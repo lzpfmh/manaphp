@@ -439,7 +439,7 @@ namespace ManaPHP\Mvc {
 		 * </code>
 		 *
 		 * @param int|string|array $parameters
-		 * @return static
+		 * @return static|false
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public static function findFirst($parameters=null){

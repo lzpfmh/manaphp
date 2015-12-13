@@ -85,7 +85,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $data
 		 * @param array $columnMap
-		 * @return \ManaPHP\Mvc\Model
+		 * @return static
 		 */
 		public function assign($data, $columnMap=null);
 
@@ -94,7 +94,7 @@ namespace ManaPHP\Mvc {
 		 * Allows to query a set of records that match the specified conditions
 		 *
 		 * @param 	array $parameters
-		 * @return  \ManaPHP\Mvc\Model\ResultsetInterface
+		 * @return  static[]
 		 */
 		public static function find($parameters=null);
 
@@ -103,7 +103,7 @@ namespace ManaPHP\Mvc {
 		 * Allows to query the first record that match the specified conditions
 		 *
 		 * @param array $parameters
-		 * @return \ManaPHP\Mvc\ModelInterface
+		 * @return static|false
 		 */
 		public static function findFirst($parameters=null);
 
