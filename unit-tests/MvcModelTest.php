@@ -209,6 +209,16 @@ class Store extends \ManaPHP\Mvc\Model{
     }
 }
 
+class Student extends \ManaPHP\Mvc\Model{
+    public $id;
+    public $age;
+    public $name;
+
+    public function getSource(){
+        return '_student';
+    }
+}
+
 class MvcModelTest extends TestCase{
     /**
      * @var \ManaPHP\DiInterface
@@ -229,7 +239,6 @@ class MvcModelTest extends TestCase{
             $config= require 'config.database.php';
             return new ManaPHP\Db\Adapter($config['mysql']);
         });
-
     }
 
     public function testCount(){
@@ -294,5 +303,34 @@ class MvcModelTest extends TestCase{
         $this->assertCount(1,Actor::find(['first_name=:first_name:',
             'bind'=>['first_name'=>'BEN'],
             'limit'=>1]));
+    }
+
+    /**
+     * @param \ManaPHP\Mvc\Model $model
+     */
+    protected function _truncateTable($model){
+        /**
+         * @var \ManaPHP\Db\Adapter $db
+         */
+        $db =$this->di->getShared('db');
+        $db->execute('TRUNCATE TABLE '.$model->getSource());
+    }
+
+    public function testSave(){
+        $this->_truncateTable(new Student());
+
+        $student=new Student();
+
+        $student->id=1;
+        $student->age=30;
+        $student->name='manaphp';
+        $this->assertTrue($student->save());
+
+        $student=Student::findFirst(1);
+        $this->assertNotEquals(false,$student);
+        $this->assertTrue($student instanceof Student);
+        $this->assertEquals('1',$student->id);
+        $this->assertEquals('30',$student->age);
+        $this->assertEquals('manaphp',$student->name);
     }
 }

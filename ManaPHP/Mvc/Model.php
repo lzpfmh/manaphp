@@ -72,11 +72,6 @@ namespace ManaPHP\Mvc {
 		protected $_snapshot;
 
 		/**
-		 * @var array
-		 */
-		protected static $_primaryKeys;
-
-		/**
 		 * \ManaPHP\Mvc\Model constructor
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
@@ -460,15 +455,13 @@ namespace ManaPHP\Mvc {
 			}elseif($parameters===null){
 				$params=[];
 			}elseif(is_int($parameters) ||is_numeric($parameters)){
-				if(self::$_primaryKeys ===null){
-					$modelsMetadata=$dependencyInjector->getShared('modelsMetadata');
-					self::$_primaryKeys=$modelsMetadata->getPrimaryKeyAttributes(new static);
-				}
+				$modelsMetadata=$dependencyInjector->getShared('modelsMetadata');
+				$primaryKeys=$modelsMetadata->getPrimaryKeyAttributes(new static);
 
-				if(count(self::$_primaryKeys) !==1){
+				if(count($primaryKeys) !==1){
 					throw new Exception('parameter is integer, but the model\'s primary key has more than one column');
 				}
-				$key=self::$_primaryKeys[0];
+				$key=$primaryKeys[0];
 				$params['conditions']='['.$key.']=:'.$key.':';
 				$params['bind']=[$key=>(int)$parameters];
 			} else{
