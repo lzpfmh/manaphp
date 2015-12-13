@@ -80,6 +80,7 @@ namespace ManaPHP\Mvc\Model {
             $primaryKeys=[];
             $nonPrimaryKeys=[];
             $numericTyped=[];
+            $autoIncrementAttribute=null;
             foreach($columns as $column){
                 $columnName =$column[0];
 
@@ -98,12 +99,17 @@ namespace ManaPHP\Mvc\Model {
                 ||strpos($columnType,'float') !==false) {
                     $numericTyped[]=$columnName;
                 }
+
+                if($column[5] ==='auto_increment'){
+                    $autoIncrementAttribute=$columnName;
+                }
             }
 
             return [self::MODELS_ATTRIBUTES=>$attributes,
                     self::MODELS_PRIMARY_KEY=>$primaryKeys,
                     self::MODELS_NON_PRIMARY_KEY=>$nonPrimaryKeys,
-                    self::MODELS_DATA_TYPES_NUMERIC=>$numericTyped];
+                    self::MODELS_DATA_TYPES_NUMERIC=>$numericTyped,
+                    self::MODELS_IDENTITY_COLUMN=>$autoIncrementAttribute];
         }
         /**
          * @param \ManaPHP\Mvc\ModelInterface $model
@@ -198,6 +204,14 @@ namespace ManaPHP\Mvc\Model {
 			return $this->_readMetaData($model)[self::MODELS_PRIMARY_KEY];
 		}
 
+        /**
+         * Returns attribute which is auto increment or null
+         * @param $model
+         * @return string |null
+         */
+        public function getAutoIncrementAttribute($model){
+            return $this->_readMetaData($model)[self::MODELS_IDENTITY_COLUMN];
+        }
 
         /**
          * Returns an array of fields which are not part of the primary key

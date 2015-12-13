@@ -34,6 +34,13 @@ namespace ManaPHP\Mvc\Model {
 		 */
 		public function getNonPrimaryKeyAttributes($model);
 
+		/**
+		 * Returns attribute which is auto increment or null
+		 * @param $model
+		 * @return string |null
+		 */
+		public function getAutoIncrementAttribute($model);
+
 
 		/**
 		 * Returns attributes which types are numerical

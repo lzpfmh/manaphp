@@ -300,6 +300,7 @@ namespace ManaPHP\Db {
 					$this->_eventsManager->fire('db:afterQuery',$this,$bindParams);
 				}
 			}
+
 			return $this->_affectedRows;
 		}
 
@@ -468,7 +469,12 @@ namespace ManaPHP\Db {
 				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).' VALUES ('. implode(', ',$value_parts).')';
 			}
 
-			return $this->execute($insertSql,$bindParams);
+			$affectRows=$this->execute($insertSql,$bindParams) ;
+			if(is_int($affectRows)){
+				return $affectRows>0;
+			}else{
+				return $affectRows;
+			}
 		}
 
 

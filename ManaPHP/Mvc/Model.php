@@ -869,6 +869,10 @@ namespace ManaPHP\Mvc {
 
 			$success =$connection->insert($table,$values,$fields);
 			if($success ===true){
+				$autoIncrementAttribute=$metaData->getAutoIncrementAttribute($this);
+				if($autoIncrementAttribute !==null &&$this->{$autoIncrementAttribute} ===null){
+					$this->{$autoIncrementAttribute}=$connection->lastInsertId();
+				}
 				$this->refresh();
 			}
 
