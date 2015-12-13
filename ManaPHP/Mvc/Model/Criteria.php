@@ -1,7 +1,7 @@
 <?php 
 
 namespace ManaPHP\Mvc\Model {
-
+	use \ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Mvc\Model\Criteria
 	 *
@@ -18,7 +18,7 @@ namespace ManaPHP\Mvc\Model {
 	 *</code>
 	 */
 	
-	class Criteria implements \ManaPHP\Mvc\Model\CriteriaInterface, \ManaPHP\Di\InjectionAwareInterface {
+	class Criteria implements CriteriaInterface, InjectionAwareInterface {
 
 		protected $_model;
 

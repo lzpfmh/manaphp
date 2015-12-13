@@ -2,6 +2,7 @@
 
 namespace ManaPHP\Mvc\Model\MetaData {
 
+	use  \ManaPHP\Mvc\Model\MetaData;
 	/**
 	 * ManaPHP\Mvc\Model\MetaData\Memory
 	 *
@@ -9,7 +10,7 @@ namespace ManaPHP\Mvc\Model\MetaData {
 	 *
 	 */
 	
-	class Memory extends \ManaPHP\Mvc\Model\MetaData implements \ManaPHP\Mvc\Model\MetaDataInterface, \ManaPHP\Di\InjectionAwareInterface {
+	class Memory extends MetaData {
 
 		const MODELS_ATTRIBUTES = 0;
 
