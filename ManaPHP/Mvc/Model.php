@@ -575,9 +575,9 @@ namespace ManaPHP\Mvc {
 			$num =$connection->fetchOne('SELECT COUNT(*) as rowcount'.
 										' FROM '. $connection->escapeIdentifier($table).
 										' WHERE '. implode(' AND ',$conditions),
-							null, $bindParams);
+							\PDO::FETCH_ASSOC, $bindParams);
 
-			return isset($num['rowcount']);
+			return $num['rowcount'] >0;
 		}
 
 
