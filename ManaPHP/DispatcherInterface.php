@@ -127,5 +127,11 @@ namespace ManaPHP {
 		 */
 		public function forward($forward);
 
+		/**
+		 * Check if the current executed action was forwarded by another one
+		 *
+		 * @return boolean
+		 */
+		public function wasForwarded();
 	}
 }
