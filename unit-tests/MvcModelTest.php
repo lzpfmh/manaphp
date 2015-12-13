@@ -241,7 +241,7 @@ class MvcModelTest extends TestCase{
         });
     }
 
-    public function testCount(){
+    public function test_count(){
 
         $this->assertTrue(is_int(Actor::count()));
 
@@ -257,7 +257,7 @@ class MvcModelTest extends TestCase{
         $this->assertTrue(Actor::count(['actor_id=0'])===0);
     }
 
-    public function testFindFirst(){
+    public function test_findFirst(){
         $actor =Actor::findFirst();
 
         $this->assertTrue(is_object($actor));
@@ -285,7 +285,7 @@ class MvcModelTest extends TestCase{
         $this->assertEquals($actor->actor_id,'10');
     }
 
-    public function testFind(){
+    public function test_find(){
         $actors=Actor::find();
         $this->assertTrue(is_array($actors));
         $this->assertEquals(get_class($actors[1]),'Actor');
@@ -316,7 +316,7 @@ class MvcModelTest extends TestCase{
         $db->execute('TRUNCATE TABLE '.$model->getSource());
     }
 
-    public function testSave(){
+    public function test_save(){
         $this->_truncateTable(new Student());
 
         $student=new Student();
