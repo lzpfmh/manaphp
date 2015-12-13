@@ -9,6 +9,7 @@ namespace Application\Home;
 
 use \ManaPHP\Mvc\ModuleDefinitionInterface;
 use \ManaPHP\Autoloader;
+use \ManaPHP\Db\Adapter;
 
 class Module implements ModuleDefinitionInterface{
     public function registerAutoloaders($di){
@@ -20,7 +21,7 @@ class Module implements ModuleDefinitionInterface{
 
     public function registerServices($di){
         $di->set('db',function(){
-            return new \ManaPHP\Db\Adapter(['host'=>'localhost',
+            return new Adapter(['host'=>'localhost',
                 'username'=>'root',
                 'password'=>'',
                 'dbname'=>'test',
