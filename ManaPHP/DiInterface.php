@@ -116,7 +116,7 @@ namespace ManaPHP {
 		/**
 		 * Return the last DI created
 		 *
-		 * @return \ManaPHP\DiInterface
+		 * @return static
 		 */
 		public static function getDefault();
 

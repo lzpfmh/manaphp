@@ -224,7 +224,7 @@ namespace ManaPHP\Mvc {
 		 *</code>
 		 *
 		 * @param int $uriSource
-		 * @return \ManaPHP\Mvc\RouterInterface
+		 * @return static
 		 */
 		public function setUriSource($uriSource){
 			$this->_uriSource =$uriSource;
@@ -236,7 +236,7 @@ namespace ManaPHP\Mvc {
 		 * Set whether router must remove the extra slashes in the handled routes
 		 *
 		 * @param boolean $remove
-		 * @return \ManaPHP\Mvc\RouterInterface
+		 * @return static
 		 */
 		public function removeExtraSlashes($remove){
 			$this->_removeExtraSlashes=$remove;
@@ -248,7 +248,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the name of the default namespace
 		 *
 		 * @param string $namespaceName
-		 * @return \ManaPHP\Mvc\RouterInterface
+		 * @return static
 		 */
 		public function setDefaultNamespace($namespaceName){
 			$this->_defaultNamespace =$namespaceName;
@@ -270,7 +270,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the name of the default module
 		 *
 		 * @param string $moduleName
-		 * @return \ManaPHP\Mvc\RouterInterface
+		 * @return static
 		 */
 		public function setDefaultModule($moduleName){
 			$this->_defaultModule =$moduleName;
@@ -292,7 +292,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the default controller name
 		 *
 		 * @param string $controllerName
-		 * @return \ManaPHP\Mvc\RouterInterface
+		 * @return static
 		 */
 		public function setDefaultController($controllerName){
 			$this->_defaultController =$controllerName;
@@ -314,7 +314,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the default action name
 		 *
 		 * @param string $actionName
-		 * @return \ManaPHP\Mvc\RouterInterface
+		 * @return static
 		 */
 		public function setDefaultAction($actionName){
 			$this->_defaultAction =$actionName;
@@ -587,7 +587,7 @@ namespace ManaPHP\Mvc {
 		 * Mounts a group of routes in the router
 		 *
 		 * @param \ManaPHP\Mvc\Router\GroupInterface $group
-		 * @return \ManaPHP\Mvc\RouterInterface
+		 * @return static
 		 */
 		public function mount($group){
 			$groupRoutes=$group->getRoutes();
@@ -609,7 +609,7 @@ namespace ManaPHP\Mvc {
 		 * Set a group of paths to be returned when none of the defined routes are matched
 		 *
 		 * @param array $paths
-		 * @return \ManaPHP\Mvc\RouterInterface
+		 * @return static
 		 */
 		public function notFound($paths){
 			$this->_notFoundPaths =$paths;

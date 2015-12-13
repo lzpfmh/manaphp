@@ -64,7 +64,7 @@ namespace ManaPHP\Http {
 		 * Sets the dependency injector
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return \ManaPHP\Http\CookieInterface
+		 * @return static
 		 */
 		public function setDI($dependencyInjector){
 			$this->_dependencyInjector =$dependencyInjector;
@@ -109,7 +109,7 @@ namespace ManaPHP\Http {
 		 * Sends the cookie to the HTTP client
 		 * Stores the cookie definition in session
 		 *
-		 * @return \ManaPHP\Http\Cookie
+		 * @return static
 		 */
 		public function send(){ }
 
@@ -118,7 +118,7 @@ namespace ManaPHP\Http {
 		 * Reads the cookie-related info from the SESSION to restore the cookie as it was set
 		 * This method is automatically called internally so normally you don't need to call it
 		 *
-		 * @return \ManaPHP\Http\Cookie
+		 * @return static
 		 */
 		public function restore(){ }
 
@@ -134,7 +134,7 @@ namespace ManaPHP\Http {
 		 * Sets if the cookie must be encrypted/decrypted automatically
 		 *
 		 * @param boolean $useEncryption
-		 * @return \ManaPHP\Http\Cookie
+		 * @return static
 		 */
 		public function useEncryption($useEncryption){ }
 
@@ -151,7 +151,7 @@ namespace ManaPHP\Http {
 		 * Sets the cookie's expiration time
 		 *
 		 * @param int $expire
-		 * @return \ManaPHP\Http\Cookie
+		 * @return static
 		 */
 		public function setExpiration($expire){ }
 
@@ -168,7 +168,7 @@ namespace ManaPHP\Http {
 		 * Sets the cookie's expiration time
 		 *
 		 * @param string $path
-		 * @return \ManaPHP\Http\Cookie
+		 * @return static
 		 */
 		public function setPath($path){ }
 
@@ -185,7 +185,7 @@ namespace ManaPHP\Http {
 		 * Sets the domain that the cookie is available to
 		 *
 		 * @param string $domain
-		 * @return \ManaPHP\Http\Cookie
+		 * @return static
 		 */
 		public function setDomain($domain){ }
 
@@ -202,7 +202,7 @@ namespace ManaPHP\Http {
 		 * Sets if the cookie must only be sent when the connection is secure (HTTPS)
 		 *
 		 * @param boolean $secure
-		 * @return \ManaPHP\Http\Cookie
+		 * @return static
 		 */
 		public function setSecure($secure){ }
 
@@ -219,7 +219,7 @@ namespace ManaPHP\Http {
 		 * Sets if the cookie is accessible only through the HTTP protocol
 		 *
 		 * @param boolean $httpOnly
-		 * @return \ManaPHP\Http\Cookie
+		 * @return static
 		 */
 		public function setHttpOnly($httpOnly){ }
 

@@ -107,7 +107,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the dependency injection container
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return \ManaPHP\Mvc\ModelInterface
+		 * @return static
 		 */
 		public function setDI($dependencyInjector){
 			$this->_dependencyInjector =$dependencyInjector;
@@ -439,7 +439,7 @@ namespace ManaPHP\Mvc {
 		 * </code>
 		 *
 		 * @param int|string|array $parameters
-		 * @return static|false
+		 * @return static
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public static function findFirst($parameters=null){

@@ -12,7 +12,7 @@ namespace ManaPHP\Http\Response {
 		 * Set if cookies in the bag must be automatically encrypted/decrypted
 		 *
 		 * @param boolean $useEncryption
-		 * @return \ManaPHP\Http\Response\CookiesInterface
+		 * @return static
 		 */
 		public function useEncryption($useEncryption);
 
@@ -35,7 +35,7 @@ namespace ManaPHP\Http\Response {
 		 * @param boolean $secure
 		 * @param string $domain
 		 * @param boolean $httpOnly
-		 * @return \ManaPHP\Http\Response\CookiesInterface
+		 * @return static
 		 */
 		public function set($name, $value=null, $expire=null, $path=null, $secure=null, $domain=null, $httpOnly=null);
 
@@ -79,7 +79,7 @@ namespace ManaPHP\Http\Response {
 		/**
 		 * Reset set cookies
 		 *
-		 * @return \ManaPHP\Http\Response\CookiesInterface
+		 * @return static
 		 */
 		public function reset();
 

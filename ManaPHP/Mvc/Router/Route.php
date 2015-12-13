@@ -185,7 +185,7 @@ namespace ManaPHP\Mvc\Router {
 		 * If the callback returns false the route is treaded as not matched
 		 *
 		 * @param callback $callback
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @return static
 		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function beforeMatch($callback){
@@ -261,7 +261,7 @@ namespace ManaPHP\Mvc\Router {
 		 *</code>
 		 *
 		 * @param string|array $httpMethods
-		 * @return \ManaPHP\Mvc\Router\Route
+		 * @return static
 		 */
 		public function setHttpMethods($httpMethods){
 			$this->_methods =$httpMethods;
@@ -282,7 +282,7 @@ namespace ManaPHP\Mvc\Router {
 		 * Sets the group associated with the route
 		 *
 		 * @param \ManaPHP\Mvc\Router\Group $group
-		 * @return \ManaPHP\Mvc\RouterInterface
+		 * @return static
 		 */
 		public function setGroup($group){
 			$this->_group=$group;

@@ -118,7 +118,7 @@ namespace ManaPHP {
 		 * Sets the default action suffix
 		 *
 		 * @param string $actionSuffix
-		 * @return \ManaPHP\DispatcherInterface
+		 * @return static
 		 */
 		public function setActionSuffix($actionSuffix){
 			$this->_actionSuffix =$actionSuffix;
@@ -130,7 +130,7 @@ namespace ManaPHP {
 		 * Sets the module where the controller is (only informative)
 		 *
 		 * @param string $moduleName
-		 * @return \ManaPHP\DispatcherInterface
+		 * @return static
 		 */
 		public function setModuleName($moduleName){
 			$this->_moduleName =$moduleName;
@@ -152,7 +152,7 @@ namespace ManaPHP {
 		 * Sets the namespace where the controller class is
 		 *
 		 * @param string $namespaceName
-		 * @return \ManaPHP\DispatcherInterface
+		 * @return static
 		 */
 		public function setNamespaceName($namespaceName){
 			$this->_namespaceName =$namespaceName;
@@ -174,7 +174,7 @@ namespace ManaPHP {
 		 * Sets the default namespace
 		 *
 		 * @param string $namespace
-		 * @return \ManaPHP\DispatcherInterface
+		 * @return static
 		 */
 		public function setDefaultNamespace($namespace){
 			$this->_defaultNamespace =$namespace;
@@ -196,7 +196,7 @@ namespace ManaPHP {
 		 * Sets the default action name
 		 *
 		 * @param string $actionName
-		 * @return \ManaPHP\DispatcherInterface
+		 * @return static
 		 */
 		public function setDefaultAction($actionName){
 			$this->_defaultAction=$actionName;
@@ -208,7 +208,7 @@ namespace ManaPHP {
 		 * Sets the action name to be dispatched
 		 *
 		 * @param string $actionName
-		 * @return \ManaPHP\DispatcherInterface
+		 * @return static
 		 */
 		public function setActionName($actionName){
 			$this->_actionName =$actionName;
@@ -230,7 +230,7 @@ namespace ManaPHP {
 		 * Sets action params to be dispatched
 		 *
 		 * @param array $params
-		 * @return \ManaPHP\DispatcherInterface
+		 * @return static
 		 */
 		public function setParams($params){
 			if(!is_array($params)){
@@ -257,7 +257,7 @@ namespace ManaPHP {
 		 *
 		 * @param  mixed $param
 		 * @param  mixed $value
-		 * @return \ManaPHP\DispatcherInterface
+		 * @return static
 		 */
 		public function setParam($param, $value){
 			$this->_params[$param]=$value;
@@ -314,7 +314,7 @@ namespace ManaPHP {
 		 * Sets the latest returned value by an action manually
 		 *
 		 * @param mixed $value
-		 * @return \ManaPHP\DispatcherInterface
+		 * @return static
 		 */
 		public function setReturnedValue($value){
 			$this->_returnedValue =$value;

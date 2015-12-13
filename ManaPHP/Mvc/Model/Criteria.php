@@ -50,7 +50,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Set a model on which the query will be executed
 		 *
 		 * @param string $modelName
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function setModelName($modelName){
 			$this->_model =$modelName;
@@ -73,7 +73,7 @@ namespace ManaPHP\Mvc\Model {
 		 * This method replaces all previously set bound parameters
 		 *
 		 * @param string $bindParams
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function bind($bindParams){
 			$this->_params['bind']=$bindParams;
@@ -86,7 +86,7 @@ namespace ManaPHP\Mvc\Model {
 		 * This method replaces all previously set bound parameters
 		 *
 		 * @param string $bindTypes
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function bindTypes($bindTypes){
 			$this->_params['bindTypes']=$$bindTypes;
@@ -97,7 +97,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Sets SELECT DISTINCT / SELECT ALL flag
 		 *
 		 * @param mixed $distinct
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function distinct($distinct){
 	 		$this->_params["distinct"] = $distinct;
@@ -113,7 +113,7 @@ namespace ManaPHP\Mvc\Model {
 		 *</code>
 		 *
 		 * @param string|array $columns
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function columns($columns){
 			$this->_params['columns']=$columns;
@@ -135,7 +135,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $conditions
 		 * @param string $alias
 		 * @param string $type
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function join($model, $conditions=null, $alias=null, $type=null){
 			if(!isset($this->_params['joins'])){
@@ -159,7 +159,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $model
 		 * @param string $conditions
 		 * @param string $alias
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function innerJoin($model, $conditions=null, $alias=null){
 			return $this->join($model, $conditions, $alias, 'INNER');
@@ -176,7 +176,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $model
 		 * @param string $conditions
 		 * @param string $alias
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function leftJoin($model, $conditions=null, $alias=null){
 			return $this->join($model, $conditions, $alias, 'LEFT');
@@ -193,7 +193,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $model
 		 * @param string $conditions
 		 * @param string $alias
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function rightJoin($model, $conditions=null, $alias=null){
 			return $this->join($model, $conditions, $alias, 'RIGHT');
@@ -206,7 +206,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $conditions
 		 * @param array $bindParams
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function where($conditions,$bindParams=null,$bindTypes=null){
@@ -218,8 +218,11 @@ namespace ManaPHP\Mvc\Model {
 				}
 				$this->_params['bind']=array_merge($this->_params['bind'],$bindParams);
 			}
+			if($bindTypes !==null){
+				throw new Exception('bindTypes not support.');
+			}
 
-			throw new Exception('bindTypes not support.');
+			return $this;
 		}
 
 
@@ -229,7 +232,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $conditions
 		 * @param array $bindParams
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function andWhere($conditions, $bindParams=null, $bindTypes=null){
@@ -260,7 +263,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $conditions
 		 * @param array $bindParams
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function orWhere($conditions, $bindParams=null, $bindTypes=null){
@@ -295,7 +298,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $expr
 		 * @param mixed $minimum
 		 * @param mixed $maximum
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function betweenWhere($expr, $minimum, $maximum){
 			$min_key='ABP'.$this->_hiddenParamNumber++;
@@ -319,7 +322,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $expr
 		 * @param mixed $minimum
 		 * @param mixed $maximum
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function notBetweenWhere($expr, $minimum, $maximum){
 			$min_key='ABP'.$this->_hiddenParamNumber++;
@@ -341,7 +344,7 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param string $expr
 		 * @param array $values
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function inWhere($expr, $values){
 			$bind_params=[];
@@ -368,7 +371,7 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param string $expr
 		 * @param array $values
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function notInWhere($expr, $values){
 			$bind_params=[];
@@ -390,17 +393,18 @@ namespace ManaPHP\Mvc\Model {
 		 * Adds the conditions parameter to the criteria
 		 *
 		 * @param string $conditions
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function conditions($conditions){
 			$this->_params['conditions']=$conditions;
+			return $this;
 		}
 
 		/**
 		 * Adds the order-by parameter to the criteria
 		 *
 		 * @param string $orderColumns
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function orderBy($orderColumns){
 			$this->_params['order']=$orderColumns;
@@ -413,7 +417,7 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param int $limit
 		 * @param int $offset
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function limit($limit, $offset=null){
 			if($offset ===null){
@@ -430,7 +434,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Adds the "for_update" parameter to the criteria
 		 *
 		 * @param boolean $forUpdate
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function forUpdate($forUpdate=null){
 			$this->_params['for_update']=$forUpdate;
@@ -442,7 +446,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Adds the "shared_lock" parameter to the criteria
 		 *
 		 * @param boolean $sharedLock
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function sharedLock($sharedLock=null){
 			$this->_params['shared_lock']=$sharedLock;
@@ -516,7 +520,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param \ManaPHP\DiInterface $dependencyInjector
 		 * @param string $modelName
 		 * @param array $data
-		 * @return \ManaPHP\Mvc\Model\Criteria
+		 * @return static
 		 */
 		public static function fromInput($dependencyInjector, $modelName, $data){ }
 
@@ -541,10 +545,11 @@ namespace ManaPHP\Mvc\Model {
 		 * This method replaces all previously set cache options
 		 *
 		 * @param array $options
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function cache($options){
 			$this->_params['cache']=$options;
+			return $this;
 		}
 
 	}

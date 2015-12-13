@@ -18,7 +18,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * Sets the columns to be queried
 		 *
 		 * @param string|array $columns
-		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+		 * @return static
 		 */
 		public function columns($columns);
 
@@ -35,7 +35,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * Sets the models who makes part of the query
 		 *
 		 * @param string|array $models
-		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+		 * @return static
 		 */
 		public function from($models);
 
@@ -45,7 +45,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @param string $model
 		 * @param string $alias
-		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+		 * @return static
 		 */
 		public function addFrom($model, $alias=null);
 
@@ -65,7 +65,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $conditions
 		 * @param string $alias
 		 * @param string $type
-		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+		 * @return static
 		 */
 		public function join($model, $conditions=null, $alias=null,$type=null);
 
@@ -76,8 +76,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $model
 		 * @param string $conditions
 		 * @param string $alias
-		 * @param string $type
-		 * @return \ManaPHP\Mvc\Model\Query\Builder
+		 * @return static
 		 */
 		public function innerJoin($model, $conditions=null, $alias=null);
 
@@ -88,7 +87,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $model
 		 * @param string $conditions
 		 * @param string $alias
-		 * @return \ManaPHP\Mvc\Model\Query\Builder
+		 * @return static
 		 */
 		public function leftJoin($model, $conditions=null, $alias=null);
 
@@ -99,7 +98,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $model
 		 * @param string $conditions
 		 * @param string $alias
-		 * @return \ManaPHP\Mvc\Model\Query\Builder
+		 * @return static
 		 */
 		public function rightJoin($model, $conditions=null, $alias=null);
 
@@ -110,7 +109,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $conditions
 		 * @param array $bindParams
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+		 * @return static
 		 */
 		public function where($conditions, $bindParams=null, $bindTypes=null);
 
@@ -121,7 +120,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $conditions
 		 * @param array $bindParams
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\Query\Builder
+		 * @return static
 		 */
 		public function andWhere($conditions, $bindParams=null, $bindTypes=null);
 
@@ -132,7 +131,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $conditions
 		 * @param array $bindParams
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\Query\Builder
+		 * @return static
 		 */
 		public function orWhere($conditions, $bindParams=null, $bindTypes=null);
 
@@ -143,7 +142,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $expr
 		 * @param mixed $minimum
 		 * @param mixed $maximum
-		 * @return \ManaPHP\Mvc\Model\Query\Builder
+		 * @return static
 		 */
 		public function betweenWhere($expr, $minimum, $maximum);
 
@@ -158,7 +157,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @param string $expr
 		 * @param mixed $minimum
 		 * @param mixed $maximum
-		 * @return \ManaPHP\Mvc\Model\Query\Builder
+		 * @return static
 		 */
 		public function notBetweenWhere($expr, $minimum, $maximum);
 
@@ -168,7 +167,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @param string $expr
 		 * @param array $values
-		 * @return \ManaPHP\Mvc\Model\Query\Builder
+		 * @return static
 		 */
 		public function inWhere($expr, $values);
 
@@ -178,7 +177,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @param string $expr
 		 * @param array $values
-		 * @return \ManaPHP\Mvc\Model\Query\Builder
+		 * @return static
 		 */
 		public function notInWhere($expr, $values);
 
@@ -195,7 +194,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * Sets a ORDER BY condition clause
 		 *
 		 * @param string $orderBy
-		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+		 * @return static
 		 */
 		public function orderBy($orderBy);
 
@@ -212,7 +211,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * Sets a HAVING condition clause
 		 *
 		 * @param string $having
-		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+		 * @return static
 		 */
 		public function having($having);
 
@@ -230,7 +229,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @param int $limit
 		 * @param int $offset
-		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+		 * @return static
 		 */
 		public function limit($limit, $offset=null);
 
@@ -247,7 +246,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * Sets a LIMIT clause
 		 *
 		 * @param string $group
-		 * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+		 * @return static
 		 */
 		public function groupBy($group);
 

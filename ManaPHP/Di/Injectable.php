@@ -52,7 +52,7 @@ namespace ManaPHP\Di {
 		 * Sets the dependency injector
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return \ManaPHP\Di\Injectable
+		 * @return static
 		 */
 		public function setDI($dependencyInjector){
 			$this->_dependencyInjector =$dependencyInjector;
@@ -78,7 +78,7 @@ namespace ManaPHP\Di {
 		 * Sets the event manager
 		 *
 		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
-		 * @return \ManaPHP\Di\Injectable
+		 * @return static
 		 */
 		public function setEventsManager($eventsManager){
 			$this->_eventsManager =$eventsManager;

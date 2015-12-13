@@ -149,7 +149,7 @@ namespace ManaPHP\Mvc {
 		/**
 		 * Mounts a group of routes in the router
 		 * @param \ManaPHP\Mvc\Router\GroupInterface
-		 * @return  \ManaPHP\Mvc\RouterInterface
+		 * @return  static
 		 */
 		public function mount($group);
 

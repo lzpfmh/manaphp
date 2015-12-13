@@ -88,7 +88,7 @@ namespace ManaPHP\Mvc {
 		 * You can full disable the view component using this method
 		 *
 		 * @param boolean $implicitView
-		 * @return \ManaPHP\Mvc\Application
+		 * @return static
 		 */
 		public function useImplicitView($implicitView){
 			$this->_implicitView=$implicitView;
@@ -114,7 +114,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $modules
 		 * @param boolean $merge
-		 * @return \ManaPHP\Mvc\Application
+		 * @return static
 		 */
 		public function registerModules($modules, $merge=false){
 			$this->_modules =$merge===false?$modules:array_merge($this->_modules,$modules);
@@ -150,7 +150,7 @@ namespace ManaPHP\Mvc {
 		 * Sets the module name to be used if the router doesn't return a valid module
 		 *
 		 * @param string $defaultModule
-		 * @return \ManaPHP\Mvc\Application
+		 * @return static
 		 */
 		public function setDefaultModule($defaultModule){
 			$this->_defaultModule =$defaultModule;

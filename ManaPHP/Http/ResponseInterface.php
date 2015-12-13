@@ -13,7 +13,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param int $code
 		 * @param string $message
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setStatusCode($code, $message);
 
@@ -23,7 +23,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string $name
 		 * @param string $value
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setHeader($name, $value);
 
@@ -32,7 +32,7 @@ namespace ManaPHP\Http {
 		 * Send a raw header to the response
 		 *
 		 * @param string $header
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setRawHeader($header);
 
@@ -41,7 +41,7 @@ namespace ManaPHP\Http {
 		 * Sets output expire time header
 		 *
 		 * @param \DateTime $datetime
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setExpires($datetime);
 
@@ -49,7 +49,7 @@ namespace ManaPHP\Http {
 		/**
 		 * Sends a Not-Modified response
 		 *
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setNotModified();
 
@@ -59,7 +59,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string $contentType
 		 * @param string $charset
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setContentType($contentType, $charset=null);
 
@@ -70,7 +70,7 @@ namespace ManaPHP\Http {
 		 * @param string $location
 		 * @param boolean $externalRedirect
 		 * @param int $statusCode
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function redirect($location, $externalRedirect=null, $statusCode=null);
 
@@ -79,7 +79,7 @@ namespace ManaPHP\Http {
 		 * Sets HTTP response body
 		 *
 		 * @param string $content
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setContent($content);
 
@@ -93,7 +93,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string $content
 		 * @param int $jsonOptions
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setJsonContent($content, $jsonOptions=null);
 
@@ -102,7 +102,7 @@ namespace ManaPHP\Http {
 		 * Appends a string to the HTTP response body
 		 *
 		 * @param string $content
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function appendContent($content);
 
@@ -118,20 +118,20 @@ namespace ManaPHP\Http {
 		/**
 		 * Sends headers to the client
 		 *
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function sendHeaders();
 
 		/**
 		 * Sets a cookies bag for the response externally
 		 * @param \ManaPHP\Http\Response\CookiesInterface $cookies
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setCookies($cookies);
 		/**
 		 * Sends cookies to the client
 		 *
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function sendCookies();
 
@@ -139,7 +139,7 @@ namespace ManaPHP\Http {
 		/**
 		 * Prints out HTTP response to the client
 		 *
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function send();
 
@@ -149,7 +149,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string $filePath
 		 * @param string $attachmentName
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setFileToSend($filePath, $attachmentName=null);
 

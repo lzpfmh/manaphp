@@ -243,7 +243,7 @@ namespace ManaPHP {
 		/**
 		 * Return the latest DI created
 		 *
-		 * @return \ManaPHP\DiInterface
+		 * @return static
 		 */
 		public static function getDefault(){
 			return self::$_default;

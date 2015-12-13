@@ -195,7 +195,7 @@ namespace ManaPHP\Db {
 						}
 					}
 
-					$statement->bindValue($parameter,$v,$dataTypes[$parameter]);
+					$statement->bindValue($parameter,$v,$data_type);
 				}else{
 					throw new Exception('array data bind not support: '.$parameter);
 				}
@@ -507,7 +507,6 @@ namespace ManaPHP\Db {
 				throw new Exception('The number of values in the update is not the same as fields');
 			}
 
-			
 		}
 
 

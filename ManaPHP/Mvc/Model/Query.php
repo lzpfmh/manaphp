@@ -126,7 +126,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Tells to the query if only the first row in the resultset must be returned
 		 *
 		 * @param boolean $uniqueRow
-		 * @return \ManaPHP\Mvc\Model\Query
+		 * @return static
 		 */
 		public function setUniqueRow($uniqueRow){
 			$this->_uniqueRow =$uniqueRow;
@@ -323,7 +323,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Sets the cache parameters of the query
 		 *
 		 * @param array $cacheOptions
-		 * @return \ManaPHP\Mvc\Model\Query
+		 * @return static
 		 */
 		public function cache($cacheOptions){ }
 
@@ -443,7 +443,7 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param array $bindParams
 		 * @param bool $merge
-		 * @return \ManaPHP\Mvc\Model\Query
+		 * @return static
 		 */
 		public function setBindParams($bindParams, $merge = false){
 		}
@@ -453,7 +453,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Set default bind parameters
 		 *
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\Query
+		 * @return static
 		 */
 		public function setBindTypes($bindTypes){ }
 

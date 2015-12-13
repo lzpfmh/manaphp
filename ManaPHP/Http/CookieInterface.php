@@ -17,7 +17,7 @@ namespace ManaPHP\Http{
          * Sets the cookie's value
          *
          * @param string $value
-         * @return \ManaPHP\Http\CookieInterface
+         * @return static
          */
         public function setValue($value);
 
@@ -32,20 +32,20 @@ namespace ManaPHP\Http{
 
         /**
          * Sends the cookie to the HTTP client
-         * @return \ManaPHP\Http\CookieInterface
+         * @return static
          */
         public function send();
 
         /**
          * Deletes the cookie
-         * @return \ManaPHP\Http\CookieInterface
+         * @return static
          */
         public function delete();
 
         /**
          * Sets if the cookie must be encrypted/decrypted automatically
          * @param boolean $useEncryption
-         * @return \ManaPHP\Http\CookieInterface
+         * @return static
          */
         public function useEncryption($useEncryption);
 
@@ -58,7 +58,7 @@ namespace ManaPHP\Http{
         /**
          * Sets the cookie's expiration time
          * @param int $expire
-         * @return \ManaPHP\Http\CookieInterface
+         * @return static
          */
         public function setExpiration($expire);
 
@@ -66,7 +66,7 @@ namespace ManaPHP\Http{
         /**
          * Sets the cookie's expiration time
          * @param string $path
-         * @return \ManaPHP\Http\CookieInterface
+         * @return static
          */
         public function setPath($path);
 
@@ -80,21 +80,21 @@ namespace ManaPHP\Http{
         /**
          * Sets the domain that the cookie is available to
          * @param string $domain
-         * @return \ManaPHP\Http\CookieInterface
+         * @return static
          */
         public function setDomain($domain);
 
         /**
          * Sets if the cookie must only be sent when the connection is secure (HTTPS)
          * @param boolean $secure
-         * @return \ManaPHP\Http\CookieInterface
+         * @return static
          */
         public function setSecure($secure);
 
         /**
          * Sets if the cookie is accessible only through the HTTP protocol
          * @param boolean $httpOnly
-         * * @return \ManaPHP\Http\CookieInterface
+         * @return static
          */
         public function setHttpOnly($httpOnly);
 

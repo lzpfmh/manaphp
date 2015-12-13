@@ -84,7 +84,7 @@ namespace ManaPHP\Mvc\Router {
 		 * Set a common uri prefix for all the routes in this group
 		 *
 		 * @param string $prefix
-		 * @return \ManaPHP\Mvc\Router\GroupInterface
+		 * @return static
 		 */
 		public function setPrefix($prefix){
 			$this->_prefix=$prefix;
@@ -108,7 +108,7 @@ namespace ManaPHP\Mvc\Router {
 		 * If the callback returns false the route is treated as not matched
 		 *
 		 * @param callable $beforeMatch
-		 * @return \ManaPHP\Mvc\Router\GroupInterface
+		 * @return static
 		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function beforeMatch($beforeMatch){
@@ -134,7 +134,7 @@ namespace ManaPHP\Mvc\Router {
 		 * Set common paths for all the routes in the group
 		 *
 		 * @param array $paths
-		 * @return \ManaPHP\Mvc\Router\GroupInterface
+		 * @return static
 		 */
 		public function setPaths($paths){
 			$this->_paths =$paths;

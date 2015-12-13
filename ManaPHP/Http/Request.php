@@ -53,7 +53,7 @@ namespace ManaPHP\Http {
 		 * Sets the dependency injector
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return \ManaPHP\Http\RequestInterface
+		 * @return static
 		 */
 		public function setDI($dependencyInjector){
 			$this->_dependencyInjector =$dependencyInjector;

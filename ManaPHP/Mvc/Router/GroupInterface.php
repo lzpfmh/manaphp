@@ -53,7 +53,7 @@ namespace ManaPHP\Mvc\Router{
         /**
          * Set a common uri prefix for all the routes in this group
          * @param string $prefix
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return static
          */
         public function setPrefix($prefix);
 
@@ -68,7 +68,7 @@ namespace ManaPHP\Mvc\Router{
          * The developer can implement any arbitrary conditions here
          * If the callback returns false the route is treated as not matched
          * @param callable $beforeMatch
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return static
          */
          public function beforeMatch($beforeMatch);
 
@@ -82,8 +82,8 @@ namespace ManaPHP\Mvc\Router{
          * Set common paths for all the routes in the group
          *
          * @param array $paths
-         * @return \ManaPHP\Mvc\Router\GroupInterface
-         */
+         * @return static
+    */
         public function setPaths($paths);
 
         /**
@@ -94,7 +94,7 @@ namespace ManaPHP\Mvc\Router{
 
         /**
          * Returns the routes added to the group
-         * @return \ManaPHP\Mvc\Router\GroupInterface[]
+         * @return \ManaPHP\Mvc\Router\RouteInterface[]
          */
         public function getRoutes();
 
@@ -107,7 +107,7 @@ namespace ManaPHP\Mvc\Router{
          * @param string $pattern
          * @param array $paths
          * @param array $httpMethods
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return \ManaPHP\Mvc\Router\RouteInterface
          */
         public function add($pattern, $paths = null, $httpMethods = null);
 
@@ -115,7 +115,7 @@ namespace ManaPHP\Mvc\Router{
          * Adds a route to the router that only match if the HTTP method is GET
          * @param $pattern
          * @param array $paths
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return \ManaPHP\Mvc\Router\RouteInterface
          */
         public function addGet($pattern, $paths = null);
 
@@ -123,7 +123,7 @@ namespace ManaPHP\Mvc\Router{
          * Adds a route to the router that only match if the HTTP method is POST
          * @param $pattern
          * @param array $paths
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return \ManaPHP\Mvc\Router\RouteInterface
          */
         public function addPost($pattern, $paths = null);
 
@@ -131,7 +131,7 @@ namespace ManaPHP\Mvc\Router{
          * Adds a route to the router that only match if the HTTP method is PUT
          * @param $pattern
          * @param array $paths
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return \ManaPHP\Mvc\Router\RouteInterface
          */
         public function addPut($pattern, $paths = null);
 
@@ -139,7 +139,7 @@ namespace ManaPHP\Mvc\Router{
          * Adds a route to the router that only match if the HTTP method is PATCH
          * @param $pattern
          * @param array $paths
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return \ManaPHP\Mvc\Router\RouteInterface
          */
         public function addPatch($pattern, $paths = null);
 
@@ -147,7 +147,7 @@ namespace ManaPHP\Mvc\Router{
          * Adds a route to the router that only match if the HTTP method is DELETE
          * @param $pattern
          * @param array $paths
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return \ManaPHP\Mvc\Router\RouteInterface
          */
         public function addDelete($pattern, $paths = null);
 
@@ -155,7 +155,7 @@ namespace ManaPHP\Mvc\Router{
          * Add a route to the router that only match if the HTTP method is OPTIONS
          * @param $pattern
          * @param array $paths
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return \ManaPHP\Mvc\Router\RouteInterface
          */
         public function addOptions($pattern, $paths = null);
 
@@ -163,7 +163,7 @@ namespace ManaPHP\Mvc\Router{
          * Adds a route to the router that only match if the HTTP method is HEAD
          * @param $pattern
          * @param array $paths
-         * @return \ManaPHP\Mvc\Router\GroupInterface
+         * @return \ManaPHP\Mvc\Router\RouteInterface
          */
         public function addHead($pattern, $paths = null);
     }

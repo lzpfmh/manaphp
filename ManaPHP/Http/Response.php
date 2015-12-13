@@ -65,7 +65,7 @@ namespace ManaPHP\Http {
 		 * Sets the dependency injector
 		 *
 		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setDI($dependencyInjector){
 			$this->_dependencyInjector =$dependencyInjector;
@@ -95,7 +95,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param int $code
 		 * @param string $message
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 * @throws
 		 */
 		public function setStatusCode($code, $message){
@@ -108,10 +108,11 @@ namespace ManaPHP\Http {
 		 * Sets a cookies bag for the response externally
 		 *
 		 * @param \ManaPHP\Http\Response\CookiesInterface $cookies
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setCookies($cookies){
 			$this->_cookies =$cookies;
+			return $this;
 		}
 
 
@@ -134,7 +135,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string $name
 		 * @param string $value
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setHeader($name, $value){
 			$this->_headers->set($name,$value);
@@ -150,7 +151,7 @@ namespace ManaPHP\Http {
 		 *</code>
 		 *
 		 * @param string $header
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setRawHeader($header){
 			$this->_headers->setRaw($header);
@@ -166,7 +167,7 @@ namespace ManaPHP\Http {
 		 *</code>
 		 *
 		 * @param \DateTime $datetime
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setExpires($datetime){
 			$date =clone($datetime);
@@ -179,7 +180,7 @@ namespace ManaPHP\Http {
 		/**
 		 * Sets a Not-Modified response
 		 *
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setNotModified(){
 			$this->setStatusCode(304, 'Not modified');
@@ -197,7 +198,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string $contentType
 		 * @param string $charset
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setContentType($contentType, $charset=null){
 			if($charset ===null){
@@ -217,7 +218,7 @@ namespace ManaPHP\Http {
 		 *</code>
 		 *
 		 * @param string $etag
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setEtag($etag){
 			$this->_headers->set('Etag',$etag);
@@ -245,7 +246,7 @@ namespace ManaPHP\Http {
 		 * @param string|array $location
 		 * @param boolean $externalRedirect
 		 * @param int|string $statusCode
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 * @throws \ManaPHP\Http\Response\Exception
 		 */
 		public function redirect($location, $externalRedirect=false, $statusCode=302){
@@ -290,7 +291,7 @@ namespace ManaPHP\Http {
 		 *</code>
 		 *
 		 * @param string $content
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setContent($content){
 			$this->_content =$content;
@@ -308,10 +309,11 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string $content
 		 * @param int $jsonOptions bitmask consisting on http://www.php.net/manual/en/json.constants.php
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setJsonContent($content,$jsonOptions=null){
 			$this->_content =json_encode($content,$jsonOptions|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE,512);
+			return $this;
 		}
 
 
@@ -319,7 +321,7 @@ namespace ManaPHP\Http {
 		 * Appends a string to the HTTP response body
 		 *
 		 * @param string $content
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function appendContent($content){
 			$this->_content .=$content;
@@ -350,7 +352,7 @@ namespace ManaPHP\Http {
 		/**
 		 * Sends headers to the client
 		 *
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function sendHeaders(){
 			if($this->_status_line !==null){
@@ -367,7 +369,7 @@ namespace ManaPHP\Http {
 		/**
 		 * Sends cookies to the client
 		 *
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function sendCookies(){
 			if(is_object($this->_cookies)){
@@ -380,7 +382,7 @@ namespace ManaPHP\Http {
 		/**
 		 * Prints out HTTP response to the client
 		 *
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 * @throws \ManaPHP\Http\Response\Exception
 		 */
 		public function send(){
@@ -415,7 +417,7 @@ namespace ManaPHP\Http {
 		 *
 		 * @param string $filePath
 		 * @param string $attachmentName
-		 * @return \ManaPHP\Http\ResponseInterface
+		 * @return static
 		 */
 		public function setFileToSend($filePath, $attachmentName=null){
 			if(is_string($attachmentName)){

@@ -62,7 +62,7 @@ namespace ManaPHP {
 		 * Sets the events manager
 		 *
 		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
-		 * @return \ManaPHP\Autoloader
+		 * @return static
 		 */
 		public function setEventsManager($eventsManager){
 			$this->_eventsManager =$eventsManager;
@@ -92,7 +92,7 @@ namespace ManaPHP {
 		 * </code>
 		 * @param array $namespaces
 		 * @param boolean $merge
-		 * @return \ManaPHP\Autoloader
+		 * @return static
 		 */
 		public function registerNamespaces($namespaces, $merge=false){
 			if($merge ===false){
@@ -126,7 +126,7 @@ namespace ManaPHP {
 		 * </code>
 		 * @param array $directories
 		 * @param boolean $merge
-		 * @return \ManaPHP\Autoloader
+		 * @return static
 		 */
 		public function registerDirs($directories, $merge=false){
 			if($merge ===false){
@@ -153,7 +153,7 @@ namespace ManaPHP {
 		 *
 		 * @param array $classes
 		 * @param boolean $merge
-		 * @return \ManaPHP\Autoloader
+		 * @return static
 		 */
 		public function registerClasses($classes, $merge=false){
 			if($merge ===false){
@@ -161,6 +161,8 @@ namespace ManaPHP {
 			}else{
 				$this->_classes=is_array($this->_classes)?array_merge($this->_classes,$classes):$classes;
 			}
+
+			return $this;
 		}
 
 
@@ -177,7 +179,7 @@ namespace ManaPHP {
 		/**
 		 * Register the autoload method
 		 *
-		 * @return \ManaPHP\Autoloader
+		 * @return static
 		 */
 		public function register(){
 			if($this->_registered ===false){
@@ -192,7 +194,7 @@ namespace ManaPHP {
 		/**
 		 * Unregister the autoload method
 		 *
-		 * @return \ManaPHP\Autoloader
+		 * @return static
 		 */
 		public function unregister(){
 			if($this->_registered ===true){

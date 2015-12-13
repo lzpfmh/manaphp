@@ -14,7 +14,7 @@ namespace ManaPHP\Mvc\Router {
 		 * If the callback returns false the route is treated as not matched
 		 *
 		 * @param callable callback
-		 * @return \ManaPHP\Mvc\Router\RouteInterface
+		 * @return static
 		 */
 		public function beforeMatch($callback);
 

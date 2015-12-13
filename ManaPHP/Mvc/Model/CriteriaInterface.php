@@ -12,7 +12,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Set a model on which the query will be executed
 		 *
 		 * @param string $modelName
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function setModelName($modelName);
 
@@ -29,7 +29,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Adds the bind parameter to the criteria
 		 *
 		 * @param string $bindParams
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function bind($bindParams);
 
@@ -39,7 +39,7 @@ namespace ManaPHP\Mvc\Model {
 		 * This method replaces all previously set bound parameters
 		 *
 		 * @param string $bindTypes
-		 * @return \ManaPHP\Mvc\Model\Criteria
+		 * @return static
 		 */
 		public function bindTypes($bindTypes);
 
@@ -52,7 +52,7 @@ namespace ManaPHP\Mvc\Model {
 		 *</code>
 		 *
 		 * @param string|array $columns
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function columns($columns);
 
@@ -71,7 +71,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $conditions
 		 * @param string $alias
 		 * @param string $type
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function join($model, $conditions=null, $alias=null, $type=null);
 
@@ -82,7 +82,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $conditions
 		 * @param array $bindParams
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function where($conditions,$bindParams,$bindTypes);
 
@@ -91,7 +91,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Adds the conditions parameter to the criteria
 		 *
 		 * @param string $conditions
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function conditions($conditions);
 
@@ -100,7 +100,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Adds the order-by parameter to the criteria
 		 *
 		 * @param string $orderColumns
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function orderBy($orderColumns);
 
@@ -110,7 +110,7 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param int $limit
 		 * @param int $offset
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function limit($limit, $offset=null);
 
@@ -119,7 +119,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Sets the "for_update" parameter to the criteria
 		 *
 		 * @param boolean $forUpdate
-		 * @return \ManaPHP\Mvc\Model\CriteriaInterface
+		 * @return static
 		 */
 		public function forUpdate($forUpdate=null);
 
@@ -128,7 +128,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Sets the "shared_lock" parameter to the criteria
 		 *
 		 * @param boolean $sharedLock
-		 * @return \ManaPHP\Mvc\Model\Criteria
+		 * @return static
 		 */
 		public function sharedLock($sharedLock=null);
 
@@ -139,7 +139,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $conditions
 		 * @param array $bindParams
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\Criteria
+		 * @return static
 		 */
 		public function andWhere($conditions, $bindParams=null, $bindTypes=null);
 
@@ -150,7 +150,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param string $conditions
 		 * @param array $bindParams
 		 * @param array $bindTypes
-		 * @return \ManaPHP\Mvc\Model\Criteria
+		 * @return static
 		 */
 		public function orWhere($conditions, $bindParams=null, $bindTypes=null);
 
