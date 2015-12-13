@@ -459,7 +459,7 @@ namespace ManaPHP\Mvc {
 				$params =$parameters;
 			}elseif($parameters===null){
 				$params=[];
-			}elseif(is_int($parameters)){
+			}elseif(is_int($parameters) ||is_numeric($parameters)){
 				if(self::$_primaryKeys ===null){
 					$modelsMetadata=$dependencyInjector->getShared('modelsMetadata');
 					self::$_primaryKeys=$modelsMetadata->getPrimaryKeyAttributes(new static);
@@ -470,7 +470,7 @@ namespace ManaPHP\Mvc {
 				}
 				$key=self::$_primaryKeys[0];
 				$params['conditions']='['.$key.']=:'.$key.':';
-				$params['bind']=[$key=>$parameters];
+				$params['bind']=[$key=>(int)$parameters];
 			} else{
 				$params=[];
 				$params[]=$parameters;
