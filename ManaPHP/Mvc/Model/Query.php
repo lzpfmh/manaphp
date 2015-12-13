@@ -422,9 +422,8 @@ namespace ManaPHP\Mvc\Model {
 			}else{
 				$mergedTypes =$this->_bindTypes;
 			}
-			$this->_phql=str_replace('[Application\Home\Models\User]','user',$this->_phql);
-			$result=$this->_dependencyInjector->getShared('modelsManager')->getReadConnection(new User())->fetchAll($this->_phql,\PDO::FETCH_ASSOC,$mergedParams,$mergedTypes);
 			$result =$this->_executeSelect($this->_phql,$mergedParams,$mergedTypes);
+			return $result;
 		}
 
 

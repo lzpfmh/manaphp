@@ -114,6 +114,7 @@ namespace ManaPHP\Mvc\Model {
         /**
          * @param \ManaPHP\Mvc\ModelInterface $model
          * @return array
+         * @throws \ManaPHP\Mvc\Model\Exception
          */
         protected function _initialize($model){
             $className =get_class($model);
@@ -161,6 +162,7 @@ namespace ManaPHP\Mvc\Model {
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @return array
+         * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		protected function _readMetaData($model){
 			$source =$model->getSource();

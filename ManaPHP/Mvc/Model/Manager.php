@@ -327,6 +327,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @param array $placeholders
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
+		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function executeQuery($phql, $placeholders=null,$bindTypes=null){
 			/**

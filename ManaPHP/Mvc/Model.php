@@ -371,6 +371,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param 	array $parameters
 		 * @return  static[]
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		public static function find($parameters=null){
 			/**
@@ -440,7 +441,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param int|string|array $parameters
 		 * @return static
-		 * @throws \ManaPHP\Mvc\Model\Exception
+		 * @throws \ManaPHP\Mvc\Model\Exception | \ManaPHP\Di\Exception
 		 */
 		public static function findFirst($parameters=null){
 			/**
@@ -581,6 +582,7 @@ namespace ManaPHP\Mvc {
 		 * @param string $alias
 		 * @param array $parameters
 		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		protected static function _groupResult($function, $alias, $parameters){
 			$dependencyInjector =Di::getDefault();
@@ -661,6 +663,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $parameters
 		 * @return int
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		public static function count($parameters=null){
 			$result =self::_groupResult('COUNT','rowcount',$parameters);
@@ -689,6 +692,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $parameters
 		 * @return double
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		public static function sum($parameters=null){
 			return self::_groupResult('SUM','summary',$parameters);
@@ -712,6 +716,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $parameters
 		 * @return mixed
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		public static function maximum($parameters=null){
 			return self::_groupResult('MAX','maximum',$parameters);
@@ -735,6 +740,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $parameters
 		 * @return mixed
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		public static function minimum($parameters=null){
 			return self::_groupResult('MIN', 'minimum', $parameters);
@@ -758,6 +764,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $parameters
 		 * @return double
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		public static function average($parameters=null){
 			return self::_groupResult('AVG','average',$parameters);
@@ -1114,6 +1121,7 @@ namespace ManaPHP\Mvc {
 		 * Unserializes the object from a serialized string
 		 *
 		 * @param string $data
+		 * @throws \ManaPHP\Di\Exception
 		 */
 		public function unserialize($data){
 			$attributes=unserialize($data);

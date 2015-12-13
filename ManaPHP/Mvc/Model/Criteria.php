@@ -100,7 +100,7 @@ namespace ManaPHP\Mvc\Model {
 		 * @return static
 		 */
 		public function distinct($distinct){
-	 		$this->_params["distinct"] = $distinct;
+	 		$this->_params['distinct'] = $distinct;
 	 		return $this;
 	 	}
 
