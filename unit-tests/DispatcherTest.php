@@ -7,6 +7,103 @@
  */
 defined('UNIT_TESTS_ROOT')||require 'bootstrap.php';
 
+class Test1Controller extends \ManaPHP\Mvc\Controller{
+
+}
+
+class Test2Controller extends \ManaPHP\Mvc\Controller
+{
+    public function indexAction()
+    {
+    }
+
+    public function otherAction()
+    {
+
+    }
+
+    public function anotherAction()
+    {
+        return 100;
+    }
+
+    public function anotherTwoAction($a, $b)
+    {
+        return $a+$b;
+    }
+
+    public function anotherThreeAction()
+    {
+        return $this->dispatcher->forward(
+            array(
+                'controller' => 'test2',
+                'action' => 'anotherfour'
+            )
+        );
+    }
+
+    public function anotherFourAction()
+    {
+        return 120;
+    }
+
+    public function anotherFiveAction()
+    {
+        return $this->dispatcher->getParam('param1')+$this->dispatcher->getParam('param2');
+    }
+
+}
+
+class Test4Controller extends \ManaPHp\Mvc\Controller
+{
+    public function requestAction()
+    {
+        return $this->request->getPost('email', 'email');
+    }
+
+    public function viewAction()
+    {
+        return $this->view->setParamToView('born', 'this');
+    }
+}
+
+class ControllerBase extends \ManaPHP\Mvc\Controller
+{
+    public function serviceAction()
+    {
+        return "hello";
+    }
+
+}
+class Test5Controller extends ManaPHP\Mvc\Controller
+{
+    public function notFoundAction()
+    {
+        return 'not-found';
+    }
+
+}
+
+
+class Test6Controller extends ManaPHP\Mvc\Controller
+{
+
+
+}
+
+class Test7Controller extends ControllerBase
+{
+
+}
+
+class Test8Controller extends ManaPHP\Mvc\Controller
+{
+    public function buggyAction()
+    {
+        throw new Exception("This is an uncaught exception");
+    }
+
+}
 class tDispatcher extends \ManaPHP\Dispatcher{
     protected function _handleException($exception){
 
@@ -28,6 +125,7 @@ class tDispatcher extends \ManaPHP\Dispatcher{
         return $this->_defaultAction;
     }
 }
+
 
 
 class DispatcherTest extends TestCase{
@@ -147,8 +245,102 @@ class DispatcherTest extends TestCase{
     public function test_dispatcher(){
         $di=new ManaPHP\Di();
         $di->set('response',new ManaPHP\Http\Response());
+
         $dispatcher =new ManaPHP\Mvc\Dispatcher();
         $dispatcher->setDI($di);
         $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDI());
+        $di->set('dispatcher',$dispatcher);
+        $dispatcher->setControllerName('Index');
+        $dispatcher->setActionName('index');
+        $dispatcher->setParams([]);
+
+        try{
+            $dispatcher->dispatch();
+            $this->assertTrue(false,'oh, why?');
+        }catch (\Manaphp\Exception $e){
+            $this->assertEquals($e->getMessage(),'IndexController handler class cannot be loaded');
+            $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception',$e);
+        }
+
+        $dispatcher->setControllerName('missing');
+        $dispatcher->setActionName('index');
+        $dispatcher->setParams([]);
+
+        try{
+            $dispatcher->dispatch();
+            $this->assertTrue(false,'oh, why?');
+        }catch (\Manaphp\Exception $e){
+            $this->assertEquals($e->getMessage(),'MissingController handler class cannot be loaded');
+            $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception',$e);
+        }
+
+        $dispatcher->setControllerName('test0');
+        $dispatcher->setActionName('index');
+        $dispatcher->setParams(array());
+
+        try {
+            $dispatcher->dispatch();
+            $this->assertTrue(FALSE, 'oh, Why?');
+        } catch(\Manaphp\Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Test0Controller handler class cannot be loaded');
+            $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception', $e);
+        }
+
+        $dispatcher->setControllerName('test1');
+        $dispatcher->setActionName('index');
+        $dispatcher->setParams(array());
+
+        try {
+            $dispatcher->dispatch();
+            $this->assertTrue(FALSE, 'oh, Why?');
+        } catch (\Manaphp\Exception $e) {
+            $this->assertEquals($e->getMessage(), "Action 'index' was not found on handler 'test1'");
+        }
+
+        $dispatcher->setControllerName('test2');
+        $dispatcher->setActionName('other');
+        $dispatcher->setParams(array());
+        $controller = $dispatcher->dispatch();
+        $this->assertInstanceOf('Test2Controller', $controller);
+
+        $dispatcher->setControllerName('test2');
+        $dispatcher->setActionName('another');
+        $dispatcher->setParams(array());
+        $dispatcher->dispatch();
+        $value = $dispatcher->getReturnedValue();
+        $this->assertEquals($value, 100);
+
+        $dispatcher->setControllerName('test2');
+        $dispatcher->setActionName('anotherTwo');
+        $dispatcher->setParams(array(2, "3"));
+        $dispatcher->dispatch();
+        $value = $dispatcher->getReturnedValue();
+        $this->assertEquals($value, 5);
+
+        $dispatcher->setControllerName('test2');
+        $dispatcher->setActionName('anotherthree');
+        $dispatcher->setParams(array());
+        $dispatcher->dispatch();
+        $value = $dispatcher->getActionName();
+        $this->assertEquals($value, 'anotherfour');
+        $value = $dispatcher->getReturnedValue();
+        $this->assertEquals($value, 120);
+
+        $dispatcher->setControllerName('test2');
+        $dispatcher->setActionName('anotherFive');
+        $dispatcher->setParams(array('param1' => 2, 'param2' => 3));
+        $dispatcher->dispatch();
+        $value = $dispatcher->getReturnedValue();
+        $this->assertEquals($value, 5);
+
+        $dispatcher->setControllerName('test7');
+        $dispatcher->setActionName('service');
+        $dispatcher->setParams(array());
+        $dispatcher->dispatch();
+        $value = $dispatcher->getReturnedValue();
+        $this->assertEquals($value, 'hello');
+
+        $value = $dispatcher->getControllerClass();
+        $this->assertEquals($value, 'Test7Controller');
     }
 }
