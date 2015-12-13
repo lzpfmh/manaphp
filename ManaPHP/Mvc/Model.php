@@ -541,7 +541,7 @@ namespace ManaPHP\Mvc {
 
 			foreach($primaryKeys as $attributeField){
 				if(!isset($this->{$attributeField})){
-					throw new Exception('Record cannot be updated because it\'s some primary key has invalid value.');
+					return false;
 				}
 
 				$bindKey =':'.$attributeField;
@@ -566,7 +566,7 @@ namespace ManaPHP\Mvc {
 
 			$schema =$this->getSchema();
 			$source=$this->getSource();
-			if($schema !=='' &&$schema !==null){
+			if($schema !==''){
 				$table =[$schema, $source];
 			}else{
 				$table=$source;
@@ -781,8 +781,6 @@ namespace ManaPHP\Mvc {
 			if(method_exists($this,$eventName)){
 				$this->{$eventName}();
 			}
-
-			return $this->_modelsManager->notifyEvent($eventName,$this);
 		}
 
 
@@ -850,7 +848,7 @@ namespace ManaPHP\Mvc {
 		protected function _doLowInsert($metaData,$connection){
 			$schema=$this->getSchema();
 			$source =$this->getSource();
-			if($schema !==null){
+			if($schema !==''){
 				$table=[$schema,$source];
 			}else{
 				$table =$source;
@@ -889,7 +887,7 @@ namespace ManaPHP\Mvc {
 		protected function _doLowUpdate($metaData,$connection){
 			$schema=$this->getSchema();
 			$source =$this->getSource();
-			if($schema !==null){
+			if($schema !==''){
 				$table=[$schema,$source];
 			}else{
 				$table =$source;
@@ -1090,7 +1088,7 @@ namespace ManaPHP\Mvc {
 
 			$schema =$this->getSchema();
 			$source =$this->getSource();
-			if($schema !==null){
+			if($schema !==''){
 				$table=[$schema,$source];
 			}else{
 				$table=$source;
