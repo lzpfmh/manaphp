@@ -342,16 +342,6 @@ namespace ManaPHP {
 
 
 		/**
-		 * Checks if the dispatch loop is finished or has more pendent controllers/tasks to disptach
-		 *
-		 * @return boolean
-		 */
-		public function isFinished(){
-			return $this->_finished;
-		}
-
-
-		/**
 		 * Sets the latest returned value by an action manually
 		 *
 		 * @param mixed $value
