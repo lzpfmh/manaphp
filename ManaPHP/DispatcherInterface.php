@@ -157,6 +157,12 @@ namespace ManaPHP {
 		 */
 		public function setControllerName($controllerName);
 
+		/**
+		 * Gets last dispatched controller class name
+		 *
+		 * @return string
+		 */
+		public function getControllerClass();
 
 		/**
 		 * Gets last dispatched controller name
@@ -164,6 +170,13 @@ namespace ManaPHP {
 		 * @return string
 		 */
 		public function getControllerName();
+
+		/**
+		 * Returns the previous controller class in the dispatcher
+		 *
+		 * @return string
+		 */
+		public function getPreviousControllerClass();
 
 		/**
 		 * Returns the previous controller in the dispatcher

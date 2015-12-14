@@ -379,9 +379,25 @@ class DispatcherTest extends TestCase{
         $dispatcher->setActionName('another3');
         $dispatcher->setParams([]);
         $dispatcher->dispatch();
+        $this->assertEquals('Test2Controller',$dispatcher->getPreviousControllerClass());
         $this->assertEquals('test2',$dispatcher->getPreviousControllerName());
         $this->assertEquals('another3',$dispatcher->getPreviousActionName());
+        $this->assertEquals('Test2Controller',$dispatcher->getControllerClass());
+        $this->assertEquals('test2',$dispatcher->getControllerName());
         $this->assertEquals('another4',$dispatcher->getActionName());
+
+        $dispatcher->setControllerName('test2');
+        $dispatcher->setActionName('index');
+        $dispatcher->setParams([]);
+
+        $dispatcher->forward(['controller'=>'test3','action'=>'other']);
+        $this->assertEquals('Test3Controller',$dispatcher->getControllerClass());
+        $this->assertEquals('test3',$dispatcher->getControllerName());
+        $this->assertEquals('other',$dispatcher->getActionName());
+
+        $this->assertEquals('Test2Controller',$dispatcher->getPreviousControllerClass());
+        $this->assertEquals('test2',$dispatcher->getPreviousControllerName());
+        $this->assertEquals('index',$dispatcher->getPreviousActionName());
     }
 
     public function test_wasForwarded(){
@@ -399,4 +415,5 @@ class DispatcherTest extends TestCase{
         $dispatcher->dispatch();
         $this->assertTrue($dispatcher->wasForwarded());
     }
+
 }

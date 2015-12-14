@@ -109,6 +109,10 @@ namespace ManaPHP {
 		/**
 		 * @var string
 		 */
+		protected $_previousHandlerClass;
+		/**
+		 * @var string
+		 */
 		protected $_previousHandlerName;
 
 		/**
@@ -397,7 +401,7 @@ namespace ManaPHP {
 					}
 				}
 
-				$handlerClass = $this->getHandlerClass();
+				$handlerClass = $this->getControllerClass();
 
 				if(!$this->_dependencyInjector->has($handlerClass)&& !class_exists($handlerClass)){
 					if($this->_throwDispatchException($handlerClass . ' handler class cannot be loaded', self::EXCEPTION_HANDLER_NOT_FOUND) ===false){
@@ -514,6 +518,8 @@ namespace ManaPHP {
 				return ;
 			}
 
+			$this->_previousHandlerClass=$this->getControllerClass();
+
 			if(isset($forward['namespace'])){
 				$this->_namespaceName =$forward['namespace'];
 			}
@@ -570,7 +576,7 @@ namespace ManaPHP {
 		 *
 		 * @return string
 		 */
-		public function getHandlerClass(){
+		public function getControllerClass(){
 			$this->_resolveEmptyProperties();
 
 			if(strpos($this->_handlerName,'\\') ===false){
@@ -664,6 +670,14 @@ namespace ManaPHP {
 			return $this->_handlerName;
 		}
 
+		/**
+		 * Returns the previous controller class in the dispatcher
+		 *
+		 * @return string
+		 */
+		public function getPreviousControllerClass(){
+			return $this->_previousHandlerClass;
+		}
 
 		/**
 		 * Returns the previous controller in the dispatcher
