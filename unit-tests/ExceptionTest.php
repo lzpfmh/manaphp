@@ -8,7 +8,7 @@
 defined('UNIT_TESTS_ROOT')||require 'bootstrap.php';
 
 class ExceptionTest extends TestCase{
-    public function testException(){
+    public function test_throw(){
         try{
             throw new \ManaPHP\Exception();
         }catch (\Exception $e){
