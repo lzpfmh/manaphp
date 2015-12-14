@@ -9,6 +9,10 @@ defined('UNIT_TESTS_ROOT')||require 'bootstrap.php';
 
 class ExceptionTest extends TestCase{
     public function testException(){
-        $this->assertTrue(new \ManaPHP\Exception instanceof \Exception);
+        try{
+            throw new \ManaPHP\Exception();
+        }catch (\Exception $e){
+            $this->assertInstanceOf('ManaPHP\Exception',$e);
+        }
     }
 }
