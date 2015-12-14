@@ -36,45 +36,6 @@ namespace ManaPHP\Mvc {
 			$this->_defaultHandler ='Index';
 			$this->_defaultAction='index';
 		}
-		/**
-		 * Sets the default controller suffix
-		 *
-		 * @param string $controllerSuffix
-		 */
-		public function setControllerSuffix($controllerSuffix){
-			$this->_handlerSuffix =$controllerSuffix;
-		}
-
-
-		/**
-		 * Sets the default controller name
-		 *
-		 * @param string $controllerName
-		 */
-		public function setDefaultController($controllerName){
-			$this->_defaultHandler =$controllerName;
-		}
-
-
-		/**
-		 * Sets the controller name to be dispatched
-		 *
-		 * @param string $controllerName
-		 */
-		public function setControllerName($controllerName){
-			$this->_handlerName =$controllerName;
-		}
-
-
-		/**
-		 * Gets last dispatched controller name
-		 *
-		 * @return string
-		 */
-		public function getControllerName(){
-			return $this->_handlerName;
-		}
-
 
 		/**
 		 * Throws an internal exception
@@ -117,52 +78,5 @@ namespace ManaPHP\Mvc {
 		protected function _handleException($exception){
 
 		}
-
-
-		/**
-		 * Possible controller class name that will be located to dispatch the request
-		 *
-		 * @return string
-		 */
-		public function getControllerClass(){
-			return $this->getHandlerClass();
-		}
-
-
-		/**
-		 * Returns the latest dispatched controller
-		 *
-		 * @return \ManaPHP\Mvc\ControllerInterface
-		 */
-		public function getLastController(){
-			return $this->_lastHandler;
-		}
-
-
-		/**
-		 * Returns the active controller in the dispatcher
-		 *
-		 * @return \ManaPHP\Mvc\ControllerInterface
-		 */
-		public function getActiveController(){
-			return $this->_activeHandler;
-		}
-
-
-		/**
-		 * Returns the previous controller in the dispatcher
-		 *
-		 * @return string
-		 */
-		public function getPreviousControllerName(){ }
-
-
-		/**
-		 * Returns the previous action in the dispatcher
-		 *
-		 * @return string
-		 */
-		public function getPreviousActionName(){ }
-
 	}
 }
