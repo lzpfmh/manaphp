@@ -164,22 +164,5 @@ namespace ManaPHP {
 		 * @return string
 		 */
 		public function getControllerName();
-
-
-		/**
-		 * Returns the latest dispatched controller
-		 *
-		 * @return \ManaPHP\Mvc\ControllerInterface
-		 */
-		public function getLastController();
-
-
-		/**
-		 * Returns the active controller in the dispatcher
-		 *
-		 * @return \ManaPHP\Mvc\ControllerInterface
-		 */
-		public function getActiveController();
-
 	}
 }

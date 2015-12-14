@@ -664,49 +664,23 @@ namespace ManaPHP {
 			return $this->_handlerName;
 		}
 
-		/**
-		 * Possible controller class name that will be located to dispatch the request
-		 *
-		 * @return string
-		 */
-		public function getControllerClass(){
-			return $this->getHandlerClass();
-		}
-
-
-		/**
-		 * Returns the latest dispatched controller
-		 *
-		 * @return \ManaPHP\Mvc\ControllerInterface
-		 */
-		public function getLastController(){
-			return $this->_lastHandler;
-		}
-
-
-		/**
-		 * Returns the active controller in the dispatcher
-		 *
-		 * @return \ManaPHP\Mvc\ControllerInterface
-		 */
-		public function getActiveController(){
-			return $this->_activeHandler;
-		}
-
 
 		/**
 		 * Returns the previous controller in the dispatcher
 		 *
 		 * @return string
 		 */
-		public function getPreviousControllerName(){ }
-
+		public function getPreviousControllerName(){
+			return $this->_previousHandlerName;
+		}
 
 		/**
 		 * Returns the previous action in the dispatcher
 		 *
 		 * @return string
 		 */
-		public function getPreviousActionName(){ }
+		public function getPreviousActionName(){
+			return $this->_previousActionName;
+		}
 	}
 }

@@ -348,7 +348,7 @@ class DispatcherTest extends TestCase{
         $dispatcher->dispatch();
         $this->assertEquals('hello',$dispatcher->getReturnedValue());
 
-        $this->assertEquals('Test7Controller',$dispatcher->getControllerClass());
+        $this->assertEquals('test7',$dispatcher->getControllerName());
     }
 
     public function test_getReturnedValue(){
@@ -379,6 +379,8 @@ class DispatcherTest extends TestCase{
         $dispatcher->setActionName('another3');
         $dispatcher->setParams([]);
         $dispatcher->dispatch();
+        $this->assertEquals('test2',$dispatcher->getPreviousControllerName());
+        $this->assertEquals('another3',$dispatcher->getPreviousActionName());
         $this->assertEquals('another4',$dispatcher->getActionName());
     }
 
