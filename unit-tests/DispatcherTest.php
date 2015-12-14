@@ -242,7 +242,7 @@ class DispatcherTest extends TestCase{
         $this->assertEquals('default',$dispatcher->getParam('not_exist',null,'default'));
     }
 
-    public function test_dispatcher(){
+    public function test_dispatch(){
         $di=new ManaPHP\Di();
         $di->set('response',new ManaPHP\Http\Response());
 
@@ -290,7 +290,7 @@ class DispatcherTest extends TestCase{
             $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception', $e);
         }
 
-        //action determine
+        //action determination
         $dispatcher->setControllerName('test1');
         $dispatcher->setActionName('index');
         $dispatcher->setParams([]);
@@ -332,6 +332,7 @@ class DispatcherTest extends TestCase{
         $dispatcher->dispatch();
         $this->assertEquals('another4',$dispatcher->getActionName());
         $this->assertEquals(120,$dispatcher->getReturnedValue());
+        $this->assertTrue($dispatcher->wasForwarded());
 
         //fetch param from dispatcher
         $dispatcher->setControllerName('test2');
@@ -348,5 +349,52 @@ class DispatcherTest extends TestCase{
         $this->assertEquals('hello',$dispatcher->getReturnedValue());
 
         $this->assertEquals('Test7Controller',$dispatcher->getControllerClass());
+    }
+
+    public function test_getReturnedValue(){
+        $di=new ManaPHP\Di();
+        $di->set('response',new ManaPHP\Http\Response());
+
+        $dispatcher =new ManaPHP\Mvc\Dispatcher();
+        $dispatcher->setDI($di);
+        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDI());
+        $di->set('dispatcher',$dispatcher);
+
+        $dispatcher->setControllerName('test2');
+        $dispatcher->setActionName('another5');
+        $dispatcher->setParams(['param1' => 2, 'param2' => 3]);
+        $dispatcher->dispatch();
+        $this->assertEquals(5,$dispatcher->getReturnedValue());
+    }
+    public function test_forward(){
+        $di=new ManaPHP\Di();
+        $di->set('response',new ManaPHP\Http\Response());
+
+        $dispatcher =new ManaPHP\Mvc\Dispatcher();
+        $dispatcher->setDI($di);
+        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDI());
+        $di->set('dispatcher',$dispatcher);
+
+        $dispatcher->setControllerName('test2');
+        $dispatcher->setActionName('another3');
+        $dispatcher->setParams([]);
+        $dispatcher->dispatch();
+        $this->assertEquals('another4',$dispatcher->getActionName());
+    }
+
+    public function test_wasForwarded(){
+        $di=new ManaPHP\Di();
+        $di->set('response',new ManaPHP\Http\Response());
+
+        $dispatcher =new ManaPHP\Mvc\Dispatcher();
+        $dispatcher->setDI($di);
+        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDI());
+        $di->set('dispatcher',$dispatcher);
+
+        $dispatcher->setControllerName('test2');
+        $dispatcher->setActionName('another3');
+        $dispatcher->setParams([]);
+        $dispatcher->dispatch();
+        $this->assertTrue($dispatcher->wasForwarded());
     }
 }
