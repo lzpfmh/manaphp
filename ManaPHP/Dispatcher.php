@@ -72,6 +72,9 @@ namespace ManaPHP {
 		 */
 		protected $_params=[];
 
+		/**
+		 * @var mixed
+		 */
 		protected $_returnedValue;
 
 		protected $_lastHandler;
@@ -150,8 +153,7 @@ namespace ManaPHP {
 		 * Returns the internal event manager
 		 * @return \ManaPHP\Events\EventsAwareInterface
 		 */
-		public function getEventsManager()
-		{
+		public function getEventsManager(){
 			return $this->_eventsManager;
 		}
 
@@ -328,16 +330,6 @@ namespace ManaPHP {
 			}
 
 			return $this->_dependencyInjector->getShared('filter')->sanitize($this->_params[$param],$filters);
-		}
-
-
-		/**
-		 * Returns the current method to be/executed in the dispatcher
-		 *
-		 * @return string
-		 */
-		public function getActiveMethod(){
-			return $this->_actionName .$this->_actionSuffix;
 		}
 
 
@@ -592,7 +584,7 @@ namespace ManaPHP {
 		 * @param string $str
 		 * @return string
 		 */
-		public function camelize($str){
+		protected function _camelize($str){
 			$parts =explode('_',$str);
 			foreach($parts as $k=>$v){
 				$parts[$k]=ucfirst($v);
@@ -610,7 +602,7 @@ namespace ManaPHP {
 			$this->_resolveEmptyProperties();
 
 			if(strpos($this->_handlerName,'\\') ===false){
-				$camelizedClass=$this->camelize($this->_handlerName);
+				$camelizedClass=$this->_camelize($this->_handlerName);
 			}else{
 				$camelizedClass =$this->_handlerName;
 			}
