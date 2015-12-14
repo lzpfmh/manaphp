@@ -17,9 +17,9 @@ namespace ManaPHP {
 
 		const EXCEPTION_CYCLIC_ROUTING = 1;
 
-		const EXCEPTION_HANDLER_NOT_FOUND = 2;
+		const EXCEPTION_CONTROLLER_NOT_FOUND = 2;
 
-		const EXCEPTION_INVALID_HANDLER = 3;
+		const EXCEPTION_INVALID_CONTROLLER = 3;
 
 		const EXCEPTION_INVALID_PARAMS = 4;
 
@@ -400,7 +400,7 @@ namespace ManaPHP {
 				$controllerClass = $this->getControllerClass();
 
 				if(!$this->_dependencyInjector->has($controllerClass)&& !class_exists($controllerClass)){
-					if($this->_throwDispatchException($controllerClass . ' handler class cannot be loaded', self::EXCEPTION_HANDLER_NOT_FOUND) ===false){
+					if($this->_throwDispatchException($controllerClass . ' handler class cannot be loaded', self::EXCEPTION_CONTROLLER_NOT_FOUND) ===false){
 						if($this->_finished ===false){
 							continue;
 						}
@@ -412,7 +412,7 @@ namespace ManaPHP {
 				$controller =$this->_dependencyInjector->getShared($controllerClass);
 				$wasFreshInstance =$this->_dependencyInjector->wasFreshInstance();
 				if(!is_object($controller)){
-					if($this->_throwDispatchException('Invalid handler returned from the services container', self::EXCEPTION_INVALID_HANDLER) ===false ){
+					if($this->_throwDispatchException('Invalid handler returned from the services container', self::EXCEPTION_INVALID_CONTROLLER) ===false ){
 						if($this->_finished ===false){
 							continue;
 						}
