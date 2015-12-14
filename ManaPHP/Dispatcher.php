@@ -443,17 +443,7 @@ namespace ManaPHP {
 					break;
 				}
 
-				if(is_object($this->_eventsManager)){
-					if($this->_eventsManager->fire('dispatch:beforeExecuteRoute',$this) ===false) {
-						continue;
-					}
-
-					if($this->_finished ===false){
-						continue;
-					}
-				}
-
-				// Calling beforeExecuteRoute as callback and event
+				// Calling beforeExecuteRoute as callback
 				if(method_exists($handler, 'beforeExecuteRoute')){
 					if($handler->beforeExecuteRoute($this) ===false){
 						continue;
@@ -467,16 +457,6 @@ namespace ManaPHP {
 				if($wasFreshInstance) {
 					if (method_exists($handler, 'initialize')) {
 						$handler->initialize();
-					}
-
-					if (is_object($this->_eventsManager)) {
-						if ($this->_eventsManager->fire('dispatch:afterInitialize', $this) === false) {
-							continue;
-						}
-
-						if ($this->_finished === false) {
-							continue;
-						}
 					}
 				}
 
@@ -495,14 +475,6 @@ namespace ManaPHP {
 
 				$value=null;
 				if(is_object($this->_eventsManager)){
-					if($this->_eventsManager->fire('dispatch:afterExecuteRoute', $this, $value) ===false){
-						continue;
-					}
-
-					if($this->_finished ===false){
-						continue;
-					}
-
 					// Call afterDispatch
 					$this->_eventsManager->fire('dispatch:afterDispatch', $this);
 				}
