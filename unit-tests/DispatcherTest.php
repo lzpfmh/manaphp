@@ -27,27 +27,27 @@ class Test2Controller extends \ManaPHP\Mvc\Controller
         return 100;
     }
 
-    public function anotherTwoAction($a, $b)
+    public function another2Action($a, $b)
     {
         return $a+$b;
     }
 
-    public function anotherThreeAction()
+    public function another3Action()
     {
         return $this->dispatcher->forward(
             array(
                 'controller' => 'test2',
-                'action' => 'anotherfour'
+                'action' => 'another4'
             )
         );
     }
 
-    public function anotherFourAction()
+    public function another4Action()
     {
         return 120;
     }
 
-    public function anotherFiveAction()
+    public function another5Action()
     {
         return $this->dispatcher->getParam('param1')+$this->dispatcher->getParam('param2');
     }
@@ -71,7 +71,7 @@ class ControllerBase extends \ManaPHP\Mvc\Controller
 {
     public function serviceAction()
     {
-        return "hello";
+        return 'hello';
     }
 
 }
@@ -100,7 +100,7 @@ class Test8Controller extends ManaPHP\Mvc\Controller
 {
     public function buggyAction()
     {
-        throw new Exception("This is an uncaught exception");
+        throw new Exception('This is an uncaught exception');
     }
 
 }
@@ -250,6 +250,8 @@ class DispatcherTest extends TestCase{
         $dispatcher->setDI($di);
         $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDI());
         $di->set('dispatcher',$dispatcher);
+
+        //camelize the handler class:not require
         $dispatcher->setControllerName('Index');
         $dispatcher->setActionName('index');
         $dispatcher->setParams([]);
@@ -258,10 +260,11 @@ class DispatcherTest extends TestCase{
             $dispatcher->dispatch();
             $this->assertTrue(false,'oh, why?');
         }catch (\Manaphp\Exception $e){
-            $this->assertEquals($e->getMessage(),'IndexController handler class cannot be loaded');
+            $this->assertEquals('IndexController handler class cannot be loaded',$e->getMessage());
             $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception',$e);
         }
 
+        //camelize the handler class: require,only one word
         $dispatcher->setControllerName('missing');
         $dispatcher->setActionName('index');
         $dispatcher->setParams([]);
@@ -270,77 +273,80 @@ class DispatcherTest extends TestCase{
             $dispatcher->dispatch();
             $this->assertTrue(false,'oh, why?');
         }catch (\Manaphp\Exception $e){
-            $this->assertEquals($e->getMessage(),'MissingController handler class cannot be loaded');
+            $this->assertEquals('MissingController handler class cannot be loaded',$e->getMessage());
             $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception',$e);
         }
 
-        $dispatcher->setControllerName('test0');
+        //camelize the handler class: require,multiple words
+        $dispatcher->setControllerName('test_home');
         $dispatcher->setActionName('index');
-        $dispatcher->setParams(array());
+        $dispatcher->setParams([]);
 
         try {
             $dispatcher->dispatch();
             $this->assertTrue(FALSE, 'oh, Why?');
         } catch(\Manaphp\Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Test0Controller handler class cannot be loaded');
+            $this->assertEquals('TestHomeController handler class cannot be loaded',$e->getMessage());
             $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception', $e);
         }
 
+        //action determine
         $dispatcher->setControllerName('test1');
         $dispatcher->setActionName('index');
-        $dispatcher->setParams(array());
+        $dispatcher->setParams([]);
 
         try {
             $dispatcher->dispatch();
             $this->assertTrue(FALSE, 'oh, Why?');
         } catch (\Manaphp\Exception $e) {
-            $this->assertEquals($e->getMessage(), "Action 'index' was not found on handler 'test1'");
+            $this->assertEquals("Action 'index' was not found on handler 'Test1Controller'",$e->getMessage());
         }
 
+        //normal usage without return value
         $dispatcher->setControllerName('test2');
         $dispatcher->setActionName('other');
-        $dispatcher->setParams(array());
+        $dispatcher->setParams([]);
         $controller = $dispatcher->dispatch();
         $this->assertInstanceOf('Test2Controller', $controller);
+        $this->assertEquals('other',$dispatcher->getActionName());
+        $this->assertEquals(null,$dispatcher->getReturnedValue());
 
+        //normal usage with return value
         $dispatcher->setControllerName('test2');
         $dispatcher->setActionName('another');
-        $dispatcher->setParams(array());
+        $dispatcher->setParams([]);
         $dispatcher->dispatch();
-        $value = $dispatcher->getReturnedValue();
-        $this->assertEquals($value, 100);
+        $this->assertEquals(100,$dispatcher->getReturnedValue());
 
+        //bind param to method parameter
         $dispatcher->setControllerName('test2');
-        $dispatcher->setActionName('anotherTwo');
-        $dispatcher->setParams(array(2, "3"));
+        $dispatcher->setActionName('another2');
+        $dispatcher->setParams([2, '3']);
         $dispatcher->dispatch();
-        $value = $dispatcher->getReturnedValue();
-        $this->assertEquals($value, 5);
+        $this->assertEquals(5,$dispatcher->getReturnedValue());
 
+        //forward
         $dispatcher->setControllerName('test2');
-        $dispatcher->setActionName('anotherthree');
-        $dispatcher->setParams(array());
+        $dispatcher->setActionName('another3');
+        $dispatcher->setParams([]);
         $dispatcher->dispatch();
-        $value = $dispatcher->getActionName();
-        $this->assertEquals($value, 'anotherfour');
-        $value = $dispatcher->getReturnedValue();
-        $this->assertEquals($value, 120);
+        $this->assertEquals('another4',$dispatcher->getActionName());
+        $this->assertEquals(120,$dispatcher->getReturnedValue());
 
+        //fetch param from dispatcher
         $dispatcher->setControllerName('test2');
-        $dispatcher->setActionName('anotherFive');
-        $dispatcher->setParams(array('param1' => 2, 'param2' => 3));
+        $dispatcher->setActionName('another5');
+        $dispatcher->setParams(['param1' => 2, 'param2' => 3]);
         $dispatcher->dispatch();
-        $value = $dispatcher->getReturnedValue();
-        $this->assertEquals($value, 5);
+        $this->assertEquals(5,$dispatcher->getReturnedValue());
 
+        //inherit class
         $dispatcher->setControllerName('test7');
         $dispatcher->setActionName('service');
-        $dispatcher->setParams(array());
+        $dispatcher->setParams([]);
         $dispatcher->dispatch();
-        $value = $dispatcher->getReturnedValue();
-        $this->assertEquals($value, 'hello');
+        $this->assertEquals('hello',$dispatcher->getReturnedValue());
 
-        $value = $dispatcher->getControllerClass();
-        $this->assertEquals($value, 'Test7Controller');
+        $this->assertEquals('Test7Controller',$dispatcher->getControllerClass());
     }
 }

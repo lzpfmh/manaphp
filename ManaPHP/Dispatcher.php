@@ -442,7 +442,7 @@ namespace ManaPHP {
 						}
 					}
 
-					if($this->_throwDispatchException('Action \'' . $this->_actionName . '\' was not found on handler \'' . $this->_handlerName . '\'', self::EXCEPTION_ACTION_NOT_FOUND) ===false){
+					if($this->_throwDispatchException('Action \'' . $this->_actionName . '\' was not found on handler \'' . $handlerClass . '\'', self::EXCEPTION_ACTION_NOT_FOUND) ===false){
 						if($this->_finished ===false){
 							continue;
 						}
