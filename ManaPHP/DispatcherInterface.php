@@ -164,5 +164,19 @@ namespace ManaPHP {
 		 * @return string
 		 */
 		public function getControllerName();
+
+		/**
+		 * Returns the previous controller in the dispatcher
+		 *
+		 * @return string
+		 */
+		public function getPreviousControllerName();
+
+		/**
+		 * Returns the previous action in the dispatcher
+		 *
+		 * @return string
+		 */
+		public function getPreviousActionName();
 	}
 }
