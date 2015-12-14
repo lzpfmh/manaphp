@@ -35,7 +35,7 @@ namespace ManaPHP {
 		 */
 		protected $_eventsManager;
 
-		protected $_activeHandler;
+		protected $_activeController;
 
 		/**
 		 * @var boolean
@@ -60,7 +60,7 @@ namespace ManaPHP {
 		/**
 		 * @var string
 		 */
-		protected $_handlerName;
+		protected $_controllerName;
 
 		/**
 		 * @var string
@@ -77,14 +77,14 @@ namespace ManaPHP {
 		 */
 		protected $_returnedValue;
 
-		protected $_lastHandler;
+		protected $_lastController;
 
 		/**
 		 * @var string
 		 */
 		protected $_defaultNamespace;
 
-		protected $_defaultHandler;
+		protected $_defaultController;
 
 		/**
 		 * @var string
@@ -94,26 +94,22 @@ namespace ManaPHP {
 		/**
 		 * @var string
 		 */
-		protected $_handlerSuffix='';
+		protected $_controllerSuffix='';
 
 		/**
 		 * @var string
 		 */
 		protected $_actionSuffix='Action';
 
-		/**
-		 * @var boolean
-		 */
-		protected $_isExactHandler;
 
 		/**
 		 * @var string
 		 */
-		protected $_previousHandlerClass;
+		protected $_previousControllerClass;
 		/**
 		 * @var string
 		 */
-		protected $_previousHandlerName;
+		protected $_previousControllerName;
 
 		/**
 		 * @var string
@@ -377,7 +373,7 @@ namespace ManaPHP {
 				}
 			}
 
-			$handler =null;
+			$controller =null;
 			$numberDispatches =0;
 			$this->_finished =false;
 			while($this->_finished ===false){
@@ -401,10 +397,10 @@ namespace ManaPHP {
 					}
 				}
 
-				$handlerClass = $this->getControllerClass();
+				$controllerClass = $this->getControllerClass();
 
-				if(!$this->_dependencyInjector->has($handlerClass)&& !class_exists($handlerClass)){
-					if($this->_throwDispatchException($handlerClass . ' handler class cannot be loaded', self::EXCEPTION_HANDLER_NOT_FOUND) ===false){
+				if(!$this->_dependencyInjector->has($controllerClass)&& !class_exists($controllerClass)){
+					if($this->_throwDispatchException($controllerClass . ' handler class cannot be loaded', self::EXCEPTION_HANDLER_NOT_FOUND) ===false){
 						if($this->_finished ===false){
 							continue;
 						}
@@ -413,9 +409,9 @@ namespace ManaPHP {
 					break;
 				}
 
-				$handler =$this->_dependencyInjector->getShared($handlerClass);
+				$controller =$this->_dependencyInjector->getShared($controllerClass);
 				$wasFreshInstance =$this->_dependencyInjector->wasFreshInstance();
-				if(!is_object($handler)){
+				if(!is_object($controller)){
 					if($this->_throwDispatchException('Invalid handler returned from the services container', self::EXCEPTION_INVALID_HANDLER) ===false ){
 						if($this->_finished ===false){
 							continue;
@@ -424,10 +420,10 @@ namespace ManaPHP {
 
 					break;
 				}
-				$this->_activeHandler =$handler;
+				$this->_activeController =$controller;
 
 				$actionMethod =$this->_actionName .$this->_actionSuffix;
-				if(!method_exists($handler, $actionMethod)){
+				if(!method_exists($controller, $actionMethod)){
 					if(is_object($this->_eventsManager)){
 						if($this->_eventsManager->fire('dispatch:beforeNotFoundAction', $this) ===false){
 							continue;
@@ -438,7 +434,7 @@ namespace ManaPHP {
 						}
 					}
 
-					if($this->_throwDispatchException('Action \'' . $this->_actionName . '\' was not found on handler \'' . $handlerClass . '\'', self::EXCEPTION_ACTION_NOT_FOUND) ===false){
+					if($this->_throwDispatchException('Action \'' . $this->_actionName . '\' was not found on handler \'' . $controllerClass . '\'', self::EXCEPTION_ACTION_NOT_FOUND) ===false){
 						if($this->_finished ===false){
 							continue;
 						}
@@ -448,8 +444,8 @@ namespace ManaPHP {
 				}
 
 				// Calling beforeExecuteRoute as callback
-				if(method_exists($handler, 'beforeExecuteRoute')){
-					if($handler->beforeExecuteRoute($this) ===false){
+				if(method_exists($controller, 'beforeExecuteRoute')){
+					if($controller->beforeExecuteRoute($this) ===false){
 						continue;
 					}
 
@@ -459,14 +455,14 @@ namespace ManaPHP {
 				}
 
 				if($wasFreshInstance) {
-					if (method_exists($handler, 'initialize')) {
-						$handler->initialize();
+					if (method_exists($controller, 'initialize')) {
+						$controller->initialize();
 					}
 				}
 
 				try{
-					$this->_returnedValue =call_user_func_array([$handler,$actionMethod],$this->_params);
-					$this->_lastHandler =$handler;
+					$this->_returnedValue =call_user_func_array([$controller,$actionMethod],$this->_params);
+					$this->_lastController =$controller;
 				}catch (\Exception $e){
 					if($this->_handleException($e) ===false){
 						if($this->_finished ===false){
@@ -483,8 +479,8 @@ namespace ManaPHP {
 					$this->_eventsManager->fire('dispatch:afterDispatch', $this);
 				}
 
-				if(method_exists($handler,'afterExecuteRoute')){
-					if($handler->afterExecuteRoute($this,$value) ===false) {
+				if(method_exists($controller,'afterExecuteRoute')){
+					if($controller->afterExecuteRoute($this,$value) ===false) {
 						continue;
 					}
 
@@ -498,7 +494,7 @@ namespace ManaPHP {
 				$this->_eventsManager->fire('dispatch:afterDispatchLoop',$this);
 			}
 
-			return $handler;
+			return $controller;
 		}
 
 
@@ -518,20 +514,15 @@ namespace ManaPHP {
 				return ;
 			}
 
-			$this->_previousHandlerClass=$this->getControllerClass();
+			$this->_previousControllerClass=$this->getControllerClass();
 
 			if(isset($forward['namespace'])){
 				$this->_namespaceName =$forward['namespace'];
 			}
 
 			if(isset($forward['controller'])){
-				$this->_previousHandlerName =$this->_handlerName;
-				$this->_handlerName =$forward['controller'];
-			}else{
-				if(isset($forward['task'])){
-					$this->_previousHandlerName =$this->_handlerName;
-					$this->_handlerName =$forward['task'];
-				}
+				$this->_previousControllerName =$this->_controllerName;
+				$this->_controllerName =$forward['controller'];
 			}
 
 			if(isset($forward['action'])){
@@ -579,16 +570,16 @@ namespace ManaPHP {
 		public function getControllerClass(){
 			$this->_resolveEmptyProperties();
 
-			if(strpos($this->_handlerName,'\\') ===false){
-				$camelizedClass=$this->_camelize($this->_handlerName);
+			if(strpos($this->_controllerName,'\\') ===false){
+				$camelizedClass=$this->_camelize($this->_controllerName);
 			}else{
-				$camelizedClass =$this->_handlerName;
+				$camelizedClass =$this->_controllerName;
 			}
 
 			if($this->_namespaceName){
-				$handlerClass =rtrim($this->_namespaceName,'\\').'\\'.$camelizedClass.$this->_handlerSuffix;
+				$handlerClass =rtrim($this->_namespaceName,'\\').'\\'.$camelizedClass.$this->_controllerSuffix;
 			}else{
-				$handlerClass =$camelizedClass.$this->_handlerSuffix;
+				$handlerClass =$camelizedClass.$this->_controllerSuffix;
 			}
 
 			return $handlerClass;
@@ -621,8 +612,8 @@ namespace ManaPHP {
 			}
 
 			// If the handler is null we use the set in this->_defaultHandler
-			if ($this->_handlerName ===null) {
-				$this->_handlerName = $this->_defaultHandler;
+			if ($this->_controllerName ===null) {
+				$this->_controllerName = $this->_defaultController;
 			}
 
 			// If the action is null we use the set in this->_defaultAction
@@ -637,7 +628,7 @@ namespace ManaPHP {
 		 * @param string $controllerSuffix
 		 */
 		public function setControllerSuffix($controllerSuffix){
-			$this->_handlerSuffix =$controllerSuffix;
+			$this->_controllerSuffix =$controllerSuffix;
 		}
 
 
@@ -647,7 +638,7 @@ namespace ManaPHP {
 		 * @param string $controllerName
 		 */
 		public function setDefaultController($controllerName){
-			$this->_defaultHandler =$controllerName;
+			$this->_defaultController =$controllerName;
 		}
 
 
@@ -657,7 +648,7 @@ namespace ManaPHP {
 		 * @param string $controllerName
 		 */
 		public function setControllerName($controllerName){
-			$this->_handlerName =$controllerName;
+			$this->_controllerName =$controllerName;
 		}
 
 
@@ -667,7 +658,7 @@ namespace ManaPHP {
 		 * @return string
 		 */
 		public function getControllerName(){
-			return $this->_handlerName;
+			return $this->_controllerName;
 		}
 
 		/**
@@ -676,7 +667,7 @@ namespace ManaPHP {
 		 * @return string
 		 */
 		public function getPreviousControllerClass(){
-			return $this->_previousHandlerClass;
+			return $this->_previousControllerClass;
 		}
 
 		/**
@@ -685,7 +676,7 @@ namespace ManaPHP {
 		 * @return string
 		 */
 		public function getPreviousControllerName(){
-			return $this->_previousHandlerName;
+			return $this->_previousControllerName;
 		}
 
 		/**

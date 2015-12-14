@@ -32,8 +32,8 @@ namespace ManaPHP\Mvc {
 		public function __construct(){
 			parent::__construct();
 
-			$this->_handlerSuffix ='Controller';
-			$this->_defaultHandler ='Index';
+			$this->_controllerSuffix ='Controller';
+			$this->_defaultController ='Index';
 			$this->_defaultAction='index';
 		}
 
