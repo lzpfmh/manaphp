@@ -78,4 +78,15 @@ class DiTest extends TestCase{
         $this->assertEquals(100,$this->_di->get('getComponent1',[100])->value);
         $this->assertEquals(50,$this->_di->get('getComponent2',[50])->value);
     }
+
+    public function test_remove(){
+        $this->_di->set('removeService',function(){
+            return new stdClass();
+        });
+
+        $this->assertTrue($this->_di->has('removeService'));
+
+        $this->_di->remove('removeService');
+        $this->assertFalse($this->_di->has('removeService'));
+    }
 }
