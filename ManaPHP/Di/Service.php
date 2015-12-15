@@ -75,7 +75,8 @@ namespace ManaPHP\Di {
             if(is_string($definition)){
                 if(class_exists($definition)){
                     if(is_array($parameters)){
-                        $instance =new $definition($parameters);
+						$reflection=new \ReflectionClass($definition);
+						$instance=$reflection->newInstanceArgs($parameters);
                     }else{
                         $instance =new $definition();
                     }
