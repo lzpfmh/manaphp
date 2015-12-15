@@ -106,25 +106,10 @@ namespace ManaPHP {
 
 
 		/**
-		 * Set the default dependency injection container to be obtained into static methods
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 */
-		public static function setDefault($dependencyInjector);
-
-
-		/**
 		 * Return the last DI created
 		 *
 		 * @return static
 		 */
 		public static function getDefault();
-
-
-		/**
-		 * Resets the internal default DI
-		 */
-		public static function reset();
-
 	}
 }

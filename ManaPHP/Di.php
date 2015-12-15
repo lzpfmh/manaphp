@@ -231,30 +231,12 @@ namespace ManaPHP {
 
 
 		/**
-		 * Set a default dependency injection container to be obtained into static methods
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 */
-		public static function setDefault($dependencyInjector){
-			self::$_default =$dependencyInjector;
-		}
-
-
-		/**
 		 * Return the latest DI created
 		 *
 		 * @return static
 		 */
 		public static function getDefault(){
 			return self::$_default;
-		}
-
-
-		/**
-		 * Resets the internal default DI
-		 */
-		public static function reset(){
-			unset(self::$_default);
 		}
 
 

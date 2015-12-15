@@ -95,4 +95,20 @@ class DiTest extends TestCase{
         $this->assertEquals(100,$this->_di->get('getComponent1',[100])->value);
         $this->assertEquals(50,$this->_di->get('getComponent2',[50])->value);
     }
+
+    public function testGetServices(){
+        $di=new ManaPHP\Di();
+        $di->set('getService1',function(){
+            return new stdClass();
+        });
+
+        $di->set('getService2',function(){
+            return new stdClass();
+        });
+
+        $services=$di->getServices();
+
+        $this->assertArrayHasKey('getService1',$services);
+        $this->assertArrayHasKey('getService2',$services);
+    }
 }
