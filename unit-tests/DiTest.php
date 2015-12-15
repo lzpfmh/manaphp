@@ -40,24 +40,7 @@ class DiTest extends TestCase{
         });
         $this->assertInstanceOf('ManaPHP\Http\Request',$this->_di->get('set_request2'));
     }
-
-    public function test_attempt(){
-        $this->_di->set('attempt_request4', function(){
-            return new \ManaPHP\Http\Request();
-        });
-
-        $this->_di->attempt('attempt_request4',function(){
-            return new stdClass();
-        });
-
-        $this->_di->attempt('attempt_request5',function(){
-            return new stdClass();
-        });
-        $this->assertInstanceOf('ManaPHP\Http\Request',$this->_di->get('attempt_request4'));
-
-        $this->assertInstanceOf('stdClass',$this->_di->get('attempt_request5'));
-    }
-
+    
     public function test_has(){
         $this->_di->set('has_request',function(){
             return new ManaPHP\Http\Request();

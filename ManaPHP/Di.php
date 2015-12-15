@@ -93,25 +93,6 @@ namespace ManaPHP {
 
 
 		/**
-		 * Attempts to register a service in the services container
-		 * Only is successful if a service hasn't been registered previously
-		 * with the same name
-		 *
-		 * @param string $name
-		 * @param mixed $definition
-		 * @param boolean $shared
-		 * @return \ManaPHP\Di\ServiceInterface
-		 */
-		public function attempt($name, $definition, $shared = false){
-			if($this->has($name)){
-				return false;
-			}else{
-				return $this->set($name,$definition,$shared);
-			}
-		}
-
-
-		/**
 		 * Removes a service in the services container
 		 *
 		 * @param string $name
@@ -120,7 +101,6 @@ namespace ManaPHP {
 			unset($this->_services[$name]);
 			unset($this->_sharedInstances[$name]);
 		}
-
 
 
 		/**
@@ -137,7 +117,6 @@ namespace ManaPHP {
 				throw new Exception("Service '" . $name . "' wasn't found in the dependency injection container");
 			}
 		}
-
 
 
 		/**

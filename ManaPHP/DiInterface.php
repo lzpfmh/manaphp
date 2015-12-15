@@ -30,19 +30,6 @@ namespace ManaPHP {
 
 
 		/**
-		 * Attempts to register a service in the services container
-		 * Only is successful if a service hasn't been registered previously
-		 * with the same name
-		 *
-		 * @param string $name
-		 * @param mixed $definition
-		 * @param boolean $shared
-		 * @return \ManaPHP\Di\ServiceInterface
-		 */
-		public function attempt($name, $definition, $shared = false);
-
-
-		/**
 		 * Removes a service from the service container
 		 *
 		 * @param string $name
