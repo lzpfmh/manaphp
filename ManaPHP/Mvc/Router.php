@@ -140,10 +140,10 @@ namespace ManaPHP\Mvc {
 			$this->_routes=[];
 
 			if($defaultRoutes){
-				$this->_routes[]=new Route('/');
-				$this->_routes[]=new Route('/:controller');
-				$this->_routes[]=new Route('/:controller/:action');
-				$this->_routes[]=new Route('/:controller/:action:/:params');
+				$this->_routes[]=new Route('/?');
+				$this->_routes[]=new Route('/:controller/?');
+				$this->_routes[]=new Route('/:controller/:action/?');
+				$this->_routes[]=new Route('/:controller/:action/:params');
 			}
 		}
 

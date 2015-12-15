@@ -25,10 +25,10 @@ class MvcRouterTest extends TestCase{
                 'params' => array()
             ),
             array(
-                'uri' => '/documentation/index/hellao/aaadpqñda/bbbAdld/cc-ccc',
+                'uri' => '/documentation/index/hello/ñda/dld/cc-ccc',
                 'controller' => 'documentation',
                 'action' => 'index',
-                'params' => array('hellao', 'aaadpqñda', 'bbbAdld', 'cc-ccc')
+                'params' => array('hello', 'ñda', 'dld', 'cc-ccc')
             ),
             array(
                 'uri' => '/documentation/index/',
@@ -55,10 +55,10 @@ class MvcRouterTest extends TestCase{
                 'params' => array()
             ),
             array(
-                'uri' => '/system/admin/a/edit/hellao/aaadp',
+                'uri' => '/system/admin/a/edit/hello/adp',
                 'controller' => 'admin',
                 'action' => 'edit',
-                'params' => array('hellao', 'aaadp')
+                'params' => array('hello', 'adp')
             ),
             array(
                 'uri' => '/es/news',
@@ -97,10 +97,10 @@ class MvcRouterTest extends TestCase{
                 'params' => array('year' => '1999', 'title' => 'le-nice-title')
             ),
             array(
-                'uri' => '/feed/fr/blog/diaporema.json',
+                'uri' => '/feed/fr/blog/ema.json',
                 'controller' => 'feed',
                 'action' => 'get',
-                'params' => array('lang' => 'fr', 'blog' => 'diaporema', 'type' => 'json')
+                'params' => array('lang' => 'fr', 'blog' => 'ema', 'type' => 'json')
             ),
             array(
                 'uri' => '/posts/delete/150',

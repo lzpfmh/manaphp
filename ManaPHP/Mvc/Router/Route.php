@@ -75,7 +75,7 @@ namespace ManaPHP\Mvc\Router {
 				$pattern=str_replace('/:controller','/{controller:[\w-]+}',$pattern);
 				$pattern =str_replace('/:namespace','/{namespace:[\w-]+}',$pattern);
 				$pattern =str_replace('/:action','/{action:[\w-]+}',$pattern);
-				$pattern=str_replace('/:params','/{params}',$pattern);
+				$pattern=str_replace('/:params','/{params:.+}',$pattern);
 				$pattern=str_replace('/:int','/(\d+)',$pattern);
 			}
 
@@ -160,7 +160,7 @@ namespace ManaPHP\Mvc\Router {
 							throw new Exception('-- invalid part: '.$controllerName);
 						}else{
 							// Always pass the controller to lowercase
-							$routePaths['controller']='todo';
+							$routePaths['controller']=self::_uncamelize($controllerName);
 						}
 					}
 
@@ -179,6 +179,18 @@ namespace ManaPHP\Mvc\Router {
 			return $routePaths;
 		}
 
+		static protected function _uncamelize($str){
+			$first=true;
+			$str =preg_replace_callback('/([A-Z])/',function($matches) use(&$first){
+				if($first){
+					$first =false;
+					return strtolower($matches[1]);
+				}else{
+					return '_'.strtolower($matches[1]);
+				}
+			},$str);
+			return $str;
+		}
 		/**
 		 * Sets a callback that is called if the route is matched.
 		 * The developer can implement any arbitrary conditions here
