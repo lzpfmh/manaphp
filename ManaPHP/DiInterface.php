@@ -6,7 +6,7 @@ namespace ManaPHP {
 	 * ManaPHP\DiInterface initializer
 	 */
 
-	interface DiInterface extends \ArrayAccess {
+	interface DiInterface {
 
 		/**
 		 * Registers a service in the service container
@@ -59,15 +59,6 @@ namespace ManaPHP {
 
 
 		/**
-		 * Returns the corresponding \ManaPHP\Di\Service instance for a service
-		 *
-		 * @param string $name
-		 * @return \ManaPHP\Di\ServiceInterface
-		 */
-		public function getService($name);
-
-
-		/**
 		 * Check whether the DI contains a service by a name
 		 *
 		 * @param string $name
@@ -82,14 +73,6 @@ namespace ManaPHP {
 		 * @return boolean
 		 */
 		public function wasFreshInstance();
-
-
-		/**
-		 * Return the services registered in the DI
-		 *
-		 * @return array
-		 */
-		public function getServices();
 
 
 		/**

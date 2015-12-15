@@ -104,22 +104,6 @@ namespace ManaPHP {
 
 
 		/**
-		 * Returns a \ManaPHP\Di\Service instance
-		 *
-		 * @param string $name
-		 * @return \ManaPHP\Di\ServiceInterface
-		 * @throws \ManaPHP\Di\Exception
-		 */
-		public function getService($name){
-			if(isset($this->_services[$name])){
-				return $this->_services[$name];
-			}else{
-				throw new Exception("Service '" . $name . "' wasn't found in the dependency injection container");
-			}
-		}
-
-
-		/**
 		 * Resolves the service based on its configuration
 		 *
 		 * @param string $name
@@ -200,16 +184,6 @@ namespace ManaPHP {
 
 
 		/**
-		 * Return the services registered in the DI
-		 *
-		 * @return \ManaPHP\Di\Service[]
-		 */
-		public function getServices(){
-			return $this->_services;
-		}
-
-
-		/**
 		 * Return the latest DI created
 		 *
 		 * @return static
@@ -229,62 +203,7 @@ namespace ManaPHP {
 		public function setShared($name, $definition){
 			return $this->_services[$name] =new Service($name, $definition, true);
 		}
-		/**
-		 * Check if a service is registered using the array syntax.
-		 * Alias for \ManaPHP\Di::has()
-		 *
-		 * @param string $name
-		 * @return boolean
-		 */
-		public function offsetExists($name){
-			return $this->has($name);
-		}
-
-
-		/**
-		 * Allows to register a shared service using the array syntax.
-		 * Alias for \ManaPHP\Di::setShared()
-		 *
-		 *<code>
-		 *	$di['request'] = new \ManaPHP\Http\Request();
-		 *</code>
-		 *
-		 * @param string $name
-		 * @param callable|string $definition
-		 * @return void
-		 */
-		public function offsetSet($name, $definition){
-			$this->setShared($name,$definition);
-		}
-
-
-		/**
-		 * Allows to obtain a shared service using the array syntax.
-		 * Alias for \ManaPHP\Di::getShared()
-		 *
-		 *<code>
-		 *	var_dump($di['request']);
-		 *</code>
-		 *
-		 * @param string $name
-		 * @return mixed
-		 * @throws \ManaPHP\Di\Exception
-		 */
-		public function offsetGet($name){
-			return $this->getShared($name);
-		}
-
-
-		/**
-		 * Removes a service from the services container using the array syntax.
-		 * Alias for \ManaPHP\Di::remove()
-		 *
-		 * @param string $name
-		 */
-		public function offsetUnset($name){
-			$this->remove($name);
-		}
-
+		
 
 		/**
 		 * Magic method to get or set services using setters/getters
