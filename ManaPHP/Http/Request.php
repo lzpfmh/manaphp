@@ -45,9 +45,6 @@ namespace ManaPHP\Http {
 		protected $_files;
 
 		public function __construct(){
-			if($this->isPut()){
-				parse_str($this->getRawBody(),$this->_putCache);
-			}
 		}
 		/**
 		 * Sets the dependency injector
@@ -193,6 +190,10 @@ namespace ManaPHP\Http {
 		 * @throws \ManaPHP\Http\Request\Exception
 		 */
 		public function getPut($name=null, $filters=null, $defaultValue=null, $notAllowEmpty=false){
+			if($this->_putCache ===null &&$this->isPut()){
+				parse_str($this->getRawBody(),$this->_putCache);
+			}
+
 			return $this->_getHelper($this->_putCache,$name,$filters,$defaultValue,$notAllowEmpty);
 		}
 
@@ -263,6 +264,10 @@ namespace ManaPHP\Http {
 		 * @return boolean
 		 */
 		public function hasPut($name){
+			if($this->_putCache ===null &&$this->isPut()){
+				parse_str($this->getRawBody(),$this->_putCache);
+			}
+
 			return isset($this->_putCache[$name]);
 		}
 
