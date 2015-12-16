@@ -352,6 +352,7 @@ class MvcRouterTest extends TestCase{
 
         foreach ($routes as $route => $paths) {
             $router->handle($route);
+            /** @noinspection DisconnectedForeachInstructionInspection */
             $this->assertTrue($router->wasMatched());
             $this->assertEquals($paths['controller'], $router->getControllerName());
             $this->assertEquals($paths['action'], $router->getActionName());
@@ -403,6 +404,7 @@ class MvcRouterTest extends TestCase{
 
         foreach ($routes as $route => $paths) {
             $router->handle($route);
+            /** @noinspection DisconnectedForeachInstructionInspection */
             $this->assertTrue($router->wasMatched());
             $this->assertEquals($paths['module'], $router->getModuleName());
             $this->assertEquals($paths['controller'], $router->getControllerName());
