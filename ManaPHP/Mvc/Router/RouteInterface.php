@@ -33,14 +33,6 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		public function getPaths();
 
-
-		/**
-		 * Returns the HTTP methods that constraint matching the route
-		 *
-		 * @return string|array
-		 */
-		public function getHttpMethods();
-
 		/**
 		 * @param string $handle_uri
 		 * @param array $matches

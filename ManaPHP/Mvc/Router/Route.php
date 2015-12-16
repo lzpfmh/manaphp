@@ -55,7 +55,7 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		public function __construct($pattern, $paths=null, $httpMethods=null){
 			$this->_pattern=$pattern;
-			$this->_compiledPattern =$this->compilePattern($pattern);
+			$this->_compiledPattern =$this->_compilePattern($pattern);
 			$this->_paths =self::getRoutePaths($paths);
 
 			$this->_methods =$httpMethods;
@@ -68,7 +68,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @return string
 		 */
-		public function compilePattern($pattern){
+		protected function _compilePattern($pattern){
 			// If a pattern contains ':', maybe there are placeholders to replace
 			if(strpos($pattern,':') !==false){
 				$pattern =str_replace('/:module','/{module:[\w-]+}',$pattern);
@@ -80,7 +80,7 @@ namespace ManaPHP\Mvc\Router {
 			}
 
 			if(strpos($pattern,'{') !==false){
-				$pattern=$this->extractNamedParams($pattern);
+				$pattern=$this->_extractNamedParams($pattern);
 			}
 
 			if(strpos($pattern,'(') !==false ||strpos($pattern,'[') !==false){
@@ -95,7 +95,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @param string $pattern
 		 * @return string
 		 */
-		public function extractNamedParams($pattern){
+		protected function _extractNamedParams($pattern){
 			if(strpos($pattern,'{') ===false){
 				return $pattern;
 			}
@@ -212,16 +212,6 @@ namespace ManaPHP\Mvc\Router {
 
 
 		/**
-		 * Returns the 'before match' callback if any
-		 *
-		 * @return mixed
-		 */
-		public function getBeforeMatch(){
-			return $this->_beforeMatch;
-		}
-
-
-		/**
 		 * Returns the paths
 		 *
 		 * @return array
@@ -249,15 +239,6 @@ namespace ManaPHP\Mvc\Router {
 
 
 		/**
-		 * Returns the HTTP methods that constraint matching the route
-		 *
-		 * @return string|array
-		 */
-		public function getHttpMethods(){
-			return $this->_methods;
-		}
-
-		/**
 		 * Sets the group associated with the route
 		 *
 		 * @param \ManaPHP\Mvc\Router\Group $group
@@ -277,14 +258,13 @@ namespace ManaPHP\Mvc\Router {
 		public function isMatched($handle_uri, &$matches){
 			$matches =null;
 
-			$methods =$this->getHttpMethods();
-			if($methods !==null){
-				if(is_string($methods)){
-					if($methods !==$_SERVER['REQUEST_METHOD']){
+			if($this->_methods !==null){
+				if(is_string($this->_methods)){
+					if($this->_methods !==$_SERVER['REQUEST_METHOD']){
 						return false;
 					}
 				}else{
-					if(!in_array($_SERVER['REQUEST_METHOD'],$methods,true)){
+					if(!in_array($_SERVER['REQUEST_METHOD'],$this->_methods,true)){
 						return false;
 					}
 				}
@@ -302,13 +282,12 @@ namespace ManaPHP\Mvc\Router {
 			}
 
 			if($is_matched){
-				$beforeMatch=$this->getBeforeMatch();
-				if($beforeMatch !==null){
-					if(!is_callable($beforeMatch)) {
+				if($this->_beforeMatch !==null){
+					if(!is_callable($this->_beforeMatch)) {
 						throw new Exception('Before-Match callback is not callable in matched route');
 					}
 
-					$is_matched=call_user_func_array($this->getBeforeMatch(),[$handle_uri, $this]);
+					$is_matched=call_user_func_array($this->_beforeMatch,[$handle_uri, $this]);
 				}
 			}
 
