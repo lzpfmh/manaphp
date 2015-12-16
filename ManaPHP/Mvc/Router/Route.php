@@ -32,7 +32,7 @@ namespace ManaPHP\Mvc\Router {
 		/**
 		 * @var array|null|string
 		 */
-		protected $_methods;
+		protected $_httpMethods;
 
 
 		/**
@@ -58,7 +58,7 @@ namespace ManaPHP\Mvc\Router {
 			$this->_compiledPattern =$this->_compilePattern($pattern);
 			$this->_paths =self::getRoutePaths($paths);
 
-			$this->_methods =$httpMethods;
+			$this->_httpMethods =$httpMethods;
 		}
 
 
@@ -233,7 +233,7 @@ namespace ManaPHP\Mvc\Router {
 		 * @return static
 		 */
 		public function setHttpMethods($httpMethods){
-			$this->_methods =$httpMethods;
+			$this->_httpMethods =$httpMethods;
 			return $this;
 		}
 
@@ -258,13 +258,13 @@ namespace ManaPHP\Mvc\Router {
 		public function isMatched($handle_uri, &$matches){
 			$matches =null;
 
-			if($this->_methods !==null){
-				if(is_string($this->_methods)){
-					if($this->_methods !==$_SERVER['REQUEST_METHOD']){
+			if($this->_httpMethods !==null){
+				if(is_string($this->_httpMethods)){
+					if($this->_httpMethods !==$_SERVER['REQUEST_METHOD']){
 						return false;
 					}
 				}else{
-					if(!in_array($_SERVER['REQUEST_METHOD'],$this->_methods,true)){
+					if(!in_array($_SERVER['REQUEST_METHOD'],$this->_httpMethods,true)){
 						return false;
 					}
 				}
