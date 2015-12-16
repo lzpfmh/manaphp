@@ -173,9 +173,7 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		protected function _addRoute($pattern, $paths=null, $httpMethods=null){
 			$route =new Route($this->_prefix.$pattern,is_array($paths)?array_merge($this->_paths,$paths):$this->_paths, $httpMethods);
-			$route->setGroup($this);
 			$this->_routes[]=$route;
-
 			return $route;
 		}
 

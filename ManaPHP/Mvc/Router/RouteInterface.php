@@ -18,13 +18,6 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		public function beforeMatch($callback);
 
-		/**
-		 * Sets a set of HTTP methods that constraint the matching of the route
-		 *
-		 * @param string|array $httpMethods
-		 */
-		public function setHttpMethods($httpMethods);
-
 
 		/**
 		 * Returns the paths

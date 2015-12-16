@@ -40,10 +40,6 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		protected $_beforeMatch;
 
-		/**
-		 * @var \ManaPHP\Mvc\Router\GroupInterface
-		 */
-		protected $_group;
 
 		/**
 		 * \ManaPHP\Mvc\Router\Route constructor
@@ -220,34 +216,6 @@ namespace ManaPHP\Mvc\Router {
 			return $this->_paths;
 		}
 
-
-		/**
-		 * Sets a set of HTTP methods that constraint the matching of the route (alias of via)
-		 *
-		 *<code>
-		 * $route->setHttpMethods('GET');
-		 * $route->setHttpMethods(array('GET', 'POST'));
-		 *</code>
-		 *
-		 * @param string|array $httpMethods
-		 * @return static
-		 */
-		public function setHttpMethods($httpMethods){
-			$this->_httpMethods =$httpMethods;
-			return $this;
-		}
-
-
-		/**
-		 * Sets the group associated with the route
-		 *
-		 * @param \ManaPHP\Mvc\Router\Group $group
-		 * @return static
-		 */
-		public function setGroup($group){
-			$this->_group=$group;
-			return $this;
-		}
 
 		/**
 		 * @param string $handle_uri
