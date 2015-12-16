@@ -348,10 +348,6 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Router\Exception
 		 */
 		public function handle($uri=null){
-			/**
-			 *  @var $request \ManaPHP\Http\RequestInterface
-			 */
-
 			$uri=($uri===null||$uri==='')?$this->getRewriteUri():$uri;
 
 			if($this->_removeExtraSlashes && $uri !=='/'){
