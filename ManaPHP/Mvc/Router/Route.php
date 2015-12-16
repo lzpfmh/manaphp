@@ -115,7 +115,7 @@ namespace ManaPHP\Mvc\Router {
 				foreach($matches as $match){
 
 					if(strpos($match[0],':') ===false){
-						$pattern=str_replace($match[0],'(?<'.$match[1].'>[\w_]+)',$pattern);
+						$pattern=str_replace($match[0],'(?<'.$match[1].'>[\w-]+)',$pattern);
 					}else{
 						$parts =explode(':',$match[1]);
 						$pattern =str_replace($match[0],'(?<'.$parts[0].'>'.$parts[1].')',$pattern);

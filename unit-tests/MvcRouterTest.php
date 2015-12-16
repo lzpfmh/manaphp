@@ -182,4 +182,151 @@ class MvcRouterTest extends TestCase{
             $this->assertEquals($router->getParams(), $test['params'], 'Testing ' . $test['uri']);
         }
     }
+
+    public function test_add(){
+        $tests = array(
+            array(
+                'method' => null,
+                'uri' => '/documentation/index/hello',
+                'controller' => 'documentation',
+                'action' => 'index',
+                'params' => array('hello')
+            ),
+            array(
+                'method' => 'POST',
+                'uri' => '/docs/index',
+                'controller' => 'documentation3',
+                'action' => 'index',
+                'params' => array()
+            ),
+            array(
+                'method' => 'GET',
+                'uri' => '/docs/index',
+                'controller' => 'documentation4',
+                'action' => 'index',
+                'params' => array()
+            ),
+            array(
+                'method' => 'PUT',
+                'uri' => '/docs/index',
+                'controller' => 'documentation5',
+                'action' => 'index',
+                'params' => array()
+            ),
+            array(
+                'method' => 'DELETE',
+                'uri' => '/docs/index',
+                'controller' => 'documentation6',
+                'action' => 'index',
+                'params' => array()
+            ),
+            array(
+                'method' => 'OPTIONS',
+                'uri' => '/docs/index',
+                'controller' => 'documentation7',
+                'action' => 'index',
+                'params' => array()
+            ),
+            array(
+                'method' => 'HEAD',
+                'uri' => '/docs/index',
+                'controller' => 'documentation8',
+                'action' => 'index',
+                'params' => array()
+            ),
+        );
+
+        $di = new ManaPHP\DI();
+
+        $di->set('request', function(){
+            return new ManaPHP\Http\Request();
+        });
+
+        $router = new ManaPHP\Mvc\Router();
+        $router->setDI($di);
+
+        $router->add('/docs/index', array(
+            'controller' => 'documentation2',
+            'action' => 'index'
+        ));
+
+        $router->addPost('/docs/index', array(
+            'controller' => 'documentation3',
+            'action' => 'index'
+        ));
+
+        $router->addGet('/docs/index', array(
+            'controller' => 'documentation4',
+            'action' => 'index'
+        ));
+
+        $router->addPut('/docs/index', array(
+            'controller' => 'documentation5',
+            'action' => 'index'
+        ));
+
+        $router->addDelete('/docs/index', array(
+            'controller' => 'documentation6',
+            'action' => 'index'
+        ));
+
+        $router->addOptions('/docs/index', array(
+            'controller' => 'documentation7',
+            'action' => 'index'
+        ));
+
+        $router->addHead('/docs/index', array(
+            'controller' => 'documentation8',
+            'action' => 'index'
+        ));
+
+        foreach ($tests as $n => $test) {
+            $_SERVER['REQUEST_METHOD'] = $test['method'];
+            $router->handle($test['uri']);
+            $this->assertEquals($router->getControllerName(), $test['controller'], 'Testing ' . $test['uri']);
+            $this->assertEquals($router->getActionName(), $test['action'], 'Testing ' . $test['uri']);
+            $this->assertEquals($router->getParams(), $test['params'], 'Testing ' . $test['uri']);
+        }
+    }
+
+    public function test_params(){
+        $router = new ManaPHP\Mvc\Router(false);
+
+        $tests = array(
+            array(
+                'method' => null,
+                'uri' => '/some/hattie',
+                'controller' => 'c',
+                'action' => 'a',
+                'params' => array('name' => 'hattie')
+            ),
+            array(
+                'method' => null,
+                'uri' => '/some/hattie/100',
+                'controller' => 'c',
+                'action' => 'a',
+                'params' => array('name' => 'hattie', 'id' => 100)
+            ),
+            array(
+                'method' => null,
+                'uri' => '/some/hattie/100/2011-01-02',
+                'controller' => 'c',
+                'action' => 'a',
+                'params' => array('name' => 'hattie', 'id' => 100, 'date' => '2011-01-02')
+            ),
+        );
+
+        $router->add('/some/{name}',['controller'=>'c','action'=>'a']);
+        $router->add('/some/{name}/{id:[0-9]+}',['controller'=>'c','action'=>'a']);
+        $router->add('/some/{name}/{id:[0-9]+}/{date}',['controller'=>'c','action'=>'a']);
+
+        foreach ($tests as $n => $test) {
+            $_SERVER['REQUEST_METHOD'] = $test['method'];
+
+            $router->handle($test['uri']);
+            $this->assertEquals($test['controller'], $router->getControllerName(), 'Testing ' . $test['uri']);
+            $this->assertEquals($test['action'], $router->getActionName(), 'Testing ' . $test['uri']);
+            $this->assertEquals($test['params'],$router->getParams(), 'Testing ' . $test['uri']);
+        }
+    }
 }
