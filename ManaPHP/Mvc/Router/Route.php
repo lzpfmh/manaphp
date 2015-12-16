@@ -222,47 +222,12 @@ namespace ManaPHP\Mvc\Router {
 
 
 		/**
-		 * Returns the route's pattern
-		 *
-		 * @return string
-		 */
-		public function getPattern(){
-			return $this->_pattern;
-		}
-
-
-		/**
-		 * Returns the route's compiled pattern
-		 *
-		 * @return string
-		 */
-		public function getCompiledPattern(){
-			return $this->_compiledPattern;
-		}
-
-
-		/**
 		 * Returns the paths
 		 *
 		 * @return array
 		 */
 		public function getPaths(){
 			return $this->_paths;
-		}
-
-
-		/**
-		 * Returns the paths using positions as keys and names as values
-		 *
-		 * @return array
-		 */
-		public function getReversedPaths(){
-			$reversed=[];
-			foreach($this->_paths as $path=>$position){
-				$reversed[$position]=$path;
-			}
-
-			return $reversed;
 		}
 
 
@@ -325,17 +290,15 @@ namespace ManaPHP\Mvc\Router {
 				}
 			}
 
-			$pattern =$this->getCompiledPattern();
-
-			if(strpos($pattern,'^') !==false){
-				$r=preg_match($pattern,$handle_uri,$matches);
+			if(strpos($this->_compiledPattern,'^') !==false){
+				$r=preg_match($this->_compiledPattern,$handle_uri,$matches);
 				if($r ===false){
-					throw new Exception('--invalid PCRE: '.$pattern. ' for '. $this->getPattern());
+					throw new Exception('--invalid PCRE: '.$this->_compiledPattern. ' for '. $this->_pattern);
 				}
 
 				$is_matched =$r===1;
 			}else{
-				$is_matched =$pattern===$handle_uri;
+				$is_matched =$this->_compiledPattern===$handle_uri;
 			}
 
 			if($is_matched){

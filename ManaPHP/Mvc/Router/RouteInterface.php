@@ -25,12 +25,6 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		public function setHttpMethods($httpMethods);
 
-		/**
-		 * Returns the route's pattern
-		 *
-		 * @return string
-		 */
-		public function getPattern();
 
 		/**
 		 * Returns the paths
