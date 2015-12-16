@@ -329,4 +329,193 @@ class MvcRouterTest extends TestCase{
             $this->assertEquals($test['params'],$router->getParams(), 'Testing ' . $test['uri']);
         }
     }
+
+    public function test_removeExtraSlashes(){
+        $router = new ManaPHP\Mvc\Router();
+
+        $router->removeExtraSlashes(true);
+
+        $routes = array(
+            '/index/' => array(
+                'controller' => 'index',
+                'action' => '',
+            ),
+            '/session/start/' => array(
+                'controller' => 'session',
+                'action' => 'start'
+            ),
+            '/users/edit/100/' => array(
+                'controller' => 'users',
+                'action' => 'edit'
+            ),
+        );
+
+        foreach ($routes as $route => $paths) {
+            $router->handle($route);
+            $this->assertTrue($router->wasMatched());
+            $this->assertEquals($paths['controller'], $router->getControllerName());
+            $this->assertEquals($paths['action'], $router->getActionName());
+        }
+    }
+
+    public function test_mount(){
+        $router = new ManaPHP\Mvc\Router(false);
+
+        $blog = new ManaPHP\Mvc\Router\Group(array(
+            'module' => 'blog',
+            'controller' => 'index'
+        ));
+
+        $blog->setPrefix('/blog');
+
+        $blog->add('/save', array(
+            'action' => 'save'
+        ));
+
+        $blog->add('/edit/{id}', array(
+            'action' => 'edit'
+        ));
+
+        $blog->add('/about', array(
+            'controller' => 'about',
+            'action' => 'index'
+        ));
+
+        $router->mount($blog);
+
+        $routes = array(
+            '/blog/save' => array(
+                'module' => 'blog',
+                'controller' => 'index',
+                'action' => 'save',
+            ),
+            '/blog/edit/1' => array(
+                'module' => 'blog',
+                'controller' => 'index',
+                'action' => 'edit'
+            ),
+            '/blog/about' => array(
+                'module' => 'blog',
+                'controller' => 'about',
+                'action' => 'index'
+            ),
+        );
+
+        foreach ($routes as $route => $paths) {
+            $router->handle($route);
+            $this->assertTrue($router->wasMatched());
+            $this->assertEquals($paths['module'], $router->getModuleName());
+            $this->assertEquals($paths['controller'], $router->getControllerName());
+            $this->assertEquals($paths['action'], $router->getActionName());
+        }
+    }
+
+    public function test_shortPaths(){
+        $router = new ManaPHP\Mvc\Router(false);
+
+        $route = $router->add('/route0', 'Feed');
+        $this->assertEquals($route->getPaths(), array(
+            'controller' => 'feed'
+        ));
+
+        $route = $router->add('/route1', 'Feed::get');
+        $this->assertEquals($route->getPaths(), array(
+            'controller' => 'feed',
+            'action' => 'get',
+        ));
+
+        $route = $router->add('/route2', 'News::Posts::show');
+        $this->assertEquals($route->getPaths(), array(
+            'module' => 'News',
+            'controller' => 'posts',
+            'action' => 'show',
+        ));
+
+        $route = $router->add('/route3', 'MyApp\Controllers\Posts::show');
+        $this->assertEquals($route->getPaths(), array(
+            'namespace' => 'MyApp\Controllers',
+            'controller' => 'posts',
+            'action' => 'show',
+        ));
+
+        //incompatible with phalcon
+        $route = $router->add('/route3', 'MyApp\Controllers\::show');
+        $this->assertEquals($route->getPaths(), array(
+            'namespace' => 'MyApp\Controllers',
+            'controller' => '',
+            'action' => 'show',
+        ));
+
+        $route = $router->add('/route3', 'News::MyApp\Controllers\Posts::show');
+        $this->assertEquals($route->getPaths(), array(
+            'module' => 'News',
+            'namespace' => 'MyApp\Controllers',
+            'controller' => 'posts',
+            'action' => 'show',
+        ));
+
+        //incompatible with phalcon
+        $route = $router->add('/route3', '\Posts::show');
+        $this->assertEquals($route->getPaths(), array(
+            'namespace'=>'',
+            'controller' => 'posts',
+            'action' => 'show',
+        ));
+    }
+
+    public function test_getRewriteUri(){
+        $_GET['_url'] = '/some/route';
+
+        $router = new ManaPHP\Mvc\Router(false);
+
+        //default get from url
+        $this->assertEquals('/some/route',$router->getRewriteUri());
+
+        //explicitly get from url
+        $router->setUriSource(ManaPHP\Mvc\Router::URI_SOURCE_GET_URL);
+        $this->assertEquals('/some/route',$router->getRewriteUri());
+
+        //explicitly get from request uri without query string
+        $router->setUriSource(ManaPHP\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI);
+        $_SERVER['REQUEST_URI'] = '/some/route';
+        $this->assertEquals('/some/route',$router->getRewriteUri());
+
+        //explicitly get from request uri with query string
+        $_SERVER['REQUEST_URI'] = '/some/route?x=1';
+        $this->assertEquals('/some/route',$router->getRewriteUri());
+    }
+
+    public function test_beforeMatch(){
+        $trace = 0;
+
+        $router = new ManaPHP\Mvc\Router(false);
+
+        $router->add('/static/route',[])
+            ->beforeMatch(function() use (&$trace) {
+                $trace++;
+                return false;
+            });
+
+        $router
+            ->add('/static/route2',[])
+            ->beforeMatch(function() use (&$trace) {
+                $trace++;
+                return true;
+            });
+
+        try{
+            $router->handle();
+            $this->assertTrue(false,'why not?');
+        }catch (\ManaPHP\Exception $e){
+            $this->assertInstanceOf('\ManaPHP\Mvc\Router\Exception',$e);
+        }
+
+        $router->handle('/static/route');
+        $this->assertFalse($router->wasMatched());
+        $this->assertEquals(1,$trace);
+        $router->handle('/static/route2');
+        $this->assertTrue($router->wasMatched());
+
+        $this->assertEquals(2,$trace);
+    }
 }

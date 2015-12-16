@@ -45,7 +45,7 @@ namespace ManaPHP\Mvc\Router {
 	 *
 	 */
 	
-	class Group {
+	class Group implements GroupInterface {
 
 		/*
 		 * var string

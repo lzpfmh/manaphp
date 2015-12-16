@@ -157,7 +157,9 @@ namespace ManaPHP\Mvc\Router {
 
 					if(isset($controllerName)){
 						if(strpos($controllerName,'\\') !==false){
-							throw new Exception('-- invalid part: '.$controllerName);
+							$pos=strrpos($controllerName,'\\');
+							$routePaths['namespace']=substr($controllerName,0,$pos);
+							$routePaths['controller']=strtolower(substr($controllerName,$pos+1));
 						}else{
 							// Always pass the controller to lowercase
 							$routePaths['controller']=self::_uncamelize($controllerName);
@@ -299,16 +301,6 @@ namespace ManaPHP\Mvc\Router {
 		public function setGroup($group){
 			$this->_group=$group;
 			return $this;
-		}
-
-
-		/**
-		 * Returns the group associated with the route
-		 *
-		 * @return \ManaPHP\Mvc\Router\Group|null
-		 */
-		public function getGroup(){
-			return $this->_group;
 		}
 
 		/**
