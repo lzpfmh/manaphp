@@ -53,7 +53,6 @@ namespace ManaPHP\Mvc\Router {
 			$this->_pattern=$pattern;
 			$this->_compiledPattern =$this->_compilePattern($pattern);
 			$this->_paths =self::getRoutePaths($paths);
-
 			$this->_httpMethods =$httpMethods;
 		}
 

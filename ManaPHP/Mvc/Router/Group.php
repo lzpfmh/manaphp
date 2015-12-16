@@ -62,11 +62,6 @@ namespace ManaPHP\Mvc\Router {
 		 */
 		protected $_routes;
 
-		/**
-		 * @var string
-		 */
-		protected $_beforeMatch;
-
 
 		/**
 		 * \ManaPHP\Mvc\Router\Group constructor
@@ -93,44 +88,6 @@ namespace ManaPHP\Mvc\Router {
 
 
 		/**
-		 * Returns the common prefix for all the routes
-		 *
-		 * @return string
-		 */
-		public function getPrefix(){
-			return $this->_prefix;
-		}
-
-
-		/**
-		 * Set a before-match condition for the whole group,
-		 * The developer can implement any arbitrary conditions here
-		 * If the callback returns false the route is treated as not matched
-		 *
-		 * @param callable $beforeMatch
-		 * @return static
-		 * @throws \ManaPHP\Mvc\Router\Exception
-		 */
-		public function beforeMatch($beforeMatch){
-			if(!is_callable($beforeMatch)) {
-				throw new Exception('Before-Match callback is not callable');
-			}
-			$this->_beforeMatch =$beforeMatch;
-			return $this;
-		}
-
-
-		/**
-		 * Returns the before-match condition if any
-		 *
-		 * @return callable
-		 */
-		public function getBeforeMatch(){
-			return $this->_beforeMatch;
-		}
-
-
-		/**
 		 * Set common paths for all the routes in the group
 		 *
 		 * @param array $paths
@@ -139,16 +96,6 @@ namespace ManaPHP\Mvc\Router {
 		public function setPaths($paths){
 			$this->_paths =$paths;
 			return $this;
-		}
-
-
-		/**
-		 * Returns the common paths defined for this group
-		 *
-		 * @return array
-		 */
-		public function getPaths(){
-			return $this->_paths;
 		}
 
 

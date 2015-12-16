@@ -590,16 +590,7 @@ namespace ManaPHP\Mvc {
 		 * @return static
 		 */
 		public function mount($group){
-			$groupRoutes=$group->getRoutes();
-
-			$beforeMatch =$group->getBeforeMatch();
-			if($beforeMatch !==null){
-				foreach($groupRoutes as $route){
-					$route->beforeMatch($beforeMatch);
-				}
-			}
-
-			$this->_routes =array_merge($this->_routes,$groupRoutes);
+			$this->_routes =array_merge($this->_routes,$group->getRoutes());
 
 			return $this;
 		}

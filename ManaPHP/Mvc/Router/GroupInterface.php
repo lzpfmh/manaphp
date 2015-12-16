@@ -57,26 +57,6 @@ namespace ManaPHP\Mvc\Router{
          */
         public function setPrefix($prefix);
 
-        /**
-         * Returns the common prefix for all the routes
-         * @return string
-         */
-        public function getPrefix();
-
-        /**
-         * Sets a callback that is called if the route is matched.
-         * The developer can implement any arbitrary conditions here
-         * If the callback returns false the route is treated as not matched
-         * @param callable $beforeMatch
-         * @return static
-         */
-         public function beforeMatch($beforeMatch);
-
-        /**
-         * Returns the 'before match' callback if any
-         * return \ManaPHP\Mvc\Router\GroupInterface
-         */
-        public function getBeforeMatch();
 
         /**
          * Set common paths for all the routes in the group
@@ -86,11 +66,6 @@ namespace ManaPHP\Mvc\Router{
     */
         public function setPaths($paths);
 
-        /**
-         * Returns the common paths defined for this group
-         * @return array
-         */
-        public function getPaths();
 
         /**
          * Returns the routes added to the group
