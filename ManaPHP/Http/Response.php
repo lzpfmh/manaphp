@@ -100,6 +100,7 @@ namespace ManaPHP\Http {
 		 */
 		public function setStatusCode($code, $message){
 			$this->_status_line='HTTP/1.1 '.$code.' '.$message;
+			$this->setHeader('Status',$code.' '.$message);
 			return $this;
 		}
 
@@ -345,7 +346,7 @@ namespace ManaPHP\Http {
 		 * @return boolean
 		 */
 		public function isSent(){
-			$this->_sent;
+			return $this->_sent;
 		}
 
 

@@ -72,7 +72,7 @@ namespace ManaPHP\Http {
 		 * @param int $statusCode
 		 * @return static
 		 */
-		public function redirect($location, $externalRedirect=null, $statusCode=null);
+		public function redirect($location, $externalRedirect=false, $statusCode=302);
 
 
 		/**
