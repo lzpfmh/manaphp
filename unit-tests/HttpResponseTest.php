@@ -14,18 +14,6 @@ class tResponse extends \ManaPHP\Http\Response{
 }
 
 class HttpResponseTest extends TestCase{
-    public function test_setHeader(){
-        $response =new tResponse();
-
-        $response->setHeader('Content-Type','text/html');
-        $this->assertEquals(['Content-Type'=>'text/html'],$response->getHeaders()->toArray());
-
-        $response->setHeader('Content-Length','1234');
-        $this->assertEquals(['Content-Type'=>'text/html',
-                                'Content-Length'=>'1234'],
-                        $response->getHeaders()->toArray());
-    }
-
     public function test_setStatusCode(){
         $response =new tResponse();
 
@@ -41,11 +29,47 @@ class HttpResponseTest extends TestCase{
         $this->assertEquals(['Status'=>'409 Conflict'],$response->getHeaders()->toArray());
     }
 
+    public function test_setHeader(){
+        $response =new tResponse();
+
+        $response->setHeader('Content-Type','text/html');
+        $this->assertEquals(['Content-Type'=>'text/html'],$response->getHeaders()->toArray());
+
+        $response->setHeader('Content-Length','1234');
+        $this->assertEquals(['Content-Type'=>'text/html',
+            'Content-Length'=>'1234'],
+            $response->getHeaders()->toArray());
+    }
+
     public function test_setRawHeader(){
         $response =new tResponse();
 
-        $response->setRawHeader('HTTP/1.1 404 Not Found');
-        $this->assertEquals(['HTTP/1.1 404 Not Found'=>''],$response->getHeaders()->toArray());
+        $response->setRawHeader('Server: Apache');
+        $this->assertEquals(['Server: Apache'=>''],$response->getHeaders()->toArray());
+    }
+
+    public function test_setExpires(){
+        $response =new tResponse();
+
+        date_default_timezone_set('PRC');
+
+        $time=strtotime('2015-12-18 00:12:41');
+
+        $datetime=new DateTime();
+        $datetime->setTimestamp($time);
+        $response->setExpires($datetime);
+        $this->assertEquals(['Expires'=>'Thu, 17 Dec 2015 16:12:41 GMT'],$response->getHeaders()->toArray());
+
+        $response->setExpires(strtotime('2015-12-18 00:12:42'));
+        $this->assertEquals(['Expires'=>'Thu, 17 Dec 2015 16:12:42 GMT'],$response->getHeaders()->toArray());
+    }
+
+    public function test_setNotModified(){
+        $response =new tResponse();
+
+        $response->setNotModified();
+
+        $this->assertEquals(['Status'=>'304 Not modified'],$response->getHeaders()->toArray());
     }
 
     public function test_setContentType(){
@@ -56,14 +80,6 @@ class HttpResponseTest extends TestCase{
 
         $response->setContentType('application/json','utf-8');
         $this->assertEquals(['Content-Type'=>'application/json; charset=utf-8'],$response->getHeaders()->toArray());
-    }
-
-    public function test_setNotModified(){
-        $response =new tResponse();
-
-        $response->setNotModified();
-
-        $this->assertEquals(['Status'=>'304 Not modified'],$response->getHeaders()->toArray());
     }
 
     public function test_redirect(){
@@ -111,6 +127,16 @@ class HttpResponseTest extends TestCase{
         $this->assertEquals('<h1>Hello 2',$response->getContent());
     }
 
+    public function test_setJsonContent(){
+        $response =new tResponse();
+
+        $response->setJsonContent(['code'=>0,'message'=>'OK']);
+        $this->assertEquals(['code'=>0,'message'=>'OK'],json_decode($response->getContent(),true));
+
+        $response->setJsonContent(['code'=>0,'message'=>'OK','data'=>'http://www.manaphp.com/tags/中国'],JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        $this->assertEquals(['code'=>0,'message'=>'OK','data'=>'http://www.manaphp.com/tags/中国'],json_decode($response->getContent(),true));
+    }
+
     public function test_appendContent(){
         $response =new tResponse();
 
@@ -123,6 +149,12 @@ class HttpResponseTest extends TestCase{
         $this->assertEquals('<h1>Hello</h1>',$response->getContent());
     }
 
+    public function test_getContent(){
+        $response =new tResponse();
+
+        $response->setContent('Hello');
+        $this->assertEquals('Hello',$response->getContent());
+    }
     /**
      * @
      */

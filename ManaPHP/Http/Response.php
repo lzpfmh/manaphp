@@ -161,11 +161,17 @@ namespace ManaPHP\Http {
 		 *	$this->response->setExpires(new DateTime());
 		 *</code>
 		 *
-		 * @param \DateTime $datetime
+		 * @param int|\DateTime $datetime
 		 * @return static
 		 */
 		public function setExpires($datetime){
-			$date =clone($datetime);
+			if(is_int($datetime)){
+				$date=new \DateTime('now',new \DateTimeZone('UTC'));
+				$date->setTimestamp($datetime);
+			}else{
+				$date =clone($datetime);
+			}
+
 			$date->setTimezone(new \DateTimeZone('UTC'));
 			$this->setHeader('Expires',$date->format('D, d M Y H:i:s').' GMT');
 			return $this;

@@ -40,7 +40,7 @@ namespace ManaPHP\Http {
 		/**
 		 * Sets output expire time header
 		 *
-		 * @param \DateTime $datetime
+		 * @param int|\DateTime $datetime
 		 * @return static
 		 */
 		public function setExpires($datetime);
