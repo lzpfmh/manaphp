@@ -49,6 +49,10 @@ namespace ManaPHP\Http\Response {
 		 */
 		public function send(){
 			if(!headers_sent()){
+				if(isset($this->_headers['Status'])){
+					header('HTTP/1.1 '.$this->_headers['Status']);
+				}
+
 				foreach($this->_headers as $header=>$value){
 					if($value !==null){
 						header($header. ': '.$value,true);

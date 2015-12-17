@@ -11,10 +11,6 @@ class tResponse extends \ManaPHP\Http\Response{
     public function getHeaders(){
         return $this->_headers;
     }
-
-    public function getStatusLine(){
-        return $this->_status_line;
-    }
 }
 
 class HttpResponseTest extends TestCase{
@@ -35,7 +31,6 @@ class HttpResponseTest extends TestCase{
 
         //set only time
         $response->setStatusCode(404,'Not Found');
-        $this->assertEquals('HTTP/1.1 404 Not Found',$response->getStatusLine());
         $this->assertEquals(['Status'=>'404 Not Found'],$response->getHeaders()->toArray());
 
         //set multiple times
@@ -68,7 +63,6 @@ class HttpResponseTest extends TestCase{
 
         $response->setNotModified();
 
-        $this->assertEquals('HTTP/1.1 304 Not modified',$response->getStatusLine());
         $this->assertEquals(['Status'=>'304 Not modified'],$response->getHeaders()->toArray());
     }
 
@@ -77,7 +71,6 @@ class HttpResponseTest extends TestCase{
         $response->setDI(new ManaPHP\Di());
 
         $response->redirect('some/local/url');
-        $this->assertEquals('HTTP/1.1 302 Temporarily Moved',$response->getStatusLine());
         $this->assertEquals(['Status'=>'302 Temporarily Moved',
                         'Location'=>'some/local/url'],
                     $response->getHeaders()->toArray());
@@ -130,13 +123,16 @@ class HttpResponseTest extends TestCase{
         $this->assertEquals('<h1>Hello</h1>',$response->getContent());
     }
 
+    /**
+     * @
+     */
     public function test_setFileToSend(){
         $response =new tResponse();
 
         $response->setFileToSend(__FILE__);
         ob_start();
         $response->send();
-        $this->assertEquals(file_get_contents(__FILE__),ob_get_contents());
+        $this->assertEquals(file_get_contents(__FILE__),ob_get_clean());
         $this->assertTrue($response->isSent());
     }
 }

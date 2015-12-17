@@ -52,11 +52,6 @@ namespace ManaPHP\Http {
 		 */
 		protected $_dependencyInjector;
 
-		/**
-		 * @var string
-		 */
-		protected $_status_line;
-
 		public function __construct(){
 			$this->_headers =new Headers();
 		}
@@ -99,7 +94,6 @@ namespace ManaPHP\Http {
 		 * @throws
 		 */
 		public function setStatusCode($code, $message){
-			$this->_status_line='HTTP/1.1 '.$code.' '.$message;
 			$this->setHeader('Status',$code.' '.$message);
 			return $this;
 		}
@@ -356,10 +350,6 @@ namespace ManaPHP\Http {
 		 * @return static
 		 */
 		public function sendHeaders(){
-			if($this->_status_line !==null){
-				$this->setRawHeader($this->_status_line);
-			}
-
 			if(is_object($this->_headers)){
 				$this->_headers->send();
 			}
