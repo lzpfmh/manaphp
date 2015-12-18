@@ -252,4 +252,13 @@ class HttpRequestTest extends TestCase{
         $_SERVER['REQUEST_METHOD']='PATCH';
         $this->assertTrue($request->isPatch());
     }
+
+    public function test_getReferer(){
+        $request =new \ManaPHP\Http\Request();
+
+        $this->assertEquals('',$request->getReferer());
+
+        $_SERVER['HTTP_REFERER']='http://www.google.com/';
+        $this->assertEquals('http://www.google.com/',$request->getReferer());
+    }
 }

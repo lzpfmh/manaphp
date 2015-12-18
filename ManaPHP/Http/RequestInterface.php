@@ -241,6 +241,6 @@ namespace ManaPHP\Http {
 		 *
 		 * @return string
 		 */
-		public function getHTTPReferer();
+		public function getReferer();
 	}
 }

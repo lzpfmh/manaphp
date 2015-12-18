@@ -484,8 +484,18 @@ namespace ManaPHP\Http {
 		 *
 		 * @return string
 		 */
-		public function getHTTPReferer(){
+		public function getReferer(){
 			return isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'';
+		}
+
+		/**
+		 * Gets web page that refers active request. ie: http://www.google.com
+		 *
+		 * @return string
+		 * @deprecated
+		 */
+		public function getHTTPReferer(){
+			return $this->getReferer();
 		}
 	}
 }
