@@ -151,7 +151,6 @@ namespace ManaPHP\Http {
 
 		/**set the client address for getClientAddress method
 		 * @param string|callable
-		 * @return string
 		 */
 		public function setClientAddress($address);
 

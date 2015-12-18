@@ -358,7 +358,6 @@ namespace ManaPHP\Http {
 
 		/**set the client address for getClientAddress method
 		 * @param string|callable
-		 * @return string
 		 */
 		public function setClientAddress($address){
 			if(is_string($address)){
@@ -453,6 +452,22 @@ namespace ManaPHP\Http {
 		 * @return boolean
 		 */
 		public function hasFiles($onlySuccessful=false){
+			if(!is_array($_FILES)){
+				return 0;
+			}
+
+			$countFiles=0;
+			foreach($_FILES as $file){
+				$error =$file['error'];
+				if(!is_array($error)){
+					if($error==='' ||!$onlySuccessful){
+						$countFiles++;
+					}
+				}else{
+					$countFiles +=$this->_has
+				}
+
+			}
 			if($this->_files ===null){
 				$this->_getFilesHelper($onlySuccessful);
 			}
