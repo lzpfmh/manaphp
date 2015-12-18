@@ -132,13 +132,6 @@ namespace ManaPHP\Http {
 		 */
 		public function isAjax();
 
-		/**
-		 * Checks whether request has been made using any secure layer
-		 *
-		 * @return boolean
-		 */
-		public function isSecureRequest();
-
 
 		/**
 		 * Gets HTTP raw request body
@@ -151,11 +144,16 @@ namespace ManaPHP\Http {
 		/**
 		 * Gets most possibly client IPv4 Address. This methods search in $_SERVER['REMOTE_ADDR'] and optionally in $_SERVER['HTTP_X_FORWARDED_FOR']
 		 *
-		 * @param boolean $trustForwardedHeader
 		 * @return string
 		 */
-		public function getClientAddress($trustForwardedHeader=false);
+		public function getClientAddress();
 
+
+		/**set the client address for getClientAddress method
+		 * @param string|callable
+		 * @return string
+		 */
+		public function setClientAddress($address);
 
 		/**
 		 * Gets HTTP user agent used to made the request

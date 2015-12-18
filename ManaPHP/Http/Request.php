@@ -44,6 +44,11 @@ namespace ManaPHP\Http {
 		 */
 		protected $_files;
 
+		/**
+		 * @var string
+		 */
+		protected $_client_address;
+
 		public function __construct(){
 		}
 		/**
@@ -287,12 +292,17 @@ namespace ManaPHP\Http {
 		 * Gets HTTP schema (http/https)
 		 *
 		 * @return string
+		 * @throws \ManaPHP\Http\Request\Exception
 		 */
 		public function getScheme(){
-			if(isset($_SERVER['REQUEST_SCHEME'])){
-				return $_SERVER['REQUEST_SCHEME'];
+			if(!isset($_SERVER['HTTPS'])){
+				throw new Exception('HTTPS field not exists in $_SERVER');
+			}
+
+			if($_SERVER['HTTPS'] ==='on'){
+				return 'https';
 			}else{
-				return '';
+				return 'http';
 			}
 		}
 
@@ -304,16 +314,6 @@ namespace ManaPHP\Http {
 		 */
 		public function isAjax(){
 			return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
-		}
-
-
-		/**
-		 * Checks whether request has been made using any secure layer
-		 *
-		 * @return boolean
-		 */
-		public function isSecureRequest(){
-			return $this->getScheme()==='https';
 		}
 
 
@@ -334,34 +334,39 @@ namespace ManaPHP\Http {
 		/**
 		 * Gets most possible client IPv4 Address. This method search in $_SERVER['REMOTE_ADDR'] and optionally in $_SERVER['HTTP_X_FORWARDED_FOR']
 		 *
-		 * @param boolean $trustForwardedHeader
 		 * @return string
 		 */
-		public function getClientAddress($trustForwardedHeader=false){
-			$address =null;
-			if($trustForwardedHeader){
-				if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
-					$address=$_SERVER['HTTP_X_FORWARDED_FOR'];
-				}else{
-					$address=$_SERVER['HTTP_CLIENT_IP'];
-				}
+		public function getClientAddress(){
+			if($this->_client_address !==null){
+				return $this->_client_address;
 			}
 
-			if($address ===null){
-				$address =$_SERVER['REMOTE_ADDR'];
-			}
-
-			if(is_string($address)){
-				if(strpos($address,',') !==false){
-					return strstr($address,',',true);
-				}else{
-					return $address;
-				}
+			if(!isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+				return $_SERVER['REMOTE_ADDR'];
 			}else{
-				return false;
+				$client_address =$_SERVER['REMOTE_ADDR'];
+				if(strpos($client_address,'127.0.')===0
+					||strpos($client_address,'192.168.') ===0
+					||strpos($client_address,'10.') ===0){
+					return $_SERVER['HTTP_X_FORWARDED_FOR'];
+				}else{
+					return $_SERVER['REMOTE_ADDR'];
+				}
 			}
 		}
 
+
+		/**set the client address for getClientAddress method
+		 * @param string|callable
+		 * @return string
+		 */
+		public function setClientAddress($address){
+			if(is_string($address)){
+				$this->_client_address=$address;
+			}else{
+				$this->_client_address=$address();
+			}
+		}
 
 		/**
 		 * Gets HTTP user agent used to made the request
@@ -381,7 +386,6 @@ namespace ManaPHP\Http {
 		public function isPost(){
 			return $_SERVER['REQUEST_METHOD'] ==='POST';
 		}
-
 
 		/**
 		 * Checks whether HTTP method is GET. if $_SERVER['REQUEST_METHOD']=='GET'
