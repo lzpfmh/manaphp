@@ -9,6 +9,14 @@ namespace ManaPHP\Http\Request {
 	interface FileInterface {
 
 		/**
+		 * Returns the file key
+		 *
+		 * @return string
+		 */
+		public function getKey();
+
+
+		/**
 		 * Returns the file size of the uploaded file
 		 *
 		 * @return int
