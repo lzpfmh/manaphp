@@ -15,7 +15,7 @@ namespace ManaPHP\Http {
 
     class Session implements  SessionInterface {
 
-        public function __construct(){
+        public function __construct($options=null){
             session_start();
 
             $message=error_get_last()['message'];
