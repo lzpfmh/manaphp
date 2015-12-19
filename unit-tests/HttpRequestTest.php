@@ -388,7 +388,31 @@ class HttpRequestTest extends TestCase{
     }
 
     public function test_getUploadedFiles(){
+
         $request = new \ManaPHP\Http\Request();
+
+        $_FILES=array (
+            'fieldNameHere' =>
+                array (
+                    'name' => 'favicon.ico',
+                    'type' => 'image/x-icon',
+                    'tmp_name' => '/tmp/php7F4.tmp',
+                    'error' => 0,
+                    'size' => 202575,
+                ),
+        );
+
+        $files=$request->getUploadedFiles();
+        $this->assertCount(1,$files);
+
+        $file =$files[0];
+        $this->assertEquals('fieldNameHere',$file->getKey());
+        $this->assertEquals('favicon.ico',$file->getName());
+        $this->assertEquals('image/x-icon',$file->getType());
+        $this->assertEquals('/tmp/php7F4.tmp',$file->getTempName());
+        $this->assertEquals(0,$file->getError());
+        $this->assertEquals(202575,$file->getSize());
+        $this->assertEquals('ico',$file->getExtension());
 
         $_FILES = [
             'photo' => array(
