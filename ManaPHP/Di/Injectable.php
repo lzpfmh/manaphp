@@ -17,7 +17,7 @@ namespace ManaPHP\Di {
 	 //* @property \ManaPHP\FilterInterface $filter
 	 //* @property \ManaPHP\Flash\Direct $flash
 	 //* @property \ManaPHP\Flash\Session $flashSession
-	 //* @property \ManaPHP\Session\Adapter\Files|\ManaPHP\Session\Adapter|\ManaPHP\Session\AdapterInterface $session
+	 * @property \ManaPHP\Http\SessionInterface $session
 	 * @property \ManaPHP\Events\ManagerInterface $eventsManager
 	 * @property \ManaPHP\Db\AdapterInterface $db
 	 //* @property \ManaPHP\Security $security
