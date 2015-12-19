@@ -232,7 +232,7 @@ namespace ManaPHP\Http {
 		 * @param boolean $onlySuccessful
 		 * @return \ManaPHP\Http\Request\FileInterface[]
 		 */
-		public function getUploadedFiles($onlySuccessful=false);
+		public function getFiles($onlySuccessful=false);
 
 
 		/**

@@ -387,7 +387,7 @@ class HttpRequestTest extends TestCase{
         $this->assertEquals($request->hasFiles(true), 0);
     }
 
-    public function test_getUploadedFiles(){
+    public function test_getFiles(){
 
         $request = new \ManaPHP\Http\Request();
 
@@ -402,7 +402,7 @@ class HttpRequestTest extends TestCase{
                 ),
         );
 
-        $files=$request->getUploadedFiles();
+        $files=$request->getFiles();
         $this->assertCount(1,$files);
 
         $file =$files[0];
@@ -424,8 +424,8 @@ class HttpRequestTest extends TestCase{
             ),
         ];
 
-        $all =$request->getUploadedFiles(false);
-        $successful =$request->getUploadedFiles(true);
+        $all =$request->getFiles(false);
+        $successful =$request->getFiles(true);
         $this->assertCount(2,$all);
         $this->assertCount(1,$successful);
 

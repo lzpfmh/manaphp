@@ -477,7 +477,7 @@ namespace ManaPHP\Http {
 		 * @param boolean $onlySuccessful
 		 * @return \ManaPHP\Http\Request\File[]
 		 */
-		public function getUploadedFiles($onlySuccessful=null){
+		public function getFiles($onlySuccessful=false){
 			$files=[];
 
 			foreach($_FILES as $key=>$file){
@@ -508,6 +508,16 @@ namespace ManaPHP\Http {
 			return $files;
 		}
 
+		/**
+		 * Gets attached files as \ManaPHP\Http\Request\File instances
+		 *
+		 * @param boolean $onlySuccessful
+		 * @return \ManaPHP\Http\Request\File[]
+		 * @deprecated
+		 */
+		public function getUploadedFiles($onlySuccessful=false){
+			return $this->getFiles($onlySuccessful);
+		}
 
 		/**
 		 * Gets web page that refers active request. ie: http://www.google.com
