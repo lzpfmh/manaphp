@@ -390,51 +390,29 @@ class HttpRequestTest extends TestCase{
     public function test_getUploadedFiles(){
         $request = new \ManaPHP\Http\Request();
 
-        $_FILES = array (
+        $_FILES = [
             'photo' => array(
-                'name' => array(0 => 'f0', 1 => 'f1', 2 => array(0 => 'f2', 1 => 'f3'), 3 => array(0 => array(0 => array(0 => array(0 => 'f4'))))),
-                'type' => array(0 => 'text/plain', 1 => 'text/csv', 2 => array(0 => 'image/png', 1 => 'image/gif'), 3 => array(0 => array(0 => array(0 => array(0 => 'application/octet-stream'))))),
-                'tmp_name' => array(0 => 't0', 1 => 't1', 2 => array(0 => 't2', 1 => 't3'), 3 => array(0 => array(0 => array(0 => array(0 => 't4'))))),
-                'error' => array(0 => 0, 1 => 0, 2 => array(0 => 0, 1 => 0), 3 => array(0 => array(0 => array(0 => array(0 => 8))))),
-                'size' => array(0 => 10, 1 => 20, 2 => array(0 => 30, 1 => 40), 3 => array(0 => array(0 => array(0 => array(0 => 50))))),
+                'name' => [0 => 'f0', 1 => 'f1'],
+                'type' => [0 => 'text/plain', 1 => 'text/csv'],
+                'tmp_name' => [0 => 't0', 1 => 't1'],
+                'error' => [0 => 0, 1 => UPLOAD_ERR_NO_FILE ],
+                'size' => [0 => 10, 1 => 20],
             ),
-        );
+        ];
 
-        $all        = $request->getUploadedFiles(false);
-        $successful = $request->getUploadedFiles(true);
-
-        $this->assertCount(5,$all);
-        $this->assertCount(4,$successful);
-
-        for ($i=0; $i<=4; ++$i) {
-            $this->assertFalse($all[$i]->isUploadedFile());
-        }
-
-        $keys = array('photo.0', 'photo.1', 'photo.2.0', 'photo.2.1', 'photo.3.0.0.0.0');
-        for ($i=0; $i<=4; ++$i) {
-            $this->assertEquals($all[$i]->getKey(), $keys[$i]);
-        }
+        $all =$request->getUploadedFiles(false);
+        $successful =$request->getUploadedFiles(true);
+        $this->assertCount(2,$all);
+        $this->assertCount(1,$successful);
 
         $this->assertEquals($all[0]->getName(), 'f0');
         $this->assertEquals($all[1]->getName(), 'f1');
-        $this->assertEquals($all[2]->getName(), 'f2');
-        $this->assertEquals($all[3]->getName(), 'f3');
-        $this->assertEquals($all[4]->getName(), 'f4');
 
         $this->assertEquals($all[0]->getTempName(), 't0');
         $this->assertEquals($all[1]->getTempName(), 't1');
-        $this->assertEquals($all[2]->getTempName(), 't2');
-        $this->assertEquals($all[3]->getTempName(), 't3');
-        $this->assertEquals($all[4]->getTempName(), 't4');
 
         $this->assertEquals($successful[0]->getName(), 'f0');
-        $this->assertEquals($successful[1]->getName(), 'f1');
-        $this->assertEquals($successful[2]->getName(), 'f2');
-        $this->assertEquals($successful[3]->getName(), 'f3');
 
         $this->assertEquals($successful[0]->getTempName(), 't0');
-        $this->assertEquals($successful[1]->getTempName(), 't1');
-        $this->assertEquals($successful[2]->getTempName(), 't2');
-        $this->assertEquals($successful[3]->getTempName(), 't3');
     }
 }

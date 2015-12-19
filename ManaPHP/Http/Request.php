@@ -4,6 +4,7 @@ namespace ManaPHP\Http {
 
 	use \ManaPHP\Http\Request\Exception;
 	use \ManaPHP\Di\InjectionAwareInterface;
+	use ManaPHP\Http\Request\File;
 
 	/**
 	 * ManaPHP\Http\Request
@@ -38,11 +39,6 @@ namespace ManaPHP\Http {
 		 * @var array
 		 */
 		protected $_putCache=null;
-
-		/**
-		 * @var \ManaPHP\Http\Request\FileInterface[]
-		 */
-		protected $_files;
 
 		/**
 		 * @var string
@@ -448,36 +444,32 @@ namespace ManaPHP\Http {
 
 		/**
 		 * Checks whether request includes attached files
+		 * http://php.net/manual/en/features.file-upload.multiple.php
+		 *
 		 * @param boolean $onlySuccessful
 		 * @return boolean
 		 */
 		public function hasFiles($onlySuccessful=false){
-			if(!is_array($_FILES)){
-				return 0;
-			}
 
-			$countFiles=0;
 			foreach($_FILES as $file){
-				$error =$file['error'];
-				if(!is_array($error)){
-					if($error==='' ||!$onlySuccessful){
-						$countFiles++;
+				if(is_int($file['error'])){
+					$error =$file['error'];
+
+					if(!$onlySuccessful ||$error ===UPLOAD_ERR_OK){
+						return true;
 					}
 				}else{
-					$countFiles +=$this->_has
+					foreach($file['error'] as $error){
+						if(!$onlySuccessful ||$error ===UPLOAD_ERR_OK){
+							return true;
+						}
+					}
 				}
-
-			}
-			if($this->_files ===null){
-				$this->_getFilesHelper($onlySuccessful);
 			}
 
-			return count($this->_files)>1;
+			return false;
 		}
 
-		protected function _getFilesHelper($onlySuccessful){
-			throw new Exception('not support hasFiles and getUploadedFiles api '. $onlySuccessful);
-		}
 
 		/**
 		 * Gets attached files as \ManaPHP\Http\Request\File instances
@@ -486,11 +478,34 @@ namespace ManaPHP\Http {
 		 * @return \ManaPHP\Http\Request\File[]
 		 */
 		public function getUploadedFiles($onlySuccessful=null){
-			if($this->_files ===null){
-				$this->_getFilesHelper($onlySuccessful);
+			$files=[];
+
+			foreach($_FILES as $key=>$file){
+				if(is_int($file['error'])){
+					if(!$onlySuccessful ||$file['error'] ===UPLOAD_ERR_OK){
+						$files[]=new File($key,
+									['name'=>$file['name'],
+										'type'=>$file['type'],
+										'tmp_name'=>$file['tmp_name'],
+										'error'=>$file['error'],
+										'size'=>$file['size']]);
+					}
+				}else{
+					$countFiles=count($file['error']);
+					for($i =0; $i<$countFiles;$i++){
+						if(!$onlySuccessful ||$file['error'][$i] ===UPLOAD_ERR_OK){
+							$files[]=new File($key,
+								['name'=>$file['name'][$i],
+									'type'=>$file['type'][$i],
+									'tmp_name'=>$file['tmp_name'][$i],
+									'error'=>$file['error'][$i],
+									'size'=>$file['size'][$i]]);
+						}
+					}
+				}
 			}
 
-			return $this->_files;
+			return $files;
 		}
 
 

@@ -26,55 +26,26 @@ namespace ManaPHP\Http\Request {
 	 *</code>
 	 */
 	
-	class File extends \SplFileInfo implements FileInterface {
-
-		protected $_name;
-
-		protected $_tmp;
-
-		protected $_size;
-
-		protected $_type;
-
-		protected $_real_type;
-
-		protected $_error;
-
+	class File implements FileInterface {
+		/**
+		 * @var string
+		 */
 		protected $_key;
 
-		protected $_extension;
+		/**
+		 * @var array
+		 */
+		protected $_file;
 
 		/**
 		 * \ManaPHP\Http\Request\File constructor
 		 *
-		 * @param array $file
 		 * @param string $key
+         * @param array $file
 		 */
-		public function __construct($file, $key=null){
-			parent::__construct($file);
-
-			if(isset($file['name'])){
-				$this->_name =$file['name'];
-				$this->_extension =pathinfo($file['name'],PATHINFO_EXTENSION);
-			}
-
-			if(isset($file['tmp_name'])){
-				$this->_tmp =$file['tmp_name'];
-			}
-
-			if(isset($file['size'])){
-				$this->_size =$file['size'];
-			}
-
-			if(isset($file['type'])){
-				$this->_type =$file['type'];
-			}
-
-			if(isset($file['error'])){
-				$this->_error =$file['error'];
-			}
-
-			$this->_key =$key;
+		public function __construct($key, $file){
+            $this->_key =$key;
+            $this->_file=$file;
 		}
 
 
@@ -84,7 +55,7 @@ namespace ManaPHP\Http\Request {
 		 * @return int
 		 */
 		public function getSize(){
-			return $this->_size;
+			return $this->_file['size'];
 		}
 
 
@@ -94,7 +65,7 @@ namespace ManaPHP\Http\Request {
 		 * @return string
 		 */
 		public function getName(){
-			return $this->_name;
+			return $this->_file['name'];
 		}
 
 
@@ -104,7 +75,7 @@ namespace ManaPHP\Http\Request {
 		 * @return string
 		 */
 		public function getTempName(){
-			return $this->_tmp;
+			return $this->_file['tmp_name'];
 		}
 
 
@@ -115,7 +86,7 @@ namespace ManaPHP\Http\Request {
 		 * @return string
 		 */
 		public function getType(){
-			return $this->_type;
+			return $this->_file['type'];
 		}
 
 
@@ -130,7 +101,7 @@ namespace ManaPHP\Http\Request {
 				return '';
 			}
 
-			$mime =finfo_file($finfo,$this->_tmp);
+			$mime =finfo_file($finfo,$this->_file['tmp_name']);
 			finfo_close($finfo);
 
 			return $mime;
@@ -143,7 +114,7 @@ namespace ManaPHP\Http\Request {
 		 * @return string
 		 */
 		public function getError(){
-			return $this->_error;
+			return $this->_file['error'];
 		}
 
 
@@ -163,8 +134,7 @@ namespace ManaPHP\Http\Request {
 		 * @return boolean
 		 */
 		public function isUploadedFile(){
-
-			return is_string($this->_tmp) &&is_uploaded_file($this->_tmp);
+			return is_uploaded_file($this->_file['tmp_name']);
 		}
 
 
@@ -175,7 +145,7 @@ namespace ManaPHP\Http\Request {
 		 * @return boolean
 		 */
 		public function moveTo($destination){
-			return move_uploaded_file($this->_tmp ,$destination);
+			return move_uploaded_file($this->_file['tmp_name'] ,$destination);
 		}
 
 
@@ -185,8 +155,7 @@ namespace ManaPHP\Http\Request {
 		 * @return string
 		 */
 		public function getExtension(){
-			return $this->_extension;
+			return pathinfo($this->_file['name'],PATHINFO_EXTENSION);
 		}
-
 	}
 }
