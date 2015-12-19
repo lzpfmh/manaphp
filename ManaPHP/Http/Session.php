@@ -7,14 +7,21 @@
  */
 namespace ManaPHP\Http {
 
+    use ManaPHP\Http\Session\Exception;
+
     /**
      * ManaPHP\Http\Session\AdapterInterface initializer
      */
 
     class Session implements  SessionInterface {
 
-        public function _construct(){
+        public function __construct(){
             session_start();
+
+            $message=error_get_last()['message'];
+            if(strpos($message,'session_start():') ===0){
+                throw new Exception($message);
+            }
         }
 
         public function __destruct(){
@@ -30,7 +37,7 @@ namespace ManaPHP\Http {
          */
         public function get($name, $defaultValue=null){
             if(isset($_SESSION[$name])){
-                return $_SERVER[$name];
+                return $_SESSION[$name];
             }else{
                 return $defaultValue;
             }
@@ -73,9 +80,12 @@ namespace ManaPHP\Http {
          * Destroys the active session
          *
          * @return boolean
+         * @throws \ManaPHP\Http\Session\Exception
          */
         public function destroy(){
-            return session_destroy();
+            if(!session_destroy()){
+                throw new Exception(error_get_last()['message']);
+            }
         }
     }
 }
