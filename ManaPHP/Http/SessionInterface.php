@@ -9,77 +9,39 @@ namespace ManaPHP\Http\Session {
 	interface SessionInterface {
 
 		/**
-		 * Starts session, optionally using an adapter
-		 */
-		public function start();
-
-
-		/**
-		 * Sets session options
-		 *
-		 * @param array $options
-		 */
-		public function setOptions($options);
-
-
-		/**
-		 * Get internal options
-		 *
-		 * @return array
-		 */
-		public function getOptions();
-
-
-		/**
 		 * Gets a session variable from an application context
 		 *
-		 * @param string $index
+		 * @param string $name
 		 * @param mixed $defaultValue
 		 * @return mixed
 		 */
-		public function get($index, $defaultValue=null);
+		public function get($name, $defaultValue=null);
 
 
 		/**
 		 * Sets a session variable in an application context
 		 *
-		 * @param string $index
+		 * @param string $name
 		 * @param string $value
 		 */
-		public function set($index, $value);
+		public function set($name, $value);
 
 
 		/**
 		 * Check whether a session variable is set in an application context
 		 *
-		 * @param string $index
+		 * @param string $name
 		 * @return boolean
 		 */
-		public function has($index);
+		public function has($name);
 
 
 		/**
 		 * Removes a session variable from an application context
 		 *
-		 * @param string $index
+		 * @param string $name
 		 */
-		public function remove($index);
-
-
-		/**
-		 * Returns active session id
-		 *
-		 * @return string
-		 */
-		public function getId();
-
-
-		/**
-		 * Check whether the session has been started
-		 *
-		 * @return boolean
-		 */
-		public function isStarted();
+		public function remove($name);
 
 
 		/**
@@ -87,7 +49,6 @@ namespace ManaPHP\Http\Session {
 		 *
 		 * @return boolean
 		 */
-		public function destroy($session_id=null);
-
+		public function destroy();
 	}
 }
