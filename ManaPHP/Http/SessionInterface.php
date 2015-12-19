@@ -1,6 +1,6 @@
 <?php 
 
-namespace ManaPHP\Http\Session {
+namespace ManaPHP\Http {
 
 	/**
 	 * ManaPHP\Http\Session\AdapterInterface initializer
