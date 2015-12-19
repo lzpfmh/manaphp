@@ -6,7 +6,7 @@ namespace ManaPHP\Http {
 	 * ManaPHP\Http\Session\AdapterInterface initializer
 	 */
 	
-	interface SessionInterface {
+	interface SessionInterface extends \ArrayAccess {
 
 		/**
 		 * Gets a session variable from an application context

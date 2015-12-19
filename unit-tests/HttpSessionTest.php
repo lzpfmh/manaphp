@@ -12,14 +12,9 @@ class HttpSessionTest extends TestCase{
     public function setUp(){
         error_reporting(0);
     }
+
     public function test_get(){
-        try{
-            $session =new \ManaPHP\Http\Session();
-            $this->assertTrue(false,'why?');
-        }catch (\ManaPHP\Exception $e){
-            $this->assertInstanceOf('\ManaPHP\Http\Session\Exception',$e);
-            return;
-        }
+        $session =new \ManaPHP\Http\Session();
 
         $this->assertFalse($session->has('some'));
         $session->set('some','value');
@@ -27,6 +22,13 @@ class HttpSessionTest extends TestCase{
 
         $this->assertFalse($session->has('some2'));
         $this->assertEquals('v',$session->get('some2','v'));
+    }
+
+    public function test_offsetGet(){
+        $session =new \ManaPHP\Http\Session();
+
+        $session->set('some','value');
+        $this->assertEquals('value',$session['some']);
     }
 
     public function test_set(){
@@ -37,33 +39,40 @@ class HttpSessionTest extends TestCase{
         $this->assertEquals('value',$session->get('some'));
     }
 
+    public function test_offsetSet(){
+        $session =new \ManaPHP\Http\Session();
+
+        $this->assertFalse($session->has('some'));
+        $session['some']='value';
+        $this->assertEquals('value',$session->get('some'));
+    }
+
     public function test_has(){
-        try{
-            $session =new \ManaPHP\Http\Session();
-            $this->assertTrue(false,'why?');
-        }catch (\ManaPHP\Exception $e){
-            $this->assertInstanceOf('\ManaPHP\Http\Session\Exception',$e);
-            return;
-        }
+        $session =new \ManaPHP\Http\Session();
 
         $this->assertFalse($session->has('some'));
 
         $session->set('some','value');
         $this->assertTrue($session->has('some'));
     }
+
+    public function test_offsetExists(){
+        $session =new \ManaPHP\Http\Session();
+
+        $this->assertFalse(isset($session['some']));
+
+        $session->set('some','value');
+        $this->assertTrue(isset($session['some']));
+    }
+
     public function test_destroy(){
         $session =new \ManaPHP\Http\Session();
 
         $session->destroy();
     }
+
     public function test_remove(){
-        try{
-            $session =new \ManaPHP\Http\Session();
-            $this->assertTrue(false,'why?');
-        }catch (\ManaPHP\Exception $e){
-            $this->assertInstanceOf('\ManaPHP\Http\Session\Exception',$e);
-            return;
-        }
+        $session =new \ManaPHP\Http\Session();
 
         $session->set('some','value');
         $this->assertTrue($session->has('some'));
@@ -72,5 +81,13 @@ class HttpSessionTest extends TestCase{
         $this->assertFalse($session->has('some'));
     }
 
+    public function test_offsetUnset(){
+        $session =new \ManaPHP\Http\Session();
 
+        $session->set('some','value');
+        $this->assertTrue($session->has('some'));
+
+        unset($session['some']);
+        $this->assertFalse($session->has('some'));
+    }
 }

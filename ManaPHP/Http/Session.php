@@ -16,6 +16,10 @@ namespace ManaPHP\Http {
     class Session implements  SessionInterface {
 
         public function __construct($options=null){
+            if(PHP_SAPI ==='cli'){
+                return;
+            }
+
             session_start();
 
             $message=error_get_last()['message'];
@@ -83,9 +87,29 @@ namespace ManaPHP\Http {
          * @throws \ManaPHP\Http\Session\Exception
          */
         public function destroy(){
+            if(PHP_SAPI ==='cli'){
+                return;
+            }
+
             if(!session_destroy()){
                 throw new Exception(error_get_last()['message']);
             }
+        }
+
+        public function offsetExists($offset){
+            return $this->has($offset);
+        }
+
+        public function offsetGet($offset){
+            return $this->get($offset);
+        }
+
+        public function offsetSet($offset, $value){
+            $this->set($offset,$value);
+        }
+
+        public function offsetUnset($offset){
+            $this->remove($offset);
         }
     }
 }
