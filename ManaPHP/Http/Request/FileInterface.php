@@ -61,7 +61,7 @@ namespace ManaPHP\Http\Request {
 		 * Move the temporary file to a destination
 		 *
 		 * @param string $destination
-		 * @return boolean
+         * @throws \ManaPHP\Http\Request\File\Exception
 		 */
 		public function moveTo($destination);
 

@@ -2,7 +2,9 @@
 
 namespace ManaPHP\Http\Request {
 
-	/**
+    use ManaPHP\Http\Request\File\Exception as FileException;
+
+    /**
 	 * ManaPHP\Http\Request\File
 	 *
 	 * Provides OO wrappers to the $_FILES superglobal
@@ -142,11 +144,28 @@ namespace ManaPHP\Http\Request {
 		 * Moves the temporary file to a destination within the application
 		 *
 		 * @param string $destination
-		 * @return boolean
+         * @throws \ManaPHP\Http\Request\File\Exception
 		 */
 		public function moveTo($destination){
-			return move_uploaded_file($this->_file['tmp_name'] ,$destination);
-		}
+
+            if($this->_file['error'] !==UPLOAD_ERR_OK){
+                throw new FileException('Error code of upload file is not UPLOAD_ERR_OK: '.$this->_file['error']);
+            }
+
+            if(is_file($destination)){
+                throw new FileException('File already exists: \''.$destination.'\'');
+            }
+
+            $dir=dirname($destination);
+            if(!is_dir($dir) &&!mkdir($dir,0755,true)){
+                throw new FileException('Unable to create \''.$dir.'\' directory: '.error_get_last()['message']);
+            }
+
+            $r =move_uploaded_file($this->_file['tmp_name'] ,$destination);
+            if($r !==true){
+                throw new FileException(error_get_last()['message']);
+            }
+        }
 
 
 		/**
