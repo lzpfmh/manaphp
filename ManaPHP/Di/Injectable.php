@@ -34,26 +34,7 @@ namespace ManaPHP\Di {
 	 */
 	
 	abstract class Injectable implements InjectionAwareInterface, EventsAwareInterface {
-		use EventsAware;
-		/**
-		 * Dependency Injector
-		 *
-		 * @var \ManaPHP\DiInterface
-		 */
-		protected $_dependencyInjector=null;
-
-		/**
-		 * Sets the dependency injector
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return static
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-			return $this;
-		}
-
-
+		use EventsAware,InjectionAware;
 		/**
 		 * Returns the internal dependency injector
 		 *

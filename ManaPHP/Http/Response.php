@@ -24,7 +24,7 @@ namespace ManaPHP\Http {
 	 */
 	
 	class Response implements ResponseInterface, InjectionAwareInterface {
-
+		use Di\InjectionAware;
 		/**
 		 * @var boolean
 		 */
@@ -47,37 +47,8 @@ namespace ManaPHP\Http {
 
 		protected $_file;
 
-		/**
-		 * @var \ManaPHP\DiInterface
-		 */
-		protected $_dependencyInjector;
-
 		public function __construct(){
 			$this->_headers =new Headers();
-		}
-
-		/**
-		 * Sets the dependency injector
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return static
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-			return $this;
-		}
-
-
-		/**
-		 * Returns the internal dependency injector
-		 *
-		 * @return \ManaPHP\DiInterface
-		 */
-		public function getDI(){
-			if(!is_object($this->_dependencyInjector)){
-				$this->_dependencyInjector =Di::getDefault();
-			}
-			return $this->_dependencyInjector;
 		}
 
 
