@@ -20,7 +20,7 @@ namespace ManaPHP\Di {
 	 //* @property \ManaPHP\Flash\Session $flashSession
 	 * @property \ManaPHP\Http\SessionInterface $session
 	 * @property \ManaPHP\Events\ManagerInterface $eventsManager
-	 * @property \ManaPHP\Db\AdapterInterface $db
+	 * @property \ManaPHP\DbInterface $db
 	 //* @property \ManaPHP\Security $security
 	 //* @property \ManaPHP\CryptInterface $crypt
 	 //* @property \ManaPHP\EscaperInterface $escaper

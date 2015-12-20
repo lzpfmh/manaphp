@@ -1,12 +1,12 @@
 <?php 
 
-namespace ManaPHP\Db {
+namespace ManaPHP {
 
 	/**
 	 * \ManaPHP\Db\AdapterInterface initializer
 	 */
 	
-	interface AdapterInterface {
+	interface DbInterface {
 
 		/**
 		 * Returns the first row in a SQL query result

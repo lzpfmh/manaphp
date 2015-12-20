@@ -1,18 +1,12 @@
 <?php 
 
-namespace ManaPHP\Db {
+namespace ManaPHP {
 
-	use ManaPHP\Db;
+	use ManaPHP\Db\Exception;
 	use ManaPHP\Events\EventsAware;
-	use \ManaPHP\Events\EventsAwareInterface;
+	use ManaPHP\Events\EventsAwareInterface;
 
-	/**
-	 * ManaPHP\Db\Adapter
-	 *
-	 * Base class for ManaPHP\Db adapters
-	 */
-	
-	class Adapter implements EventsAwareInterface, AdapterInterface {
+	class Db implements EventsAwareInterface, DbInterface {
 		use EventsAware;
 		/**
 		 * Descriptor used to connect to a database

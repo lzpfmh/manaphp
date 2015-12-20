@@ -67,7 +67,7 @@ namespace ManaPHP\Mvc {
 		/**
 		 * Gets internal database connection
 		 *
-		 * @return \ManaPHP\Db\AdapterInterface
+		 * @return \ManaPHP\DbInterface
 		 */
 		public function getReadConnection();
 
@@ -75,7 +75,7 @@ namespace ManaPHP\Mvc {
 		/**
 		 * Gets internal database connection
 		 *
-		 * @return \ManaPHP\Db\AdapterInterface
+		 * @return \ManaPHP\DbInterface
 		 */
 		public function getWriteConnection();
 

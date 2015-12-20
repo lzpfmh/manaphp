@@ -93,7 +93,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Returns the connection to write data related to a model
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return \ManaPHP\Db\AdapterInterface
+		 * @return \ManaPHP\DbInterface
 		 */
 		public function getWriteConnection($model);
 
@@ -102,7 +102,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Returns the connection to read data related to a model
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return \ManaPHP\Db\AdapterInterface
+		 * @return \ManaPHP\DbInterface
 		 */
 		public function getReadConnection($model);
 

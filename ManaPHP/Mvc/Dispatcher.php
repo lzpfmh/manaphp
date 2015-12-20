@@ -255,6 +255,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $params
 		 * @return static
+		 * @throws \ManaPHP\Mvc\Dispatcher\Exception
 		 */
 		public function setParams($params){
 			if(!is_array($params)){
@@ -296,6 +297,7 @@ namespace ManaPHP\Mvc {
 		 * @param  string|array $filters
 		 * @param  mixed $defaultValue
 		 * @return mixed
+		 * @throws \ManaPHP\Mvc\Dispatcher\Exception
 		 */
 		public function getParam($param, $filters=null, $defaultValue=null){
 			if(!isset($this->_params[$param])){
@@ -340,7 +342,7 @@ namespace ManaPHP\Mvc {
 		 * Dispatches a handle action taking into account the routing parameters
 		 *
 		 * @return object|boolean
-		 * @throws
+		 * @throws \ManaPHP\Events\Exception | \ManaPHP\Mvc\Dispatcher\Exception
 		 */
 		public function dispatch(){
 			if(!is_object($this->_dependencyInjector)){
@@ -480,6 +482,7 @@ namespace ManaPHP\Mvc {
 		 *</code>
 		 *
 		 * @param array $forward
+		 * @throws \ManaPHP\Mvc\Dispatcher\Exception
 		 */
 		public function forward($forward){
 			if(!is_array($forward)){
@@ -656,7 +659,7 @@ namespace ManaPHP\Mvc {
 			if(!is_object($this->_dependencyInjector)){
 				throw new Exception(
 					"A dependency injection container is required to access the 'response' service",
-					\ManaPHP\Dispatcher::EXCEPTION_NO_DI
+					self::EXCEPTION_NO_DI
 				);
 			}
 

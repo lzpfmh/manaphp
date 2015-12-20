@@ -7,9 +7,9 @@
  */
 namespace Application\Home;
 
+use ManaPHP\Db\Adapter\Mysql;
 use \ManaPHP\Mvc\ModuleInterface;
 use \ManaPHP\Autoloader;
-use \ManaPHP\Db\Adapter;
 
 class Module implements ModuleInterface{
     public function registerAutoloaders($di){
@@ -21,7 +21,7 @@ class Module implements ModuleInterface{
 
     public function registerServices($di){
         $di->set('db',function(){
-            return new Adapter(['host'=>'localhost',
+            return new Mysql(['host'=>'localhost',
                 'username'=>'root',
                 'password'=>'',
                 'dbname'=>'test',

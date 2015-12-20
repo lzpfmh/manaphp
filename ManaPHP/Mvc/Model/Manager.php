@@ -198,7 +198,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Returns the connection to read or write data related to a model depending on the connection services.
 		 * @param \ManaPHP\Mvc\ModelInterface $model
 		 * @param string[] $connectionServices
-		 * @return \ManaPHP\Db\AdapterInterface
+		 * @return \ManaPHP\DbInterface
 		 */
 		protected function _getConnection($model, $connectionServices){
 			$className =get_class($model);
@@ -211,7 +211,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Returns the connection to write data related to a model
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return \ManaPHP\Db\AdapterInterface
+		 * @return \ManaPHP\DbInterface
 		 */
 		public function getWriteConnection($model){
 			return $this->_getConnection($model,$this->_writeConnectionServices);
@@ -222,7 +222,7 @@ namespace ManaPHP\Mvc\Model {
 		 * Returns the connection to read data related to a model
 		 *
 		 * @param \ManaPHP\Mvc\ModelInterface $model
-		 * @return \ManaPHP\Db\AdapterInterface
+		 * @return \ManaPHP\DbInterface
 		 */
 		public function getReadConnection($model){
 			return $this->_getConnection($model,$this->_readConnectionServices);

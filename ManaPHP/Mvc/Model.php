@@ -257,7 +257,7 @@ namespace ManaPHP\Mvc {
 		/**
 		 * Gets the connection used to read data for the model
 		 *
-		 * @return \ManaPHP\Db\AdapterInterface
+		 * @return \ManaPHP\DbInterface
 		 */
 		public function getReadConnection(){
 			return $this->_modelsManager->getReadConnection($this);
@@ -267,7 +267,7 @@ namespace ManaPHP\Mvc {
 		/**
 		 * Gets the connection used to write data to the model
 		 *
-		 * @return \ManaPHP\Db\AdapterInterface
+		 * @return \ManaPHP\DbInterface
 		 */
 		public function getWriteConnection(){
 			return $this->_modelsManager->getWriteConnection($this);
@@ -498,7 +498,7 @@ namespace ManaPHP\Mvc {
 		 * Checks if the current record already exists or not
 		 *
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
-		 * @param \ManaPHP\Db\AdapterInterface $connection
+		 * @param \ManaPHP\DbInterface $connection
 		 * @return boolean
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
@@ -819,7 +819,7 @@ namespace ManaPHP\Mvc {
 		 * Sends a pre-build INSERT SQL statement to the relational database system
 		 *
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
-		 * @param \ManaPHP\Db\AdapterInterface $connection
+		 * @param \ManaPHP\DbInterface $connection
 		 * @return boolean
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
@@ -862,7 +862,7 @@ namespace ManaPHP\Mvc {
 		 * Sends a pre-build UPDATE SQL statement to the relational database system
 		 *
 		 * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
-		 * @param \ManaPHP\Db\AdapterInterface $connection
+		 * @param \ManaPHP\DbInterface $connection
 		 * @return boolean
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
