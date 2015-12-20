@@ -35,7 +35,6 @@ namespace ManaPHP\Events {
          * @param object $source
          * @param mixed  $data
          * @return mixed
-         * @throws \ManaPHP\Events\Exception
          */
         public function fireEvent($event, $source, $data=null){
             if(self::$_trait_eventPeeks !==null){
@@ -45,6 +44,7 @@ namespace ManaPHP\Events {
             }
 
             if($this->_trait_eventsManager !==null){
+                /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                 return $this->_trait_eventsManager->fire($event,$source,$data);
             }
 

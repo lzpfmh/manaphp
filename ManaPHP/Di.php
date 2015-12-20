@@ -63,7 +63,7 @@ namespace ManaPHP {
 
 		/**
 		 * \ManaPHP\Di constructor
-		 *
+		 * @var self
 		 */
 		public function __construct(){
 			if(self::$_default ===null){
@@ -179,7 +179,7 @@ namespace ManaPHP {
 		/**
 		 * Return the latest DI created
 		 *
-		 * @return static
+		 * @return \ManaPHP\Di
 		 */
 		public static function getDefault(){
 			return self::$_default;

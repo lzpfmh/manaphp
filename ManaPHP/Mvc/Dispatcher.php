@@ -342,7 +342,7 @@ namespace ManaPHP\Mvc {
 		 * Dispatches a handle action taking into account the routing parameters
 		 *
 		 * @return object|boolean
-		 * @throws \ManaPHP\Events\Exception | \ManaPHP\Mvc\Dispatcher\Exception
+		 * @throws \ManaPHP\Mvc\Dispatcher\Exception
 		 */
 		public function dispatch(){
 			if(!is_object($this->_dependencyInjector)){

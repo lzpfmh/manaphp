@@ -32,8 +32,8 @@ class LeDummyComponent
 
     public function leAction()
     {
-        $this->_eventsManager->fire('dummy:beforeAction', $this, "extra data");
-        $this->_eventsManager->fire('dummy:afterAction', $this, array("extra","data"));
+        $this->_eventsManager->fire('dummy:beforeAction', $this, 'extra data');
+        $this->_eventsManager->fire('dummy:afterAction', $this, array('extra','data'));
     }
 
 }
@@ -79,7 +79,7 @@ class LeDummyListener
     {
         $this->_testCase->assertInstanceOf('Phalcon\Events\Event', $event);
         $this->_testCase->assertInstanceOf('LeDummyComponent', $component);
-        $this->_testCase->assertEquals($data, "extra data");
+        $this->_testCase->assertEquals($data, 'extra data');
         $this->_before++;
     }
 
@@ -87,7 +87,7 @@ class LeDummyListener
     {
         $this->_testCase->assertInstanceOf('Phalcon\Events\Event', $event);
         $this->_testCase->assertInstanceOf('LeDummyComponent', $component);
-        $this->_testCase->assertEquals($event->getData(), array("extra","data"));
+        $this->_testCase->assertEquals($event->getData(), array('extra','data'));
         $this->_after++;
         $this->_testCase->lastListener = $this;
     }

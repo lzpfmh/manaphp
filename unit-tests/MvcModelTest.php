@@ -237,7 +237,7 @@ class MvcModelTest extends TestCase{
 
         $this->di->set('db',function(){
             $config= require 'config.database.php';
-            return new ManaPHP\Db\Adapter($config['mysql']);
+            return new ManaPHP\Db\Adapter\Mysql($config['mysql']);
         });
     }
 
@@ -310,7 +310,7 @@ class MvcModelTest extends TestCase{
      */
     protected function _truncateTable($model){
         /**
-         * @var \ManaPHP\Db\Adapter $db
+         * @var \ManaPHP\Db $db
          */
         $db =$this->di->getShared('db');
         $db->execute('TRUNCATE TABLE '.$model->getSource());
