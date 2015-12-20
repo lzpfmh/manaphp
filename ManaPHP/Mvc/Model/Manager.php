@@ -1,6 +1,8 @@
 <?php 
 
 namespace ManaPHP\Mvc\Model {
+
+	use ManaPHP\Di\InjectionAware;
 	use \ManaPHP\Di\InjectionAwareInterface;
 	use ManaPHP\Events\EventsAware;
 	use \ManaPHP\Events\EventsAwareInterface;
@@ -24,11 +26,7 @@ namespace ManaPHP\Mvc\Model {
 	 */
 	
 	class Manager implements ManagerInterface, InjectionAwareInterface, EventsAwareInterface {
-		use EventsAware;
-		/**
-		 * @var \ManaPHP\DiInterface
-		 */
-		protected $_dependencyInjector;
+		use EventsAware, InjectionAware;
 
 		protected $_readConnectionServices=[];
 
@@ -46,24 +44,6 @@ namespace ManaPHP\Mvc\Model {
 
 		protected $_namespaceAliases;
 
-		/**
-		 * Sets the DependencyInjector container
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-		}
-
-
-		/**
-		 * Returns the DependencyInjector container
-		 *
-		 * @return \ManaPHP\DiInterface
-		 */
-		public function getDI(){
-			return $this->_dependencyInjector;
-		}
 
 		/**
 		 * Initializes a model in the model manager

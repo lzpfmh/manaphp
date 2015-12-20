@@ -1,6 +1,8 @@
 <?php 
 
 namespace ManaPHP {
+
+	use ManaPHP\Di\InjectionAware;
 	use ManaPHP\Di\InjectionAwareInterface;
 	use ManaPHP\Events\EventsAware;
 	use ManaPHP\Events\EventsAwareInterface;
@@ -13,7 +15,7 @@ namespace ManaPHP {
 	 */
 	
 	abstract class Dispatcher implements DispatcherInterface, InjectionAwareInterface, EventsAwareInterface{
-		use EventsAware;
+		use EventsAware,InjectionAware;
 
 		const EXCEPTION_NO_DI = 0;
 
@@ -27,10 +29,6 @@ namespace ManaPHP {
 
 		const EXCEPTION_ACTION_NOT_FOUND = 5;
 
-		/**
-		 * @var \ManaPHP\DiInterface
-		 */
-		protected $_dependencyInjector;
 
 		protected $_activeController;
 
@@ -117,25 +115,6 @@ namespace ManaPHP {
 		 * \ManaPHP\Dispatcher constructor
 		 */
 		public function __construct(){
-		}
-
-		/**
-		 * Sets the dependency injector
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-		}
-
-
-		/**
-		 * Returns the internal dependency injector
-		 *
-		 * @return \ManaPHP\DiInterface
-		 */
-		public function getDI(){
-			return $this->_dependencyInjector;
 		}
 
 		/**

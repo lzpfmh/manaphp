@@ -2,6 +2,7 @@
 
 namespace ManaPHP\Http {
 
+	use ManaPHP\Di\InjectionAware;
 	use \ManaPHP\Http\Request\Exception;
 	use \ManaPHP\Di\InjectionAwareInterface;
 	use ManaPHP\Http\Request\File;
@@ -26,12 +27,7 @@ namespace ManaPHP\Http {
 	 */
 	
 	class Request implements RequestInterface,InjectionAwareInterface {
-
-		/**
-		 * @var \ManaPHP\DiInterface
-		 */
-		protected $_dependencyInjector;
-
+		use InjectionAware;
 
 		protected $_rawBody;
 
@@ -46,26 +42,6 @@ namespace ManaPHP\Http {
 		protected $_client_address;
 
 		public function __construct(){
-		}
-		/**
-		 * Sets the dependency injector
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return static
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-			return $this;
-		}
-
-
-		/**
-		 * Returns the internal dependency injector
-		 *
-		 * @return \ManaPHP\DiInterface
-		 */
-		public function getDI(){
-			return $this->_dependencyInjector;
 		}
 
 		/**

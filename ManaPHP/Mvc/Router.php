@@ -2,6 +2,7 @@
 
 namespace ManaPHP\Mvc {
 
+	use ManaPHP\Di\InjectionAware;
 	use ManaPHP\Events\EventsAware;
 	use ManaPHP\Mvc\Router\Exception;
 	use ManaPHP\Mvc\Router\Route;
@@ -36,16 +37,11 @@ namespace ManaPHP\Mvc {
 	 */
 	
 	class Router implements RouterInterface, InjectionAwareInterface, EventsAwareInterface {
-		use EventsAware;
+		use EventsAware,InjectionAware;
 
 		const URI_SOURCE_GET_URL = 0;
 
 		const URI_SOURCE_SERVER_REQUEST_URI = 1;
-
-		/**
-		 * @var \ManaPHP\DiInterface
-		 */
-		protected $_dependencyInjector=null;
 
 		/**
 		 * @var int
@@ -144,25 +140,6 @@ namespace ManaPHP\Mvc {
 			}
 		}
 
-
-		/**
-		 * Sets the dependency injector
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-		}
-
-
-		/**
-		 * Returns the internal dependency injector
-		 *
-		 * @return \ManaPHP\DiInterface
-		 */
-		public function getDI(){
-			return $this->_dependencyInjector;
-		}
 
 		/**
 		 * Get rewrite info. This info is read from $_GET['_url']. This returns '/' if the rewrite information cannot be read

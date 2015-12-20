@@ -41,14 +41,13 @@ namespace ManaPHP\Mvc {
 	 */
 	
 	abstract class Model implements ModelInterface, ResultInterface, InjectionAwareInterface, \Serializable {
+		use Di\InjectionAware;
 
 		const DIRTY_STATE_PERSISTENT = 0;
 
 		const DIRTY_STATE_TRANSIENT = 1;
 
 		const DIRTY_STATE_DETACHED = 2;
-
-		protected $_dependencyInjector;
 
 		/**
 		 * @var \ManaPHP\Mvc\Model\ManagerInterface
@@ -102,27 +101,6 @@ namespace ManaPHP\Mvc {
             }
 		}
 
-
-		/**
-		 * Sets the dependency injection container
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return static
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-			return $this;
-		}
-
-
-		/**
-		 * Returns the dependency injection container
-		 *
-		 * @return \ManaPHP\DiInterface
-		 */
-		public function getDI(){
-			return $this->_dependencyInjector;
-		}
 
 		/**
 		 * Returns the models meta-data service related to the entity instance

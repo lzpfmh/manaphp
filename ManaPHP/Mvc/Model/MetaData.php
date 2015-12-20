@@ -1,7 +1,9 @@
 <?php 
 
 namespace ManaPHP\Mvc\Model {
-	use \ManaPHP\Di\InjectionAwareInterface;
+
+    use ManaPHP\Di\InjectionAware;
+    use \ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Mvc\Model\MetaData
 	 *
@@ -20,6 +22,7 @@ namespace ManaPHP\Mvc\Model {
 	 */
 	
 	abstract class MetaData implements InjectionAwareInterface, MetaDataInterface {
+        use InjectionAware;
 
 		const MODELS_ATTRIBUTES = 0;
 
@@ -48,8 +51,6 @@ namespace ManaPHP\Mvc\Model {
 		const MODELS_COLUMN_MAP = 0;
 
 		const MODELS_REVERSE_COLUMN_MAP = 1;
-
-		protected $_dependencyInjector;
 
 		protected $_strategy;
 
@@ -130,27 +131,6 @@ namespace ManaPHP\Mvc\Model {
                 }
             }
         }
-
-		/**
-		 * Sets the DependencyInjector container
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-		}
-
-
-		/**
-		 * Returns the DependencyInjector container
-		 *
-		 * @return \ManaPHP\DiInterface
-		 */
-		public function getDI(){
-			return $this->_dependencyInjector;
-		}
-
-
 
 
 		/**

@@ -1,6 +1,8 @@
 <?php 
 
 namespace ManaPHP\Http\Response {
+
+	use ManaPHP\Di\InjectionAware;
 	use \ManaPHP\Di\InjectionAwareInterface;
 	/**
 	 * ManaPHP\Http\Response\Cookies
@@ -10,11 +12,7 @@ namespace ManaPHP\Http\Response {
 	 */
 	
 	class Cookies implements CookiesInterface, InjectionAwareInterface {
-
-		/**
-		 * @var \ManaPHP\DiInterface
-		 */
-		protected $_dependencyInjector;
+		use InjectionAware;
 
 		protected $_registered;
 
@@ -25,24 +23,6 @@ namespace ManaPHP\Http\Response {
 		 */
 		protected $_cookies;
 
-		/**
-		 * Sets the dependency injector
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-		}
-
-
-		/**
-		 * Returns the internal dependency injector
-		 *
-		 * @return \ManaPHP\DiInterface
-		 */
-		public function getDI(){
-			return $this->_dependencyInjector;
-		}
 
 
 		/**

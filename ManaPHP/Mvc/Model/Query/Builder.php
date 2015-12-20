@@ -24,8 +24,7 @@ namespace ManaPHP\Mvc\Model\Query {
 	 */
 	
 	class Builder implements BuilderInterface, InjectionAwareInterface {
-
-		protected $_dependencyInjector;
+		use Di\InjectionAware;
 
 		protected $_columns;
 
@@ -213,28 +212,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 */
 		public function getDistinct(){
 			return $this->_distinct;
-		}
-
-
-		/**
-		 * Sets the DependencyInjector container
-		 *
-		 * @param \ManaPHP\DiInterface $dependencyInjector
-		 * @return static
-		 */
-		public function setDI($dependencyInjector){
-			$this->_dependencyInjector =$dependencyInjector;
-			return $this;
-		}
-
-
-		/**
-		 * Returns the DependencyInjector container
-		 *
-		 * @return \ManaPHP\DiInterface
-		 */
-		public function getDI(){
-			return $this->_dependencyInjector;
 		}
 
 
