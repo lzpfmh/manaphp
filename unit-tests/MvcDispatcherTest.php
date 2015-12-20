@@ -104,7 +104,7 @@ class Test8Controller extends ManaPHP\Mvc\Controller
     }
 
 }
-class tDispatcher extends \ManaPHP\Dispatcher{
+class tDispatcher extends \ManaPHP\Mvc\Dispatcher{
     protected function _handleException($exception){
 
     }
@@ -128,7 +128,7 @@ class tDispatcher extends \ManaPHP\Dispatcher{
 
 
 
-class DispatcherTest extends TestCase{
+class MvcDispatcherTest extends TestCase{
     public function test_setActionSuffix(){
         $dispatcher =new tDispatcher();
 
@@ -138,7 +138,7 @@ class DispatcherTest extends TestCase{
         $dispatcher->setActionSuffix('_ACTION');
         $this->assertEquals('_ACTION',$dispatcher->getActionSuffix());
 
-        $this->assertInstanceOf('\ManaPHP\Dispatcher',$dispatcher->setActionSuffix(''));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setActionSuffix(''));
         $this->assertInstanceOf('tDispatcher',$dispatcher->setActionSuffix(''));
     }
 
@@ -148,7 +148,7 @@ class DispatcherTest extends TestCase{
         $dispatcher->setDefaultNamespace('Application\Api');
         $this->assertEquals('Application\Api',$dispatcher->getDefaultNamespace());
 
-        $this->assertInstanceOf('\ManaPHP\Dispatcher',$dispatcher->setDefaultNamespace('Application\Api'));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setDefaultNamespace('Application\Api'));
         $this->assertInstanceOf('tDispatcher',$dispatcher->setDefaultNamespace('Application\Api'));
     }
 
@@ -158,7 +158,7 @@ class DispatcherTest extends TestCase{
         $dispatcher->setNamespaceName('Application\Api');
         $this->assertEquals('Application\Api',$dispatcher->getNamespaceName());
 
-        $this->assertInstanceOf('\ManaPHP\Dispatcher',$dispatcher->setNamespaceName('Application\Api'));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setNamespaceName('Application\Api'));
         $this->assertInstanceOf('tDispatcher',$dispatcher->setNamespaceName('Application\Api'));
     }
     public function test_setModuleName(){
@@ -167,19 +167,19 @@ class DispatcherTest extends TestCase{
         $dispatcher->setModuleName('Api');
         $this->assertEquals('Api',$dispatcher->getModuleName());
 
-        $this->assertInstanceOf('\ManaPHP\Dispatcher',$dispatcher->setModuleName('Api'));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setModuleName('Api'));
         $this->assertInstanceOf('tDispatcher',$dispatcher->setModuleName('Api'));
     }
 
     public function test_setDefaultAction(){
         $dispatcher =new tDispatcher();
 
-        $this->assertEquals('',$dispatcher->getDefaultAction());
+        $this->assertEquals('index',$dispatcher->getDefaultAction());
 
         $dispatcher->setDefaultAction('index');
         $this->assertEquals('index',$dispatcher->getDefaultAction());
 
-        $this->assertInstanceOf('\ManaPHP\Dispatcher',$dispatcher->setDefaultAction('index'));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setDefaultAction('index'));
         $this->assertInstanceOf('tDispatcher',$dispatcher->setDefaultAction('index'));
     }
 
@@ -189,7 +189,7 @@ class DispatcherTest extends TestCase{
         $dispatcher->setActionName('index');
         $this->assertEquals('index',$dispatcher->getActionName());
 
-        $this->assertInstanceOf('\ManaPHP\Dispatcher',$dispatcher->setActionName('index'));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setActionName('index'));
         $this->assertInstanceOf('tDispatcher',$dispatcher->setActionName('index'));
     }
 
@@ -206,7 +206,7 @@ class DispatcherTest extends TestCase{
         $params=['id'=>10,'name'=>'manaphp'];
         $this->assertEquals($params,$dispatcher->setParams($params)->getParams());
 
-        $this->assertInstanceOf('\ManaPHP\Dispatcher',$dispatcher->setParams([]));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setParams([]));
         $this->assertInstanceOf('tDispatcher',$dispatcher->setParams([]));
     }
 
@@ -227,7 +227,7 @@ class DispatcherTest extends TestCase{
         $dispatcher->setParam('name','manaphp');
         $this->assertEquals('manaphp',$dispatcher->getParam('name'));
 
-        $this->assertInstanceOf('\ManaPHP\Dispatcher',$dispatcher->setParam('name','manaphp'));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setParam('name','manaphp'));
         $this->assertInstanceOf('tDispatcher',$dispatcher->setParam('name','manaphp'));
     }
 

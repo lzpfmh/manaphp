@@ -7,11 +7,11 @@
  */
 namespace Application\Home;
 
-use \ManaPHP\Mvc\ModuleDefinitionInterface;
+use \ManaPHP\Mvc\ModuleInterface;
 use \ManaPHP\Autoloader;
 use \ManaPHP\Db\Adapter;
 
-class Module implements ModuleDefinitionInterface{
+class Module implements ModuleInterface{
     public function registerAutoloaders($di){
         $loader =new Autoloader();
         $loader->registerNamespaces([
