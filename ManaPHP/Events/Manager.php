@@ -23,6 +23,7 @@ namespace ManaPHP\Events {
 		 *
 		 * @param string $event
 		 * @param object|callable $handler
+		 * @return static
 		 * @throws \ManaPHP\Events\Exception
 		 */
 		public function attach($event, $handler){
@@ -44,6 +45,8 @@ namespace ManaPHP\Events {
 			$this->_events[$type][] =['event'=>$event,
 											'name'=>$name,
 											'handler'=>$handler];
+
+			return $this;
 		}
 
 		/**
