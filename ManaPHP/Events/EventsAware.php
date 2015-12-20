@@ -11,16 +11,17 @@ namespace ManaPHP\Events {
          * @var \ManaPHP\Events\Manager
          */
         protected $_trait_eventsManager=null;
-        protected static $_trait_eventPeeker;
+        protected static $_trait_eventPeeks;
         /**
          * Attach a listener to the events manager
          *
          * @param string $event
          * @param object|callable $handler
+         * @throws \ManaPHP\Events\Exception
          */
         public function attachEvent($event, $handler){
             if($this->_trait_eventsManager ===null){
-                $this->_trait_eventsManager =new \ManaPHP\Events\Manager();
+                $this->_trait_eventsManager =new Manager();
             }
 
             $this->_trait_eventsManager->attach($event,$handler);
@@ -33,28 +34,32 @@ namespace ManaPHP\Events {
          * @param string $event
          * @param object $source
          * @param mixed  $data
+         * @return mixed
+         * @throws \ManaPHP\Events\Exception
          */
         public function fireEvent($event, $source, $data=null){
-            if(self::$_trait_eventPeeker !=null){
-                foreach(self::$_trait_eventPeeker as $peeker){
-                    $peeker($event,$source,$data);
+            if(self::$_trait_eventPeeks !==null){
+                foreach(self::$_trait_eventPeeks as $peek){
+                    $peek($event,$source,$data);
                 }
             }
 
             if($this->_trait_eventsManager !==null){
                 return $this->_trait_eventsManager->fire($event,$source,$data);
             }
+
+            return null;
         }
 
-        public static function peekEvents($peeker){
-            if(!$peeker instanceof \Closure){
-                throw new Exception('Peeker is not Closure.');
+        public static function peekEvents($peek){
+            if(!$peek instanceof \Closure){
+                throw new Exception('Peek is invalid: not Closure.');
             }
 
-            if(self::$_trait_eventPeeker===null){
-                self::$_trait_eventPeeker=[$peeker];
+            if(self::$_trait_eventPeeks===null){
+                self::$_trait_eventPeeks=[$peek];
             }else{
-                self::$_trait_eventPeeker[]=$peeker;
+                self::$_trait_eventPeeks[]=$peek;
             }
         }
     }
