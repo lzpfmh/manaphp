@@ -1,20 +1,38 @@
 <?php 
 
-namespace ManaPHP {
+namespace ManaPHP\Mvc {
 
 	use ManaPHP\Di\InjectionAware;
 	use ManaPHP\Di\InjectionAwareInterface;
 	use ManaPHP\Events\EventsAware;
 	use ManaPHP\Events\EventsAwareInterface;
+	use ManaPHP\Mvc\Dispatcher\Exception;
 
 	/**
-	 * ManaPHP\Dispatcher
+	 * ManaPHP\Mvc\Dispatcher
 	 *
-	 * This is the base class for ManaPHP\Mvc\Dispatcher and ManaPHP\CLI\Dispatcher.
-	 * This class can't be instantiated directly, you can use it to create your own dispatchers
+	 * Dispatching is the process of taking the request object, extracting the module name,
+	 * controller name, action name, and optional parameters contained in it, and then
+	 * instantiating a controller and calling an action of that controller.
+	 *
+	 *<code>
+	 *
+	 *	$di = new ManaPHP\Di();
+	 *
+	 *	$dispatcher = new ManaPHP\Mvc\Dispatcher();
+	 *
+	 *  $dispatcher->setDI($di);
+	 *
+	 *	$dispatcher->setControllerName('posts');
+	 *	$dispatcher->setActionName('index');
+	 *	$dispatcher->setParams(array());
+	 *
+	 *	$controller = $dispatcher->dispatch();
+	 *
+	 *</code>
 	 */
 	
-	abstract class Dispatcher implements DispatcherInterface, InjectionAwareInterface, EventsAwareInterface{
+	class Dispatcher implements DispatcherInterface, InjectionAwareInterface, EventsAwareInterface{
 		use EventsAware,InjectionAware;
 
 		const EXCEPTION_NO_DI = 0;
@@ -79,17 +97,20 @@ namespace ManaPHP {
 		 */
 		protected $_defaultNamespace;
 
-		protected $_defaultController;
+		/**
+		 * @var string
+		 */
+		protected $_defaultController='Index';
 
 		/**
 		 * @var string
 		 */
-		protected $_defaultAction='';
+		protected $_defaultAction='index';
 
 		/**
 		 * @var string
 		 */
-		protected $_controllerSuffix='';
+		protected $_controllerSuffix='Controller';
 
 		/**
 		 * @var string
@@ -537,23 +558,6 @@ namespace ManaPHP {
 			return $handlerClass;
 		}
 
-		/**Throws an internal exception
-		 *
-		 * @param string $message
-		 * @param int $exceptionCode
-		 * @return boolean
-		 */
-		abstract protected function _throwDispatchException($message, $exceptionCode=0);
-
-		/**
-		 * Handles a user exception
-		 *
-		 * @param \Exception $exception
-		 * @return boolean
-		 */
-		abstract protected function _handleException($exception);
-
-
 		/**
 		 * Set empty properties to their defaults (where defaults are available)
 		 */
@@ -638,6 +642,48 @@ namespace ManaPHP {
 		 */
 		public function getPreviousActionName(){
 			return $this->_previousActionName;
+		}
+
+		/**
+		 * Throws an internal exception
+		 *
+		 * @param string $message
+		 * @param int $exceptionCode
+		 * @return boolean
+		 * @throws \ManaPHP\Mvc\Dispatcher\Exception
+		 */
+		protected function _throwDispatchException($message, $exceptionCode=0){
+			if(!is_object($this->_dependencyInjector)){
+				throw new Exception(
+					"A dependency injection container is required to access the 'response' service",
+					\ManaPHP\Dispatcher::EXCEPTION_NO_DI
+				);
+			}
+
+			$response =$this->_dependencyInjector->getShared('response');
+			$response->setStatusCode(404, 'Not Found');
+
+			$exception =new Exception($message, $exceptionCode);
+
+			if($this->_handleException($exception) ===false){
+				return false;
+			}
+
+			throw $exception;
+		}
+
+
+		/**
+		 * Handles a user exception
+		 *
+		 * @param \Exception $exception
+		 * @return boolean
+		 *
+		 * @warning If any additional logic is to be implemented here, please check
+		 * ManaPHP_dispatcher_fire_event() first
+		 */
+		protected function _handleException($exception){
+
 		}
 	}
 }

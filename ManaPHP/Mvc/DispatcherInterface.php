@@ -1,9 +1,9 @@
 <?php 
 
-namespace ManaPHP {
+namespace ManaPHP\Mvc {
 
 	/**
-	 * ManaPHP\DispatcherInterface initializer
+	 * ManaPHP\Mvc\DispatcherInterface initializer
 	 */
 	
 	interface DispatcherInterface {
