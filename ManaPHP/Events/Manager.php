@@ -65,29 +65,33 @@ namespace ManaPHP\Events {
 
 			list($fire_type,$fire_name)=explode(':',$event,2);
 
-			if(isset($this->_events[$fire_type])){
-				$callback_params=[new Event($fire_type), $source, $data];
+			if(!isset($this->_events[$fire_type])){
+				return;
+			}
 
-				foreach($this->_events[$fire_type] as $event_handler){
-					$name =$event_handler['name'];
+			$callback_params=[new Event($fire_type), $source, $data];
 
-					if($name===''||$name===$fire_name){
-						$handler=$event_handler['handler'];
+			foreach($this->_events[$fire_type] as $event_handler){
+				$name =$event_handler['name'];
 
-						$callback =null;
-						if($handler instanceof \Closure){
-							$callback=$handler;
-						}else{
-							if(method_exists($handler,$name)){
-								$callback=[$handler,$name];
-							}
-						}
-						
-						if($callback !==null){
-							call_user_func_array($callback,$callback_params);
-						}
-					}
+				if($name!=='' &&$name!==$fire_name){
+					continue;
 				}
+
+				$handler=$event_handler['handler'];
+
+				$callback =null;
+				if($handler instanceof \Closure){
+					$callback=$handler;
+				}else{
+					if(!method_exists($handler,$fire_name)){
+						continue;
+					}
+
+					$callback=[$handler,$fire_name];
+				}
+
+				call_user_func_array($callback,$callback_params);
 			}
 		}
 	}
