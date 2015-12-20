@@ -59,6 +59,7 @@ namespace ManaPHP\Events {
 		 * @param string $event
 		 * @param object $source
 		 * @param mixed  $data
+		 * @return boolean|null
 		 * @throws \ManaPHP\Events\Exception
 		 */
 		public function fire($event, $source, $data=null){
@@ -69,11 +70,12 @@ namespace ManaPHP\Events {
 			list($fire_type,$fire_name)=explode(':',$event,2);
 
 			if(!isset($this->_events[$fire_type])){
-				return;
+				return null;
 			}
 
 			$callback_params=[new Event($fire_name), $source, $data];
 
+			$ret=null;
 			foreach($this->_events[$fire_type] as $event_handler){
 				$name =$event_handler['name'];
 
@@ -94,8 +96,10 @@ namespace ManaPHP\Events {
 					$callback=[$handler,$fire_name];
 				}
 
-				call_user_func_array($callback,$callback_params);
+				$ret =call_user_func_array($callback,$callback_params);
 			}
+
+			return $ret;
 		}
 	}
 }

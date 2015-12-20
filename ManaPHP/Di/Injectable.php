@@ -3,6 +3,7 @@
 namespace ManaPHP\Di {
 
 	use ManaPHP\Di;
+	use ManaPHP\Events\EventsAware;
 	use \ManaPHP\Events\EventsAwareInterface;
 
 	/**
@@ -33,20 +34,13 @@ namespace ManaPHP\Di {
 	 */
 	
 	abstract class Injectable implements InjectionAwareInterface, EventsAwareInterface {
-
+		use EventsAware;
 		/**
 		 * Dependency Injector
 		 *
 		 * @var \ManaPHP\DiInterface
 		 */
 		protected $_dependencyInjector=null;
-
-		/**
-		 * Events Manager
-		 *
-		 * @var \ManaPHP\Events\ManagerInterface
-		 */
-		protected $_eventsManager=null;
 
 		/**
 		 * Sets the dependency injector
@@ -72,29 +66,6 @@ namespace ManaPHP\Di {
 
 			return $this->_dependencyInjector;
 		}
-
-
-		/**
-		 * Sets the event manager
-		 *
-		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
-		 * @return static
-		 */
-		public function setEventsManager($eventsManager){
-			$this->_eventsManager =$eventsManager;
-			return $this;
-		}
-
-
-		/**
-		 * Returns the internal event manager
-		 *
-		 * @return \ManaPHP\Events\ManagerInterface
-		 */
-		public function getEventsManager(){
-			return $this->_eventsManager;
-		}
-
 
 		/**
 		 * Magic method __get

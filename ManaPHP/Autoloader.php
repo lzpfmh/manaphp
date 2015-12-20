@@ -27,12 +27,6 @@ namespace ManaPHP {
 	 */
 
 	class Autoloader{
-
-		/**
-		 * @var \ManaPHP\Events\ManagerInterface
-		 */
-		protected $_eventsManager;
-
 		/**
 		 * @var array
 		 */
@@ -57,28 +51,6 @@ namespace ManaPHP {
 		 * @var string|boolean
 		 */
 		protected $_requiredFile=false;
-
-		/**
-		 * Sets the events manager
-		 *
-		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
-		 * @return static
-		 */
-		public function setEventsManager($eventsManager){
-			$this->_eventsManager =$eventsManager;
-			return $this;
-		}
-
-
-		/**
-		 * Returns the internal event manager
-		 *
-		 * @return \ManaPHP\Events\ManagerInterface
-		 */
-		public function getEventsManager(){
-			return $this->_eventsManager;
-		}
-
 
 		/**
 		 * Register namespaces and their related directories

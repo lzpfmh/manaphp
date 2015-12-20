@@ -188,11 +188,10 @@ namespace ManaPHP\Mvc {
 				throw new Exception('A dependency injection object is required to access internal services');
 			}
 
-			if(is_object($this->_eventsManager)){
-				if($this->_eventsManager->fire('application:boot', $this) ===false){
-					return false;
-				}
+			if($this->fireEvent('application:boot', $this) ===false){
+				return false;
 			}
+
 
 			$router =$this->_dependencyInjector->getShared('router');
 
@@ -204,10 +203,8 @@ namespace ManaPHP\Mvc {
 			$moduleObject =null;
 
 			if($moduleName !==null){
-				if(is_object($this->_eventsManager)){
-					if($this->_eventsManager->fire('application:beforeStartModule', $this, $moduleName) ===false) {
-						return false;
-					}
+				if($this->fireEvent('application:beforeStartModule', $this, $moduleName) ===false) {
+					return false;
 				}
 
 				$module =$this->getModule($moduleName);
@@ -248,9 +245,8 @@ namespace ManaPHP\Mvc {
 					throw new Exception('Invalid module definition');
 				}
 
-				if(is_object($this->_eventsManager)){
-					$this->_eventsManager->fire('application:afterStartModule', $this, $moduleObject);
-				}
+				$this->fireEvent('application:afterStartModule', $this, $moduleObject);
+
 			}
 
 			if($this->_implicitView ===true){
@@ -268,11 +264,10 @@ namespace ManaPHP\Mvc {
 				$view->start();
 			}
 
-			if(is_object($this->_eventsManager)){
-				if($this->_eventsManager->fire('application:beforeHandleRequest', $this, $dispatcher) ===false){
-					return false;
-				}
+			if($this->fireEvent('application:beforeHandleRequest', $this, $dispatcher) ===false){
+				return false;
 			}
+
 
 			$controller =$dispatcher->dispatch();
 			$possibleResponse=$dispatcher->getReturnedValue();
@@ -282,9 +277,8 @@ namespace ManaPHP\Mvc {
 			}else{
 				$returnedResponse=is_object($possibleResponse)?($possibleResponse instanceof ResponseInterface):false;
 
-				if(is_object($this->_eventsManager)){
-					$this->_eventsManager->fire('application:afterHandleRequest',$this,$controller);
-				}
+				$this->fireEvent('application:afterHandleRequest',$this,$controller);
+
 				/**
 				 * If the dispatcher returns an object we try to render the view in auto-rendering mode
 				 */
@@ -293,9 +287,7 @@ namespace ManaPHP\Mvc {
 						if(is_object($controller)){
 							$renderStatus =true;
 
-							if(is_object($this->_eventsManager)){
-								$renderStatus = $this->_eventsManager->fire('application:viewRender', $this, $view);
-							}
+							$renderStatus = $this->fireEvent('application:viewRender', $this, $view);
 
 							/**
 							 * Check if the view process has been treated by the developer
@@ -332,9 +324,7 @@ namespace ManaPHP\Mvc {
 				}
 			}
 
-			if(is_object($this->_eventsManager)){
-				$this->eventsManager->fire('application:beforeSendResponse',$this, $response);
-			}
+			$this->fireEvent('application:beforeSendResponse',$this, $response);
 
 			$response->sendHeaders();
 			$response->sendCookies();

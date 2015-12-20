@@ -9,18 +9,21 @@ namespace ManaPHP\Events {
 	interface EventsAwareInterface {
 
 		/**
-		 * Sets the events manager
+		 * Attach a listener to the events manager
 		 *
-		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
+		 * @param string $event
+		 * @param object|callable $handler
 		 */
-		public function setEventsManager($eventsManager);
+		public function attachEvent($event, $handler);
 
 
 		/**
-		 * Returns the internal event manager
+		 * Fires an event in the events manager causing that the active listeners will be notified about it
 		 *
-		 * @return \ManaPHP\Events\ManagerInterface
+		 * @param string $event
+		 * @param object $source
+		 * @param mixed  $data
 		 */
-		public function getEventsManager();
+		public function fireEvent($event, $source, $data=null);
 	}
 }

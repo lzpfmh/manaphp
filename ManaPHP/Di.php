@@ -57,13 +57,6 @@ namespace ManaPHP {
 		protected $_freshInstance = false;
 
 		/**
-		 * Events Manager
-		 *
-		 * @var \ManaPHP\Events\ManagerInterface
-		 */
-		protected $_eventsManager;
-
-		/**
 		 * Latest DI build
 		 */
 		protected static $_default;

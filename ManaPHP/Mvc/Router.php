@@ -2,6 +2,7 @@
 
 namespace ManaPHP\Mvc {
 
+	use ManaPHP\Events\EventsAware;
 	use ManaPHP\Mvc\Router\Exception;
 	use ManaPHP\Mvc\Router\Route;
 	use ManaPHP\Di\InjectionAwareInterface;
@@ -35,6 +36,7 @@ namespace ManaPHP\Mvc {
 	 */
 	
 	class Router implements RouterInterface, InjectionAwareInterface, EventsAwareInterface {
+		use EventsAware;
 
 		const URI_SOURCE_GET_URL = 0;
 
@@ -44,11 +46,6 @@ namespace ManaPHP\Mvc {
 		 * @var \ManaPHP\DiInterface
 		 */
 		protected $_dependencyInjector=null;
-
-		/**
-		 * @var \ManaPHP\Events\ManagerInterface
-		 */
-		protected $_eventsManager=null;
 
 		/**
 		 * @var int
@@ -165,23 +162,6 @@ namespace ManaPHP\Mvc {
 		 */
 		public function getDI(){
 			return $this->_dependencyInjector;
-		}
-
-		/**
-		 * Sets the events manager
-		 * @param \ManaPHP\Events\EventsAwareInterface $eventsManager
-		 */
-		public function setEventsManager($eventsManager){
-			$this->_eventsManager =$eventsManager;
-		}
-
-		/**
-		 * Returns the internal event manager
-		 * @return \ManaPHP\Events\EventsAwareInterface
-		 */
-		public function getEventsManager()
-		{
-			return $this->_eventsManager;
 		}
 
 		/**
@@ -356,9 +336,7 @@ namespace ManaPHP\Mvc {
 				$handle_uri =$uri;
 			}
 
-			if(is_object($this->_eventsManager)){
-				$this->_eventsManager->fire('router:beforeCheckRoutes',$this);
-			}
+			$this->fireEvent('router:beforeCheckRoutes',$this);
 
 			$route_found=false;
 			$parts=[];
@@ -460,9 +438,7 @@ namespace ManaPHP\Mvc {
 				$this->_params=array_merge($params,$parts);
 			}
 
-			if(is_object($this->_eventsManager)){
-				$this->_eventsManager->fire('router:afterCheckRoutes',$this);
-			}
+			$this->fireEvent('router:afterCheckRoutes',$this);
 
 			return $route_found;
 		}

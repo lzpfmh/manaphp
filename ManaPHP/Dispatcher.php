@@ -2,6 +2,7 @@
 
 namespace ManaPHP {
 	use ManaPHP\Di\InjectionAwareInterface;
+	use ManaPHP\Events\EventsAware;
 	use ManaPHP\Events\EventsAwareInterface;
 
 	/**
@@ -12,6 +13,7 @@ namespace ManaPHP {
 	 */
 	
 	abstract class Dispatcher implements DispatcherInterface, InjectionAwareInterface, EventsAwareInterface{
+		use EventsAware;
 
 		const EXCEPTION_NO_DI = 0;
 
@@ -29,11 +31,6 @@ namespace ManaPHP {
 		 * @var \ManaPHP\DiInterface
 		 */
 		protected $_dependencyInjector;
-
-		/**
-		 * @var \ManaPHP\Events\ManagerInterface
-		 */
-		protected $_eventsManager;
 
 		protected $_activeController;
 
@@ -139,22 +136,6 @@ namespace ManaPHP {
 		 */
 		public function getDI(){
 			return $this->_dependencyInjector;
-		}
-
-		/**
-		 * Sets the events manager
-		 * @param \ManaPHP\Events\EventsAwareInterface $eventsManager
-		 */
-		public function setEventsManager($eventsManager){
-			$this->_eventsManager =$eventsManager;
-		}
-
-		/**
-		 * Returns the internal event manager
-		 * @return \ManaPHP\Events\EventsAwareInterface
-		 */
-		public function getEventsManager(){
-			return $this->_eventsManager;
 		}
 
 		/**
@@ -367,10 +348,8 @@ namespace ManaPHP {
 				return false;
 			}
 
-			if(is_object($this->_eventsManager)){
-				if($this->_eventsManager->fire('dispatch:beforeDispatchLoop',$this) ===false){
-					return false;
-				}
+			if($this->fireEvent('dispatch:beforeDispatchLoop',$this) ===false){
+				return false;
 			}
 
 			$controller =null;
@@ -387,14 +366,12 @@ namespace ManaPHP {
 
 				$this->_resolveEmptyProperties();
 
-				if(is_object($this->_eventsManager)){
-					if($this->_eventsManager->fire('dispatch:beforeDispatch',$this) ===false){
-						continue;
-					}
+				if($this->fireEvent('dispatch:beforeDispatch',$this) ===false){
+					continue;
+				}
 
-					if($this->_finished ===false){
-						continue;
-					}
+				if($this->_finished ===false){
+					continue;
 				}
 
 				$controllerClass = $this->getControllerClass();
@@ -424,15 +401,14 @@ namespace ManaPHP {
 
 				$actionMethod =$this->_actionName .$this->_actionSuffix;
 				if(!method_exists($controller, $actionMethod)){
-					if(is_object($this->_eventsManager)){
-						if($this->_eventsManager->fire('dispatch:beforeNotFoundAction', $this) ===false){
-							continue;
-						}
-
-						if($this->_finished ===false){
-							continue;
-						}
+					if($this->fireEvent('dispatch:beforeNotFoundAction', $this) ===false){
+						continue;
 					}
+
+					if($this->_finished ===false){
+						continue;
+					}
+
 
 					if($this->_throwDispatchException('Action \'' . $this->_actionName . '\' was not found on handler \'' . $controllerClass . '\'', self::EXCEPTION_ACTION_NOT_FOUND) ===false){
 						if($this->_finished ===false){
@@ -474,10 +450,9 @@ namespace ManaPHP {
 				}
 
 				$value=null;
-				if(is_object($this->_eventsManager)){
-					// Call afterDispatch
-					$this->_eventsManager->fire('dispatch:afterDispatch', $this);
-				}
+
+				// Call afterDispatch
+				$this->fireEvent('dispatch:afterDispatch', $this);
 
 				if(method_exists($controller,'afterExecuteRoute')){
 					if($controller->afterExecuteRoute($this,$value) ===false) {
@@ -490,9 +465,7 @@ namespace ManaPHP {
 				}
 			}
 
-			if(is_object($this->_eventsManager)){
-				$this->_eventsManager->fire('dispatch:afterDispatchLoop',$this);
-			}
+			$this->fireEvent('dispatch:afterDispatchLoop',$this);
 
 			return $controller;
 		}

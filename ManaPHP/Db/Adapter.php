@@ -3,6 +3,7 @@
 namespace ManaPHP\Db {
 
 	use ManaPHP\Db;
+	use ManaPHP\Events\EventsAware;
 	use \ManaPHP\Events\EventsAwareInterface;
 
 	/**
@@ -12,14 +13,7 @@ namespace ManaPHP\Db {
 	 */
 	
 	class Adapter implements EventsAwareInterface, AdapterInterface {
-
-		/**
-		 * Event Manager
-		 *
-		 * @var \ManaPHP\Events\ManagerInterface
-		 */
-		protected $_eventsManager;
-
+		use EventsAware;
 		/**
 		 * Descriptor used to connect to a database
 		 *
@@ -80,26 +74,6 @@ namespace ManaPHP\Db {
 			$this->_type ='mysql';
 			$this->_descriptor =$descriptor;
 			$this->connect();
-		}
-
-
-		/**
-		 * Sets the event manager
-		 *
-		 * @param \ManaPHP\Events\ManagerInterface $eventsManager
-		 */
-		public function setEventsManager($eventsManager){
-			$this->_eventsManager =$eventsManager;
-		}
-
-
-		/**
-		 * Returns the internal event manager
-		 *
-		 * @return \ManaPHP\Events\ManagerInterface
-		 */
-		public function getEventsManager(){
-			return $this->_eventsManager;
 		}
 
 		/**
@@ -227,11 +201,10 @@ namespace ManaPHP\Db {
 			$this->_sqlVariables = $bindParams;
 			$this->_sqlBindTypes = $bindTypes;
 
-			if(is_object($this->_eventsManager)) {
-				if($this->_eventsManager->fire('db:beforeQuery',$this,$bindParams) ===false){
-					return false;
-				}
+			if($this->fireEvent('db:beforeQuery',$this,$bindParams) ===false){
+				return false;
 			}
+
 
 			if(is_array($bindParams)){
 				$statement =$this->_pdo->prepare($sqlStatement);
@@ -249,9 +222,7 @@ namespace ManaPHP\Db {
 			}
 
 			if(is_object($statement)){
-				if(is_object($this->_eventsManager)){
-					$this->_eventsManager->fire('db:afterQuery',$this,$bindParams);
-				}
+				$this->fireEvent('db:afterQuery',$this,$bindParams);
 
 				return $statement;
 			}
@@ -279,9 +250,7 @@ namespace ManaPHP\Db {
 			$this->_sqlVariables =$bindParams;
 			$this->_sqlBindTypes =$bindTypes;
 
-			if(is_object($this->_eventsManager)){
-				$this->_eventsManager->fire('db:beforeQuery',$this,$bindParams);
-			}
+			$this->fireEvent('db:beforeQuery',$this,$bindParams);
 
 			$this->_affectedRows=0;
 
@@ -296,9 +265,7 @@ namespace ManaPHP\Db {
 			}
 
 			if(is_int($this->_affectedRows)){
-				if(is_object($this->_eventsManager)){
-					$this->_eventsManager->fire('db:afterQuery',$this,$bindParams);
-				}
+				$this->fireEvent('db:afterQuery',$this,$bindParams);
 			}
 
 			return $this->_affectedRows;
@@ -623,9 +590,7 @@ namespace ManaPHP\Db {
 				throw new Exception('There is in a active transaction already.');
 			}
 
-			if(is_object($this->_eventsManager)){
-				$this->_eventsManager->fire('db:beginTransaction',$this);
-			}
+			$this->fireEvent('db:beginTransaction',$this);
 
 			$this->_transactionLevel++;
 			return $this->_pdo->beginTransaction();
@@ -655,9 +620,7 @@ namespace ManaPHP\Db {
 				throw new Exception('There is no active transaction');
 			}
 
-			if(is_object($this->_eventsManager)){
-				$this->_eventsManager->fire('db:rollbackTransaction',$this);
-			}
+			$this->fireEvent('db:rollbackTransaction',$this);
 
 			$this->_transactionLevel--;
 			return $this->_pdo->rollBack();
@@ -675,9 +638,8 @@ namespace ManaPHP\Db {
 				throw new Exception('There is no active transaction');
 			}
 
-			if(is_object($this->_eventsManager)){
-				$this->_eventsManager->fire('db:commitTransaction',$this);
-			}
+			$this->fireEvent('db:commitTransaction',$this);
+
 
 			$this->_transactionLevel--;
 			return $this->_pdo->commit();
