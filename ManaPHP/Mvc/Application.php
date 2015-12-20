@@ -181,7 +181,7 @@ namespace ManaPHP\Mvc {
 			 * @var $dispatcher \ManaPHP\Mvc\DispatcherInterface
 			 * @var $view \ManaPHP\Mvc\ViewInterface
 			 * @var $response \ManaPHP\Http\ResponseInterface
-			 * @var $moduleObject \ManaPHP\Mvc\ModuleDefinitionInterface
+			 * @var $moduleObject \ManaPHP\Mvc\ModuleInterface
 			 */
 
 			if(!is_object($this->_dependencyInjector)){

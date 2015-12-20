@@ -3,10 +3,10 @@
 namespace ManaPHP\Mvc {
 
 	/**
-	 * ManaPHP\Mvc\ModuleDefinitionInterface initializer
+	 * ManaPHP\Mvc\ModuleInterface initializer
 	 */
 	
-	interface ModuleDefinitionInterface {
+	interface ModuleInterface {
 
 		/**
 		 * Registers an autoloader related to the module
