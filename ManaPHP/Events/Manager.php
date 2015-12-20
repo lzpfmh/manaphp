@@ -72,7 +72,7 @@ namespace ManaPHP\Events {
 				return;
 			}
 
-			$callback_params=[new Event($fire_type), $source, $data];
+			$callback_params=[new Event($fire_name), $source, $data];
 
 			foreach($this->_events[$fire_type] as $event_handler){
 				$name =$event_handler['name'];
