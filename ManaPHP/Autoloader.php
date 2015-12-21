@@ -3,34 +3,40 @@
 namespace ManaPHP {
 
 	class Autoloader{
-		protected static $rootPath;
-
-		public static function autoload($className){
-			if(strncmp($className,'ManaPHP',7) ===0)
-			if(self::$rootPath ===null){
-				self::$rootPath=dirname(__DIR__);
+		protected static $_rootPath;
+		protected static $_optimizeMode;
+		public static function autoload($className) {
+			if (strncmp($className, 'ManaPHP', 7) !== 0) {
+				return false;
 			}
 
-				////				echo $className.'<br/>';
-//				if(strpos($className,'Interface') !==false){
-//					//create_function('','interface '.$className.' {}');
-//					eval('namespace '.str_replace('/','\\',dirname(str_replace('\\',DIRECTORY_SEPARATOR,$className))).'{interface ' . basename(str_replace('\\',DIRECTORY_SEPARATOR,$className)) . ' {}}');
-//					return true;
-//				}
-				$file =self::$rootPath.'/'.$className.'.php';
-				$file =str_replace('\\','/',$file);
-				if(is_file($file)){
+			if (self::$_rootPath === null) {
+				self::$_rootPath = dirname(__DIR__);
+			}
+
+			if(self::$_optimizeMode &&substr_compare($className,'Interface',strlen($className)-9) ===0){
+				eval('namespace '.str_replace('/','\\',dirname(str_replace('\\',DIRECTORY_SEPARATOR,$className))).'{interface ' . basename(str_replace('\\',DIRECTORY_SEPARATOR,$className)) . ' {}}');
+				//create_function('','interface '.$className.' {}');
+				return true;
+			}
+
+			$file = self::$_rootPath . '/' . $className . '.php';
+			$file = str_replace('\\', '/', $file);
+			if (is_file($file)) {
 
 				/** @noinspection PhpIncludeInspection */
 				require $file;
 				return true;
-
 			}
-
-			return false;
 		}
 
-		public static function register(){
+		/**
+		 * @param bool|true $optimizeMode
+		 * @return bool
+		 */
+		public static function register($optimizeMode=true){
+			self::$_optimizeMode=$optimizeMode;
+
 			return spl_autoload_register([__CLASS__,'autoload']);
 		}
 	}
