@@ -26,7 +26,7 @@ namespace ManaPHP {
 	 *</code>
 	 */
 
-	class Autoloader{
+	class Loader{
 		/**
 		 * @var array
 		 */
