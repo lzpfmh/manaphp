@@ -2,7 +2,6 @@
 
 namespace ManaPHP\Mvc\Model {
 
-	use Application\Home\Models\User;
 	use \ManaPHP\Di\InjectionAwareInterface;
 	use ManaPHP\Mvc\Application;
 
