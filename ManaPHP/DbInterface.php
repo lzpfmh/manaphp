@@ -13,11 +13,11 @@ namespace ManaPHP {
 		 *
 		 * @param string $sqlQuery
 		 * @param int $fetchMode
-		 * @param array $placeholders
+		 * @param array $bindParams
 		 * @param array $bindTypes
 		 * @return array
 		 */
-		public function fetchOne($sqlQuery, $fetchMode=null, $placeholders=null,$bindTypes=null);
+		public function fetchOne($sqlQuery, $fetchMode=null, $bindParams=null,$bindTypes=null);
 
 
 		/**
@@ -25,11 +25,11 @@ namespace ManaPHP {
 		 *
 		 * @param string $sqlQuery
 		 * @param int $fetchMode
-		 * @param array $placeholders
+		 * @param array $bindParams
 		 * @param array $bindTypes
 		 * @return array
 		 */
-		public function fetchAll($sqlQuery, $fetchMode=null, $placeholders=null,$bindTypes=null);
+		public function fetchAll($sqlQuery, $fetchMode=null, $bindParams=null,$bindTypes=null);
 
 
 		/**
@@ -62,11 +62,11 @@ namespace ManaPHP {
 		 *
 		 * @param  string $table
 		 * @param  string $whereCondition
-		 * @param  array $placeholders
-		 * @param  array $dataTypes
+		 * @param  array $bindParams
+		 * @param  array $bindTypes
 		 * @return boolean
 		 */
-		public function delete($table, $whereCondition, $placeholders=null, $dataTypes=null);
+		public function delete($table, $whereCondition, $bindParams=null, $bindTypes=null);
 
 
 		/**
@@ -127,11 +127,11 @@ namespace ManaPHP {
 		 * Use this method only when the SQL statement sent to the server return rows
 		 *
 		 * @param  string $sqlStatement
-		 * @param  array $placeholders
-		 * @param  array $dataTypes
+		 * @param  array $bindParams
+		 * @param  array $bindTypes
 		 * @return \ManaPHP\Db\ResultInterface
 		 */
-		public function query($sqlStatement, $placeholders=null, $dataTypes=null);
+		public function query($sqlStatement, $bindParams=null, $bindTypes=null);
 
 
 		/**
@@ -139,11 +139,11 @@ namespace ManaPHP {
 		 * Use this method only when the SQL statement sent to the server don't return any row
 		 *
 		 * @param  string $sqlStatement
-		 * @param  array $placeholders
-		 * @param  array $dataTypes
+		 * @param  array $bindParams
+		 * @param  array $bindTypes
 		 * @return boolean
 		 */
-		public function execute($sqlStatement, $placeholders=null, $dataTypes=null);
+		public function execute($sqlStatement, $bindParams=null, $bindTypes=null);
 
 
 		/**

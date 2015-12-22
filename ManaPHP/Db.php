@@ -136,25 +136,25 @@ namespace ManaPHP {
 		 *</code>
 		 *
 		 * @param \PDOStatement statement
-		 * @param array $placeholders
-		 * @param array $dataTypes
+		 * @param array $bindParams
+		 * @param array $bindTypes
 		 * @return \PDOStatement
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function executePrepared($statement, $placeholders, $dataTypes)
+		public function executePrepared($statement, $bindParams, $bindTypes)
 		{
-			foreach($placeholders as $parameter=>$v){
+			foreach($bindParams as $parameter=>$v){
 				if(!is_string($parameter)){
 					throw new Exception('Invalid bind parameter: '.$parameter);
 				}
 
-				if(is_array($dataTypes)){
+				if(is_array($bindTypes)){
 					throw new Exception('dataTypes not support');
 				}
 
 				if(!is_array($v)){
-					if(isset($dataTypes[$parameter])){
-						$data_type =$dataTypes[$parameter];
+					if(isset($bindTypes[$parameter])){
+						$data_type =$bindTypes[$parameter];
 					}else{
 						if(is_int($v)){
 							$data_type =\PDO::PARAM_INT;
@@ -487,12 +487,12 @@ namespace ManaPHP {
 		 *
 		 * @param  string $table
 		 * @param  string $whereCondition
-		 * @param  array $placeholders
-		 * @param  array $dataTypes
+		 * @param  array $bindParams
+		 * @param  array $bindTypes
 		 * @return boolean
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function delete($table, $whereCondition, $placeholders=null, $dataTypes=null){
+		public function delete($table, $whereCondition, $bindParams=null, $bindTypes=null){
 			$escapedTable=$this->escapeIdentifier($table);
 
 			if($whereCondition ==='' ||$whereCondition===null){
@@ -501,7 +501,7 @@ namespace ManaPHP {
 
 			$sql ='DELETE FROM '.$this->escapeIdentifier($table).' WHERE '.$whereCondition;
 
-			return $this->execute($sql,$placeholders,$dataTypes);
+			return $this->execute($sql,$bindParams,$bindTypes);
 		}
 
 
