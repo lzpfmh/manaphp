@@ -9,11 +9,11 @@ namespace Application\Home;
 
 use ManaPHP\Db\Adapter\Mysql;
 use \ManaPHP\Mvc\ModuleInterface;
-use \ManaPHP\Autoloader;
+use \ManaPHP\Loader;
 
 class Module implements ModuleInterface{
     public function registerAutoloaders($di){
-        $loader =new Autoloader();
+        $loader =new Loader();
         $loader->registerNamespaces([
             'Application\Home'=>realpath(__DIR__).''
         ])->register();

@@ -13,7 +13,8 @@ date_default_timezone_set('PRC');
 define ('APP_ROOT',dirname(__DIR__).'/Application');
 define ('MANAPHP_ROOT',dirname(APP_ROOT).'/ManaPHP');
 require MANAPHP_ROOT. '/Autoloader.php';
-\ManaPHP\Autoloader::autoloadFrameWorkClasses();
+
+\ManaPHP\Autoloader::register(false);
 
 try{
     $application = new \ManaPHP\Mvc\Application();

@@ -6,6 +6,9 @@
  * Time: 12:31
  */
 $router =new \ManaPHP\Mvc\Router(false);
-$router->add('/',['controller'=>'index','action'=>'index','module'=>'Home','namespace'=>'Application\Home\Controllers']);
+$router->setDefaultNamespace('Application\Home\Controllers');
+$router->setDefaultModule('Home');
+$router->add('/',['controller'=>'index','action'=>'index']);
+$router->add('/test2',['controller'=>'index','action'=>'test2']);
 $router->removeExtraSlashes(true);
 return $router;
