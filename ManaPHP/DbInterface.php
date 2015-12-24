@@ -119,7 +119,7 @@ namespace ManaPHP {
 		 *
 		 * @return array
 		 */
-		public function getSQLVariables();
+		public function getSQLBindParams();
 
 
 		/**
@@ -129,7 +129,7 @@ namespace ManaPHP {
 		 * @param  string $sqlStatement
 		 * @param  array $bindParams
 		 * @param  array $bindTypes
-		 * @return \ManaPHP\Db\ResultInterface
+		 * @return \PDOStatement
 		 */
 		public function query($sqlStatement, $bindParams=null, $bindTypes=null);
 
@@ -141,7 +141,7 @@ namespace ManaPHP {
 		 * @param  string $sqlStatement
 		 * @param  array $bindParams
 		 * @param  array $bindTypes
-		 * @return boolean
+		 * @return int
 		 */
 		public function execute($sqlStatement, $bindParams=null, $bindTypes=null);
 

@@ -34,7 +34,7 @@ namespace ManaPHP {
 		 *
 		 * @var array
 		 */
-		protected $_sqlVariables;
+		protected $_sqlBindParams;
 
 		/**
 		 * Active SQL Bind Types
@@ -67,7 +67,7 @@ namespace ManaPHP {
 		public function __construct($descriptor){
 			$this->_type ='mysql';
 			$this->_descriptor =$descriptor;
-			$this->connect();
+			$this->_connect();
 		}
 
 		/**
@@ -89,7 +89,7 @@ namespace ManaPHP {
 		 *
 		 * @return 	boolean
 		 */
-		protected function connect(){
+		protected function _connect(){
 			$descriptor =$this->_descriptor;
 
 			$username =isset($descriptor['username'])?$descriptor['username']:null;
@@ -112,22 +112,6 @@ namespace ManaPHP {
 		}
 
 		/**
-		 * Returns a PDO prepared statement to be executed with 'executePrepared'
-		 *
-		 *<code>
-		 * $statement = $db->prepare('SELECT * FROM robots WHERE name = :name');
-		 * $result = $connection->executePrepared($statement, array('name' => 'Voltron'));
-		 *</code>
-		 *
-		 * @param string $sqlStatement
-		 * @return \PDOStatement
-		 */
-		public function prepare($sqlStatement)
-		{
-			return $this->_pdo->prepare($sqlStatement);
-		}
-
-		/**
 		 * Executes a prepared statement binding. This function uses integer indexes starting from zero
 		 *
 		 *<code>
@@ -141,35 +125,33 @@ namespace ManaPHP {
 		 * @return \PDOStatement
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function executePrepared($statement, $bindParams, $bindTypes)
+		protected function _executePrepared($statement, $bindParams, $bindTypes)
 		{
-			foreach($bindParams as $parameter=>$v){
-				if(!is_string($parameter)){
-					throw new Exception('Invalid bind parameter: '.$parameter);
-				}
-
-				if(is_array($bindTypes)){
-					throw new Exception('dataTypes not support');
-				}
-
-				if(!is_array($v)){
+			foreach($bindParams as $parameter=>$value){
+				if(!is_array($value)){
 					if(isset($bindTypes[$parameter])){
 						$data_type =$bindTypes[$parameter];
 					}else{
-						if(is_int($v)){
+						if(is_int($value)){
 							$data_type =\PDO::PARAM_INT;
 						}else{
 							$data_type=\PDO::PARAM_STR;
 						}
 					}
 
-					$statement->bindValue($parameter,$v,$data_type);
+					if(is_int($parameter)){
+						$statement->bindValue($parameter+1,$value,$data_type);
+					}else{
+						$statement->bindValue($parameter,$value,$data_type);
+					}
+
 				}else{
 					throw new Exception('array data bind not support: '.$parameter);
 				}
 			}
 
 			$statement->execute();
+
 			return $statement;
 		}
 
@@ -192,19 +174,18 @@ namespace ManaPHP {
 		 */
 		public function query($sqlStatement, $bindParams = null, $bindTypes = null){
 			$this->_sqlStatement = $sqlStatement;
-			$this->_sqlVariables = $bindParams;
+			$this->_sqlBindParams = $bindParams;
 			$this->_sqlBindTypes = $bindTypes;
 
 			if($this->fireEvent('db:beforeQuery',$this,$bindParams) ===false){
 				return false;
 			}
 
-
 			if(is_array($bindParams)){
 				$statement =$this->_pdo->prepare($sqlStatement);
 
 				if(is_object($statement)){
-					$statement =$this->executePrepared($statement,$bindParams,$bindTypes);
+					$statement =$this->_executePrepared($statement,$bindParams,$bindTypes);
 				}
 			}else{
 				try{
@@ -212,12 +193,11 @@ namespace ManaPHP {
 				}catch (\PDOException $e){
 					throw new Exception($e->getMessage());
 				}
-
 			}
 
 			if(is_object($statement)){
 				$this->fireEvent('db:afterQuery',$this,$bindParams);
-
+				$statement->setFetchMode(\PDO::FETCH_ASSOC);
 				return $statement;
 			}
 
@@ -241,21 +221,25 @@ namespace ManaPHP {
 		 */
 		public function execute($sqlStatement, $bindParams = null, $bindTypes = null){
 			$this->_sqlStatement =$sqlStatement;
-			$this->_sqlVariables =$bindParams;
+			$this->_sqlBindParams =$bindParams;
 			$this->_sqlBindTypes =$bindTypes;
-
-			$this->fireEvent('db:beforeQuery',$this,$bindParams);
 
 			$this->_affectedRows=0;
 
-			if(is_array($bindParams)){
-				$statement =$this->_pdo->prepare($sqlStatement);
-				if(is_object($statement)){
-					$newStatement=$this->executePrepared($statement,$bindParams,$bindTypes);
-					$this->_affectedRows =$newStatement->rowCount();
+			$this->fireEvent('db:beforeQuery',$this,$bindParams);
+
+			try{
+				if(is_array($bindParams)){
+					$statement =$this->_pdo->prepare($sqlStatement);
+					if(is_object($statement)){
+						$newStatement=$this->_executePrepared($statement,$bindParams,$bindTypes);
+						$this->_affectedRows =$newStatement->rowCount();
+					}
+				}else{
+					$this->_affectedRows =$this->_pdo->exec($sqlStatement);
 				}
-			}else{
-				$this->_affectedRows =$this->_pdo->exec($sqlStatement);
+			}catch (\PDOException $e){
+				throw new Exception($e->getMessage());
 			}
 
 			if(is_int($this->_affectedRows)){
@@ -430,7 +414,7 @@ namespace ManaPHP {
 				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).' VALUES ('. implode(', ',$value_parts).')';
 			}
 
-			$affectRows=$this->execute($insertSql,$bindParams) ;
+			$affectRows=$this->execute($insertSql,$bindParams,$dataTypes) ;
 			if(is_int($affectRows)){
 				return $affectRows>0;
 			}else{
@@ -558,8 +542,8 @@ namespace ManaPHP {
 		 *
 		 * @return array
 		 */
-		public function getSQLVariables(){
-			return $this->_sqlStatement;
+		public function getSQLBindParams(){
+			return $this->_sqlBindParams;
 		}
 
 
@@ -654,7 +638,7 @@ namespace ManaPHP {
 		 *
 		 * @return string
 		 */
-		public function getRealSQLStatement(){
+		public function getEmulatePrepareSQLStatement(){
 			return $this->_sqlStatement;
 		}
 
