@@ -448,9 +448,17 @@ namespace ManaPHP {
 		 * @throws \ManaPHP\Db\Exception
 		 */
 		public function update($table, $fields, $values, $whereCondition=null, $dataTypes=null){
+			$escapedTable=$this->escapeIdentifier($table);
+
+			if($whereCondition ==='' ||$whereCondition===null){
+				throw new Exception('Danger DELETE \''. $escapedTable.'\'operation without any condition');
+			}
+
 			if(count($fields) !==count($values)){
 				throw new Exception('The number of values in the update is not the same as fields');
 			}
+
+
 
 		}
 
@@ -485,7 +493,7 @@ namespace ManaPHP {
 
 			$sql ='DELETE FROM '.$this->escapeIdentifier($table).' WHERE '.$whereCondition;
 
-			return $this->execute($sql,$bindParams,$bindTypes);
+			return $this->execute($sql, $bindParams, $bindTypes);
 		}
 
 
@@ -501,7 +509,7 @@ namespace ManaPHP {
 		 * @param   int $offset
 		 * @return 	string
 		 */
-		public function limit($sqlQuery, $number,$offset=null){
+		public function limit($sqlQuery, $number, $offset=null){
 			return $sqlQuery.' LIMIT '.$number.($offset ===null?'':(' OFFSET '.$offset));
 		}
 
@@ -632,16 +640,6 @@ namespace ManaPHP {
 		public function lastInsertId($sequenceName=null){
 			return $this->_pdo->lastInsertId($sequenceName);
 		}
-
-		/**
-		 * Active SQL statement in the object without replace bound parameters
-		 *
-		 * @return string
-		 */
-		public function getEmulatePrepareSQLStatement(){
-			return $this->_sqlStatement;
-		}
-
 
 
 		/**

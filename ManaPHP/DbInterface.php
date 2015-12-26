@@ -107,14 +107,6 @@ namespace ManaPHP {
 
 
 		/**
-		 * Active SQL statement in the object without replace bound parameters
-		 *
-		 * @return string
-		 */
-		public function getRealSQLStatement();
-
-
-		/**
 		 * Active SQL statement in the object
 		 *
 		 * @return array
