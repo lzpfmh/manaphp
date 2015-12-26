@@ -12,24 +12,24 @@ namespace ManaPHP {
 		 * Returns the first row in a SQL query result
 		 *
 		 * @param string $sqlQuery
-		 * @param int $fetchMode
 		 * @param array $bindParams
 		 * @param array $bindTypes
+		 * @param int $fetchMode
 		 * @return array
 		 */
-		public function fetchOne($sqlQuery, $fetchMode=null, $bindParams=null,$bindTypes=null);
+		public function fetchOne($sqlQuery, $bindParams=null,$bindTypes=null, $fetchMode=\PDO::FETCH_ASSOC);
 
 
 		/**
 		 * Dumps the complete result of a query into an array
 		 *
 		 * @param string $sqlQuery
-		 * @param int $fetchMode
 		 * @param array $bindParams
 		 * @param array $bindTypes
+		 * @param int $fetchMode
 		 * @return array
 		 */
-		public function fetchAll($sqlQuery, $fetchMode=null, $bindParams=null,$bindTypes=null);
+		public function fetchAll($sqlQuery,$bindParams=null,$bindTypes=null, $fetchMode=\PDO::FETCH_ASSOC);
 
 
 		/**
@@ -121,9 +121,10 @@ namespace ManaPHP {
 		 * @param  string $sqlStatement
 		 * @param  array $bindParams
 		 * @param  array $bindTypes
+		 * @param int $fetchMode
 		 * @return \PDOStatement
 		 */
-		public function query($sqlStatement, $bindParams=null, $bindTypes=null);
+		public function query($sqlStatement, $bindParams=null, $bindTypes=null, $fetchMode=\PDO::FETCH_ASSOC);
 
 
 		/**
