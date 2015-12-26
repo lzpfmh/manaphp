@@ -3,6 +3,7 @@
 namespace ManaPHP {
 
 	use ManaPHP\Db\Exception;
+	use ManaPHP\Db\PrepareEmulation;
 	use ManaPHP\Events\EventsAware;
 	use ManaPHP\Events\EventsAwareInterface;
 
@@ -129,26 +130,10 @@ namespace ManaPHP {
 		protected function _executePrepared($statement, $bindParams, $bindTypes)
 		{
 			foreach($bindParams as $parameter=>$value){
-				if(isset($bindTypes[$parameter])){
-					$data_type =$bindTypes[$parameter];
-				}else{
-					if(is_string($value)){
-						$data_type =\PDO::PARAM_STR;
-					}else if(is_int($value)){
-						$data_type =\PDO::PARAM_INT;
-					}else if(is_bool($value)){
-						$data_type=\PDO::PARAM_BOOL;
-					}else if($value ===null){
-						$data_type=\PDO::PARAM_NULL;
-					}else{
-						$data_type=\PDO::PARAM_STR;
-					}
-				}
-
 				if(is_int($parameter)){
-					$statement->bindValue($parameter+1, $value, $data_type);
+					$statement->bindValue($parameter+1, $value, $bindTypes[$parameter]);
 				}else{
-					$statement->bindValue($parameter, $value, $data_type);
+					$statement->bindValue($parameter, $value, $bindTypes[$parameter]);
 				}
 			}
 
@@ -162,9 +147,12 @@ namespace ManaPHP {
 			$bindParams=null;
 			$bindTypes=null;
 
-			if($binds ===null){
+			if($binds ===null ||count($binds) ===0){
 				return ;
 			}
+
+			$bindParams=[];
+			$bindTypes=[];
 
 			foreach($binds as $key=>$value){
 				if(is_int($key)){
@@ -192,17 +180,22 @@ namespace ManaPHP {
 					throw new Exception('one value of binds has invalid value: '.json_encode($value));
 				}
 
-				if($bindParams ===null){
-					$bindParams=[];
-				}
-				$bindParams[$finalKey]=$data;
-
-				if($type !==null){
-					if($bindTypes ===null){
-						$bindTypes=[];
+				if($type ===null){
+					if(is_string($data)){
+						$type =\PDO::PARAM_STR;
+					}else if(is_int($data)){
+						$type =\PDO::PARAM_INT;
+					}else if(is_bool($data)){
+						$type=\PDO::PARAM_BOOL;
+					}else if($data ===null){
+						$type=\PDO::PARAM_NULL;
+					}else{
+						$type=\PDO::PARAM_STR;
 					}
-					$bindTypes[$finalKey]=$type;
 				}
+
+				$bindParams[$finalKey]=$data;
+				$bindTypes[$finalKey]=$type;
 			}
 		}
 
@@ -584,6 +577,17 @@ namespace ManaPHP {
 		 */
 		public function getSQLStatement(){
 			return $this->_sqlStatement;
+		}
+
+
+		/**
+		 * Active SQL statement in the object with replace the bind with value
+		 *
+		 * @return string
+		 * @throws \ManaPHP\Db\Exception
+		 */
+		public function getEmulatePrepareSQLStatement(){
+			return (new PrepareEmulation($this->_pdo))->emulate($this->_sqlStatement,$this->_sqlBindParams,$this->_sqlBindTypes);
 		}
 
 		/**
