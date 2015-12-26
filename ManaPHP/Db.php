@@ -158,6 +158,76 @@ namespace ManaPHP {
 		}
 
 
+		protected function _parseBinds($binds, &$bindParams, &$bindTypes){
+			$bindParams=null;
+			$bindTypes=null;
+
+			if($binds ===null){
+				return ;
+			}
+
+			foreach($binds as $key=>$value){
+				if(is_int($key)){
+					$finalKey=$key;
+				}else if(is_string($key)){
+					$finalKey=($key[0] ===':')?$key:(':'.$key);
+				}else{
+					throw new Exception('invalid binds field: '.json_encode($key));
+				}
+
+				if(is_scalar($value) ||$value===null){
+					$data=$value;
+					$type=null;
+				}else if(is_array($value)){
+					if(count($value) ===1){
+						$data=$value[0];
+						$type=null;
+					}else if(count($value) ===2){
+						$data=$value[0];
+						$type=$value[1];
+					}else{
+						throw new Exception('one value of binds has invalid values: '.json_encode($value));
+					}
+				}else{
+					throw new Exception('one value of binds has invalid value: '.json_encode($value));
+				}
+
+				if($bindParams ===null){
+					$bindParams=[];
+				}
+				$bindParams[$finalKey]=$data;
+
+				if($type !==null){
+					if($bindTypes ===null){
+						$bindTypes=[];
+					}
+					$bindTypes[$finalKey]=$type;
+				}
+			}
+		}
+
+		protected function _parseFields($binds, &$fields,&$escaped_fields){
+			$fields=null;
+			$escaped_fields=null;
+			if($binds ===null){
+				return ;
+			}
+
+			$fields=[];
+			$escaped_fields=[];
+			foreach($binds as $key=>$value){
+				if(is_int($key)){
+					$finalKey=$key;
+				}else if(is_string($key)){
+					$finalKey=($key[0] ===':')?substr($key,1):$key;
+				}else{
+					throw new Exception('invalid binds field: '.json_encode($key));
+				}
+
+				$fields[]=$finalKey;
+				$escaped_fields[]='`'.$finalKey.'`';
+			}
+		}
 		/**
 		 * Sends SQL statements to the database server returning the success state.
 		 * Use this method only when the SQL statement sent to the server is returning rows
@@ -169,13 +239,14 @@ namespace ManaPHP {
 		 *</code>
 		 *
 		 * @param string $sqlStatement
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @param int $fetchMode
 		 * @return \PdoStatement
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function query($sqlStatement, $bindParams = null, $bindTypes = null, $fetchMode=\PDO::FETCH_ASSOC){
+		public function query($sqlStatement, $binds=null, $fetchMode=\PDO::FETCH_ASSOC){
+			$this->_parseBinds($binds,$bindParams, $bindTypes);
+
 			$this->_sqlStatement = $sqlStatement;
 			$this->_sqlBindParams = $bindParams;
 			$this->_sqlBindTypes = $bindTypes;
@@ -212,12 +283,13 @@ namespace ManaPHP {
 		 *	$success = $connection->execute("INSERT INTO robots VALUES (?, ?)", array(1, 'Astro Boy'));
 		 *</code>
 		 * @param string $sqlStatement
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @return int
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function execute($sqlStatement, $bindParams = null, $bindTypes = null){
+		public function execute($sqlStatement, $binds=null){
+			$this->_parseBinds($binds,$bindParams, $bindTypes);
+
 			$this->_sqlStatement =$sqlStatement;
 			$this->_sqlBindParams =$bindParams;
 			$this->_sqlBindTypes =$bindTypes;
@@ -264,7 +336,25 @@ namespace ManaPHP {
 			}
 		}
 
+		/**
+		 * Escapes a column/table/schema name
+		 *
+		 * <code>
+		 * echo $connection->escapeIdentifier('my_table'); // `my_table`
+		 * echo $connection->escapeIdentifier(['companies', 'name']); // `companies`.`name`
+		 * <code>
+		 *
+		 * @param array $identifiers
+		 * @return string
+		 */
+		public function _escapeIdentifiers($identifiers){
+			$escaped_identifiers=[];
+			foreach($identifiers as $identifier){
+				$escaped_identifiers[]='`'.$identifiers.'`';
+			}
 
+			return $escaped_identifiers;
+		}
 		/**
 		 * Returns the number of affected rows by the last INSERT/UPDATE/DELETE reported by the database system
 		 *
@@ -289,19 +379,14 @@ namespace ManaPHP {
 		 *</code>
 		 *
 		 * @param string $sqlQuery
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @param int $fetchMode
 		 * @throws \ManaPHP\Db\Exception
-		 * @return array
+		 * @return array|false
 		 */
-		public function fetchOne($sqlQuery, $bindParams=null,$bindTypes=null,$fetchMode=\PDO::FETCH_ASSOC){
-			$result =$this->query($sqlQuery, $bindParams, $bindTypes, $fetchMode);
-			if(is_object($result)){
-				return $result->fetch();
-			}else{
-				return [];
-			}
+		public function fetchOne($sqlQuery,$binds=null,$fetchMode=\PDO::FETCH_ASSOC){
+			$result =$this->query($sqlQuery, $binds, $fetchMode);
+			return $result->fetch();
 		}
 
 
@@ -326,14 +411,13 @@ namespace ManaPHP {
 		 *</code>
 		 *
 		 * @param string $sqlQuery
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @param int $fetchMode
 		 * @throws \ManaPHP\Db\Exception
 		 * @return array
 		 */
-		public function fetchAll($sqlQuery, $bindParams=null,$bindTypes=null,$fetchMode=\PDO::FETCH_ASSOC){
-			$result =$this->query($sqlQuery,$bindParams, $bindTypes, $fetchMode);
+		public function fetchAll($sqlQuery, $binds=null, $fetchMode=\PDO::FETCH_ASSOC){
+			$result =$this->query($sqlQuery,$binds, $fetchMode);
 			return $result->fetchAll();
 		}
 
@@ -354,28 +438,26 @@ namespace ManaPHP {
 		 * </code>
 		 *
 		 * @param 	string $table
-		 * @param 	array $field_values
-		 * @param 	array $dataTypes
+		 * @param 	array $binds
 		 * @return 	int
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function insert($table, $field_values, $dataTypes=null){
-			if(count($field_values) ===0){
+		public function insert($table, $binds){
+			if(count($binds) ===0){
 				throw new Exception('Unable to insert into ' . $table . ' without data');
 			}
 
-			if(isset($field_values[0])){
-				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).' VALUES ('. rtrim(str_repeat('?,',count($field_values)),',').')';
-				return $this->execute($insertSql,$field_values,$dataTypes);
+			if(isset($binds[0])){
+				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).
+								' VALUES ('. rtrim(str_repeat('?,',count($binds)),',').')';
+				return $this->execute($insertSql,$binds);
 			}else{
-				$field_parts=[];
 
-				foreach($field_values as $k=>$v){
-					$field_parts[]=$this->escapeIdentifier(ltrim($k,':'));
-				}
-
-				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).' ('. implode(',',$field_parts).') VALUES ('. implode(',', array_keys($field_values)) .')';
-				return $this->execute($insertSql,$field_values,$dataTypes) ;
+				$this->_parseFields($binds,$fields,$escaped_fields);
+				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).
+							' ('. implode(',',$escaped_fields).
+							') VALUES (:'. implode(',:', $fields) .')';
+				return $this->execute($insertSql,$binds) ;
 			}
 		}
 
@@ -397,43 +479,30 @@ namespace ManaPHP {
 		 * </code>
 		 *
 		 * @param 	string $table
-		 * @param 	array $field_values
+		 * @param 	array $values
 		 * @param 	string $whereCondition
-		 * @param 	array $dataTypes
 		 * @return 	boolean
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function update($table, $whereCondition=null, $field_values, $dataTypes=null){
-			if(count($field_values) ===0){
+		public function update($table, $whereCondition=null, $values){
+			$escapedTable=$this->escapeIdentifier($table);
+
+			if(count($values) ===0){
 				throw new Exception('Unable to update ' . $table . ' without data');
 			}
-
-			if(isset($field_values[0])){
-				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).' VALUES ('. rtrim(str_repeat('?,',count($field_values)),',').')';
-				return $this->execute($insertSql,$field_values,$dataTypes);
-			}else{
-				$field_parts=[];
-
-				foreach($field_values as $k=>$v){
-					$field_parts[]=$this->escapeIdentifier(ltrim($k,':'));
-				}
-
-				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).' ('. implode(',',$field_parts).') VALUES ('. implode(',', array_keys($field_values)) .')';
-				return $this->execute($insertSql,$field_values,$dataTypes) ;
-			}
-
-			$escapedTable=$this->escapeIdentifier($table);
 
 			if($whereCondition ==='' ||$whereCondition===null){
 				throw new Exception('Danger DELETE \''. $escapedTable.'\'operation without any condition');
 			}
 
-			if(count($fields) !==count($values)){
-				throw new Exception('The number of values in the update is not the same as fields');
+			$this->_parseFields($values,$fields,$escaped_fields);
+			$setFields=[];
+			foreach($fields as $key=>$field){
+				$setFields[]=$escaped_fields[$key].'=:'.$field;
 			}
+			$updateSql='UPDATE '. $this->escapeIdentifier($table). 'SET '.implode(',', $setFields).' WHERE '. $whereCondition;
 
-
-
+			return $this->execute($updateSql,$values);
 		}
 
 
@@ -453,12 +522,11 @@ namespace ManaPHP {
 		 *
 		 * @param  string $table
 		 * @param  string $whereCondition
-		 * @param  array $bindParams
-		 * @param  array $bindTypes
+		 * @param  array $binds
 		 * @return boolean
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function delete($table, $whereCondition, $bindParams=null, $bindTypes=null){
+		public function delete($table, $whereCondition, $binds=null){
 			$escapedTable=$this->escapeIdentifier($table);
 
 			if($whereCondition ==='' ||$whereCondition===null){
@@ -467,7 +535,7 @@ namespace ManaPHP {
 
 			$sql ='DELETE FROM '.$this->escapeIdentifier($table).' WHERE '.$whereCondition;
 
-			return $this->execute($sql, $bindParams, $bindTypes);
+			return $this->execute($sql, $binds);
 		}
 
 

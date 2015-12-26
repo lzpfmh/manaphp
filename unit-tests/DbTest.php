@@ -17,50 +17,50 @@ class DbTest extends TestCase{
         $config= require 'config.database.php';
         $this->db=new ManaPHP\Db\Adapter\Mysql($config['mysql']);
         $this->db->attachEvent('db:beforeQuery',function($event,$source,$data){
-           var_dump(['sql'=>$source->getSQLStatement(),'bind'=>$source->getSQLBindParams()]);
+          // var_dump(['sql'=>$source->getSQLStatement(),'bind'=>$source->getSQLBindParams(),'bindTypes'=>$source->getSQLBindTypes()]);
         });
+        $this->db->query('SET GLOBAL innodb_flush_log_at_trx_commit=2');
     }
 
     public function test_query(){
-        $result=$this->db->query('SELECT * FROM city LIMIT 3');
-        $this->assertTrue(is_object($result));
-        $this->assertInstanceOf('\PDOStatement',$result);
+        $rows=$this->db->query('SELECT * FROM city LIMIT 3');
+        $this->assertTrue(is_object($rows));
+        $this->assertInstanceOf('\PDOStatement',$rows);
         for($i=0; $i<3; $i++){
-            $row=$result->fetch();
-            var_dump($row);
+            $row=$rows->fetch();
             $this->assertCount(4,$row);
         }
 
-        $row =$result->fetch();
+        $row =$rows->fetch();
         $this->assertFalse($row);
 
-        $result=$this->db->query('SELECT * FROM city LIMIT 5');
-        $this->assertTrue(is_object($result));
+        $rows=$this->db->query('SELECT * FROM city LIMIT 5');
+        $this->assertTrue(is_object($rows));
         $rowCount=0;
-        while($row =$result->fetch()){
+        while($row =$rows->fetch()){
             $rowCount++;
         }
         $this->assertEquals(5, $rowCount);
 
-        $result=$this->db->query('SELECT * FROM city LIMIT 5');
-        $result->setFetchMode(PDO::FETCH_NUM);
-        $row=$result->fetch();
+        $rows=$this->db->query('SELECT * FROM city LIMIT 5');
+        $rows->setFetchMode(PDO::FETCH_NUM);
+        $row=$rows->fetch();
         $this->assertTrue(is_array($row));
         $this->assertCount(4,$row);
         $this->assertTrue(isset($row[0]));
         $this->assertFalse(isset($row['city']));
 
-        $result=$this->db->query('SELECT * FROM city LIMIT 5');
-        $result->setFetchMode(PDO::FETCH_ASSOC);
-        $row=$result->fetch();
+        $rows=$this->db->query('SELECT * FROM city LIMIT 5');
+        $rows->setFetchMode(PDO::FETCH_ASSOC);
+        $row=$rows->fetch();
         $this->assertTrue(is_array($row));
         $this->assertCount(4,$row);
         $this->assertFalse(isset($row[0]));
         $this->assertTrue(isset($row['city']));
 
-        $result=$this->db->query('SELECT * FROM city LIMIT 5');
-        $result->setFetchMode(PDO::FETCH_OBJ);
-        $row=$result->fetch();
+        $rows=$this->db->query('SELECT * FROM city LIMIT 5');
+        $rows->setFetchMode(PDO::FETCH_OBJ);
+        $row=$rows->fetch();
         $this->assertTrue(is_object($row));
         $this->assertTrue(isset($row->city));
     }
@@ -93,27 +93,88 @@ class DbTest extends TestCase{
     }
 
     public function test_insert(){
+
+        //recommended method without bind value type
         $this->db->execute('TRUNCATE TABLE _student');
-
-        $affectedRows=$this->db->insert('_student',[':id'=>1,':age'=>2,':name'=>'mana']);
+        $affectedRows=$this->db->insert('_student',[':id'=>1,':age'=>21,':name'=>'mana1']);
         $this->assertEquals(1,$affectedRows);
+        $row=$this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
+        $this->assertEquals([1,21,'mana1'],array_values($row));
 
-        $row=$this->db->fetchOne('SELECT * FROM _student WHERE id=1');
-        $this->assertEquals('1',$row['id']);
-        $this->assertEquals('2',$row['age']);
-        $this->assertEquals('mana',$row['name']);
-
-        $affectedRows=$this->db->insert('_student',[2,22,'mana2']);
+        //recommended method with bind value type completely
+        $this->db->execute('TRUNCATE TABLE _student');
+        $affectedRows=$this->db->insert('_student',[':id'=>[1,\PDO::PARAM_INT],':age'=>[21,\PDO::PARAM_INT],':name'=>['mana1',\PDO::PARAM_STR]]);
         $this->assertEquals(1,$affectedRows);
+        $row=$this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
+        $this->assertEquals([1,21,'mana1'],array_values($row));
 
-        $row=$this->db->fetchOne('SELECT * FROM _student WHERE id=2');
-        $this->assertEquals('2',$row['id']);
-        $this->assertEquals('22',$row['age']);
-        $this->assertEquals('mana2',$row['name']);
+        //recommended method with bind value type partly
+        $this->db->execute('TRUNCATE TABLE _student');
+        $affectedRows=$this->db->insert('_student',[':id'=>1,':age'=>[21],':name'=>['mana1',\PDO::PARAM_STR]]);
+        $this->assertEquals(1,$affectedRows);
+        $row=$this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
+        $this->assertEquals([1,21,'mana1'],array_values($row));
+
+        //value only method
+        $this->db->execute('TRUNCATE TABLE _student');
+        $affectedRows=$this->db->insert('_student',[1,21,'mana1']);
+        $this->assertEquals(1,$affectedRows);
+        $row=$this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
+        $this->assertEquals([1,21,'mana1'],array_values($row));
+
+        //compatible method
+        $this->db->execute('TRUNCATE TABLE _student');
+        $affectedRows=$this->db->insert('_student',['id'=>1,'age'=>21,'name'=>'mana1']);
+        $this->assertEquals(1,$affectedRows);
+        $row=$this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
+        $this->assertEquals([1,21,'mana1'],array_values($row));
 
         for($i =0; $i<10; $i++){
-            $affectedRows =$this->db->insert('_student',[':age'=>$i,':name'=>'mana'.$i]);
+            $affectedRows =$this->db->insert('_student',['age'=>$i,':name'=>'mana'.$i]);
             $this->assertEquals(1,$affectedRows);
         }
+    }
+
+    public function test_update(){
+        $this->db->execute('TRUNCATE TABLE _student');
+        $affectedRows=$this->db->insert('_student',[':id'=>1,':age'=>21,':name'=>'mana1']);
+        $this->assertEquals(1,$affectedRows);
+
+        //recommended method without bind value type
+        $affectedRows=$this->db->update('_student','id=1',[':age'=>22,':name'=>'mana2']);
+        $this->assertEquals(1,$affectedRows);
+        $row=$this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
+        $this->assertEquals([1,22,'mana2'],array_values($row));
+
+        //recommended method with bind value type completely
+        $affectedRows=$this->db->update('_student','id=1',[':age'=>[23,\PDO::PARAM_INT],':name'=>['mana3',\PDO::PARAM_STR]]);
+        $this->assertEquals(1,$affectedRows);
+        $row=$this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
+        $this->assertEquals([1,23,'mana3'],array_values($row));
+
+        //recommended method with bind value type partly
+        $affectedRows=$this->db->update('_student','id=1',[':age'=>[24],':name'=>['mana4',\PDO::PARAM_STR]]);
+        $this->assertEquals(1,$affectedRows);
+        $row=$this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
+        $this->assertEquals([1,24,'mana4'],array_values($row));
+
+        //compatible method
+        $affectedRows=$this->db->update('_student','id=1',['age'=>25,'name'=>'mana5']);
+        $this->assertEquals(1,$affectedRows);
+        $row=$this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
+        $this->assertEquals([1,25,'mana5'],array_values($row));
+    }
+
+    public function test_delete(){
+        $this->db->execute('TRUNCATE TABLE _student');
+        $affectedRows=$this->db->insert('_student',[':id'=>1,':age'=>21,':name'=>'mana1']);
+        $this->assertEquals(1,$affectedRows);
+        $this->db->delete('_student','id=:id',['id'=>1]);
+        $this->assertFalse($this->db->fetchOne('SELECT * FROM _student WHERE id=1'));
+
+        $affectedRows=$this->db->insert('_student',[':id'=>1,':age'=>21,':name'=>'mana1']);
+        $this->assertEquals(1,$affectedRows);
+        $this->db->delete('_student','id=1');
+        $this->assertFalse($this->db->fetchOne('SELECT * FROM _student WHERE id=1'));
     }
 }

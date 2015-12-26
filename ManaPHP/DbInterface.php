@@ -12,47 +12,43 @@ namespace ManaPHP {
 		 * Returns the first row in a SQL query result
 		 *
 		 * @param string $sqlQuery
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @param int $fetchMode
-		 * @return array
+		 * @return array|false
 		 */
-		public function fetchOne($sqlQuery, $bindParams=null,$bindTypes=null, $fetchMode=\PDO::FETCH_ASSOC);
+		public function fetchOne($sqlQuery, $binds=null, $fetchMode=\PDO::FETCH_ASSOC);
 
 
 		/**
 		 * Dumps the complete result of a query into an array
 		 *
 		 * @param string $sqlQuery
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @param int $fetchMode
 		 * @return array
 		 */
-		public function fetchAll($sqlQuery,$bindParams=null,$bindTypes=null, $fetchMode=\PDO::FETCH_ASSOC);
+		public function fetchAll($sqlQuery, $binds=null, $fetchMode=\PDO::FETCH_ASSOC);
 
 
 		/**
 		 * Inserts data into a table using custom RBDMS SQL syntax
 		 *
 		 * @param 	string $table
-		 * @param 	array $field_values
-		 * @param 	array $dataTypes
+		 * @param 	array $binds
 		 * @return 	boolean
 		 */
-		public function insert($table, $field_values, $dataTypes=null);
+		public function insert($table, $binds);
 
 
 		/**
 		 * Updates data on a table using custom RBDMS SQL syntax
 		 *
 		 * @param 	string $table
-		 * @param 	array $field_values
+		 * @param 	array $binds
 		 * @param 	string $whereCondition
-		 * @param 	array $dataTypes
 		 * @return 	boolean
 		 */
-		public function update($table, $whereCondition, $field_values, $dataTypes=null);
+		public function update($table, $whereCondition, $binds);
 
 
 		/**
@@ -60,11 +56,10 @@ namespace ManaPHP {
 		 *
 		 * @param  string $table
 		 * @param  string $whereCondition
-		 * @param  array $bindParams
-		 * @param  array $bindTypes
+		 * @param  array $binds
 		 * @return boolean
 		 */
-		public function delete($table, $whereCondition, $bindParams=null, $bindTypes=null);
+		public function delete($table, $whereCondition, $binds=null);
 
 
 		/**
@@ -117,12 +112,11 @@ namespace ManaPHP {
 		 * Use this method only when the SQL statement sent to the server return rows
 		 *
 		 * @param  string $sqlStatement
-		 * @param  array $bindParams
-		 * @param  array $bindTypes
+		 * @param  array $binds
 		 * @param int $fetchMode
 		 * @return \PDOStatement
 		 */
-		public function query($sqlStatement, $bindParams=null, $bindTypes=null, $fetchMode=\PDO::FETCH_ASSOC);
+		public function query($sqlStatement, $binds=null, $fetchMode=\PDO::FETCH_ASSOC);
 
 
 		/**
@@ -130,11 +124,10 @@ namespace ManaPHP {
 		 * Use this method only when the SQL statement sent to the server don't return any row
 		 *
 		 * @param  string $sqlStatement
-		 * @param  array $bindParams
-		 * @param  array $bindTypes
+		 * @param  array $binds
 		 * @return int
 		 */
-		public function execute($sqlStatement, $bindParams=null, $bindTypes=null);
+		public function execute($sqlStatement, $binds=null);
 
 
 		/**
