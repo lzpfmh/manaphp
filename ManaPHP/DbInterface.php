@@ -36,12 +36,11 @@ namespace ManaPHP {
 		 * Inserts data into a table using custom RBDMS SQL syntax
 		 *
 		 * @param 	string $table
-		 * @param 	array $values
-		 * @param 	array $fields
+		 * @param 	array $field_values
 		 * @param 	array $dataTypes
 		 * @return 	boolean
 		 */
-		public function insert($table, $values, $fields=null, $dataTypes=null);
+		public function insert($table, $field_values, $dataTypes=null);
 
 
 		/**

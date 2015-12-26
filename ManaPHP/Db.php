@@ -354,40 +354,28 @@ namespace ManaPHP {
 		 * </code>
 		 *
 		 * @param 	string $table
-		 * @param 	array $values
-		 * @param 	array $fields
+		 * @param 	array $field_values
 		 * @param 	array $dataTypes
 		 * @return 	int
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function insert($table, $values, $fields=null, $dataTypes=null){
-			if(count($values) ===0){
+		public function insert($table, $field_values, $dataTypes=null){
+			if(count($field_values) ===0){
 				throw new Exception('Unable to insert into ' . $table . ' without data');
 			}
 
-			if($fields ===null){
-				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).' VALUES ('. rtrim(str_repeat('?,',count($values)),',').')';
-				return $this->execute($insertSql,$values,$dataTypes);
+			if(isset($field_values[0])){
+				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).' VALUES ('. rtrim(str_repeat('?,',count($field_values)),',').')';
+				return $this->execute($insertSql,$field_values,$dataTypes);
 			}else{
-				if(count($values) !==count($fields)){
-					throw new Exception('The number of values in the insert is not the same as fields');
-				}
-				$value_parts=[];
-				$bindParams=[];
-				foreach($values as $k=>$v){
-					$bindKey =':'.$fields[$k];
-					$value_parts[]=$bindKey;
-					$bindParams[$bindKey]=$v;
-				}
-
 				$field_parts=[];
 
-				foreach($fields as $field){
-					$field_parts[]=$this->escapeIdentifier($field);
+				foreach($field_values as $k=>$v){
+					$field_parts[]=$this->escapeIdentifier(ltrim($k,':'));
 				}
 
-				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).' ('. implode(',',$field_parts).') VALUES ('. implode(',', $value_parts) .')';
-				return $this->execute($insertSql,$bindParams,$dataTypes) ;
+				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).' ('. implode(',',$field_parts).') VALUES ('. implode(',', array_keys($field_values)) .')';
+				return $this->execute($insertSql,$field_values,$dataTypes) ;
 			}
 		}
 

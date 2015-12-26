@@ -17,7 +17,7 @@ class DbTest extends TestCase{
         $config= require 'config.database.php';
         $this->db=new ManaPHP\Db\Adapter\Mysql($config['mysql']);
         $this->db->attachEvent('db:beforeQuery',function($event,$source,$data){
-           var_dump(['sql'=>$source->getRealSQLStatement(),'bind'=>$source->getSQLBindParams()]);
+           var_dump(['sql'=>$source->getSQLStatement(),'bind'=>$source->getSQLBindParams()]);
         });
     }
 
@@ -66,47 +66,54 @@ class DbTest extends TestCase{
     }
 
     public function test_execute(){
-        $success=$this->db->execute('TRUNCATE TABLE _student');
-        $this->assertTrue($success);
+        $affectedRows=$this->db->execute('TRUNCATE TABLE _student');
+        $this->assertTrue(is_int($affectedRows));
+        //affected rows always are 0
+        $this->assertEquals(0,$affectedRows);
 
-        $success=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(?,?,?)',[1,20,'mana']);
-        $this->assertTrue($success);
+        $affectedRows=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(?,?,?)',[1,20,'mana']);
+        $this->assertEquals(1,$affectedRows);
 
-        $success =$this->db->execute('UPDATE _student set age=?, name=?',[22,'mana2']);
-        $this->assertTrue($success);
+        $affectedRows =$this->db->execute('UPDATE _student set age=?, name=?',[22,'mana2']);
+        $this->assertEquals(1,$affectedRows);
 
-        $success =$this->db->execute('DELETE FROM _student WHERE id=?',[1]);
-        $this->assertTrue($success);
+        $affectedRows =$this->db->execute('DELETE FROM _student WHERE id=?',[1]);
+        $this->assertEquals(1,$affectedRows);
 
-        $success=$this->db->execute('TRUNCATE TABLE _student');
-        $this->assertTrue($success);
+        $this->db->execute('TRUNCATE TABLE _student');
 
-        $success=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(:id,:age,:name)',['id'=>11,'age'=>220,'name'=>'mana2']);
-        $this->assertTrue($success);
+        $affectedRows=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(:id,:age,:name)',['id'=>11,'age'=>220,'name'=>'mana2']);
+        $this->assertEquals(1,$affectedRows);
 
-        $success =$this->db->execute('UPDATE _student set age=:age, name=:name',['age'=>22,'name'=>'mana2']);
-        $this->assertTrue($success);
+        $affectedRows =$this->db->execute('UPDATE _student set age=:age, name=:name',['age'=>22,'name'=>'mana2']);
+        $this->assertEquals(1,$affectedRows);
 
-        $success =$this->db->execute('DELETE FROM _student WHERE id=:id',['id'=>1]);
-        $this->assertTrue($success);
+        $affectedRows =$this->db->execute('DELETE FROM _student WHERE id=:id',['id'=>11]);
+        $this->assertEquals(1,$affectedRows);
     }
 
     public function test_insert(){
-        $success=$this->db->execute('TRUNCATE TABLE _student');
-        $this->assertTrue($success);
+        $this->db->execute('TRUNCATE TABLE _student');
 
-        $success=$this->db->insert('_student',[1,2,'mana'],['id','age','name']);
-        $this->assertTrue($success);
+        $affectedRows=$this->db->insert('_student',[':id'=>1,':age'=>2,':name'=>'mana']);
+        $this->assertEquals(1,$affectedRows);
 
-        $success=$this->db->insert('_student',[2,2,'mana'],['id','age','name']);
-        $this->assertTrue($success);
+        $row=$this->db->fetchOne('SELECT * FROM _student WHERE id=1');
+        $this->assertEquals('1',$row['id']);
+        $this->assertEquals('2',$row['age']);
+        $this->assertEquals('mana',$row['name']);
 
-        for($i =0; $i<50; $i++){
-            $success =$this->db->insert('_student',[$i,'mana'.$i],['age','name']);
-            $this->assertTrue($success);
+        $affectedRows=$this->db->insert('_student',[2,22,'mana2']);
+        $this->assertEquals(1,$affectedRows);
+
+        $row=$this->db->fetchOne('SELECT * FROM _student WHERE id=2');
+        $this->assertEquals('2',$row['id']);
+        $this->assertEquals('22',$row['age']);
+        $this->assertEquals('mana2',$row['name']);
+
+        for($i =0; $i<10; $i++){
+            $affectedRows =$this->db->insert('_student',[':age'=>$i,':name'=>'mana'.$i]);
+            $this->assertEquals(1,$affectedRows);
         }
-
     }
-
-
 }
