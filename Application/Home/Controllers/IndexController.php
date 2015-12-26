@@ -8,6 +8,8 @@
 namespace Application\Home\Controllers;
 
 use Application\Home\Models\User;
+use ManaPHP\Autoloader;
+use ManaPHP\Http\Session;
 use ManaPHP\Mvc\Controller;
 class SomeComponent{
     public $someProperty=false;
@@ -30,31 +32,44 @@ class IndexController extends Controller{
 //            echo $user->id;
 //        }
 
-//        var_dump(User::findFirst('2')->toArray());
+      //  var_dump(User::findFirst('2')->toArray());
 
       //  var_dump(User::count(['id >1']));
-        $user =new User();
-        $user->id=12;
-        $user->age=30;
-        $user->name='mana'.microtime(true);
-        $user->save();
+//        $user =new User();
+//        $user->id=12;
+//        $user->age=30;
+//        $user->name='mana'.microtime(true);
+//        $user->save();
+//
+//        echo $this->dispatcher->getControllerClass(),PHP_EOL;
+//        echo $this->dispatcher->getControllerName(),PHP_EOL;
+//        echo $this->dispatcher->getActionName(),PHP_EOL;
+//        var_dump($user->toArray());
+//
+//        $this->_dependencyInjector->set('getComponent1', function($v){
+//            return new SomeComponent($v);
+//        });
+//
+//        $this->_dependencyInjector->set('getComponent2','Application\Home\Controllers\SomeComponent');
+//
+//        var_dump($this->_dependencyInjector->get('getComponent1',[100]));
+//        var_dump($this->_dependencyInjector->get('getComponent2',[50]));
+    //    $this->session->set('times',$this->session->get('times','1')+1);
+      //  echo $this->session->get('times');
+        //var_dump(get_included_files());
 
-        echo $this->dispatcher->getControllerClass(),PHP_EOL;
-        echo $this->dispatcher->getControllerName(),PHP_EOL;
-        echo $this->dispatcher->getActionName(),PHP_EOL;
-        var_dump($user->toArray());
-
-        $this->_dependencyInjector->set('getComponent1', function($v){
-            return new SomeComponent($v);
-        });
-
-        $this->_dependencyInjector->set('getComponent2','Application\Home\Controllers\SomeComponent');
-
-        var_dump($this->_dependencyInjector->get('getComponent1',[100]));
-        var_dump($this->_dependencyInjector->get('getComponent2',[50]));
+//        foreach(get_included_files() as $file){
+//            if(strpos($file,'\ManaPHP') !==false){
+//                echo substr($file,strlen(Autoloader::getRootPath())),',',PHP_EOL;
+//            }
+//        }
+        echo date('Y-m-d H:i:s');
+        $success=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(?,?,?)',[1,20,'mana']);
     }
 
-    public function index2Action(){
+    public function test2Action(){
         echo date('Y-m-d H:i:s');
     }
+
+
 }

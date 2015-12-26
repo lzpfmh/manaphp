@@ -675,7 +675,6 @@ namespace ManaPHP {
 		/**
 		 * Returns insert id for the auto_increment column inserted in the last SQL statement
 		 *
-		 * @param string $sequenceName
 		 * @return int
 		 */
 		public function lastInsertId(){
