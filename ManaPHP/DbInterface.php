@@ -47,13 +47,12 @@ namespace ManaPHP {
 		 * Updates data on a table using custom RBDMS SQL syntax
 		 *
 		 * @param 	string $table
-		 * @param 	array $fields
-		 * @param 	array $values
+		 * @param 	array $field_values
 		 * @param 	string $whereCondition
 		 * @param 	array $dataTypes
 		 * @return 	boolean
 		 */
-		public function update($table, $fields, $values, $whereCondition=null, $dataTypes=null);
+		public function update($table, $whereCondition, $field_values, $dataTypes=null);
 
 
 		/**

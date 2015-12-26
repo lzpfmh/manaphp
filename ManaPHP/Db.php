@@ -397,14 +397,31 @@ namespace ManaPHP {
 		 * </code>
 		 *
 		 * @param 	string $table
-		 * @param 	array $fields
-		 * @param 	array $values
+		 * @param 	array $field_values
 		 * @param 	string $whereCondition
 		 * @param 	array $dataTypes
 		 * @return 	boolean
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function update($table, $fields, $values, $whereCondition=null, $dataTypes=null){
+		public function update($table, $whereCondition=null, $field_values, $dataTypes=null){
+			if(count($field_values) ===0){
+				throw new Exception('Unable to update ' . $table . ' without data');
+			}
+
+			if(isset($field_values[0])){
+				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).' VALUES ('. rtrim(str_repeat('?,',count($field_values)),',').')';
+				return $this->execute($insertSql,$field_values,$dataTypes);
+			}else{
+				$field_parts=[];
+
+				foreach($field_values as $k=>$v){
+					$field_parts[]=$this->escapeIdentifier(ltrim($k,':'));
+				}
+
+				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).' ('. implode(',',$field_parts).') VALUES ('. implode(',', array_keys($field_values)) .')';
+				return $this->execute($insertSql,$field_values,$dataTypes) ;
+			}
+
 			$escapedTable=$this->escapeIdentifier($table);
 
 			if($whereCondition ==='' ||$whereCondition===null){
