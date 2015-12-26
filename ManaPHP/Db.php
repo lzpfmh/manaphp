@@ -350,7 +350,7 @@ namespace ManaPHP {
 		public function _escapeIdentifiers($identifiers){
 			$escaped_identifiers=[];
 			foreach($identifiers as $identifier){
-				$escaped_identifiers[]='`'.$identifiers.'`';
+				$escaped_identifiers[]='`'.$identifier.'`';
 			}
 
 			return $escaped_identifiers;
@@ -500,7 +500,7 @@ namespace ManaPHP {
 			foreach($fields as $key=>$field){
 				$setFields[]=$escaped_fields[$key].'=:'.$field;
 			}
-			$updateSql='UPDATE '. $this->escapeIdentifier($table). 'SET '.implode(',', $setFields).' WHERE '. $whereCondition;
+			$updateSql='UPDATE '. $this->escapeIdentifier($table). ' SET '.implode(',', $setFields).' WHERE '. $whereCondition;
 
 			return $this->execute($updateSql,$values);
 		}
