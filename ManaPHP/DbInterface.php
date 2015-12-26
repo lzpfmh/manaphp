@@ -44,11 +44,11 @@ namespace ManaPHP {
 		 * Updates data on a table using custom RBDMS SQL syntax
 		 *
 		 * @param 	string $table
-		 * @param 	array $binds
+		 * @param 	array $columnValues
 		 * @param 	string $whereCondition
 		 * @return 	boolean
 		 */
-		public function update($table, $whereCondition, $binds);
+		public function update($table, $whereCondition, $columnValues);
 
 
 		/**
@@ -150,10 +150,9 @@ namespace ManaPHP {
 		/**
 		 * Returns insert id for the auto_increment column inserted in the last SQL statement
 		 *
-		 * @param string $sequenceName
 		 * @return int
 		 */
-		public function lastInsertId($sequenceName=null);
+		public function lastInsertId();
 
 
 		/**

@@ -206,15 +206,15 @@ namespace ManaPHP {
 			}
 		}
 
-		protected function _parseFields($binds, &$fields,&$escaped_fields){
-			$fields=null;
-			$escaped_fields=null;
+		protected function _parseColumns($binds, &$columns,&$escapedColumns){
+			$columns=null;
+			$escapedColumns=null;
 			if($binds ===null){
 				return ;
 			}
 
-			$fields=[];
-			$escaped_fields=[];
+			$columns=[];
+			$escapedColumns=[];
 			foreach($binds as $key=>$value){
 				if(is_int($key)){
 					$finalKey=$key;
@@ -224,8 +224,8 @@ namespace ManaPHP {
 					throw new Exception('invalid binds field: '.json_encode($key));
 				}
 
-				$fields[]=$finalKey;
-				$escaped_fields[]='`'.$finalKey.'`';
+				$columns[]=$finalKey;
+				$escapedColumns[]='`'.$finalKey.'`';
 			}
 		}
 		/**
@@ -452,11 +452,10 @@ namespace ManaPHP {
 								' VALUES ('. rtrim(str_repeat('?,',count($binds)),',').')';
 				return $this->execute($insertSql,$binds);
 			}else{
-
-				$this->_parseFields($binds,$fields,$escaped_fields);
+				$this->_parseColumns($binds,$columns,$escapedColumns);
 				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).
-							' ('. implode(',',$escaped_fields).
-							') VALUES (:'. implode(',:', $fields) .')';
+							' ('. implode(',',$escapedColumns).
+							') VALUES (:'. implode(',:', $columns) .')';
 				return $this->execute($insertSql,$binds) ;
 			}
 		}
@@ -479,15 +478,15 @@ namespace ManaPHP {
 		 * </code>
 		 *
 		 * @param 	string $table
-		 * @param 	array $values
+		 * @param 	array $columnValues
 		 * @param 	string $whereCondition
 		 * @return 	boolean
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function update($table, $whereCondition=null, $values){
+		public function update($table, $whereCondition=null, $columnValues){
 			$escapedTable=$this->escapeIdentifier($table);
 
-			if(count($values) ===0){
+			if(count($columnValues) ===0){
 				throw new Exception('Unable to update ' . $table . ' without data');
 			}
 
@@ -495,14 +494,14 @@ namespace ManaPHP {
 				throw new Exception('Danger DELETE \''. $escapedTable.'\'operation without any condition');
 			}
 
-			$this->_parseFields($values,$fields,$escaped_fields);
-			$setFields=[];
-			foreach($fields as $key=>$field){
-				$setFields[]=$escaped_fields[$key].'=:'.$field;
+			$this->_parseColumns($columnValues,$columns,$escapedColumns);
+			$setColumns=[];
+			foreach($columns as $key=>$column){
+				$setColumns[]=$escapedColumns[$key].'=:'.$column;
 			}
-			$updateSql='UPDATE '. $this->escapeIdentifier($table). ' SET '.implode(',', $setFields).' WHERE '. $whereCondition;
+			$updateSql='UPDATE '. $this->escapeIdentifier($table). ' SET '.implode(',', $setColumns).' WHERE '. $whereCondition;
 
-			return $this->execute($updateSql,$values);
+			return $this->execute($updateSql,$columnValues);
 		}
 
 
@@ -679,8 +678,8 @@ namespace ManaPHP {
 		 * @param string $sequenceName
 		 * @return int
 		 */
-		public function lastInsertId($sequenceName=null){
-			return $this->_pdo->lastInsertId($sequenceName);
+		public function lastInsertId(){
+			return $this->_pdo->lastInsertId();
 		}
 
 
