@@ -16,9 +16,19 @@ namespace ManaPHP\Db {
             $this->_pdo =$pdo;
         }
 
-        protected function _parseValue($value, $type){
+        /**
+         * @param mixed $value
+         * @param int $type
+         * @param int $preservedStrLength
+         * @return int|string
+         */
+        protected function _parseValue($value, $type,$preservedStrLength){
             if($type===\PDO::PARAM_STR){
-                return $this->_pdo->quote($value);
+                if($preservedStrLength >0 &&strlen($value) >=$preservedStrLength){
+                    return $this->_pdo->quote(substr($value,0,$preservedStrLength).'...');
+                }else{
+                    return $this->_pdo->quote($value);
+                }
             }elseif($type===\PDO::PARAM_INT){
                 return $value;
             } else if($type ===\PDO::PARAM_NULL){
@@ -51,9 +61,10 @@ namespace ManaPHP\Db {
          * @param string $sqlStatement
          * @param array $bindParams
          * @param array $bindTypes
+         * @param int $preservedStrLength
          * @return mixed
          */
-        public function emulate($sqlStatement, $bindParams=null, $bindTypes=null){
+        public function emulate($sqlStatement, $bindParams=null, $bindTypes=null, $preservedStrLength =-1){
             if($bindParams ===null ||count($bindParams) ===0){
                 return $sqlStatement;
             }
@@ -62,9 +73,9 @@ namespace ManaPHP\Db {
                 $pos =0;
 
                 $preparedStatement= preg_replace_callback('/(\?)/',
-                    function($matches) use($bindParams, $bindTypes,&$pos){
+                    function() use($bindParams, $bindTypes,&$pos,$preservedStrLength){
                         $type =isset($bindTypes[$pos])?$bindTypes[$pos]:$this->_inferType($bindParams[$pos]);
-                        return $this->_parseValue($bindParams[$pos++],$type);
+                        return $this->_parseValue($bindParams[$pos++],$type,$preservedStrLength);
                     },
                     $sqlStatement);
 
@@ -77,7 +88,7 @@ namespace ManaPHP\Db {
                 $replaces=[];
                 foreach($bindParams as $key=>$value){
                     $type =isset($bindTypes[$key])?$bindTypes[$key]:$this->_inferType($bindParams[$key]);
-                    $replaces[$key]=$this->_parseValue($value,$type);
+                    $replaces[$key]=$this->_parseValue($value,$type,$preservedStrLength);
                 }
 
                 return strtr($sqlStatement,$replaces);

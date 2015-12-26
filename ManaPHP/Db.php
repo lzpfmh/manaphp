@@ -583,11 +583,12 @@ namespace ManaPHP {
 		/**
 		 * Active SQL statement in the object with replace the bind with value
 		 *
+		 * @param int $preservedStrLength
 		 * @return string
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function getEmulatePrepareSQLStatement(){
-			return (new PrepareEmulation($this->_pdo))->emulate($this->_sqlStatement,$this->_sqlBindParams,$this->_sqlBindTypes);
+		public function getEmulatePrepareSQLStatement($preservedStrLength=-1){
+			return (new PrepareEmulation($this->_pdo))->emulate($this->_sqlStatement,$this->_sqlBindParams,$this->_sqlBindTypes,$preservedStrLength);
 		}
 
 		/**

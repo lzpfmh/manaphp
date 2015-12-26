@@ -100,6 +100,16 @@ namespace ManaPHP {
 
 
 		/**
+		 * Active SQL statement in the object with replace the bind with value
+		 *
+		 * @param int $preservedStrLength
+		 * @return string
+		 * @throws \ManaPHP\Db\Exception
+		 */
+		public function getEmulatePrepareSQLStatement($preservedStrLength=-1);
+
+
+		/**
 		 * Active SQL statement in the object
 		 *
 		 * @return array
