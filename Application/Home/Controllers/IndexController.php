@@ -8,7 +8,6 @@
 namespace Application\Home\Controllers;
 
 use Application\Home\Models\User;
-use ManaPHP\Autoloader;
 use ManaPHP\Http\Session;
 use ManaPHP\Mvc\Controller;
 class SomeComponent{
@@ -32,7 +31,7 @@ class IndexController extends Controller{
 //            echo $user->id;
 //        }
 
-      //  var_dump(User::findFirst('2')->toArray());
+       var_dump(User::findFirst('2')->toArray());
 
       //  var_dump(User::count(['id >1']));
 //        $user =new User();
@@ -64,7 +63,7 @@ class IndexController extends Controller{
 //            }
 //        }
         echo date('Y-m-d H:i:s');
-        $success=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(?,?,?)',[1,20,'mana']);
+ //       $success=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(?,?,?)',[1,20,'mana']);
     }
 
     public function test2Action(){

@@ -64,17 +64,11 @@ namespace ManaPHP\Mvc\Model {
          * @throws \ManaPHP\Mvc\Model\Exception
          */
         protected function _fetchMetaDataFromRDBMS($model){
-            $schema=$model->getSchema();
-            $table=$model->getSource();
-            if($schema){
-                $completeTable=$schema."''".$table;
-            }else{
-                $completeTable=$table;
-            }
+
             $readConnection=$model->getReadConnection();
-            $columns=$readConnection->fetchAll('DESCRIBE '.$readConnection->escapeIdentifier($table),null,\PDO::FETCH_NUM);
+            $columns=$readConnection->fetchAll('DESCRIBE '.$readConnection->escapeIdentifier($model->getSource()),null,\PDO::FETCH_NUM);
             if(count($columns) ===0){
-                throw new Exception("Cannot obtain table columns for the mapped source '" . $completeTable . "' used in model " . get_class($model));
+                throw new Exception("Cannot obtain table columns for the mapped source '" . $model->getSource() . "' used in model " . get_class($model));
             }
 
             $attributes=[];
@@ -147,10 +141,7 @@ namespace ManaPHP\Mvc\Model {
          * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		protected function _readMetaData($model){
-			$source =$model->getSource();
-			$schema =$model->getSchema();
-
-			$key=get_class($model).'-'.$schema.$source;
+			$key=get_class($model).'-'.$model->getSource();
 			if(!isset($this->_metaData[$key])){
 				$this->_metaData[$key]=$this->_initialize($model);
 			}

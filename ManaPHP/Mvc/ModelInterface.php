@@ -17,14 +17,6 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Returns schema name where table mapped is located
-		 *
-		 * @return string
-		 */
-		public function getSchema();
-
-
-		/**
 		 * Sets both read/write connection services
 		 *
 		 * @param string $connectionService

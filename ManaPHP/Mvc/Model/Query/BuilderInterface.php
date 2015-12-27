@@ -271,5 +271,14 @@ namespace ManaPHP\Mvc\Model\Query {
 		 */
 		public function getQuery();
 
+
+		/**
+		 * Set default bind parameters
+		 *
+		 * @param array $binds
+		 * @param bool $merge
+		 * @return static
+		 */
+		public function setBinds($binds, $merge = false);
 	}
 }

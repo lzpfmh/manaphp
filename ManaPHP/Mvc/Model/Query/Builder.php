@@ -963,15 +963,8 @@ namespace ManaPHP\Mvc\Model\Query {
 			foreach($models as $model){
 				$modelInstance=$modelsManager->load($model,false);
 
-				$schema =$modelInstance->getSchema();
-				$source =$modelInstance->getSource();
-				if($schema){
-					$table=[$schema,$source];
-				}else{
-					$table=$source;
-				}
 				$readConnection=$modelInstance->getReadConnection();
-				$escapedTable=$readConnection->escapeIdentifier($table);
+				$escapedTable=$readConnection->escapeIdentifier($modelInstance->getSource());
 				$sql =str_replace('['.$model.']',$escapedTable,$sql);
 			}
 
