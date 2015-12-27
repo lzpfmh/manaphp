@@ -431,25 +431,25 @@ namespace ManaPHP {
 		 * </code>
 		 *
 		 * @param 	string $table
-		 * @param 	array $binds
+		 * @param 	array $columnValues
 		 * @return 	int
 		 * @throws \ManaPHP\Db\Exception
 		 */
-		public function insert($table, $binds){
-			if(count($binds) ===0){
+		public function insert($table, $columnValues){
+			if(count($columnValues) ===0){
 				throw new Exception('Unable to insert into ' . $table . ' without data');
 			}
 
-			if(isset($binds[0])){
+			if(isset($columnValues[0])){
 				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).
-								' VALUES ('. rtrim(str_repeat('?,',count($binds)),',').')';
-				return $this->execute($insertSql,$binds);
+								' VALUES ('. rtrim(str_repeat('?,',count($columnValues)),',').')';
+				return $this->execute($insertSql,$columnValues);
 			}else{
-				$this->_parseColumns($binds,$columns,$escapedColumns);
+				$this->_parseColumns($columnValues,$columns,$escapedColumns);
 				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).
 							' ('. implode(',',$escapedColumns).
 							') VALUES (:'. implode(',:', $columns) .')';
-				return $this->execute($insertSql,$binds) ;
+				return $this->execute($insertSql,$columnValues) ;
 			}
 		}
 
