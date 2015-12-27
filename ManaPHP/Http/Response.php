@@ -140,7 +140,7 @@ namespace ManaPHP\Http {
 				$date=new \DateTime('now',new \DateTimeZone('UTC'));
 				$date->setTimestamp($datetime);
 			}else{
-				$date =clone($datetime);
+				$date =clone $datetime;
 			}
 
 			$date->setTimezone(new \DateTimeZone('UTC'));
@@ -232,7 +232,7 @@ namespace ManaPHP\Http {
 
 			if(is_string($statusCode)){
 				$statusCode =(int)$statusCode;
-			};
+			}
 
 			/**
 			 * The HTTP status is 302 by default, a temporary redirection
