@@ -72,7 +72,7 @@ namespace ManaPHP\Mvc\Model {
                 $completeTable=$table;
             }
             $readConnection=$model->getReadConnection();
-            $columns=$readConnection->fetchAll('DESCRIBE '.$readConnection->escapeIdentifier($table),\PDO::FETCH_NUM);
+            $columns=$readConnection->fetchAll('DESCRIBE '.$readConnection->escapeIdentifier($table),null,\PDO::FETCH_NUM);
             if(count($columns) ===0){
                 throw new Exception("Cannot obtain table columns for the mapped source '" . $completeTable . "' used in model " . get_class($model));
             }
@@ -130,6 +130,8 @@ namespace ManaPHP\Mvc\Model {
                     return $data;
                 }
             }
+
+            return null;
         }
 
 
