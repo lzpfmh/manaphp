@@ -374,7 +374,7 @@ namespace ManaPHP\Mvc {
 
 			if(isset($params['bind'])){
 				if(is_array($params['bind'])){
-					$query->setBindParams($params['bind'],true);
+					$query->setBinds($params['bind'],true);
 				}
 			}
 
@@ -456,7 +456,7 @@ namespace ManaPHP\Mvc {
 
 			if(isset($params['bind'])){
 				if(is_array($params['bind'])){
-					$query->setBindParams($params['bind'],true);
+					$query->setBinds($params['bind'],true);
 				}
 			}
 
