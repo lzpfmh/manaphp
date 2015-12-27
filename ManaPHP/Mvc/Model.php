@@ -4,7 +4,6 @@ namespace ManaPHP\Mvc {
 
 	use ManaPHP\Di;
 	use ManaPHP\Mvc\Model\Exception;
-	use \ManaPHP\Mvc\Model\ResultInterface;
 	use \ManaPHP\Di\InjectionAwareInterface;
 
 	/**
@@ -40,7 +39,7 @@ namespace ManaPHP\Mvc {
 	 *
 	 */
 	
-	abstract class Model implements ModelInterface, ResultInterface, InjectionAwareInterface, \Serializable {
+	abstract class Model implements ModelInterface, InjectionAwareInterface, \Serializable {
 		use Di\InjectionAware;
 
 		const DIRTY_STATE_PERSISTENT = 0;
@@ -832,20 +831,18 @@ namespace ManaPHP\Mvc {
 				$table =$source;
 			}
 
-			$fields=[];
-			$values=[];
+			$columnValues=[];
 			foreach($metaData->getAttributes($this) as $attributeField){
 				if($this->{$attributeField} !==null){
-					$fields[]=$attributeField;
-					$values[]=$this->{$attributeField};
+					$columnValues[$attributeField]=$this->{$attributeField};
 				}
 			}
 
-			if(count($fields) ===0){
+			if(count($columnValues) ===0){
 				throw new Exception('Unable to insert into ' . $source . ' without data');
 			}
 
-			$success =$connection->insert($table,$values,$fields);
+			$success =$connection->insert($table,$columnValues);
 			if($success ===true){
 				$autoIncrementAttribute=$metaData->getAutoIncrementAttribute($this);
 				if($autoIncrementAttribute !==null &&$this->{$autoIncrementAttribute} ===null){
@@ -876,7 +873,7 @@ namespace ManaPHP\Mvc {
 			}
 
 			$conditions=[];
-			$bindParams=[];
+			$binds=[];
 			foreach($metaData->getPrimaryKeyAttributes($this) as $attributeField){
 				if(!isset($this->{$attributeField})){
 					throw new Exception('Record cannot be updated because it\'s some primary key has invalid value.');
@@ -884,28 +881,27 @@ namespace ManaPHP\Mvc {
 				$bindKey =':'.$attributeField;
 
 				$conditions[]=$attributeField.' ='.$bindKey;
-				$bindParams[$bindKey]=$this->{$attributeField};
+				$binds[$bindKey]=$this->{$attributeField};
 			}
 
-			$fields=[];
-			$values=[];
+			$columnValues=[];
 			foreach($metaData->getAttributes($this) as $attributeField){
 				if(isset($this->{$attributeField})){
 					if(!is_array($this->_snapshot)
 						||!isset($this->_snapshot[$attributeField])
 						||$this->{$attributeField} !==$this->_snapshot[$attributeField]){
-							$fields[]=$attributeField;
-							$values[]=$this->{$attributeField};
+							$columnValues[$attributeField]=$this->{$attributeField};
 					}
 				}
 			}
 
-			if(count($fields) ===0){
+			if(count($columnValues) ===0){
 				return true;
 			}
 
-			$success =$connection->update($table,$fields,$values,
-				['conditions'=>implode(' AND ',$conditions), 'bind'=>$bindParams]);
+			$success =$connection->update($table,
+						['conditions'=>implode(' AND ',$conditions), 'bind'=>$binds],
+						$columnValues);
 
 			if($success){
 				$this->_snapshot=$this->toArray();
