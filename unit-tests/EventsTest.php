@@ -221,7 +221,7 @@ class EventsTest extends TestCase{
         $di->set('firstListener', 'MyFirstWeakrefListener');
         $di->set('secondListener', 'MySecondWeakrefListener');
 
-        // ----- TESTING STEP 1 - SIGNLE 'LOG' LISTENER ATTACHED
+        // ----- TESTING STEP 1 - SINGLE 'LOG' LISTENER ATTACHED
 
         $component = $di->get('componentX');
 
@@ -274,7 +274,7 @@ class EventsTest extends TestCase{
         $di->set('firstListener', 'MyFirstWeakrefListener');
         $di->set('secondListener', 'MySecondWeakrefListener');
 
-        // ----- TESTING STEP 1 - SIGNLE 'LOG' LISTENER ATTACHED
+        // ----- TESTING STEP 1 - SINGLE 'LOG' LISTENER ATTACHED
 
         $component = $di->get('componentX');
 
