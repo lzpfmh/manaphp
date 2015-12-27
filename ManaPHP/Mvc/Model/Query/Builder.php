@@ -40,14 +40,23 @@ namespace ManaPHP\Mvc\Model\Query {
 
 		protected $_order;
 
+		/**
+		 * @var int
+		 */
 		protected $_limit;
 
+		/**
+		 * @var int
+		 */
 		protected $_offset;
 
 		protected $_forUpdate;
 
 		protected $_sharedLock;
 
+		/**
+		 * @var array
+		 */
 		protected $_binds=[];
 
 		protected $_distinct;
@@ -122,7 +131,7 @@ namespace ManaPHP\Mvc\Model\Query {
 				}
 
 				if(isset($params['bind'])){
-					$this->_binds=$params['bind'];
+					$this->_binds=array_merge($this->_binds,$params['bind']);
 				}
 
 				if(isset($params['distinct'])){
@@ -936,6 +945,8 @@ namespace ManaPHP\Mvc\Model\Query {
 
 			if($binds !==null){
 				$mergedBinds=array_merge($this->_binds,$binds);
+			}else{
+				$mergedBinds=$this->_binds;
 			}
 
 			$sql=$this->_lastSQL;
