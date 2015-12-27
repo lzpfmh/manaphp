@@ -48,7 +48,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
 		protected $_sharedLock;
 
-		protected $_binds;
+		protected $_binds=[];
 
 		protected $_distinct;
 
@@ -383,11 +383,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			$this->_conditions =$conditions;
 
 			if($binds !==null){
-				if($this->_binds ===null){
-					$this->_binds=$binds;
-				}else{
-					$this->_binds=array_merge($this->_binds, $binds);
-				}
+				$this->_binds=array_merge($this->_binds, $binds);
 			}
 
 			return $this;
@@ -414,11 +410,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			}
 
 			if($binds !==null){
-				if($this->_binds ===null){
-					$this->_binds=$binds;
-				}else{
-					$this->_binds=array_merge($this->_binds,$binds);
-				}
+				$this->_binds=array_merge($this->_binds,$binds);
 			}
 
 			return $this;
@@ -445,11 +437,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			}
 
 			if($binds !==null){
-				if($this->_binds ===null){
-					$this->_binds=$binds;
-				}else{
-					$this->_binds=array_merge($this->_binds,$binds);
-				}
+				$this->_binds=array_merge($this->_binds,$binds);
 			}
 
 			return $this;
@@ -946,10 +934,8 @@ namespace ManaPHP\Mvc\Model\Query {
 //				$query->setBindTypes($this->_bindTypes);
 //			}
 
-			if($binds !==null &&is_array($binds)){
+			if($binds !==null){
 				$mergedBinds=array_merge($this->_binds,$binds);
-			} else{
-				$mergedBinds=$this->_binds;
 			}
 
 			$sql=$this->_lastSQL;
@@ -1023,6 +1009,5 @@ namespace ManaPHP\Mvc\Model\Query {
 
 			return $this;
 		}
-
 	}
 }
