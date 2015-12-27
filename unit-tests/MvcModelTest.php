@@ -7,221 +7,10 @@
  * Time: 17:07
  */
 defined('UNIT_TESTS_ROOT')||require 'bootstrap.php';
-
-class Actor extends \ManaPHP\Mvc\Model{
-    public $actor_id;
-    public $first_name;
-    public $last_name;
-    public $last_update;
-
-    public function getSource(){
-        return 'actor';
-    }
-}
-
-
-/** @noinspection PhpUndefinedClassInspection */
-class Address extends \ManaPHP\Mvc\Model{
-    public $address_id;
-    public $address;
-    public $address2;
-    public $district;
-    public $city_id;
-    public $postal_code;
-    public $phone;
-    public $last_update;
-
-    public function getSource(){
-        return 'address';
-    }
-}
-
-class Category extends \ManaPHP\Mvc\Model{
-    public $category_id;
-    public $name;
-    public $last_update;
-
-    public function getSource(){
-        return 'category';
-    }
-}
-
-/** @noinspection PhpUndefinedClassInspection */
-class City extends \ManaPHP\Mvc\Model{
-    public $city_id;
-    public $city;
-    public $country_id;
-    public $last_update;
-
-    public function getSource(){
-        return 'city';
-    }
-}
-
-/** @noinspection PhpUndefinedClassInspection */
-class Country extends \ManaPHP\Mvc\Model{
-    public $country_id;
-    public $country;
-    public $last_update;
-
-    public function getSource(){
-        return 'country';
-    }
-}
-
-class Customer extends \ManaPHP\Mvc\Model{
-    public $customer_id;
-    public $store_id;
-    public $first_name;
-    public $last_name;
-    public $email;
-    public $address_id;
-    public $active;
-    public $create_date;
-    public $last_update;
-
-    public function getSource(){
-        return 'customer';
-    }
-}
-
-class Film extends \ManaPHP\Mvc\Model{
-    public $film_id;
-    public $title;
-    public $description;
-    public $release_year;
-    public $language_id;
-    public $original_language_id;
-    public $rental_duration;
-    public $rental_rate;
-    public $length;
-    public $replacement_cost;
-    public $rating;
-    public $special_features;
-    public $last_update;
-
-    public function getSource(){
-        return 'film';
-    }
-}
-
-class FilmActor extends \ManaPHP\Mvc\Model{
-    public $actor_id;
-    public $film_id;
-    public $last_update;
-
-    public function getSource(){
-        return 'film_actor';
-    }
-}
-
-class FilmCategory extends \ManaPHP\Mvc\Model{
-    public $film_id;
-    public $category_id;
-    public $last_update;
-
-    public function getSource(){
-        return 'film_category';
-    }
-}
-
-class FilmText extends \ManaPHP\Mvc\Model{
-    public $film_id;
-    public $title;
-    public $description;
-
-    public function getSource(){
-        return 'film_text';
-    }
-}
-
-class Inventory extends \ManaPHP\Mvc\Model{
-    public $inventory_id;
-    public $film_id;
-    public $store_id;
-    public $last_update;
-
-    public function getSource(){
-        return 'inventory';
-    }
-}
-
-class Language extends \ManaPHP\Mvc\Model{
-    public $language_id;
-    public $name;
-    public $last_update;
-
-    public function getSource(){
-        return 'language';
-    }
-}
-
-class Payment extends \ManaPHP\Mvc\Model{
-    public $payment_id;
-    public $customer_id;
-    public $staff_id;
-    public $rental_id;
-    public $amount;
-    public $payment_date;
-    public $last_update;
-
-    public function getSource(){
-        return 'payment';
-    }
-}
-
-class Rental extends \ManaPHP\Mvc\Model{
-    public $rental_id;
-    public $rental_date;
-    public $inventory_id;
-    public $customer_id;
-    public $return_date;
-    public $staff_id;
-    public $last_update;
-
-    public function getSource(){
-        return 'rental';
-    }
-}
-
-class Staff extends \ManaPHP\Mvc\Model{
-    public $staff_id;
-    public $first_name;
-    public $last_name;
-    public $address_id;
-    public $picture;
-    public $email;
-    public $store_id;
-    public $active;
-    public $username;
-    public $password;
-    public $last_update;
-
-    public function getSource(){
-        return 'staff';
-    }
-}
-
-class Store extends \ManaPHP\Mvc\Model{
-    public $store_id;
-    public $manager_staff_id;
-    public $address_id;
-    public $last_update;
-
-    public function getSource(){
-        return 'store';
-    }
-}
-
-class Student extends \ManaPHP\Mvc\Model{
-    public $id;
-    public $age;
-    public $name;
-
-    public function getSource(){
-        return '_student';
-    }
-}
+use Models\Actor;
+use Models\Student;
+use Models\Payment;
+use Models\City;
 
 class MvcModelTest extends TestCase{
     /**
@@ -326,7 +115,7 @@ class MvcModelTest extends TestCase{
     public function test_findFirst(){
         $actor =Actor::findFirst();
         $this->assertTrue(is_object($actor));
-        $this->assertInstanceOf('Actor',$actor);
+        $this->assertInstanceOf(get_class(new Actor()),$actor);
         $this->assertInstanceOf('ManaPHP\Mvc\Model',$actor);
 
         $this->assertTrue(is_object(Actor::findFirst('')));
@@ -335,18 +124,18 @@ class MvcModelTest extends TestCase{
         $this->assertTrue(is_object(Actor::findFirst(['conditions'=>'actor_id=1'])));
 
         $actor=Actor::findFirst(['conditions'=>'first_name=\'BEN\'','order'=>'actor_id']);
-        $this->assertInstanceOf('Actor',$actor);
+        $this->assertInstanceOf(get_class(new Actor()),$actor);
         $this->assertEquals('83',$actor->actor_id);
         $this->assertEquals('WILLIS',$actor->last_name);
 
         $actor2=Actor::findFirst(['conditions'=>'first_name=:first_name:',
                 'bind'=>['first_name'=>'BEN'],
             'order'=>'actor_id']);
-        $this->assertInstanceOf('Actor',$actor2);
+        $this->assertInstanceOf(get_class(new Actor()),$actor2);
         $this->assertEquals($actor->actor_id,$actor2->actor_id);
 
         $actor=Actor::findFirst(10);
-        $this->assertInstanceOf('Actor',$actor);
+        $this->assertInstanceOf(get_class(new Actor()),$actor);
         $this->assertEquals('10',$actor->actor_id);
     }
 
@@ -354,7 +143,7 @@ class MvcModelTest extends TestCase{
         $actors=Actor::find();
         $this->assertTrue(is_array($actors));
         $this->assertCount(200,$actors);
-        $this->assertInstanceOf('Actor',$actors[0]);
+        $this->assertInstanceOf(get_class(new Actor()),$actors[0]);
         $this->assertInstanceOf('ManaPHP\Mvc\Model',$actors[0]);
 
         $this->assertCount(200,Actor::find());
