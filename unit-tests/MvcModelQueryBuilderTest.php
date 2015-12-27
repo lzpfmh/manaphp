@@ -397,6 +397,7 @@ class MvcModelQueryBuilderTest extends TestCase{
         $rows=$builder->getQuery()->execute();
         $this->assertCount(10,$builder->getQuery()->execute());
 
+        /** @noinspection ForeachInvariantsInspection */
         for($i=0; $i<count($rows)-1;$i++){
             $this->assertTrue($rows[$i]['address_id'] <$rows[$i+1]['address_id']);
         }
@@ -409,6 +410,7 @@ class MvcModelQueryBuilderTest extends TestCase{
         $rows=$builder->getQuery()->execute();
         $this->assertCount(10,$builder->getQuery()->execute());
 
+        /** @noinspection ForeachInvariantsInspection */
         for($i=0; $i<count($rows)-1;$i++){
             $this->assertTrue($rows[$i]['address_id'] <$rows[$i+1]['address_id']);
         }
@@ -421,6 +423,7 @@ class MvcModelQueryBuilderTest extends TestCase{
         $rows=$builder->getQuery()->execute();
         $this->assertCount(10,$builder->getQuery()->execute());
 
+        /** @noinspection ForeachInvariantsInspection */
         for($i=0; $i<count($rows)-1;$i++){
             $this->assertTrue($rows[$i]['address_id'] >$rows[$i+1]['address_id']);
         }

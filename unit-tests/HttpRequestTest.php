@@ -13,7 +13,7 @@ class HttpRequestTest extends TestCase{
     public function test_get(){
         $request =new \ManaPHP\Http\Request();
 
-        $this->assertEquals(null,$request->get('name'));
+        $this->assertNull($request->get('name'));
 
         $this->assertEquals('test',$request->get('name',null,'test'));
 
@@ -31,7 +31,7 @@ class HttpRequestTest extends TestCase{
     public function test_getGet(){
         $request =new \ManaPHP\Http\Request();
 
-        $this->assertEquals(null,$request->getGet('name'));
+        $this->assertNull($request->getGet('name'));
 
         $this->assertEquals('test',$request->getGet('name',null,'test'));
 
@@ -49,7 +49,7 @@ class HttpRequestTest extends TestCase{
     public function test_getPost(){
         $request =new \ManaPHP\Http\Request();
 
-        $this->assertEquals(null,$request->getPost('name'));
+        $this->assertNull($request->getPost('name'));
 
         $this->assertEquals('test',$request->getPost('name',null,'test'));
 
@@ -68,7 +68,7 @@ class HttpRequestTest extends TestCase{
         $request =new \ManaPHP\Http\Request();
 
         $_SERVER['REQUEST_METHOD']='PUT';
-        $this->assertEquals(null,$request->getPut('name'));
+        $this->assertNull($request->getPut('name'));
 
         $this->assertEquals('test',$request->getPut('name',null,'test'));
 
@@ -83,7 +83,7 @@ class HttpRequestTest extends TestCase{
     public function test_getQuery(){
         $request =new \ManaPHP\Http\Request();
 
-        $this->assertEquals(null,$request->getQuery('name'));
+        $this->assertNull($request->getQuery('name'));
 
         $this->assertEquals('test',$request->getQuery('name',null,'test'));
 

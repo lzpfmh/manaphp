@@ -343,6 +343,7 @@ namespace ManaPHP\Mvc {
 			 * @var \ManaPHP\Mvc\Model\MetaDataInterface $modelsMetadata
 			 */
 			$dependencyInjector=Di::getDefault();
+			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 			$modelsManager =$dependencyInjector->getShared('modelsManager');
 
 			if(is_array($parameters)){
@@ -350,6 +351,7 @@ namespace ManaPHP\Mvc {
 			}elseif($parameters===null){
 				$params=[];
 			}elseif(is_int($parameters) ||is_numeric($parameters)){
+				/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 				$modelsMetadata=$dependencyInjector->getShared('modelsMetadata');
 				$primaryKeys=$modelsMetadata->getPrimaryKeyAttributes(new static);
 
@@ -583,6 +585,7 @@ namespace ManaPHP\Mvc {
 		 */
 		public static function sum($parameters=null){
 			if($parameters ===null ||!isset($parameters['column'])){
+				/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 				throw new Exception('which column is used to calculate the summatory?');
 			}
 			return self::_groupResult('SUM','summary',$parameters);

@@ -421,8 +421,8 @@ namespace ManaPHP\Mvc\Model {
 			}else{
 				$mergedTypes =$this->_bindTypes;
 			}
-			$result =$this->_executeSelect($this->_phql,$mergedParams,$mergedTypes);
-			return $result;
+
+			return $this->_executeSelect($this->_phql,$mergedParams,$mergedTypes);
 		}
 
 

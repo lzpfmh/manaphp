@@ -972,6 +972,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			/**
 			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
 			 */
+			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 			$modelsManager =$this->_dependencyInjector->getShared('modelsManager');
 
 			if(is_string($this->_models)){

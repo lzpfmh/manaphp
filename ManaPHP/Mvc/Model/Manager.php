@@ -87,8 +87,8 @@ namespace ManaPHP\Mvc\Model {
 				if($newInstance){
 					return new $modelName($this->_dependencyInjector,$this);
 				}
-				$model =$this->_initialized[$modelName];
-				return $model;
+
+				return $this->_initialized[$modelName];
 			}else{
 				if(class_exists($modelName)){
 					return new $modelName($this->_dependencyInjector, $this);
@@ -203,9 +203,7 @@ namespace ManaPHP\Mvc\Model {
 		protected function _getConnection($model, $connectionServices){
 			$className =get_class($model);
 			$serviceName=isset($connectionServices[$className])?$connectionServices[$className]:'db';
-			$connection =$this->_dependencyInjector->getShared($serviceName);
-
-			return $connection;
+			return $this->_dependencyInjector->getShared($serviceName);
 		}
 		/**
 		 * Returns the connection to write data related to a model

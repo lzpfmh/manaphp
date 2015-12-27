@@ -468,6 +468,7 @@ namespace ManaPHP\Http {
 					}
 				}else{
 					$countFiles=count($file['error']);
+					/** @noinspection ForeachInvariantsInspection */
 					for($i =0; $i<$countFiles;$i++){
 						if(!$onlySuccessful ||$file['error'][$i] ===UPLOAD_ERR_OK){
 							$files[]=new File($key,

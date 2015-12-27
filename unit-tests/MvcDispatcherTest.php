@@ -91,6 +91,7 @@ class Test6Controller extends ManaPHP\Mvc\Controller
 
 }
 
+/** @noinspection LongInheritanceChainInspection */
 class Test7Controller extends ControllerBase
 {
 
@@ -100,7 +101,7 @@ class Test8Controller extends ManaPHP\Mvc\Controller
 {
     public function buggyAction()
     {
-        throw new Exception('This is an uncaught exception');
+        throw new \ManaPHP\Exception('This is an uncaught exception');
     }
 
 }
@@ -222,7 +223,7 @@ class MvcDispatcherTest extends TestCase{
     public function test_setParam(){
         $dispatcher =new tDispatcher();
 
-        $this->assertEquals(null,$dispatcher->getParam('name'));
+        $this->assertNull($dispatcher->getParam('name'));
 
         $dispatcher->setParam('name','manaphp');
         $this->assertEquals('manaphp',$dispatcher->getParam('name'));
@@ -234,7 +235,7 @@ class MvcDispatcherTest extends TestCase{
     public function test_getParam(){
         $dispatcher =new tDispatcher();
 
-        $this->assertEquals(null,$dispatcher->getParam('name'));
+        $this->assertNull($dispatcher->getParam('name'));
 
         $dispatcher->setParam('name','manaphp');
         $this->assertEquals('manaphp',$dispatcher->getParam('name'));
@@ -309,7 +310,7 @@ class MvcDispatcherTest extends TestCase{
         $controller = $dispatcher->dispatch();
         $this->assertInstanceOf('Test2Controller', $controller);
         $this->assertEquals('other',$dispatcher->getActionName());
-        $this->assertEquals(null,$dispatcher->getReturnedValue());
+        $this->assertNull($dispatcher->getReturnedValue());
 
         //normal usage with return value
         $dispatcher->setControllerName('test2');
