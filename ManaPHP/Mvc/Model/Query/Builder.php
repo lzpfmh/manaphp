@@ -980,6 +980,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			}else{
 				$models=$this->_models;
 			}
+
 			foreach($models as $model){
 				$modelInstance=$modelsManager->load($model,false);
 
