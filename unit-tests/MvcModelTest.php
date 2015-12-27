@@ -20,6 +20,7 @@ class Actor extends \ManaPHP\Mvc\Model{
 }
 
 
+/** @noinspection PhpUndefinedClassInspection */
 class Address extends \ManaPHP\Mvc\Model{
     public $address_id;
     public $address;
@@ -45,6 +46,7 @@ class Category extends \ManaPHP\Mvc\Model{
     }
 }
 
+/** @noinspection PhpUndefinedClassInspection */
 class City extends \ManaPHP\Mvc\Model{
     public $city_id;
     public $city;
@@ -56,6 +58,7 @@ class City extends \ManaPHP\Mvc\Model{
     }
 }
 
+/** @noinspection PhpUndefinedClassInspection */
 class Country extends \ManaPHP\Mvc\Model{
     public $country_id;
     public $country;
@@ -241,7 +244,7 @@ class MvcModelTest extends TestCase{
             return new ManaPHP\Db\Adapter\Mysql($config['mysql']);
         });
 
-        $this->di->getShared('db')->attachEvent('db:beforeQuery',function($event,$source,$data){
+        $this->di->getShared('db')->attachEvent('db:beforeQuery',function($event,\ManaPHP\DbInterface $source,$data){
             //var_dump(['sql'=>$source->getSQLStatement(),'bind'=>$source->getSQLBindParams(),'bindTypes'=>$source->getSQLBindTypes()]);
             var_dump($source->getSQLStatement(),$source->getEmulatePrepareSQLStatement());
         });
