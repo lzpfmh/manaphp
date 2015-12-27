@@ -19,6 +19,7 @@ class Actor extends \ManaPHP\Mvc\Model{
     }
 }
 
+
 class Address extends \ManaPHP\Mvc\Model{
     public $address_id;
     public $address;

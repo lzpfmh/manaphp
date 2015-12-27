@@ -36,6 +36,9 @@ namespace ManaPHP\Mvc\Model\Query {
 
 		protected $_group;
 
+		/**
+		 * @var array
+		 */
 		protected $_having;
 
 		protected $_order;
@@ -196,7 +199,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		/**
 		 * Sets SELECT DISTINCT / SELECT ALL flag
 		 *
-		 * @param bool|null distinct
+		 * @param bool $distinct
 		 * @return static
 		 */
 		public function distinct($distinct){
@@ -512,7 +515,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 */
 		public function inWhere($expr, $values){
 			if(count($values) ===0){
-				$this->andWhere($expr .' != '.$expr);
+				$this->andWhere('FALSE');
 				return $this;
 			}
 
@@ -544,7 +547,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 */
 		public function notInWhere($expr, $values){
 			if(count($values) ===0){
-				$this->andWhere($expr .' != '.$expr);
 				return $this;
 			}
 
@@ -607,10 +609,20 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *</code>
 		 *
 		 * @param string $having
+		 * @param array $binds
 		 * @return static
 		 */
-		public function having($having){
-			$this->_having =$having;
+		public function having($having,$binds=null){
+			if($this->_having ===null){
+				$this->_having =[$having];
+			}else{
+				$this->_having[]=$having;
+			}
+
+			if($binds !==null){
+				$this->_binds=array_merge($this->_binds,$binds);
+			}
+
 			return $this;
 		}
 
@@ -845,17 +857,24 @@ namespace ManaPHP\Mvc\Model\Query {
 
 			/**
 			 * Process group parameters
-			 * todo
 			 */
+			if($this->_group !==null){
+				$sql.=' GROUP BY '.$this->_group;
+			}
 
 			/**
-			 * Process group parameters
-			 * todo
+			 * Process having parameters
 			 */
+			if($this->_having !==null){
+				if(count($this->_having) ===1){
+					$sql .=' HAVING '.$this->_having[0];
+				}else{
+					$sql .=' HAVING ('.implode(' AND ',$this->_having).')';
+				}
+			}
 
 			/**
 			 * Process order clause
-			 * todo
 			 */
 			if($this->_order !==null){
 				if(is_array($this->_order)){

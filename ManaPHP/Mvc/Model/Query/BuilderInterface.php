@@ -8,6 +8,13 @@ namespace ManaPHP\Mvc\Model\Query {
 	
 	interface BuilderInterface {
 
+		/**
+		 * Sets the columns to be queried
+		 *
+		 * @param bool $distinct
+		 * @return static
+		 */
+
 		public function distinct($distinct);
 
 
@@ -208,9 +215,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * Sets a HAVING condition clause
 		 *
 		 * @param string $having
+		 * @param array $binds
 		 * @return static
 		 */
-		public function having($having);
+		public function having($having, $binds=null);
 
 
 		/**
@@ -238,6 +246,17 @@ namespace ManaPHP\Mvc\Model\Query {
 		 */
 		public function getLimit();
 
+		/**
+		 * Sets an OFFSET clause
+		 *
+		 *<code>
+		 *	$builder->offset(30);
+		 *</code>
+		 *
+		 * @param int $offset
+		 * @return static
+		 */
+		public function offset($offset);
 
 		/**
 		 * Sets a LIMIT clause
