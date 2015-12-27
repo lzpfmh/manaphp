@@ -122,7 +122,7 @@ namespace ManaPHP\Mvc {
 		 * Allows to calculate a summatory on a column that match the specified conditions
 		 *
 		 * @param array $parameters
-		 * @return double
+		 * @return mixed
 		 */
 		public static function sum($parameters=null);
 

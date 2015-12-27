@@ -2,6 +2,7 @@
 
 namespace ManaPHP {
 
+	use ManaPHP\Db\ConditionParser;
 	use ManaPHP\Db\Exception;
 	use ManaPHP\Db\PrepareEmulation;
 	use ManaPHP\Events\EventsAware;
@@ -221,6 +222,7 @@ namespace ManaPHP {
 				$escapedColumns[]='`'.$finalKey.'`';
 			}
 		}
+
 		/**
 		 * Sends SQL statements to the database server returning the success state.
 		 * Use this method only when the SQL statement sent to the server is returning rows
@@ -432,7 +434,7 @@ namespace ManaPHP {
 		 *
 		 * @param 	string $table
 		 * @param 	array $columnValues
-		 * @return 	int
+		 * @return 	boolean
 		 * @throws \ManaPHP\Db\Exception
 		 */
 		public function insert($table, $columnValues){
@@ -443,13 +445,13 @@ namespace ManaPHP {
 			if(isset($columnValues[0])){
 				$insertSql ='INSERT INTO '.$this->escapeIdentifier($table).
 								' VALUES ('. rtrim(str_repeat('?,',count($columnValues)),',').')';
-				return $this->execute($insertSql,$columnValues);
+				return $this->execute($insertSql,$columnValues)===1;
 			}else{
 				$this->_parseColumns($columnValues,$columns,$escapedColumns);
 				$insertSql='INSERT INTO '. $this->escapeIdentifier($table).
 							' ('. implode(',',$escapedColumns).
 							') VALUES (:'. implode(',:', $columns) .')';
-				return $this->execute($insertSql,$columnValues) ;
+				return $this->execute($insertSql,$columnValues)===1;
 			}
 		}
 
@@ -487,12 +489,16 @@ namespace ManaPHP {
 				throw new Exception('Danger DELETE \''. $escapedTable.'\'operation without any condition');
 			}
 
+			$where=(new ConditionParser())->parse($whereCondition,$binds);
+
 			$this->_parseColumns($columnValues,$columns,$escapedColumns);
 			$setColumns=[];
 			foreach($columns as $key=>$column){
 				$setColumns[]=$escapedColumns[$key].'=:'.$column;
 			}
-			$updateSql='UPDATE '. $this->escapeIdentifier($table). ' SET '.implode(',', $setColumns).' WHERE '. $whereCondition;
+			$updateSql='UPDATE '. $this->escapeIdentifier($table). ' SET '.implode(',', $setColumns).' WHERE '. $where;
+
+			$columnValues=array_merge($columnValues,$binds);
 
 			return $this->execute($updateSql,$columnValues);
 		}
@@ -683,7 +689,7 @@ namespace ManaPHP {
 		 * @return int
 		 */
 		public function lastInsertId(){
-			return $this->_pdo->lastInsertId();
+			return (int)$this->_pdo->lastInsertId();
 		}
 
 

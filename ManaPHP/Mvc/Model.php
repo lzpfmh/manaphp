@@ -2,6 +2,7 @@
 
 namespace ManaPHP\Mvc {
 
+	use ManaPHP\Db\ConditionParser;
 	use ManaPHP\Di;
 	use ManaPHP\Mvc\Model\Exception;
 	use \ManaPHP\Di\InjectionAwareInterface;
@@ -11,15 +12,12 @@ namespace ManaPHP\Mvc {
 	 *
 	 * <p>ManaPHP\Mvc\Model connects business objects and database tables to create
 	 * a persistable domain model where logic and data are presented in one wrapping.
-	 * It‘s an implementation of the object-relational mapping (ORM).</p>
+	 * It's an implementation of the object-relational mapping (ORM).</p>
 	 *
 	 * <p>A model represents the information (data) of the application and the rules to manipulate that data.
 	 * Models are primarily used for managing the rules of interaction with a corresponding database table.
 	 * In most cases, each table in your database will correspond to one model in your application.
 	 * The bulk of your application’s business logic will be concentrated in the models.</p>
-	 *
-	 * <p>ManaPHP\Mvc\Model is the first ORM written in C-language for PHP, giving to developers high performance
-	 * when interacting with databases while is also easy to use.</p>
 	 *
 	 * <code>
 	 *
@@ -39,7 +37,7 @@ namespace ManaPHP\Mvc {
 	 *
 	 */
 	
-	abstract class Model implements ModelInterface, InjectionAwareInterface, \Serializable {
+	class Model implements ModelInterface, InjectionAwareInterface, \Serializable {
 		use Di\InjectionAware;
 
 		/**
@@ -91,7 +89,7 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @return \ManaPHP\Mvc\Model\MetaDataInterface
 		 */
-		public function getModelsMetaData(){
+		protected function _getModelsMetaData(){
 			if(!is_object($this->_modelsMetaData)){
 				$this->_modelsMetaData =$this->_dependencyInjector->getShared('modelsMetadata');
 			}
@@ -104,27 +102,6 @@ namespace ManaPHP\Mvc {
 		 */
 		public function refresh(){
 
-		}
-
-		/**
-		 * Returns the models manager related to the entity instance
-		 *
-		 * @return \ManaPHP\Mvc\Model\ManagerInterface
-		 */
-		public function getModelsManager(){
-			return $this->_modelsManager;
-		}
-
-
-		/**
-		 * Sets table name which model should be mapped
-		 *
-		 * @param string $source
-		 * @return $this
-		 */
-		protected function setSource($source){
-			$this->_modelsManager->setModelSource($this,$source);
-			return $this;
 		}
 
 
@@ -232,29 +209,29 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function assign($data, $columnMap=null,$whiteList=null){
-			if(is_array($columnMap)){
+			if($columnMap !==null){
 				$dataMapped=[];
 				foreach($data as $k=>$v){
 					if(isset($columnMap[$k])){
 						$dataMapped[$columnMap[$k]]=$v;
+					}else{
+						$dataMapped[$k]=$v;
 					}
 				}
 			}else{
 				$dataMapped=$data;
 			}
 
-			if(count($dataMapped) ===0){
-				return $this;
-			}
-
-			$metaData =$this->getModelsMetaData();
-			foreach($metaData->getAttributes($this) as $attributeField){
-				if(isset($dataMapped[$attributeField])){
-					if(is_array($whiteList) &&!in_array($attributeField,$whiteList,true)){
-						continue;
-					}
-					$this->{$attributeField}=$dataMapped[$attributeField];
+			$attributes=$this->_getModelsMetaData()->getAttributes($this);
+			foreach($dataMapped as $attribute=>$value){
+				if($whiteList !==null && !in_array($attribute,$whiteList,true)){
+					continue;
 				}
+
+				if(!in_array($attribute,$attributes,true)){
+					throw new Exception('attribute `'.$attribute.'` not belong to '.get_called_class());
+				}
+				$this->{$attribute}=$value;
 			}
 
 			return $this;
@@ -478,7 +455,8 @@ namespace ManaPHP\Mvc {
 			$num =$connection->fetchOne('SELECT COUNT(*) as rowcount'.
 										' FROM '. $connection->escapeIdentifier($this->getSource()).
 										' WHERE '. implode(' AND ',$conditions),
-							\PDO::FETCH_ASSOC, $binds);
+								$binds,
+							\PDO::FETCH_ASSOC);
 
 			return $num['rowcount'] >0;
 		}
@@ -600,10 +578,13 @@ namespace ManaPHP\Mvc {
 		 * </code>
 		 *
 		 * @param array $parameters
-		 * @return double
-		 * @throws \ManaPHP\Di\Exception
+		 * @return mixed
+		 * @throws \ManaPHP\Di\Exception |\ManaPHP\Mvc\Model\Exception
 		 */
 		public static function sum($parameters=null){
+			if($parameters ===null ||!isset($parameters['column'])){
+				throw new Exception('which column is used to calculate the summatory?');
+			}
 			return self::_groupResult('SUM','summary',$parameters);
 		}
 
@@ -676,7 +657,7 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Di\Exception
 		 */
 		public static function average($parameters=null){
-			return self::_groupResult('AVG','average',$parameters);
+			return (double)self::_groupResult('AVG','average',$parameters);
 		}
 
 
@@ -767,12 +748,11 @@ namespace ManaPHP\Mvc {
 			}
 
 			$success =$connection->insert($this->getSource(),$columnValues);
-			if($success ===true){
+			if($success){
 				$autoIncrementAttribute=$metaData->getAutoIncrementAttribute($this);
-				if($autoIncrementAttribute !==null &&$this->{$autoIncrementAttribute} ===null){
+				if($autoIncrementAttribute !==null){
 					$this->{$autoIncrementAttribute}=$connection->lastInsertId();
 				}
-				$this->refresh();
 			}
 
 			return $success;
@@ -790,15 +770,12 @@ namespace ManaPHP\Mvc {
 		protected function _doLowUpdate($metaData,$connection){
 
 			$conditions=[];
-			$binds=[];
 			foreach($metaData->getPrimaryKeyAttributes($this) as $attributeField){
 				if(!isset($this->{$attributeField})){
 					throw new Exception('Record cannot be updated because it\'s some primary key has invalid value.');
 				}
-				$bindKey =':'.$attributeField;
 
-				$conditions[]=$attributeField.' ='.$bindKey;
-				$binds[$bindKey]=$this->{$attributeField};
+				$conditions[$attributeField]=$this->{$attributeField};
 			}
 
 			$columnValues=[];
@@ -816,9 +793,7 @@ namespace ManaPHP\Mvc {
 				return true;
 			}
 
-			$success =$connection->update($this->getSource(),
-						['conditions'=>implode(' AND ',$conditions), 'bind'=>$binds],
-						$columnValues);
+			$success =$connection->update($this->getSource(),$conditions,$columnValues);
 
 			if($success){
 				$this->_snapshot=$this->toArray();
@@ -855,7 +830,7 @@ namespace ManaPHP\Mvc {
 				$this->assign($data,null,$whiteList);
 			}
 
-			$metaData =$this->getModelsMetaData();
+			$metaData =$this->_getModelsMetaData();
 			$writeConnection=$this->getWriteConnection();
 
 			$exists =$this->_exists($metaData, $writeConnection);
@@ -904,7 +879,7 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function create($data=null, $whiteList=null){
-			if($this->_exists($this->getModelsMetaData(),$this->getReadConnection())){
+			if($this->_exists($this->_getModelsMetaData(),$this->getReadConnection())){
 				throw new Exception('Record cannot be created because it already exists');
 			}
 
@@ -929,7 +904,7 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function update($data=null, $whiteList=null){
-			if(!$this->_exists($this->getModelsMetaData(), $this->getReadConnection())){
+			if(!$this->_exists($this->_getModelsMetaData(), $this->getReadConnection())){
 				throw new Exception('Record cannot be updated because it does not exist');
 			}
 
@@ -953,7 +928,7 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function delete(){
-			$metaData =$this->getModelsMetaData();
+			$metaData =$this->_getModelsMetaData();
 			$writeConnection=$this->getWriteConnection();
 			$primaryKeys=$metaData->getPrimaryKeyAttributes($this);
 
@@ -978,7 +953,7 @@ namespace ManaPHP\Mvc {
 
 				$bindKey=':'.$attributeField;
 				$binds[$bindKey]=$this->{$attributeField};
-				$conditions =$writeConnection->escapeIdentifier($attributeField).' ='.$bindKey;
+				$conditions[] =$writeConnection->escapeIdentifier($attributeField).' ='.$bindKey;
 			}
 
 			$success =$writeConnection->delete($this->getSource(),implode(' AND ',$conditions),$binds);
@@ -1045,7 +1020,7 @@ namespace ManaPHP\Mvc {
 		 */
 		public function toArray($columns=null){
 			$data =[];
-			$metaData =$this->getModelsMetaData();
+			$metaData =$this->_getModelsMetaData();
 
 			foreach($metaData->getAttributes($this) as $attributeField){
 				if(is_array($columns) && !in_array($attributeField, $columns,true)){
