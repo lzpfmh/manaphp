@@ -508,7 +508,7 @@ namespace ManaPHP\Mvc {
 			}
 
 			$conditions=[];
-			$bindParams=[];
+			$binds=[];
 
 			foreach($primaryKeys as $attributeField){
 				if(!isset($this->{$attributeField})){
@@ -518,7 +518,7 @@ namespace ManaPHP\Mvc {
 				$bindKey =':'.$attributeField;
 
 				$conditions[]=$attributeField.' ='.$bindKey;
-				$bindParams[$bindKey]=$this->{$attributeField};
+				$binds[$bindKey]=$this->{$attributeField};
 			}
 
 			if(is_array($this->_snapshot)){
@@ -546,7 +546,7 @@ namespace ManaPHP\Mvc {
 			$num =$connection->fetchOne('SELECT COUNT(*) as rowcount'.
 										' FROM '. $connection->escapeIdentifier($table).
 										' WHERE '. implode(' AND ',$conditions),
-							\PDO::FETCH_ASSOC, $bindParams);
+							\PDO::FETCH_ASSOC, $binds);
 
 			return $num['rowcount'] >0;
 		}
