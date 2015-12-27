@@ -107,33 +107,30 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * Sets conditions for the query
 		 *
 		 * @param string $conditions
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @return static
 		 */
-		public function where($conditions, $bindParams=null, $bindTypes=null);
+		public function where($conditions, $binds=null);
 
 
 		/**
 		 * Appends a condition to the current conditions using a AND operator
 		 *
 		 * @param string $conditions
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @return static
 		 */
-		public function andWhere($conditions, $bindParams=null, $bindTypes=null);
+		public function andWhere($conditions, $binds=null);
 
 
 		/**
 		 * Appends a condition to the current conditions using a OR operator
 		 *
 		 * @param string $conditions
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @return static
 		 */
-		public function orWhere($conditions, $bindParams=null, $bindTypes=null);
+		public function orWhere($conditions, $binds=null);
 
 
 		/**

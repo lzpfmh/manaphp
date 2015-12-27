@@ -48,9 +48,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
 		protected $_sharedLock;
 
-		protected $_bindParams;
-
-		protected $_bindTypes;
+		protected $_binds;
 
 		protected $_distinct;
 
@@ -103,8 +101,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
 				if(is_array($this->_conditions)){
 					$mergedConditions=[];
-					$mergedParams=[];
-					$mergedTypes=[];
+					$mergedBinds=[];
 
 					foreach($this->_conditions as $condition){
 						if(is_array($condition)){
@@ -114,24 +111,18 @@ namespace ManaPHP\Mvc\Model\Query {
 
 							if(is_array($condition[1])){
 								/** @noinspection SlowArrayOperationsInLoopInspection */
-								$mergedParams=array_merge($mergedParams,$condition[1]);
-							}
-
-							if(is_array($condition[2])){
-								/** @noinspection SlowArrayOperationsInLoopInspection */
-								$mergedTypes =array_merge($mergedTypes,$condition[2]);
+								$mergedBinds=array_merge($mergedBinds,$condition[1]);
 							}
 						}
 					}
 
 					$this->_conditions=implode(' AND ',$mergedConditions);
 
-					$this->_bindParams=$mergedParams;
-					$this->_bindTypes =$mergedTypes;
+					$this->_binds=$mergedBinds;
 				}
 
 				if(isset($params['bind'])){
-					$this->_bindParams=$params['bind'];
+					$this->_binds=$params['bind'];
 				}
 
 				if(isset($params['distinct'])){
@@ -385,26 +376,17 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *</code>
 		 *
 		 * @param string $conditions
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @return static
 		 */
-		public function where($conditions, $bindParams=null, $bindTypes=null){
+		public function where($conditions, $binds=null){
 			$this->_conditions =$conditions;
 
-			if($bindParams !==null){
-				if($this->_bindParams ===null){
-					$this->_bindParams=$bindParams;
+			if($binds !==null){
+				if($this->_binds ===null){
+					$this->_binds=$binds;
 				}else{
-					$this->_bindParams=array_merge($this->_bindParams,$bindParams);
-				}
-			}
-
-			if($bindTypes !==null){
-				if($this->_bindTypes ===null){
-					$this->_bindTypes=$bindTypes;
-				}else{
-					$this->_bindTypes=array_merge($this->_bindTypes, $bindTypes);
+					$this->_binds=array_merge($this->_binds, $binds);
 				}
 			}
 
@@ -421,30 +403,21 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *</code>
 		 *
 		 * @param string $conditions
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @return static
 		 */
-		public function andWhere($conditions, $bindParams=null, $bindTypes=null){
+		public function andWhere($conditions, $binds=null){
 			if(isset($this->_conditions)){
 				$this->_conditions ='(' .$this->_conditions .') AND ('.$conditions.')';
 			}else{
 				$this->_conditions =$conditions;
 			}
 
-			if($bindParams !==null){
-				if($this->_bindParams ===null){
-					$this->_bindParams=$bindParams;
+			if($binds !==null){
+				if($this->_binds ===null){
+					$this->_binds=$binds;
 				}else{
-					$this->_bindParams=array_merge($this->_bindParams,$bindParams);
-				}
-			}
-
-			if($bindTypes !==null){
-				if($this->_bindTypes ===null){
-					$this->_bindTypes=$bindTypes;
-				}else{
-					$this->_bindTypes=array_merge($this->_bindTypes, $bindTypes);
+					$this->_binds=array_merge($this->_binds,$binds);
 				}
 			}
 
@@ -461,30 +434,21 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *</code>
 		 *
 		 * @param string $conditions
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @return static
 		 */
-		public function orWhere($conditions, $bindParams=null, $bindTypes=null){
+		public function orWhere($conditions, $binds=null){
 			if(isset($this->_conditions)){
 				$this->_conditions ='(' .$this->_conditions .') OR ('.$conditions.')';
 			}else{
 				$this->_conditions =$conditions;
 			}
 
-			if($bindParams !==null){
-				if($this->_bindParams ===null){
-					$this->_bindParams=$bindParams;
+			if($binds !==null){
+				if($this->_binds ===null){
+					$this->_binds=$binds;
 				}else{
-					$this->_bindParams=array_merge($this->_bindParams,$bindParams);
-				}
-			}
-
-			if($bindTypes !==null){
-				if($this->_bindTypes ===null){
-					$this->_bindTypes=$bindTypes;
-				}else{
-					$this->_bindTypes=array_merge($this->_bindTypes, $bindTypes);
+					$this->_binds=array_merge($this->_binds,$binds);
 				}
 			}
 
@@ -555,15 +519,16 @@ namespace ManaPHP\Mvc\Model\Query {
 				return $this;
 			}
 
-			$bindParams =[];
+			$binds =[];
 			$bindKeys=[];
 
 			foreach($values as $value){
 				$key ='ABP'.$this->_hiddenParamNumber++;
 				$bindKeys[]=':'.$key.':';
-				$bindParams[$key]=$value;
+				$binds[$key]=$value;
 			}
-			$this->andWhere($expr.' IN ('.implode(', ',$bindKeys).')',$bindParams);
+
+			$this->andWhere($expr.' IN ('.implode(', ',$bindKeys).')',$binds);
 
 			return $this;
 		}
@@ -586,15 +551,15 @@ namespace ManaPHP\Mvc\Model\Query {
 				return $this;
 			}
 
-			$bindParams =[];
+			$binds =[];
 			$bindKeys=[];
 
 			foreach($values as $value){
 				$key ='ABP'.$this->_hiddenParamNumber++;
 				$bindKeys[]=':'.$key.':';
-				$bindParams[$key]=$value;
+				$binds[$key]=$value;
 			}
-			$this->andWhere($expr.' NOT IN ('.implode(', ',$bindKeys).')',$bindParams);
+			$this->andWhere($expr.' NOT IN ('.implode(', ',$bindKeys).')',$binds);
 
 			return $this;
 		}
@@ -917,20 +882,21 @@ namespace ManaPHP\Mvc\Model\Query {
 			 * todo
 			 */
 			if($this->_limit !==null){
-				$key ='ABP_LIMIT';
-				$sql .=' LIMIT :'.$key.':';
-				$this->_bindParams[$key]=(int)$this->_limit;
-				//$this->_bindTypes[$key]=\PDO::PARAM_INT;
+				$limit=$this->_limit;
+				if(is_int($limit) ||(is_string($limit) &&((string)((int)$limit))) ===$limit){
+					$sql .=' LIMIT '.$limit;
+				}else{
+					throw new Exception('limit is invalid: '.$limit);
+				}
 			}
 
 			if($this->_offset !==null){
-				if($this->_limit ===null){
-					throw new Exception('offset is invalid: limit is missing');
+				$offset=$this->_offset;
+				if(is_int($offset) ||(is_string($offset) &&((string)((int)$offset))) ===$offset){
+					$sql .=' OFFSET '.$offset;
+				}else{
+					throw new Exception('offset is invalid: '.$offset);
 				}
-				$key ='ABP_OFFSET';
-				$sql .=' OFFSET :'.$key.':';
-				$this->_bindParams[$key]=(int)$this->_offset;
-				$this->_bindTypes[$key]=\PDO::PARAM_INT;
 			}
 			/**
 			 * Process forUPDATE clause
@@ -966,12 +932,11 @@ namespace ManaPHP\Mvc\Model\Query {
 		/**
 		 * Executes a parsed PHQL statement
 		 *
-		 * @param array $bindParams
-		 * @param array $bindTypes
+		 * @param array $binds
 		 * @return mixed
 		 * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
 		 */
-		public function execute($bindParams=null, $bindTypes=null){
+		public function execute($binds=null){
 //			$query = new Query($this->getPhql(),$this->_dependencyInjector);
 //			if(is_array($this->_bindParams)){
 //				$query->setBindParams($this->_bindParams);
@@ -981,16 +946,10 @@ namespace ManaPHP\Mvc\Model\Query {
 //				$query->setBindTypes($this->_bindTypes);
 //			}
 
-			if($bindParams !==null &&is_array($bindParams)){
-				$mergedParams=array_merge($this->_bindParams,$bindParams);
+			if($binds !==null &&is_array($binds)){
+				$mergedBinds=array_merge($this->_binds,$binds);
 			} else{
-				$mergedParams=$this->_bindParams;
-			}
-
-			if($bindTypes !==null &&is_array($bindTypes)){
-				$mergedTypes=array_merge($this->_bindTypes, $bindTypes);
-			}else{
-				$mergedTypes=$this->_bindTypes;
+				$mergedBinds=$this->_binds;
 			}
 
 			$sql=$this->_lastSQL;
@@ -1022,23 +981,23 @@ namespace ManaPHP\Mvc\Model\Query {
 			/** @noinspection StrTrUsageAsStrReplaceInspection */
 			$sql=strtr($sql,'[]','``');
 
-			if(is_array($mergedParams)){
-				$sql_replaces=[];
-				$finalBindParams=[];
-				foreach($mergedParams as $key=>$value){
-					$sql_replaces[':'.$key.':']=':'.$key;
-					$finalBindParams[':'.$key]=$value;
+			if(is_array($mergedBinds)){
+				$replaces=[];
+				$finalBinds=[];
+				foreach($mergedBinds as $key=>$value){
+					$replaces[':'.$key.':']=':'.$key;
+					$finalBinds[':'.$key]=$value;
 				}
 
-				$sql =strtr($sql,$sql_replaces);
+				$sql =strtr($sql,$replaces);
 			}else{
-				$finalBindParams=null;
+				$finalBinds=null;
 			}
 			try{
 				if($this->_uniqueRow){
-					$result=$readConnection->fetchOne($sql,\PDO::FETCH_ASSOC,$finalBindParams,$mergedTypes);
+					$result=$readConnection->fetchOne($sql,$finalBinds);
 				}else{
-					$result =$readConnection->fetchAll($sql,\PDO::FETCH_ASSOC,$finalBindParams,$mergedTypes);
+					$result =$readConnection->fetchAll($sql,$finalBinds);
 				}
 
 			}catch (\Exception $e){
@@ -1051,15 +1010,15 @@ namespace ManaPHP\Mvc\Model\Query {
 		/**
 		 * Set default bind parameters
 		 *
-		 * @param array $bindParams
+		 * @param array $binds
 		 * @param bool $merge
 		 * @return static
 		 */
-		public function setBindParams($bindParams, $merge = false){
+		public function setBinds($binds, $merge = false){
 			if($merge ===false){
-				$this->_bindParams=$bindParams;
+				$this->_binds=$binds;
 			}else{
-				$this->_bindParams=array_merge($this->_bindParams,$bindParams);
+				$this->_binds=array_merge($this->_binds,$binds);
 			}
 
 			return $this;
