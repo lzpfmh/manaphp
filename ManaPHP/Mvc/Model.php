@@ -42,27 +42,12 @@ namespace ManaPHP\Mvc {
 	abstract class Model implements ModelInterface, InjectionAwareInterface, \Serializable {
 		use Di\InjectionAware;
 
-		const DIRTY_STATE_PERSISTENT = 0;
-
-		const DIRTY_STATE_TRANSIENT = 1;
-
-		const DIRTY_STATE_DETACHED = 2;
-
 		/**
 		 * @var \ManaPHP\Mvc\Model\ManagerInterface
 		 */
 		protected $_modelsManager;
 
 		protected $_modelsMetaData;
-
-		protected $_dirtyState;
-
-		protected $_uniqueKey;
-
-		protected $_uniqueParams;
-
-		protected $_uniqueTypes;
-
 
 		/**
 		 * @var array
@@ -94,8 +79,8 @@ namespace ManaPHP\Mvc {
 
             if($data !==null){
                 $this->_snapshot =$data;
-                foreach($data as $k=>$v){
-                    $this->{$k}=$v;
+                foreach($data as $attribute=>$value){
+                    $this->{$attribute}=$value;
                 }
             }
 		}
@@ -154,28 +139,6 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Sets schema name where table mapped is located
-		 *
-		 * @param string $schema
-		 * @return $this
-		 */
-		protected function setSchema($schema){
-			$this->_modelsManager->setModelSchema($this,$schema);
-			return $this;
-		}
-
-
-		/**
-		 * Returns schema name where table mapped is located
-		 *
-		 * @return string
-		 */
-		public function getSchema(){
-			return $this->_modelsManager->getModelSchema($this);
-		}
-
-
-		/**
 		 * Sets the DependencyInjection connection service name
 		 *
 		 * @param string $connectionService
@@ -228,28 +191,6 @@ namespace ManaPHP\Mvc {
 		 */
 		public function getWriteConnectionService(){
 			return $this->_modelsManager->getWriteConnectionService($this);
-		}
-
-
-		/**
-		 * Sets the dirty state of the object using one of the DIRTY_STATE_* constants
-		 *
-		 * @param int $dirtyState
-		 * @return $this
-		 */
-		public function setDirtyState($dirtyState){
-			$this->_dirtyState =$dirtyState;
-			return $this;
-		}
-
-
-		/**
-		 * Returns one of the DIRTY_STATE_* constants telling if the record exists in the database or not
-		 *
-		 * @return int
-		 */
-		public function getDirtyState(){
-			return $this->_dirtyState;
 		}
 
 
@@ -388,7 +329,6 @@ namespace ManaPHP\Mvc {
                 foreach($resultset as $result){
                     $class =get_called_class();
                     $modelInstances[]=new $class(null, null,$result);
-
                 }
                 return $modelInstances;
 			}else{
@@ -535,16 +475,8 @@ namespace ManaPHP\Mvc {
 				}
 			}
 
-			$schema =$this->getSchema();
-			$source=$this->getSource();
-			if($schema !==''){
-				$table =[$schema, $source];
-			}else{
-				$table=$source;
-			}
-
 			$num =$connection->fetchOne('SELECT COUNT(*) as rowcount'.
-										' FROM '. $connection->escapeIdentifier($table).
+										' FROM '. $connection->escapeIdentifier($this->getSource()).
 										' WHERE '. implode(' AND ',$conditions),
 							\PDO::FETCH_ASSOC, $binds);
 
@@ -823,14 +755,6 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		protected function _doLowInsert($metaData,$connection){
-			$schema=$this->getSchema();
-			$source =$this->getSource();
-			if($schema !==''){
-				$table=[$schema,$source];
-			}else{
-				$table =$source;
-			}
-
 			$columnValues=[];
 			foreach($metaData->getAttributes($this) as $attributeField){
 				if($this->{$attributeField} !==null){
@@ -839,10 +763,10 @@ namespace ManaPHP\Mvc {
 			}
 
 			if(count($columnValues) ===0){
-				throw new Exception('Unable to insert into ' . $source . ' without data');
+				throw new Exception('Unable to insert into ' . $this->getSource() . ' without data');
 			}
 
-			$success =$connection->insert($table,$columnValues);
+			$success =$connection->insert($this->getSource(),$columnValues);
 			if($success ===true){
 				$autoIncrementAttribute=$metaData->getAutoIncrementAttribute($this);
 				if($autoIncrementAttribute !==null &&$this->{$autoIncrementAttribute} ===null){
@@ -864,13 +788,6 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		protected function _doLowUpdate($metaData,$connection){
-			$schema=$this->getSchema();
-			$source =$this->getSource();
-			if($schema !==''){
-				$table=[$schema,$source];
-			}else{
-				$table =$source;
-			}
 
 			$conditions=[];
 			$binds=[];
@@ -899,7 +816,7 @@ namespace ManaPHP\Mvc {
 				return true;
 			}
 
-			$success =$connection->update($table,
+			$success =$connection->update($this->getSource(),
 						['conditions'=>implode(' AND ',$conditions), 'bind'=>$binds],
 						$columnValues);
 
@@ -1048,7 +965,7 @@ namespace ManaPHP\Mvc {
 				return false;
 			}
 
-			$bindParams=[];
+			$binds=[];
 			$conditions=[];
 			foreach($primaryKeys as $attributeField){
 
@@ -1060,19 +977,11 @@ namespace ManaPHP\Mvc {
 				}
 
 				$bindKey=':'.$attributeField;
-				$bindParams[$bindKey]=$this->{$attributeField};
+				$binds[$bindKey]=$this->{$attributeField};
 				$conditions =$writeConnection->escapeIdentifier($attributeField).' ='.$bindKey;
 			}
 
-			$schema =$this->getSchema();
-			$source =$this->getSource();
-			if($schema !==''){
-				$table=[$schema,$source];
-			}else{
-				$table=$source;
-			}
-
-			$success =$writeConnection->delete($table,implode(' AND ',$conditions),$bindParams);
+			$success =$writeConnection->delete($this->getSource(),implode(' AND ',$conditions),$binds);
 
 			if($success ===true){
 				$this->_fireEvent('afterDelete');
