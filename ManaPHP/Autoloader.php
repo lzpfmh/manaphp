@@ -28,6 +28,8 @@ namespace ManaPHP {
 				require $file;
 				return true;
 			}
+
+			return false;
 		}
 
 		/**
