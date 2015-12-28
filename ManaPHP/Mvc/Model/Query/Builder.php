@@ -209,16 +209,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
 
 		/**
-		 * Returns SELECT DISTINCT / SELECT ALL flag
-		 *
-		 * @return bool
-		 */
-		public function getDistinct(){
-			return $this->_distinct;
-		}
-
-
-		/**
 		 * Sets the columns to be queried
 		 *
 		 *<code>
@@ -231,16 +221,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		public function columns($columns){
 			$this->_columns =$columns;
 			return $this;
-		}
-
-
-		/**
-		 * Return the columns to be queried
-		 *
-		 * @return string|array
-		 */
-		public function getColumns(){
-			return $this->_columns;
 		}
 
 
@@ -289,17 +269,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
 			return $this;
 		}
-
-
-		/**
-		 * Return the models who makes part of the query
-		 *
-		 * @return string|array
-		 */
-		public function getFrom(){
-			return $this->_models;
-		}
-
 
 		/**
 		 * Adds a join to the query
@@ -565,16 +534,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
 
 		/**
-		 * Return the conditions for the query
-		 *
-		 * @return string|array
-		 */
-		public function getWhere(){
-			return $this->_conditions;
-		}
-
-
-		/**
 		 * Sets a ORDER BY condition clause
 		 *
 		 *<code>
@@ -588,16 +547,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		public function orderBy($orderBy){
 			$this->_order =$orderBy;
 			return $this;
-		}
-
-
-		/**
-		 * Returns the set ORDER BY clause
-		 *
-		 * @return string|array
-		 */
-		public function getOrderBy(){
-			return $this->_order;
 		}
 
 
@@ -628,16 +577,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
 
 		/**
-		 * Return the current having clause
-		 *
-		 * @return string|array
-		 */
-		public function getHaving(){
-			return $this->_having;
-		}
-
-
-		/**
 		 * Sets a LIMIT clause, optionally a offset clause
 		 *
 		 *<code>
@@ -658,17 +597,6 @@ namespace ManaPHP\Mvc\Model\Query {
 			return $this;
 		}
 
-
-		/**
-		 * Returns the current LIMIT clause
-		 *
-		 * @return string|array
-		 */
-		public function getLimit(){
-			return $this->_limit;
-		}
-
-
 		/**
 		 * Sets an OFFSET clause
 		 *
@@ -686,16 +614,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
 
 		/**
-		 * Returns the current OFFSET clause
-		 *
-		 * @return string|null
-		 */
-		public function getOffset(){
-			return $this->_offset;
-		}
-
-
-		/**
 		 * Sets a GROUP BY clause
 		 *
 		 *<code>
@@ -708,16 +626,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		public function groupBy($group){
 			$this->_group=$group;
 			return $this;
-		}
-
-
-		/**
-		 * Returns the GROUP BY clause
-		 *
-		 * @return string
-		 */
-		public function getGroupBy(){
-			return $this->_group;
 		}
 
 
@@ -974,10 +882,18 @@ namespace ManaPHP\Mvc\Model\Query {
 				$models=$this->_models;
 			}
 
+			if(count($this->_models) ===0){
+				throw new Exception('there is any model to query.');
+			}
+
+			$readConnection=null;
 			foreach($models as $model){
 				$modelInstance=$modelsManager->load($model,false);
 
-				$readConnection=$modelInstance->getReadConnection();
+				if($readConnection ===null){
+					$readConnection=$modelInstance->getReadConnection();
+				}
+
 				$escapedTable=$readConnection->escapeIdentifier($modelInstance->getSource());
 				$sql =str_replace('['.$model.']',$escapedTable,$sql);
 			}

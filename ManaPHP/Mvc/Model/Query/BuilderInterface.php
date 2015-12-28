@@ -18,9 +18,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		public function distinct($distinct);
 
 
-		public function getDistinct();
-
-
 		/**
 		 * Sets the columns to be queried
 		 *
@@ -28,14 +25,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @return static
 		 */
 		public function columns($columns);
-
-
-		/**
-		 * Return the columns to be queried
-		 *
-		 * @return string|array
-		 */
-		public function getColumns();
 
 
 		/**
@@ -55,15 +44,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @return static
 		 */
 		public function addFrom($model, $alias=null);
-
-
-		/**
-		 * Return the models who makes part of the query
-		 *
-		 * @return string|array
-		 */
-		public function getFrom();
-
 
 		/**
 		 * Adds a INNER join to the query
@@ -187,28 +167,12 @@ namespace ManaPHP\Mvc\Model\Query {
 
 
 		/**
-		 * Return the conditions for the query
-		 *
-		 * @return string|array
-		 */
-		public function getWhere();
-
-
-		/**
 		 * Sets a ORDER BY condition clause
 		 *
 		 * @param string $orderBy
 		 * @return static
 		 */
 		public function orderBy($orderBy);
-
-
-		/**
-		 * Return the set ORDER BY clause
-		 *
-		 * @return string|array
-		 */
-		public function getOrderBy();
 
 
 		/**
@@ -222,14 +186,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
 
 		/**
-		 * Returns the HAVING condition clause
-		 *
-		 * @return string|array
-		 */
-		public function getHaving();
-
-
-		/**
 		 * Sets a LIMIT clause
 		 *
 		 * @param int $limit
@@ -238,13 +194,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 */
 		public function limit($limit, $offset=null);
 
-
-		/**
-		 * Returns the current LIMIT clause
-		 *
-		 * @return string|array
-		 */
-		public function getLimit();
 
 		/**
 		 * Sets an OFFSET clause
@@ -265,15 +214,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @return static
 		 */
 		public function groupBy($group);
-
-
-		/**
-		 * Returns the GROUP BY clause
-		 *
-		 * @return string
-		 */
-		public function getGroupBy();
-
 
 		/**
 		 * Returns a PHQL statement built based on the builder parameters
