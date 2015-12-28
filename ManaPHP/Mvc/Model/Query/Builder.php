@@ -827,6 +827,8 @@ namespace ManaPHP\Mvc\Model\Query {
 			if(is_array($this->_joins)){
 				foreach($this->_joins as $join){
 					list($joinModel, $joinCondition, $joinAlias, $joinType)=$join;
+					$this->_models[]=$joinModel;
+					
 					if($joinType){
 						if(strpos($joinModel,'[') !==false){
 							$sql .=' '.$joinType .' JOIN '.$joinModel;
@@ -895,7 +897,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
 			/**
 			 * Process limit parameters
-			 * todo
 			 */
 			if($this->_limit !==null){
 				$limit=$this->_limit;
@@ -953,15 +954,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
 		 */
 		public function execute($binds=null){
-//			$query = new Query($this->getPhql(),$this->_dependencyInjector);
-//			if(is_array($this->_bindParams)){
-//				$query->setBindParams($this->_bindParams);
-//			}
-//
-//			if(is_array($this->_bindTypes)){
-//				$query->setBindTypes($this->_bindTypes);
-//			}
-
 			if($binds !==null){
 				$mergedBinds=array_merge($this->_binds,$binds);
 			}else{
@@ -969,6 +961,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			}
 
 			$sql=$this->_lastSQL;
+
 			/**
 			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
 			 */
