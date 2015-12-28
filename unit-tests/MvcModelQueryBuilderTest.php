@@ -99,7 +99,7 @@ class MvcModelQueryBuilderTest extends TestCase{
         $builder =$this->modelsManager->createBuilder()
             ->columns('a.address_id,a.address, c.city')
             ->addFrom(get_class(new Address()),'a')
-            ->leftJoin('City','c.city_id =a.city_id','c')
+            ->leftJoin(get_class(new City()),'c.city_id =a.city_id','c')
             ->limit(2)
             ->orderBy('a.address_id');
         $rows=$builder->getQuery()->execute();
