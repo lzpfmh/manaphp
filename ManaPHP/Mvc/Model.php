@@ -465,7 +465,7 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Generate a PHQL SELECT statement for an aggregate
+		 * Generate a SQL SELECT statement for an aggregate
 		 *
 		 * @param string $function
 		 * @param string $alias
