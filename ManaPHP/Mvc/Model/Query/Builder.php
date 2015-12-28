@@ -635,7 +635,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @return string
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function getPhql(){
+		public function getSql(){
 			if($this->_dependencyInjector ===null){
 				$dependencyInjector=Di::getDefault();
 			}else{
@@ -840,7 +840,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function getQuery(){
-			$this->_lastSQL=$this->getPhql();
+			$this->_lastSQL=$this->getSql();
 			return $this;
 		}
 

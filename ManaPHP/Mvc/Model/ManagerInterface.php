@@ -128,21 +128,21 @@ namespace ManaPHP\Mvc\Model {
 		/**
 		 * Creates a \ManaPHP\Mvc\Model\Query without execute it
 		 *
-		 * @param string $phql
+		 * @param string $sql
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
-		public function createQuery($phql);
+		public function createQuery($sql);
 
 
 		/**
 		 * Creates a \ManaPHP\Mvc\Model\Query and execute it
 		 *
-		 * @param string $phql
+		 * @param string $sql
 		 * @param array $placeholders
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
-		public function executeQuery($phql, $placeholders=null,$bindTypes=null);
+		public function executeQuery($sql, $placeholders=null,$bindTypes=null);
 
 
 		/**

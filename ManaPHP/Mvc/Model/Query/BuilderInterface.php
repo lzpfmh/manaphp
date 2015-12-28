@@ -220,7 +220,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 *
 		 * @return string
 		 */
-		public function getPhql();
+		public function getSql();
 
 
 		/**

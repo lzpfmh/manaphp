@@ -261,14 +261,14 @@ namespace ManaPHP\Mvc\Model {
 		/**
 		 * Creates a \ManaPHP\Mvc\Model\Query without execute it
 		 *
-		 * @param string $phql
+		 * @param string $sql
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 */
-		public function createQuery($phql){
+		public function createQuery($sql){
 			/**
 			 * @var $query \ManaPHP\Mvc\Model\Query
 			 */
-			$query =$this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query',[$phql, $this->_dependencyInjector]);
+			$query =$this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query',[$sql, $this->_dependencyInjector]);
 			$this->_lastQuery =$query;
 			return $query;
 		}
@@ -277,17 +277,17 @@ namespace ManaPHP\Mvc\Model {
 		/**
 		 * Creates a \ManaPHP\Mvc\Model\Query and execute it
 		 *
-		 * @param string $phql
+		 * @param string $sql
 		 * @param array $placeholders
 		 * @param array $bindTypes
 		 * @return \ManaPHP\Mvc\Model\QueryInterface
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
-		public function executeQuery($phql, $placeholders=null,$bindTypes=null){
+		public function executeQuery($sql, $placeholders=null,$bindTypes=null){
 			/**
 			 * @var $query \ManaPHP\Mvc\Model\Query
 			 */
-			$query =$this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query',[$phql, $this->_dependencyInjector]);
+			$query =$this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query',[$sql, $this->_dependencyInjector]);
 			$this->_lastQuery =$query;
 			if(is_array($placeholders)){
 				$query->setBindParams($placeholders);
