@@ -28,7 +28,10 @@ namespace ManaPHP\Mvc\Model\Query {
 
 		protected $_columns;
 
-		protected $_models;
+		/**
+		 * @var array
+		 */
+		protected $_models=[];
 
 		protected $_joins;
 
@@ -236,7 +239,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @return static
 		 */
 		public function from($models){
-			$this->_models =$models;
+			$this->_models =[$models];
 			return $this;
 		}
 
@@ -253,14 +256,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @return static
 		 */
 		public function addFrom($model, $alias=null){
-			if(!is_array($this->_models)){
-				if($this->_models !==null){
-					$this->_models=[$this->_models];
-				}else{
-					$this->_models=[];
-				}
-			}
-
 			if(is_string($alias)){
 				$this->_models[$alias]=$model;
 			}else{
@@ -688,49 +683,37 @@ namespace ManaPHP\Mvc\Model\Query {
 					$sql .=$this->_columns;
 				}
 			}else{
-				if(is_array($this->_models)){
-					$selectedColumns=[];
-					foreach($this->_models as $alias=>$model){
-						if(is_int($alias)){
-							$selectedColumns[]='['.$model.'].*';
-						}else{
-							$selectedColumns[]='['.$alias.'].*';
-						}
+				$selectedColumns=[];
+				foreach($this->_models as $alias=>$model){
+					if(is_int($alias)){
+						$selectedColumns[]='['.$model.'].*';
+					}else{
+						$selectedColumns[]='['.$alias.'].*';
 					}
-					$sql .=implode(', ',$selectedColumns);
-				}else{
-					$sql .='['.$this->_models.'].*';
 				}
+				$sql .=implode(', ',$selectedColumns);
 			}
 
 			/**
 			 *  Join multiple models or use a single one if it is a string
 			 */
-			if(is_array($this->_models)){
-				$selectedModels=[];
-				foreach($this->_models as $alias=>$model){
-					if(is_string($alias)){
-						if(strpos($model, '[') !==false){
-							$selectedModels[]=$model. ' AS ['.$alias.']';
-						}else{
-							$selectedModels[]='['.$model.'] AS ['.$alias.']';
-						}
+			$selectedModels=[];
+			foreach($this->_models as $alias=>$model){
+				if(is_string($alias)){
+					if(strpos($model, '[') !==false){
+						$selectedModels[]=$model. ' AS ['.$alias.']';
 					}else{
-						if(strpos($model,'[') !==false){
-							$selectedModels[]=$model;
-						}else{
-							$selectedModels[]='['.$model.']';
-						}
+						$selectedModels[]='['.$model.'] AS ['.$alias.']';
+					}
+				}else{
+					if(strpos($model,'[') !==false){
+						$selectedModels[]=$model;
+					}else{
+						$selectedModels[]='['.$model.']';
 					}
 				}
-				$sql .=' FROM '.implode(', ',$selectedModels);
-			}else{
-				if(strpos($this->_models,'[') !==false){
-					$sql .=' FROM '.$this->_models;
-				}else{
-					$sql.=' FROM [' .$this->_models.']';
-				}
 			}
+			$sql .=' FROM '.implode(', ',$selectedModels);
 
 			if(is_array($this->_joins)){
 				foreach($this->_joins as $join){

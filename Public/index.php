@@ -32,7 +32,6 @@ try{
     echo $application->handle()->getContent();
 }catch (\Exception $e){
     var_dump($e->getMessage());
-    var_dump($e);
     var_dump($_GET);
     var_dump($_SERVER);
 }

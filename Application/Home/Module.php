@@ -19,13 +19,21 @@ class Module implements ModuleInterface{
         ])->register();
     }
 
-    public function registerServices($di){
-        $di->set('db',function(){
-            return new Mysql(['host'=>'localhost',
-                'username'=>'root',
-                'password'=>'',
-                'dbname'=>'test',
-                'port'=>3306]);
+    public function registerServices($di) {
+        $di->set('db', function () {
+            $mysql = new Mysql([
+                'host' => 'localhost',
+                'username' => 'root',
+                'password' => '',
+                'dbname' => 'manaphp_unit_test',
+                'port' => 3306
+            ]);
+
+            $mysql->attachEvent('db:beforeQuery', function ($event, \ManaPHP\DbInterface $source, $data) {
+                var_dump($source->getSQLStatement());
+            });
+
+            return $mysql;
         });
     }
 }
