@@ -641,8 +641,6 @@ namespace ManaPHP\Mvc\Model\Query {
 				throw new Exception('At least one model is required to build the query');
 			}
 
-			$conditions=$this->_conditions;
-
 			/**
 			 * Generate PHQL for SELECT
 			 */
@@ -657,32 +655,25 @@ namespace ManaPHP\Mvc\Model\Query {
 			 */
 			if($this->_columns !==null){
 				if(is_array($this->_columns)){
-					$selectedColumns=[];
-					foreach($this->_columns as $key=>$column){
-						if(is_int($key)){
-							$selectedColumns[]=$column;
-						}else{
-							if(strpos($key,'[') !==false){
-								$selectedColumns[]= $column. ' AS '.$key;
-							}else{
-								$selectedColumns[]=$column. ' AS ['.$key.']';
-							}
-						}
-					}
-					$sql .=implode(', ',$selectedColumns);
+					$sql .=implode(', ',$this->_columns);
 				}else{
 					$sql .=$this->_columns;
 				}
 			}else{
 				$selectedColumns=[];
-				foreach($this->_models as $alias=>$model){
-					if(is_int($alias)){
-						$selectedColumns[]='['.$model.'].*';
-					}else{
-						$selectedColumns[]='['.$alias.'].*';
+				if(count($this->_models) ===1){
+					$sql .='*';
+				}else{
+					foreach($this->_models as $alias=>$model){
+						if(is_int($alias)){
+							$selectedColumns[]='['.$model.'].*';
+						}else{
+							$selectedColumns[]='['.$alias.'].*';
+						}
 					}
+					$sql .=implode(', ',$selectedColumns);
 				}
-				$sql .=implode(', ',$selectedColumns);
+
 			}
 
 			/**
@@ -735,8 +726,8 @@ namespace ManaPHP\Mvc\Model\Query {
 				}
 			}
 
-			if(is_string($conditions) && $conditions !==''){
-				$sql .=' WHERE '.$conditions;
+			if(is_string($this->_conditions) && $this->_conditions !==''){
+				$sql .=' WHERE '.$this->_conditions;
 			}
 
 			/**
@@ -797,9 +788,8 @@ namespace ManaPHP\Mvc\Model\Query {
 					throw new Exception('offset is invalid: '.$offset);
 				}
 			}
-			
-			return $sql;
 
+			return $sql;
 		}
 
 
