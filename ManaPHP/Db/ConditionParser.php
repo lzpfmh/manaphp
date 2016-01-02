@@ -17,8 +17,6 @@ namespace ManaPHP\Db {
          * @throws \ManaPHP\Db\ConditionParser\Exception
          */
         public function parse($conditions, &$binds){
-            var_dump($conditions);
-
             $binds=[];
 
             if(is_string($conditions)){

@@ -635,10 +635,10 @@ namespace ManaPHP\Mvc\Model\Query {
 					$sql.=preg_replace('/(\s+)/',' ',$this->_columns);
 				}
 			}else{
-				$selectedColumns=[];
 				if(count($this->_models) ===1){
 					$sql .='*';
 				}else{
+					$selectedColumns=[];
 					foreach($this->_models as $alias=>$model){
 						if(is_int($alias)){
 							$selectedColumns[]='['.$model.'].*';
