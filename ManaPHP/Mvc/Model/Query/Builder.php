@@ -657,7 +657,7 @@ namespace ManaPHP\Mvc\Model\Query {
 				if(is_array($this->_columns)){
 					$sql .=implode(', ',$this->_columns);
 				}else{
-					$sql .=$this->_columns;
+					$sql.=preg_replace('/(\s+)/',' ',$this->_columns);
 				}
 			}else{
 				$selectedColumns=[];
@@ -675,8 +675,9 @@ namespace ManaPHP\Mvc\Model\Query {
 				}
 			}
 
+
 			/**
-			 *  Join multiple models
+			 *  generate for FROM
 			 */
 			$selectedModels=[];
 			foreach($this->_models as $alias=>$model){
@@ -688,6 +689,10 @@ namespace ManaPHP\Mvc\Model\Query {
 			}
 			$sql .=' FROM '.implode(', ',$selectedModels);
 
+
+			/**
+			 *  Join multiple models
+			 */
 			if(is_array($this->_joins)){
 				foreach($this->_joins as $join){
 					list($joinModel, $joinCondition, $joinAlias, $joinType)=$join;
@@ -697,9 +702,13 @@ namespace ManaPHP\Mvc\Model\Query {
 						$this->_models[]=$joinModel;
 					}
 
-					$sql.=' '.($joinType !==null?$joinType:'').' JOIN ['.$joinModel.']';
+					if($joinType !==null){
+						$sql .=' '.$joinType;
+					}
 
-					if($joinAlias){
+					$sql.=' JOIN ['.$joinModel.']';
+
+					if($joinAlias !==null){
 						$sql .=' AS ['.$joinAlias.']';
 					}
 
