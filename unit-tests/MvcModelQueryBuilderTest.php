@@ -289,24 +289,6 @@ class MvcModelQueryBuilderTest extends TestCase{
         $this->assertCount(50,$builder->getQuery()->execute());
     }
 
-    public function test_orWhere(){
-        $builder =$this->modelsManager->createBuilder()
-            ->orWhere('address_id <=100')
-            ->addFrom(get_class(new Address()));
-        $this->assertCount(100,$builder->getQuery()->execute());
-
-        $builder =$this->modelsManager->createBuilder()
-            ->orWhere('address_id <=:max_address_id',['max_address_id'=>100])
-            ->addFrom(get_class(new Address()));
-        $this->assertCount(100,$builder->getQuery()->execute());
-
-        $builder =$this->modelsManager->createBuilder()
-            ->orWhere('address_id =:address_id1',['address_id1'=>100])
-            ->orWhere('address_id =:address_id2',['address_id2'=>101])
-            ->addFrom(get_class(new Address()));
-        $this->assertCount(2,$builder->getQuery()->execute());
-    }
-
     public function test_betweenWhere(){
         $builder =$this->modelsManager->createBuilder()
             ->betweenWhere('address_id',51,100)

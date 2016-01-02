@@ -392,34 +392,6 @@ namespace ManaPHP\Mvc\Model\Query {
 			return $this;
 		}
 
-
-		/**
-		 * Appends a condition to the current conditions using a OR operator
-		 *
-		 *<code>
-		 *	$builder->orWhere('name = "Peter"');
-		 *	$builder->orWhere('name = :name: AND id > :id:', array('name' => 'Peter', 'id' => 100));
-		 *</code>
-		 *
-		 * @param string $conditions
-		 * @param array $binds
-		 * @return static
-		 */
-		public function orWhere($conditions, $binds=null){
-			if(isset($this->_conditions)){
-				$this->_conditions ='(' .$this->_conditions .') OR ('.$conditions.')';
-			}else{
-				$this->_conditions =$conditions;
-			}
-
-			if($binds !==null){
-				$this->_binds=array_merge($this->_binds,$binds);
-			}
-
-			return $this;
-		}
-
-
 		/**
 		 * Appends a BETWEEN condition to the current conditions
 		 *

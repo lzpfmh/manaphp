@@ -111,16 +111,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
 
 		/**
-		 * Appends a condition to the current conditions using a OR operator
-		 *
-		 * @param string $conditions
-		 * @param array $binds
-		 * @return static
-		 */
-		public function orWhere($conditions, $binds=null);
-
-
-		/**
 		 * Appends a BETWEEN condition to the current conditions
 		 *
 		 * @param string $expr
