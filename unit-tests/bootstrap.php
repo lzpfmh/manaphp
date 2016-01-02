@@ -30,7 +30,6 @@ spl_autoload_register(function($className){
     }
 
     if(strpos($className,'Models') !==false){
-        echo $className;
         $file=str_replace('\\','/',__DIR__.'/'.$className).'.php';
         if(is_file($file)){
             require $file;
