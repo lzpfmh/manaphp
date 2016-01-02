@@ -676,7 +676,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			}
 
 			/**
-			 *  Join multiple models or use a single one if it is a string
+			 *  Join multiple models
 			 */
 			$selectedModels=[];
 			foreach($this->_models as $alias=>$model){
@@ -691,7 +691,11 @@ namespace ManaPHP\Mvc\Model\Query {
 			if(is_array($this->_joins)){
 				foreach($this->_joins as $join){
 					list($joinModel, $joinCondition, $joinAlias, $joinType)=$join;
-					$this->_models[]=$joinModel;
+					if($joinAlias !==null){
+						$this->_models[$joinAlias]=$joinModel;
+					}else{
+						$this->_models[]=$joinModel;
+					}
 					
 					if($joinType){
 						if(strpos($joinModel,'[') !==false){
