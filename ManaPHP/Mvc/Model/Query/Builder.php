@@ -673,7 +673,6 @@ namespace ManaPHP\Mvc\Model\Query {
 					}
 					$sql .=implode(', ',$selectedColumns);
 				}
-
 			}
 
 			/**
@@ -682,17 +681,9 @@ namespace ManaPHP\Mvc\Model\Query {
 			$selectedModels=[];
 			foreach($this->_models as $alias=>$model){
 				if(is_string($alias)){
-					if(strpos($model, '[') !==false){
-						$selectedModels[]=$model. ' AS ['.$alias.']';
-					}else{
-						$selectedModels[]='['.$model.'] AS ['.$alias.']';
-					}
+					$selectedModels[]='['.$model.'] AS ['.$alias.']';
 				}else{
-					if(strpos($model,'[') !==false){
-						$selectedModels[]=$model;
-					}else{
-						$selectedModels[]='['.$model.']';
-					}
+					$selectedModels[]='['.$model.']';
 				}
 			}
 			$sql .=' FROM '.implode(', ',$selectedModels);
