@@ -65,7 +65,7 @@ class MvcModelQueryBuilderTest extends TestCase{
     }
 
     public function test_columns(){
-        //default all columns
+        //default select all columns
         $builder=$this->modelsManager->createBuilder()
                 ->addFrom(get_class(new Address()))
                 ->limit(2);
@@ -73,7 +73,7 @@ class MvcModelQueryBuilderTest extends TestCase{
         $this->assertCount(2,$rows);
         $this->assertCount(8,$rows[0]);
 
-        //all columns explicitly
+        //select all columns explicitly
         $builder=$this->modelsManager->createBuilder()
             ->columns('*')
             ->addFrom(get_class(new Address()))
@@ -82,17 +82,19 @@ class MvcModelQueryBuilderTest extends TestCase{
         $this->assertCount(2,$rows);
         $this->assertCount(8,$rows[0]);
 
-        // all columns explicitly and use table alias
+        // select all columns explicitly and use table alias
         $builder=$this->modelsManager->createBuilder()
-            ->columns('a.*')
+            ->columns('a.*, c.*')
             ->addFrom(get_class(new Address()),'a')
+            ->leftJoin(get_class(new City()),'c.city_id =a.city_id','c')
             ->limit(2);
         $rows=$builder->getQuery()->execute();
         $this->assertCount(2,$rows);
-        $this->assertCount(8,$rows[0]);
+        $this->assertCount(10,$rows[0]);
 
+        //string format columns
         $builder =$this->modelsManager->createBuilder()
-            ->columns('a.address_id,a.address,a.phone')
+            ->columns('a.address_id, a.address, a.phone')
             ->addFrom(get_class(new Address()),'a')
             ->limit(2);
         $rows=$builder->getQuery()->execute();
@@ -108,8 +110,11 @@ class MvcModelQueryBuilderTest extends TestCase{
         $this->assertCount(2,$rows);
         $this->assertCount(3,$rows[0]);
 
+        //dense multi space to only one for columns
         $builder =$this->modelsManager->createBuilder()
-            ->columns('a.address_id,a.address, c.city')
+            ->columns('a.address_id,
+                        a.address,
+                        c.city')
             ->addFrom(get_class(new Address()),'a')
             ->leftJoin(get_class(new City()),'c.city_id =a.city_id','c')
             ->limit(2)
@@ -118,7 +123,6 @@ class MvcModelQueryBuilderTest extends TestCase{
         $this->assertCount(2,$rows);
         $this->assertCount(3,$rows[0]);
 
-        //all columns explicitly
         $builder=$this->modelsManager->createBuilder()
             ->columns('count(address_id) as address_count')
             ->addFrom(get_class(new Address()));
@@ -139,6 +143,7 @@ class MvcModelQueryBuilderTest extends TestCase{
     }
 
     public function test_addFrom(){
+        //one model without alias
         $builder =$this->modelsManager->createBuilder()
             ->columns('address_id,address,phone')
             ->addFrom(get_class(new Address()))
@@ -148,6 +153,7 @@ class MvcModelQueryBuilderTest extends TestCase{
         $this->assertCount(2,$rows);
         $this->assertCount(3,$rows[0]);
 
+        //one model with alias
         $builder =$this->modelsManager->createBuilder()
             ->columns('a.address_id,a.address,a.phone')
             ->addFrom(get_class(new Address()),'a')
@@ -156,20 +162,54 @@ class MvcModelQueryBuilderTest extends TestCase{
         $rows=$builder->getQuery()->execute();
         $this->assertCount(2,$rows);
         $this->assertCount(3,$rows[0]);
+
+        //multi-models with alias
+        $builder =$this->modelsManager->createBuilder()
+            ->columns('a.*, c.*')
+            ->addFrom(get_class(new Address()),'a')
+            ->addFrom(get_class(new City()),'c')
+            ->limit(2);
+
+        $rows=$builder->getQuery()->execute();
+        $this->assertCount(2,$rows);
+        $this->assertCount(10,$rows[0]);
     }
 
     public function test_join(){
-        $countCity=City::count();
-        $this->assertEquals(600,$countCity);
-
-        $countCountry=Country::count();
-        $this->assertEquals(109,$countCountry);
-
+        //with model
         $builder=$this->modelsManager->createBuilder()
-            ->columns('c1.*,c2.*')
-            ->addFrom(get_class(new City()),'c1')
-            ->join(get_class(new Country()),'','c2');
-        $this->assertCount($countCity*$countCountry,$builder->getQuery()->execute());
+            ->columns('count(address_id) as address_count')
+            ->addFrom(get_class(new Address()))
+            ->join(get_class(new City()));
+        $rows=$builder->getQuery()->execute();
+        $this->assertCount(1,$rows);
+        $this->assertEquals(361800,$rows[0]['address_count']);
+
+        //with model,conditions
+        $builder=$this->modelsManager->createBuilder()
+            ->columns('count(address_id) as address_count')
+            ->addFrom(get_class(new Address()),'a')
+            ->join(get_class(new City()),'city.city_id =a.city_id');
+        $rows=$builder->getQuery()->execute();
+        $this->assertCount(1,$rows);
+        $this->assertEquals(603,$rows[0]['address_count']);
+
+        //with model,conditions,alias
+        $builder=$this->modelsManager->createBuilder()
+            ->columns('count(address_id) as address_count')
+            ->addFrom(get_class(new Address()),'a')
+            ->join(get_class(new City()),'c.city_id =a.city_id','c');
+        $rows=$builder->getQuery()->execute();
+        $this->assertCount(1,$rows);
+        $this->assertEquals(603,$rows[0]['address_count']);
+
+        //with model,conditions,alias,join
+        $builder=$this->modelsManager->createBuilder()
+            ->columns('a.address_id, a.address, a.city_id, c.city')
+            ->addFrom(get_class(new Address()),'a')
+            ->join(get_class(new City()),'c.city_id =a.city_id','c', 'LEFT');
+        $rows=$builder->getQuery()->execute();
+        $this->assertCount(603,$rows);
     }
 
     public function test_innerJoin(){
