@@ -637,12 +637,8 @@ namespace ManaPHP\Mvc\Model\Query {
 				$dependencyInjector=$this->_dependencyInjector;
 			}
 
-			if($this->_models ===null){
+			if(count($this->_models) ===0){
 				throw new Exception('At least one model is required to build the query');
-			}else{
-				if(count($this->_models) ===0){
-					throw new Exception('At least one model is required to build the query');
-				}
 			}
 
 			$conditions=$this->_conditions;
@@ -650,12 +646,8 @@ namespace ManaPHP\Mvc\Model\Query {
 			/**
 			 * Generate PHQL for SELECT
 			 */
-			if($this->_distinct !==null && is_bool($this->_distinct)){
-				if($this->_distinct){
-					$sql='SELECT DISTINCT ';
-				}else{
-					$sql='SELECT ALL ';
-				}
+			if($this->_distinct ===true){
+				$sql='SELECT DISTINCT ';
 			}else{
 				$sql ='SELECT ';
 			}
@@ -670,7 +662,6 @@ namespace ManaPHP\Mvc\Model\Query {
 						if(is_int($key)){
 							$selectedColumns[]=$column;
 						}else{
-
 							if(strpos($key,'[') !==false){
 								$selectedColumns[]= $column. ' AS '.$key;
 							}else{
