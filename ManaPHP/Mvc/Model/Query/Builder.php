@@ -696,20 +696,8 @@ namespace ManaPHP\Mvc\Model\Query {
 					}else{
 						$this->_models[]=$joinModel;
 					}
-					
-					if($joinType){
-						if(strpos($joinModel,'[') !==false){
-							$sql .=' '.$joinType .' JOIN '.$joinModel;
-						}else{
-							$sql.=' '.$joinType.' JOIN ['.$joinModel.']';
-						}
-					}else{
-						if(strpos($joinModel,']') !==false){
-							$sql .=' JOIN '.$joinModel;
-						}else{
-							$sql.=' JOIN ['.$joinModel.']';
-						}
-					}
+
+					$sql.=' '.($joinType !==null?$joinType:'').' JOIN ['.$joinModel.']';
 
 					if($joinAlias){
 						$sql .=' AS ['.$joinAlias.']';
@@ -751,10 +739,10 @@ namespace ManaPHP\Mvc\Model\Query {
 					$orderItems=[];
 
 					foreach($this->_order as $item){
-						if(strpos($item,'.')){
+						if(strpos($item,'.') !==false){
 							$orderItems[]=$item;
 						}else{
-							$orderItems[]='['.$item.']';
+							$orderItems[]=$item;
 						}
 					}
 					$sql .=' ORDER BY '.implode(', ',$orderItems);
