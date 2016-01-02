@@ -797,11 +797,7 @@ namespace ManaPHP\Mvc\Model\Query {
 					throw new Exception('offset is invalid: '.$offset);
 				}
 			}
-			/**
-			 * Process forUPDATE clause
-			 * todo
-			 */
-
+			
 			return $sql;
 
 		}
