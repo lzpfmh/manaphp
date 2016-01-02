@@ -35,24 +35,23 @@ class MvcModelTest extends TestCase{
 
         $this->di->getShared('db')->attachEvent('db:beforeQuery',function($event,\ManaPHP\DbInterface $source,$data){
             //var_dump(['sql'=>$source->getSQLStatement(),'bind'=>$source->getSQLBindParams(),'bindTypes'=>$source->getSQLBindTypes()]);
-            var_dump($source->getSQLStatement(),$source->getEmulatePrepareSQLStatement());
+            var_dump($source->getSQLStatement());
         });
     }
 
     public function test_count(){
-
         $this->assertTrue(is_int(Actor::count()));
 
-        $this->assertTrue(Actor::count()===200);
+        $this->assertEquals(200,Actor::count());
 
-        $this->assertTrue(Actor::count('')===200);
-        $this->assertTrue(Actor::count('actor_id=1')===1);
+        $this->assertEquals(200,Actor::count(''));
+        $this->assertEquals(1,Actor::count('actor_id=1'));
 
-        $this->assertTrue(Actor::count([])===200);
-        $this->assertTrue(Actor::count(['actor_id=1'])===1);
-        $this->assertTrue(Actor::count(['conditions'=>'actor_id=1'])===1);
+        $this->assertEquals(200,Actor::count([]));
+        $this->assertEquals(1,Actor::count(['actor_id=1']));
+        $this->assertEquals(1,Actor::count(['conditions'=>'actor_id=1']));
 
-        $this->assertTrue(Actor::count(['actor_id=0'])===0);
+        $this->assertEquals(0,Actor::count(['actor_id=0']));
     }
 
     public function test_sum(){

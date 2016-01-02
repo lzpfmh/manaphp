@@ -35,7 +35,10 @@ namespace ManaPHP\Mvc\Model\Query {
 
 		protected $_joins;
 
-		protected $_conditions;
+		/**
+		 * @var array
+		 */
+		protected $_conditions=[];
 
 		protected $_group;
 
@@ -106,34 +109,38 @@ namespace ManaPHP\Mvc\Model\Query {
 		 */
 		public function __construct($params=null, $dependencyInjector=null){
 			if(is_array($params)){
-				if(isset($params[0])){
-					$this->_conditions =$params[0];
+
+				if(isset($params[0]) &&$params[0] !=='' &&$params[0] !==null){
+					$conditions =$params[0];
+				}else if(isset($params['conditions'])){
+					$conditions =$params['conditions'];
 				}else{
-					if(isset($params['conditions'])){
-						$this->_conditions =$params['conditions'];
-					}
+					$conditions=null;
 				}
 
-				if(is_array($this->_conditions)){
-					$mergedConditions=[];
+				if($conditions !==null){
+					if(is_string($conditions)){
+						$conditions=[$conditions];
+					}
+
 					$mergedBinds=[];
 
-					foreach($this->_conditions as $condition){
+					foreach($conditions as $condition){
 						if(is_array($condition)){
 							if(is_string($condition[0])){
-								$mergedConditions[]=$condition[0];
+								$this->_conditions[]=$condition[0];
 							}
 
 							if(is_array($condition[1])){
 								/** @noinspection SlowArrayOperationsInLoopInspection */
 								$mergedBinds=array_merge($mergedBinds,$condition[1]);
 							}
+						}else{
+							$this->_conditions[]=$condition;
 						}
+
+						$this->_binds=$mergedBinds;
 					}
-
-					$this->_conditions=implode(' AND ',$mergedConditions);
-
-					$this->_binds=$mergedBinds;
 				}
 
 				if(isset($params['bind'])){
@@ -356,7 +363,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @return static
 		 */
 		public function where($conditions, $binds=null){
-			$this->_conditions =$conditions;
+			$this->_conditions =[$conditions];
 
 			if($binds !==null){
 				$this->_binds=array_merge($this->_binds, $binds);
@@ -379,11 +386,7 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @return static
 		 */
 		public function andWhere($conditions, $binds=null){
-			if(isset($this->_conditions)){
-				$this->_conditions ='(' .$this->_conditions .') AND ('.$conditions.')';
-			}else{
-				$this->_conditions =$conditions;
-			}
+			$this->_conditions[]=$conditions;
 
 			if($binds !==null){
 				$this->_binds=array_merge($this->_binds,$binds);
@@ -690,8 +693,8 @@ namespace ManaPHP\Mvc\Model\Query {
 				}
 			}
 
-			if(is_string($this->_conditions) && $this->_conditions !==''){
-				$sql .=' WHERE '.$this->_conditions;
+			if(count($this->_conditions) !==0){
+				$sql .=' WHERE '. implode(' AND ',$this->_conditions);
 			}
 
 			/**
