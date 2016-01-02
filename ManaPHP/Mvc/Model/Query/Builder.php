@@ -33,7 +33,10 @@ namespace ManaPHP\Mvc\Model\Query {
 		 */
 		protected $_models=[];
 
-		protected $_joins;
+		/**
+		 * @var array
+		 */
+		protected $_joins=[];
 
 		/**
 		 * @var array
@@ -668,28 +671,27 @@ namespace ManaPHP\Mvc\Model\Query {
 			/**
 			 *  Join multiple models
 			 */
-			if(is_array($this->_joins)){
-				foreach($this->_joins as $join){
-					list($joinModel, $joinCondition, $joinAlias, $joinType)=$join;
-					if($joinAlias !==null){
-						$this->_models[$joinAlias]=$joinModel;
-					}else{
-						$this->_models[]=$joinModel;
-					}
 
-					if($joinType !==null){
-						$sql .=' '.$joinType;
-					}
+			foreach($this->_joins as $join){
+				list($joinModel, $joinCondition, $joinAlias, $joinType)=$join;
+				if($joinAlias !==null){
+					$this->_models[$joinAlias]=$joinModel;
+				}else{
+					$this->_models[]=$joinModel;
+				}
 
-					$sql.=' JOIN ['.$joinModel.']';
+				if($joinType !==null){
+					$sql .=' '.$joinType;
+				}
 
-					if($joinAlias !==null){
-						$sql .=' AS ['.$joinAlias.']';
-					}
+				$sql.=' JOIN ['.$joinModel.']';
 
-					if($joinCondition){
-						$sql .=' ON '.$joinCondition;
-					}
+				if($joinAlias !==null){
+					$sql .=' AS ['.$joinAlias.']';
+				}
+
+				if($joinCondition){
+					$sql .=' ON '.$joinCondition;
 				}
 			}
 
