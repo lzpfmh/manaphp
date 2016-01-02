@@ -10,7 +10,7 @@ namespace ManaPHP\Mvc\Model\Query {
 	/**
 	 * ManaPHP\Mvc\Model\Query\Builder
 	 *
-	 * Helps to create PHQL queries using an OO interface
+	 * Helps to create SQL queries using an OO interface
 	 *
 	 *<code>
 	 *$resultset = $this->modelsManager->createBuilder()
@@ -546,7 +546,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
 
 		/**
-		 * Sets a HAVING condition clause. You need to escape PHQL reserved words using [ and ] delimiters
+		 * Sets a HAVING condition clause. You need to escape SQL reserved words using [ and ] delimiters
 		 *
 		 *<code>
 		 *	$builder->having('SUM(Robots.price) > 0');
@@ -625,7 +625,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
 
 		/**
-		 * Returns a PHQL statement built based on the builder parameters
+		 * Returns a SQL statement built based on the builder parameters
 		 *
 		 * @return string
 		 * @throws \ManaPHP\Mvc\Model\Exception
@@ -642,7 +642,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			}
 
 			/**
-			 * Generate PHQL for SELECT
+			 * Generate SQL for SELECT
 			 */
 			if($this->_distinct ===true){
 				$sql='SELECT DISTINCT ';
@@ -651,7 +651,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			}
 
 			/**
-			 * Generate PHQL for columns
+			 * Generate SQL for columns
 			 */
 			if($this->_columns !==null){
 				if(is_array($this->_columns)){
@@ -798,7 +798,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			return $this;
 		}
 		/**
-		 * Executes a parsed PHQL statement
+		 * Executes a parsed SQL statement
 		 *
 		 * @param array $binds
 		 * @return mixed
