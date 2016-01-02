@@ -35,7 +35,7 @@ class MvcModelQueryBuilderTest extends TestCase{
             $db =new ManaPHP\Db\Adapter\Mysql($config['mysql']);
             $db->attachEvent('db:beforeQuery',function($event,ManaPHP\DbInterface $source){
                 var_dump($source->getSQLStatement());
-                var_dump($source->getEmulatePrepareSQLStatement());
+          //      var_dump($source->getEmulatePrepareSQLStatement());
             });
             return $db;
         });
@@ -43,17 +43,20 @@ class MvcModelQueryBuilderTest extends TestCase{
     }
 
     public function test_distinct(){
+        //select all implicitly
         $builder=$this->modelsManager->createBuilder()
             ->columns('city_id')
             ->addFrom(get_class(new Address()));
         $this->assertCount(603,$builder->getQuery()->execute());
 
+        //select all explicitly
         $builder=$this->modelsManager->createBuilder()
             ->columns('city_id')
             ->addFrom(get_class(new Address()))
             ->distinct(false);
         $this->assertCount(603,$builder->getQuery()->execute());
 
+        //select distinct
         $builder=$this->modelsManager->createBuilder()
              ->columns('city_id')
              ->addFrom(get_class(new Address()))
@@ -96,6 +99,15 @@ class MvcModelQueryBuilderTest extends TestCase{
         $this->assertCount(2,$rows);
         $this->assertCount(3,$rows[0]);
 
+        //array format columns
+        $builder =$this->modelsManager->createBuilder()
+            ->columns(['a.address_id','a.address','a.phone'])
+            ->addFrom(get_class(new Address()),'a')
+            ->limit(2);
+        $rows=$builder->getQuery()->execute();
+        $this->assertCount(2,$rows);
+        $this->assertCount(3,$rows[0]);
+
         $builder =$this->modelsManager->createBuilder()
             ->columns('a.address_id,a.address, c.city')
             ->addFrom(get_class(new Address()),'a')
@@ -105,6 +117,14 @@ class MvcModelQueryBuilderTest extends TestCase{
         $rows=$builder->getQuery()->execute();
         $this->assertCount(2,$rows);
         $this->assertCount(3,$rows[0]);
+
+        //all columns explicitly
+        $builder=$this->modelsManager->createBuilder()
+            ->columns('count(address_id) as address_count')
+            ->addFrom(get_class(new Address()));
+        $rows=$builder->getQuery()->execute();
+        $this->assertCount(1,$rows);
+        $this->assertCount(1,$rows[0]);
     }
 
     public function test_from(){
