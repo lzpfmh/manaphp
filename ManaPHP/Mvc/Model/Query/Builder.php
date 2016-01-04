@@ -805,18 +805,8 @@ namespace ManaPHP\Mvc\Model\Query {
 			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 			$modelsManager =$this->_dependencyInjector->getShared('modelsManager');
 
-			if(is_string($this->_models)){
-				$models=[$this->_models];
-			}else{
-				$models=$this->_models;
-			}
-
-			if(count($this->_models) ===0){
-				throw new Exception('there is any model to query.');
-			}
-
 			$readConnection=null;
-			foreach($models as $model){
+			foreach($this->_models as $model){
 				$modelInstance=$modelsManager->load($model,false);
 
 				if($readConnection ===null){
@@ -832,23 +822,19 @@ namespace ManaPHP\Mvc\Model\Query {
 
 			if(is_array($mergedBinds)){
 				$replaces=[];
-				$finalBinds=[];
 				foreach($mergedBinds as $key=>$value){
 					$replaces[':'.$key.':']=':'.$key;
-					$finalBinds[':'.$key]=$value;
 				}
 
 				$sql =strtr($sql,$replaces);
-			}else{
-				$finalBinds=null;
 			}
+
 			try{
 				if($this->_uniqueRow){
-					$result=$readConnection->fetchOne($sql,$finalBinds);
+					$result=$readConnection->fetchOne($sql,$mergedBinds);
 				}else{
-					$result =$readConnection->fetchAll($sql,$finalBinds);
+					$result =$readConnection->fetchAll($sql,$mergedBinds);
 				}
-
 			}catch (\Exception $e){
 				throw new Exception($e->getMessage().':'.$sql);
 			}
