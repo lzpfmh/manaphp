@@ -609,12 +609,6 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function getSql(){
-			if($this->_dependencyInjector ===null){
-				$dependencyInjector=Di::getDefault();
-			}else{
-				$dependencyInjector=$this->_dependencyInjector;
-			}
-
 			if(count($this->_models) ===0){
 				throw new Exception('At least one model is required to build the query');
 			}
