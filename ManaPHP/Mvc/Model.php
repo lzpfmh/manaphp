@@ -346,11 +346,7 @@ namespace ManaPHP\Mvc {
 			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 			$modelsManager =$dependencyInjector->getShared('modelsManager');
 
-			if(is_array($parameters)){
-				$params =$parameters;
-			}elseif($parameters===null){
-				$params=[];
-			}elseif(is_int($parameters) ||is_numeric($parameters)){
+			if(is_int($parameters) ||is_numeric($parameters)){
 				/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 				$modelsMetadata=$dependencyInjector->getShared('modelsMetadata');
 				$primaryKeys=$modelsMetadata->getPrimaryKeyAttributes(new static);
@@ -358,28 +354,26 @@ namespace ManaPHP\Mvc {
 				if(count($primaryKeys) !==1){
 					throw new Exception('parameter is integer, but the model\'s primary key has more than one column');
 				}
-				$key=$primaryKeys[0];
-				$params['conditions']='['.$key.']=:'.$key.':';
-				$params['bind']=[$key=>(int)$parameters];
-			} else{
-				$params=[];
-				$params[]=$parameters;
+
+				$parameters=[$primaryKeys[0].'=:'.$primaryKeys[0],'bind'=>[$primaryKeys[0]=>$parameters]];
 			}
 
-			$builder =$modelsManager->createBuilder($params);
+			$builder =$modelsManager->createBuilder($parameters);
 			$builder->from(get_called_class());
 			$builder->limit(1);
 
 			$query =$builder->getQuery();
 
-			if(isset($params['bind'])){
-				if(is_array($params['bind'])){
-					$query->setBinds($params['bind'],true);
+			if(is_array($parameters)){
+				if(isset($parameters['bind'])){
+					if(is_array($parameters['bind'])){
+						$query->setBinds($parameters['bind'],true);
+					}
 				}
-			}
 
-			if(isset($params['cache'])){
-				$query->cache($params['cache']);
+				if(isset($parameters['cache'])){
+					$query->cache($parameters['cache']);
+				}
 			}
 
 			$query->setUniqueRow(true);

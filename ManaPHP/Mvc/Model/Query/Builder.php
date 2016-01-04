@@ -111,96 +111,93 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function __construct($params=null, $dependencyInjector=null){
-			if(is_array($params)){
+			if(is_string($params)){
+				$params=[$params];
+			}
 
-				if(isset($params[0]) &&$params[0] !=='' &&$params[0] !==null){
-					$conditions =$params[0];
-				}else if(isset($params['conditions'])){
-					$conditions =$params['conditions'];
-				}else{
-					$conditions=null;
+			if(isset($params[0]) &&$params[0] !=='' &&$params[0] !==null){
+				$conditions =$params[0];
+			}else if(isset($params['conditions'])){
+				$conditions =$params['conditions'];
+			}else{
+				$conditions=null;
+			}
+
+			if($conditions !==null){
+				if(is_string($conditions)){
+					$conditions=[$conditions];
 				}
 
-				if($conditions !==null){
-					if(is_string($conditions)){
-						$conditions=[$conditions];
-					}
+				$mergedBinds=[];
 
-					$mergedBinds=[];
-
-					foreach($conditions as $condition){
-						if(is_array($condition)){
-							if(is_string($condition[0])){
-								$this->_conditions[]=$condition[0];
-							}
-
-							if(is_array($condition[1])){
-								/** @noinspection SlowArrayOperationsInLoopInspection */
-								$mergedBinds=array_merge($mergedBinds,$condition[1]);
-							}
-						}else{
-							$this->_conditions[]=$condition;
+				foreach($conditions as $condition){
+					if(is_array($condition)){
+						if(is_string($condition[0])){
+							$this->_conditions[]=$condition[0];
 						}
 
-						$this->_binds=$mergedBinds;
-					}
-				}
-
-				if(isset($params['bind'])){
-					$this->_binds=array_merge($this->_binds,$params['bind']);
-				}
-
-				if(isset($params['distinct'])){
-					$this->_distinct =$params['distinct'];
-				}
-
-				if(isset($params['models'])){
-					$this->_models=$params['models'];
-				}
-
-				if(isset($params['columns'])){
-					$this->_columns =$params['columns'];
-				}
-
-				if(isset($params['joins'])){
-					$this->_joins=$params['joins'];
-				}
-
-				if(isset($params['group'])){
-					$this->_group=$params['group'];
-				}
-
-				if(isset($params['having'])){
-					$this->_having =$params['having'];
-				}
-
-				if(isset($params['order'])){
-					$this->_order =$params['order'];
-				}
-
-				if(isset($params['limit'])){
-					if(is_array($params['limit'])){
-						throw new Exception('limit not support array format: '.$params['limit']);
+						if(is_array($condition[1])){
+							/** @noinspection SlowArrayOperationsInLoopInspection */
+							$mergedBinds=array_merge($mergedBinds,$condition[1]);
+						}
 					}else{
-						$this->_limit =$params['limit'];
+						$this->_conditions[]=$condition;
 					}
-				}
 
-				if(isset($params['offset'])){
-					$this->_offset=$params['offset'];
+					$this->_binds=$mergedBinds;
 				}
+			}
 
-				if(isset($params['for_update'])){
-					$this->_forUpdate =$params['for_update'];
-				}
+			if(isset($params['bind'])){
+				$this->_binds=array_merge($this->_binds,$params['bind']);
+			}
 
-				if(isset($params['shared_lock'])){
-					$this->_sharedLock =$params['shared_lock'];
+			if(isset($params['distinct'])){
+				$this->_distinct =$params['distinct'];
+			}
+
+			if(isset($params['models'])){
+				$this->_models=$params['models'];
+			}
+
+			if(isset($params['columns'])){
+				$this->_columns =$params['columns'];
+			}
+
+			if(isset($params['joins'])){
+				$this->_joins=$params['joins'];
+			}
+
+			if(isset($params['group'])){
+				$this->_group=$params['group'];
+			}
+
+			if(isset($params['having'])){
+				$this->_having =$params['having'];
+			}
+
+			if(isset($params['order'])){
+				$this->_order =$params['order'];
+			}
+
+			if(isset($params['limit'])){
+				if(is_array($params['limit'])){
+					throw new Exception('limit not support array format: '.$params['limit']);
+				}else{
+					$this->_limit =$params['limit'];
 				}
-			}else{
-				if(is_string($params) && $params !==''){
-					$this->_conditions=$params;
-				}
+			}
+
+			if(isset($params['offset'])){
+				$this->_offset=$params['offset'];
+			}
+
+			if(isset($params['for_update'])){
+				$this->_forUpdate =$params['for_update'];
+			}
+
+			if(isset($params['shared_lock'])){
+				$this->_sharedLock =$params['shared_lock'];
 			}
 
 			if($dependencyInjector !==null){
