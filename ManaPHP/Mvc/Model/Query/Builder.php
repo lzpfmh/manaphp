@@ -2,6 +2,7 @@
 
 namespace ManaPHP\Mvc\Model\Query {
 
+	use ManaPHP\Db\ConditionParser;
 	use ManaPHP\Di;
 	use \ManaPHP\Di\InjectionAwareInterface;
 	use ManaPHP\Mvc\Model\Exception;
@@ -111,42 +112,22 @@ namespace ManaPHP\Mvc\Model\Query {
 		 * @throws \ManaPHP\Mvc\Model\Exception
 		 */
 		public function __construct($params=null, $dependencyInjector=null){
+			if($dependencyInjector !==null){
+				$this->_dependencyInjector =$dependencyInjector;
+			}
+
 			if(is_string($params)){
 				$params=[$params];
 			}
 
-			if(isset($params[0]) &&$params[0] !=='' &&$params[0] !==null){
-				$conditions =$params[0];
+			if(isset($params[0])){
+				$this->_conditions=$params[0];
 			}else if(isset($params['conditions'])){
-				$conditions =$params['conditions'];
+				$this->_conditions =$params['conditions'];
 			}else{
-				$conditions=null;
+				$this->_conditions=[];
 			}
 
-			if($conditions !==null){
-				if(is_string($conditions)){
-					$conditions=[$conditions];
-				}
-
-				$mergedBinds=[];
-
-				foreach($conditions as $condition){
-					if(is_array($condition)){
-						if(is_string($condition[0])){
-							$this->_conditions[]=$condition[0];
-						}
-
-						if(is_array($condition[1])){
-							/** @noinspection SlowArrayOperationsInLoopInspection */
-							$mergedBinds=array_merge($mergedBinds,$condition[1]);
-						}
-					}else{
-						$this->_conditions[]=$condition;
-					}
-
-					$this->_binds=$mergedBinds;
-				}
-			}
 
 			if(isset($params['bind'])){
 				$this->_binds=array_merge($this->_binds,$params['bind']);
@@ -200,9 +181,7 @@ namespace ManaPHP\Mvc\Model\Query {
 				$this->_sharedLock =$params['shared_lock'];
 			}
 
-			if($dependencyInjector !==null){
-				$this->_dependencyInjector =$dependencyInjector;
-			}
+
 		}
 
 
@@ -686,9 +665,12 @@ namespace ManaPHP\Mvc\Model\Query {
 				}
 			}
 
-			if(count($this->_conditions) !==0){
-				$sql .=' WHERE '. implode(' AND ',$this->_conditions);
+			$conditions=(new ConditionParser())->parse($this->_conditions,$conditionBinds);
+			if($conditions !==''){
+				$sql .=' WHERE '. $conditions;
 			}
+
+			$this->_binds=array_merge($this->_binds,$conditionBinds);
 
 			/**
 			 * Process group parameters

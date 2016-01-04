@@ -7,11 +7,13 @@
  */
 namespace Application\Home\Controllers;
 
+use Application\Home\Models\Actor;
 use Application\Home\Models\Address;
 use Application\Home\Models\Film;
 use Application\Home\Models\User;
 use ManaPHP\Http\Session;
 use ManaPHP\Mvc\Controller;
+
 class SomeComponent{
     public $someProperty=false;
 
@@ -67,17 +69,24 @@ class IndexController extends Controller{
    //     echo date('Y-m-d H:i:s');
  //       $success=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(?,?,?)',[1,20,'mana']);
 
-        $builder=$this->modelsManager->createBuilder()
-            ->columns('a.*')
-            ->addFrom(get_class(new Address()),'a')
-            ->limit(2);
-        $rows=$builder->getQuery()->execute();
+//        $builder=$this->modelsManager->createBuilder()
+//            ->addFrom(get_class(new Address()),'a')
+//            ->limit(2);
+//        $rows=$builder->getQuery()->execute();
+//
+//        var_dump($rows);
+//        $films=Film::find();
+//        foreach($films as $film){
+//        //    var_dump($film->toArray());
+//        }
 
-        var_dump($rows);
-        $films=Film::find();
-        foreach($films as $film){
-        //    var_dump($film->toArray());
-        }
+        //Actor::find(['first_name'=>'BEN']);
+//        Actor::findFirst(10);
+//        $actor=Actor::findFirst(['conditions'=>'first_name=\'BEN\'','order'=>'actor_id']);
+
+        $rows=$this->modelsManager->createBuilder()
+            ->where('address_id <=100')
+            ->addFrom(get_class(new Address()))->getQuery()->execute();
     }
 
     public function test2Action(){

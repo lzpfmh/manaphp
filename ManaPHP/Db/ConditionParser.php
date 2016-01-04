@@ -19,6 +19,10 @@ namespace ManaPHP\Db {
         public function parse($conditions, &$binds){
             $binds=[];
 
+            if($conditions ===null){
+                return '';
+            }
+
             if(is_string($conditions)){
                 return $conditions;
             }
@@ -33,6 +37,11 @@ namespace ManaPHP\Db {
 
             $list=[];
             foreach($conditions as $key=>$value){
+                if(is_int($key)){
+                    $list[]=$value;
+                    continue;
+                }
+
                 if(!is_string($key)){
                     throw new ParserException('invalid condition key:'.$key);
                 }
