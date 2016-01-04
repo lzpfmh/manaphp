@@ -695,16 +695,7 @@ namespace ManaPHP\Mvc\Model\Query {
 			 */
 			if($this->_order !==null){
 				if(is_array($this->_order)){
-					$orderItems=[];
-
-					foreach($this->_order as $item){
-						if(strpos($item,'.') !==false){
-							$orderItems[]=$item;
-						}else{
-							$orderItems[]=$item;
-						}
-					}
-					$sql .=' ORDER BY '.implode(', ',$orderItems);
+					$sql .=' ORDER BY '.implode(', ',$this->_order);
 				}else{
 					$sql .=' ORDER BY '.$this->_order;
 				}
