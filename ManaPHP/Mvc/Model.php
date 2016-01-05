@@ -265,26 +265,18 @@ namespace ManaPHP\Mvc {
 		 * </code>
 		 *
 		 * @param 	array $parameters
+		 * @param  array $cacheOptions
 		 * @return  static[]
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function find($parameters=null){
+		public static function find($parameters=null, $cacheOptions=null){
 			/**
 			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
 			 */
 			$dependencyInjector=Di::getDefault();
 			$modelsManager =$dependencyInjector->getShared('modelsManager');
 
-			if(is_array($parameters)){
-				$params =$parameters;
-			}elseif($parameters===null){
-				$params=[];
-			}else{
-				$params=[];
-				$params[]=$parameters;
-			}
-
-			$builder =$modelsManager->createBuilder($params);
+			$builder =$modelsManager->createBuilder($parameters);
 			$builder->from(get_called_class());
 
 			$query =$builder->getQuery();
@@ -295,9 +287,7 @@ namespace ManaPHP\Mvc {
 				}
 			}
 
-			if(isset($params['cache'])){
-				$query->cache($params['cache']);
-			}
+			$query->cache($cacheOptions);
 
 			$resultset=$query->execute();
 
@@ -334,10 +324,11 @@ namespace ManaPHP\Mvc {
 		 * </code>
 		 *
 		 * @param int|string|array $parameters
+		 * @param $cacheOptions
 		 * @return static
 		 * @throws \ManaPHP\Mvc\Model\Exception | \ManaPHP\Di\Exception
 		 */
-		public static function findFirst($parameters=null){
+		public static function findFirst($parameters=null, $cacheOptions=null){
 			/**
 			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
 			 * @var \ManaPHP\Mvc\Model\MetaDataInterface $modelsMetadata
@@ -370,12 +361,9 @@ namespace ManaPHP\Mvc {
 						$query->setBinds($parameters['bind'],true);
 					}
 				}
-
-				if(isset($parameters['cache'])){
-					$query->cache($parameters['cache']);
-				}
 			}
 
+			$query->cache($cacheOptions);
 			$query->setUniqueRow(true);
 			$result =$query->execute();
 
@@ -464,11 +452,12 @@ namespace ManaPHP\Mvc {
 		 * @param string $function
 		 * @param string $alias
 		 * @param string $column
-		 * @param array $parameters
-		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
+		 * @param string|array $parameters
+		 * @param array $cacheOptions
+		 * @return mixed
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		protected static function _groupResult($function, $alias, $column, $parameters){
+		protected static function _groupResult($function, $alias, $column, $parameters, $cacheOptions){
 			$dependencyInjector =Di::getDefault();
 			/**
  			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
@@ -488,9 +477,7 @@ namespace ManaPHP\Mvc {
 
 			$query =$builder->getQuery();
 
-			if(isset($parameters['cache'])){
-				$query->cache($parameters['cache']);
-			}
+			$query->cache($cacheOptions);
 
 			if(isset($parameters['bind'])){
 				$resultset =$query->execute([$parameters['bind']]);
@@ -519,11 +506,12 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $parameters
 		 * @param string $column
+		 * @param array $cacheOptions
 		 * @return int
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function count($parameters=null, $column='*'){
-			$result =self::_groupResult('COUNT','rowcount', $column, $parameters);
+		public static function count($parameters=null, $column='*', $cacheOptions=null){
+			$result =self::_groupResult('COUNT','rowcount', $column, $parameters, $cacheOptions);
 			if(is_string($result)){
 				return (int)$result;
 			}else{
@@ -549,11 +537,12 @@ namespace ManaPHP\Mvc {
 		 *
  		 * @param string $column
 		 * @param array $parameters
+		 * @param array $cacheOptions
 		 * @return mixed
 		 * @throws \ManaPHP\Di\Exception |\ManaPHP\Mvc\Model\Exception
 		 */
-		public static function sum($column,$parameters=null){
-			return self::_groupResult('SUM','summary', $column, $parameters);
+		public static function sum($column,$parameters=null, $cacheOptions=null){
+			return self::_groupResult('SUM','summary', $column, $parameters,$cacheOptions=null);
 		}
 
 
@@ -574,11 +563,12 @@ namespace ManaPHP\Mvc {
 		 *
  		 * @param string $column
 		 * @param array $parameters
+		 * @param array $cacheOptions
 		 * @return mixed
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function maximum($column,$parameters=null){
-			return self::_groupResult('MAX','maximum',$column, $parameters);
+		public static function maximum($column,$parameters=null, $cacheOptions=null){
+			return self::_groupResult('MAX','maximum',$column, $parameters,$cacheOptions);
 		}
 
 
@@ -599,11 +589,12 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $column
 		 * @param array $parameters
+		 * @param array $cacheOptions
 		 * @return mixed
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function minimum($column,$parameters=null){
-			return self::_groupResult('MIN', 'minimum', $column, $parameters);
+		public static function minimum($column,$parameters=null, $cacheOptions=null){
+			return self::_groupResult('MIN', 'minimum', $column, $parameters,$cacheOptions);
 		}
 
 
@@ -624,11 +615,12 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $column
 		 * @param array $parameters
+		 * @param $cacheOptions
 		 * @return double
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function average($column,$parameters=null){
-			return (double)self::_groupResult('AVG','average',$column,$parameters);
+		public static function average($column,$parameters=null, $cacheOptions=null){
+			return (double)self::_groupResult('AVG','average',$column,$parameters,$cacheOptions);
 		}
 
 

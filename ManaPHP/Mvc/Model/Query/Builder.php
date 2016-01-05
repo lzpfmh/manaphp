@@ -819,5 +819,12 @@ namespace ManaPHP\Mvc\Model\Query {
 
 			return $this;
 		}
+
+		/**
+		 * @param array $options
+		 */
+		public function cache($options){
+
+		}
 	}
 }

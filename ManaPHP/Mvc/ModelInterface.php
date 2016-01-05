@@ -86,18 +86,20 @@ namespace ManaPHP\Mvc {
 		 * Allows to query a set of records that match the specified conditions
 		 *
 		 * @param 	array $parameters
+		 * @param   array $cacheOptions
 		 * @return  static[]
 		 */
-		public static function find($parameters=null);
+		public static function find($parameters=null,$cacheOptions=null);
 
 
 		/**
 		 * Allows to query the first record that match the specified conditions
 		 *
 		 * @param array $parameters
+		 * @param array $cacheOptions
 		 * @return static|false
 		 */
-		public static function findFirst($parameters=null);
+		public static function findFirst($parameters=null, $cacheOptions=null);
 
 
 		/**
@@ -114,9 +116,10 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param array $parameters
 		 * @param string $column
+		 * @param array $cacheOptions
 		 * @return int
 		 */
-		public static function count($parameters=null, $column='*');
+		public static function count($parameters=null, $column='*',$cacheOptions=null);
 
 
 		/**
@@ -124,9 +127,10 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $column
 		 * @param array $parameters
+		 * @param array $cacheOptions
 		 * @return mixed
 		 */
-		public static function sum($column,$parameters=null);
+		public static function sum($column,$parameters=null,$cacheOptions=null);
 
 
 		/**
@@ -134,9 +138,10 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $column
 		 * @param array $parameters
+		 * @param array $cacheOptions
 		 * @return mixed
 		 */
-		public static function maximum($column,$parameters=null);
+		public static function maximum($column,$parameters=null,$cacheOptions=null);
 
 
 		/**
@@ -144,9 +149,10 @@ namespace ManaPHP\Mvc {
 		 *
  		 * @param string $column
 		 * @param array $parameters
+		 * @param array $cacheOptions=null
 		 * @return mixed
 		 */
-		public static function minimum($column,$parameters=null);
+		public static function minimum($column,$parameters=null,$cacheOptions=null);
 
 
 		/**
@@ -154,9 +160,10 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $column
 		 * @param array $parameters
+		 * @param array $cacheOptions
 		 * @return double
 		 */
-		public static function average($column,$parameters=null);
+		public static function average($column,$parameters=null, $cacheOptions=null);
 
 
 		/**
