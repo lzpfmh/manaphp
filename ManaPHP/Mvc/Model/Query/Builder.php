@@ -125,9 +125,8 @@ namespace ManaPHP\Mvc\Model\Query {
 			}else if(isset($params['conditions'])){
 				$this->_conditions =$params['conditions'];
 			}else{
-				$this->_conditions=[];
+				$this->_conditions=$params;
 			}
-
 
 			if(isset($params['bind'])){
 				$this->_binds=array_merge($this->_binds,$params['bind']);
@@ -180,8 +179,6 @@ namespace ManaPHP\Mvc\Model\Query {
 			if(isset($params['shared_lock'])){
 				$this->_sharedLock =$params['shared_lock'];
 			}
-
-
 		}
 
 

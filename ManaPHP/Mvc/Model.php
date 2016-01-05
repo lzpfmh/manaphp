@@ -463,67 +463,40 @@ namespace ManaPHP\Mvc {
 		 *
 		 * @param string $function
 		 * @param string $alias
+		 * @param string $column
 		 * @param array $parameters
 		 * @return \ManaPHP\Mvc\Model\ResultsetInterface
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		protected static function _groupResult($function, $alias, $parameters){
+		protected static function _groupResult($function, $alias, $column, $parameters){
 			$dependencyInjector =Di::getDefault();
 			/**
  			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
 			 */
 			$modelsManager =$dependencyInjector->getShared('modelsManager');
-
-			if(is_array($parameters)){
-				$params =$parameters;
-			}elseif($parameters===null){
-				$params=[];
-			}else{
-				$params=[];
-				$params[]=$parameters;
+			if($parameters===null){
+				$parameters=[];
+			}else if(is_string($parameters)){
+				$parameters=[$parameters];
 			}
 
-			if(!isset($params['column'])){
-				$params['column']='*';
-			}
+			$columns =$function.'('.$column.') AS '.$alias;
 
-			if(isset($params['distinct'])){
-				$columns =$function .'(DISTINCT '.$params['distinct'].') AS '.$alias;
-			}else{
-				if(isset($params['group'])){
-					$columns =$params['group'].', '.$function.'('.$params['group'].') AS '  .$alias;
-				}else{
-					$columns =$function.'('.$params['column'].') AS '.$alias;
-				}
-			}
-
-			$builder =$modelsManager->createBuilder($params);
+			$builder =$modelsManager->createBuilder($parameters);
 			$builder->columns($columns);
 			$builder->from(get_called_class());
 
 			$query =$builder->getQuery();
 
-			if(isset($params['cache'])){
-				$query->cache($params['cache']);
+			if(isset($parameters['cache'])){
+				$query->cache($parameters['cache']);
 			}
 
-			if(isset($params['bind'])){
-				$resultset =$query->execute([$params['bind']]);
+			if(isset($parameters['bind'])){
+				$resultset =$query->execute([$parameters['bind']]);
 			}else{
 				$resultset=$query->execute();
 			}
-
-			/**
-			 * Return the full resultset if the query is grouped
-			 */
-			if(isset($params['group'])){
-				return $resultset;
-			}
-
-
-			/**
-			 * Return only the value in the first result
-			 */
 
 			return $resultset[0][$alias];
 		}
@@ -545,11 +518,12 @@ namespace ManaPHP\Mvc {
 		 * </code>
 		 *
 		 * @param array $parameters
+		 * @param string $column
 		 * @return int
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function count($parameters=null){
-			$result =self::_groupResult('COUNT','rowcount',$parameters);
+		public static function count($parameters=null, $column='*'){
+			$result =self::_groupResult('COUNT','rowcount', $column, $parameters);
 			if(is_string($result)){
 				return (int)$result;
 			}else{
@@ -573,16 +547,13 @@ namespace ManaPHP\Mvc {
 		 *
 		 * </code>
 		 *
+ 		 * @param string $column
 		 * @param array $parameters
 		 * @return mixed
 		 * @throws \ManaPHP\Di\Exception |\ManaPHP\Mvc\Model\Exception
 		 */
-		public static function sum($parameters=null){
-			if($parameters ===null ||!isset($parameters['column'])){
-				/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-				throw new Exception('which column is used to calculate the summatory?');
-			}
-			return self::_groupResult('SUM','summary',$parameters);
+		public static function sum($column,$parameters=null){
+			return self::_groupResult('SUM','summary', $column, $parameters);
 		}
 
 
@@ -601,12 +572,13 @@ namespace ManaPHP\Mvc {
 		 *
 		 * </code>
 		 *
+ 		 * @param string $column
 		 * @param array $parameters
 		 * @return mixed
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function maximum($parameters=null){
-			return self::_groupResult('MAX','maximum',$parameters);
+		public static function maximum($column,$parameters=null){
+			return self::_groupResult('MAX','maximum',$column, $parameters);
 		}
 
 
@@ -625,12 +597,13 @@ namespace ManaPHP\Mvc {
 		 *
 		 * </code>
 		 *
+		 * @param string $column
 		 * @param array $parameters
 		 * @return mixed
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function minimum($parameters=null){
-			return self::_groupResult('MIN', 'minimum', $parameters);
+		public static function minimum($column,$parameters=null){
+			return self::_groupResult('MIN', 'minimum', $column, $parameters);
 		}
 
 
@@ -649,12 +622,13 @@ namespace ManaPHP\Mvc {
 		 *
 		 * </code>
 		 *
+		 * @param string $column
 		 * @param array $parameters
 		 * @return double
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function average($parameters=null){
-			return (double)self::_groupResult('AVG','average',$parameters);
+		public static function average($column,$parameters=null){
+			return (double)self::_groupResult('AVG','average',$column,$parameters);
 		}
 
 

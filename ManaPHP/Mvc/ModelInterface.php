@@ -113,45 +113,50 @@ namespace ManaPHP\Mvc {
 		 * Allows to count how many records match the specified conditions
 		 *
 		 * @param array $parameters
+		 * @param string $column
 		 * @return int
 		 */
-		public static function count($parameters=null);
+		public static function count($parameters=null, $column='*');
 
 
 		/**
 		 * Allows to calculate a summatory on a column that match the specified conditions
 		 *
+		 * @param string $column
 		 * @param array $parameters
 		 * @return mixed
 		 */
-		public static function sum($parameters=null);
+		public static function sum($column,$parameters=null);
 
 
 		/**
 		 * Allows to get the maximum value of a column that match the specified conditions
 		 *
+		 * @param string $column
 		 * @param array $parameters
 		 * @return mixed
 		 */
-		public static function maximum($parameters=null);
+		public static function maximum($column,$parameters=null);
 
 
 		/**
 		 * Allows to get the minimum value of a column that match the specified conditions
 		 *
+ 		 * @param string $column
 		 * @param array $parameters
 		 * @return mixed
 		 */
-		public static function minimum($parameters=null);
+		public static function minimum($column,$parameters=null);
 
 
 		/**
 		 * Allows to calculate the average value on a column matching the specified conditions
 		 *
+		 * @param string $column
 		 * @param array $parameters
 		 * @return double
 		 */
-		public static function average($parameters=null);
+		public static function average($column,$parameters=null);
 
 
 		/**

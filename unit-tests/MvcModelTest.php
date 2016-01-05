@@ -44,71 +44,39 @@ class MvcModelTest extends TestCase{
 
         $this->assertEquals(200,Actor::count());
 
-        $this->assertEquals(200,Actor::count(''));
+        $this->assertEquals(1,Actor::count(['actor_id'=>1]));
         $this->assertEquals(1,Actor::count('actor_id=1'));
-
-        $this->assertEquals(200,Actor::count([]));
         $this->assertEquals(1,Actor::count(['actor_id=1']));
         $this->assertEquals(1,Actor::count(['conditions'=>'actor_id=1']));
-
         $this->assertEquals(0,Actor::count(['actor_id=0']));
+
+        $this->assertEquals(128,Actor::count(null,'DISTINCT first_name'));
     }
 
     public function test_sum(){
-        $sum=Payment::sum(['column'=>'amount']);
+        $sum=Payment::sum('amount');
         $this->assertEquals('string',gettype($sum));
         $this->assertEquals(67417.0,round($sum,0));
-
-        //forget to tell which column
-        try{
-            Payment::sum();
-            $this->fail('why not?');
-        }catch (\ManaPHP\Exception $e){
-            $this->assertInstanceOf('ManaPHP\Mvc\Model\Exception',$e);
-        }
     }
 
     public function test_maximum(){
-        $max=Payment::maximum(['column'=>'amount']);
+        $max=Payment::maximum('amount');
         $this->assertEquals('string',gettype($max));
         $this->assertEquals('11.99',$max);
 
-        //forget to tell which column
-        try{
-            Payment::maximum();
-            $this->fail('why not?');
-        }catch (\ManaPHP\Exception $e){
-            $this->assertInstanceOf('ManaPHP\Mvc\Model\Exception',$e);
-        }
     }
 
     public function test_minimum(){
-        $min=Payment::minimum(['column'=>'amount']);
+        $min=Payment::minimum('amount');
         $this->assertEquals('string',gettype($min));
         $this->assertEquals('0.00',$min);
-
-        //forget to tell which column
-        try{
-            Payment::minimum();
-            $this->fail('why not?');
-        }catch (\ManaPHP\Exception $e){
-            $this->assertInstanceOf('ManaPHP\Mvc\Model\Exception',$e);
-        }
     }
 
     public function test_average(){
-        $avg=Payment::average(['column'=>'amount']);
+        $avg=Payment::average('amount');
         $this->assertEquals('double',gettype($avg));
 
         $this->assertEquals(4.20,round($avg,2));
-
-        //forget to tell which column
-        try{
-            Payment::average();
-            $this->fail('why not?');
-        }catch (\ManaPHP\Exception $e){
-            $this->assertInstanceOf('ManaPHP\Mvc\Model\Exception',$e);
-        }
     }
 
     public function test_findFirst(){
@@ -136,6 +104,12 @@ class MvcModelTest extends TestCase{
         $actor=Actor::findFirst(10);
         $this->assertInstanceOf(get_class(new Actor()),$actor);
         $this->assertEquals('10',$actor->actor_id);
+
+        $actor=Actor::findFirst(['actor_id'=>5]);
+        $this->assertEquals(5,$actor->actor_id);
+
+        $actor=Actor::findFirst(['actor_id'=>5,'first_name'=>'JOHNNY']);
+        $this->assertEquals(5,$actor->actor_id);
     }
 
     public function test_find(){
