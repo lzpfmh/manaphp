@@ -507,7 +507,7 @@ class MvcRouterTest extends TestCase{
 
         try{
             $router->handle();
-            $this->assertTrue(false,'why not?');
+            $this->fail('why not?');
         }catch (\ManaPHP\Exception $e){
             $this->assertInstanceOf('\ManaPHP\Mvc\Router\Exception',$e);
         }

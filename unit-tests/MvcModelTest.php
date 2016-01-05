@@ -62,7 +62,7 @@ class MvcModelTest extends TestCase{
         //forget to tell which column
         try{
             Payment::sum();
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\ManaPHP\Exception $e){
             $this->assertInstanceOf('ManaPHP\Mvc\Model\Exception',$e);
         }
@@ -76,7 +76,7 @@ class MvcModelTest extends TestCase{
         //forget to tell which column
         try{
             Payment::maximum();
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\ManaPHP\Exception $e){
             $this->assertInstanceOf('ManaPHP\Mvc\Model\Exception',$e);
         }
@@ -90,7 +90,7 @@ class MvcModelTest extends TestCase{
         //forget to tell which column
         try{
             Payment::minimum();
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\ManaPHP\Exception $e){
             $this->assertInstanceOf('ManaPHP\Mvc\Model\Exception',$e);
         }
@@ -105,7 +105,7 @@ class MvcModelTest extends TestCase{
         //forget to tell which column
         try{
             Payment::average();
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\ManaPHP\Exception $e){
             $this->assertInstanceOf('ManaPHP\Mvc\Model\Exception',$e);
         }
@@ -160,6 +160,8 @@ class MvcModelTest extends TestCase{
 
         $this->assertCount(0,Actor::find('actor_id =-1'));
         $this->assertEquals([],Actor::find('actor_id =-1'));
+
+     //   $this->assertCount(1,Actor::find(['first_name'=>'BEN']));
     }
 
     /**

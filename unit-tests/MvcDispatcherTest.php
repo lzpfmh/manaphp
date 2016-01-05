@@ -259,7 +259,7 @@ class MvcDispatcherTest extends TestCase{
 
         try{
             $dispatcher->dispatch();
-            $this->assertTrue(false,'oh, why?');
+            $this->fail('why not?');
         }catch (\Manaphp\Exception $e){
             $this->assertEquals('IndexController handler class cannot be loaded',$e->getMessage());
             $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception',$e);
@@ -272,7 +272,7 @@ class MvcDispatcherTest extends TestCase{
 
         try{
             $dispatcher->dispatch();
-            $this->assertTrue(false,'oh, why?');
+            $this->fail('why not?');
         }catch (\Manaphp\Exception $e){
             $this->assertEquals('MissingController handler class cannot be loaded',$e->getMessage());
             $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception',$e);
@@ -285,7 +285,7 @@ class MvcDispatcherTest extends TestCase{
 
         try {
             $dispatcher->dispatch();
-            $this->assertTrue(FALSE, 'oh, Why?');
+            $this->fail('why not?');
         } catch(\Manaphp\Exception $e) {
             $this->assertEquals('TestHomeController handler class cannot be loaded',$e->getMessage());
             $this->assertInstanceOf('ManaPHP\Mvc\Dispatcher\Exception', $e);
@@ -298,7 +298,7 @@ class MvcDispatcherTest extends TestCase{
 
         try {
             $dispatcher->dispatch();
-            $this->assertTrue(FALSE, 'oh, Why?');
+            $this->fail('why not?');
         } catch (\Manaphp\Exception $e) {
             $this->assertEquals("Action 'index' was not found on handler 'Test1Controller'",$e->getMessage());
         }

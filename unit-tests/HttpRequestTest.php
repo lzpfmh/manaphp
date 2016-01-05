@@ -19,7 +19,7 @@ class HttpRequestTest extends TestCase{
 
         try{
             $this->assertEquals('test',$request->get('name','int'));
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\Exception $e){
             $this->assertInstanceOf('ManaPHP\Http\Request\Exception',$e);
         }
@@ -37,7 +37,7 @@ class HttpRequestTest extends TestCase{
 
         try{
             $this->assertEquals('test',$request->getGet('name','int'));
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\Exception $e){
             $this->assertInstanceOf('ManaPHP\Http\Request\Exception',$e);
         }
@@ -55,7 +55,7 @@ class HttpRequestTest extends TestCase{
 
         try{
             $this->assertEquals('test',$request->getPost('name','int'));
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\Exception $e){
             $this->assertInstanceOf('ManaPHP\Http\Request\Exception',$e);
         }
@@ -74,7 +74,7 @@ class HttpRequestTest extends TestCase{
 
         try{
             $this->assertEquals('test',$request->getPut('name','int'));
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\Exception $e){
             $this->assertInstanceOf('ManaPHP\Http\Request\Exception',$e);
         }
@@ -89,7 +89,7 @@ class HttpRequestTest extends TestCase{
 
         try{
             $this->assertEquals('test',$request->getQuery('name','int'));
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\Exception $e){
             $this->assertInstanceOf('ManaPHP\Http\Request\Exception',$e);
         }
@@ -103,7 +103,7 @@ class HttpRequestTest extends TestCase{
 
         try{
             $this->assertEquals('http',$request->getScheme());
-            $this->assertTrue(false,'why?');
+            $this->fail('why not?');
         }catch (\Exception $e){
             $this->assertInstanceOf('ManaPHP\Http\Request\Exception',$e);
         }
