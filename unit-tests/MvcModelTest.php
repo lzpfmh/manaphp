@@ -59,15 +59,15 @@ class MvcModelTest extends TestCase{
         $this->assertEquals(67417.0,round($sum,0));
     }
 
-    public function test_maximum(){
-        $max=Payment::maximum('amount');
+    public function test_max(){
+        $max=Payment::max('amount');
         $this->assertEquals('string',gettype($max));
         $this->assertEquals('11.99',$max);
 
     }
 
-    public function test_minimum(){
-        $min=Payment::minimum('amount');
+    public function test_min(){
+        $min=Payment::min('amount');
         $this->assertEquals('string',gettype($min));
         $this->assertEquals('0.00',$min);
     }

@@ -134,25 +134,25 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Allows to get the maximum value of a column that match the specified conditions
+		 * Allows to get the max value of a column that match the specified conditions
 		 *
 		 * @param string $column
 		 * @param array $parameters
 		 * @param array $cacheOptions
 		 * @return mixed
 		 */
-		public static function maximum($column,$parameters=null,$cacheOptions=null);
+		public static function max($column,$parameters=null,$cacheOptions=null);
 
 
 		/**
-		 * Allows to get the minimum value of a column that match the specified conditions
+		 * Allows to get the min value of a column that match the specified conditions
 		 *
  		 * @param string $column
 		 * @param array $parameters
 		 * @param array $cacheOptions=null
 		 * @return mixed
 		 */
-		public static function minimum($column,$parameters=null,$cacheOptions=null);
+		public static function min($column,$parameters=null,$cacheOptions=null);
 
 
 		/**

@@ -346,7 +346,7 @@ namespace ManaPHP\Mvc {
 					throw new Exception('parameter is integer, but the model\'s primary key has more than one column');
 				}
 
-				$parameters=[$primaryKeys[0].'=:'.$primaryKeys[0],'bind'=>[$primaryKeys[0]=>$parameters]];
+				$parameters=[$primaryKeys[0]=>$parameters];
 			}
 
 			$builder =$modelsManager->createBuilder($parameters);
@@ -547,17 +547,17 @@ namespace ManaPHP\Mvc {
 
 
 		/**
-		 * Allows to get the maximum value of a column that match the specified conditions
+		 * Allows to get the max value of a column that match the specified conditions
 		 *
 		 * <code>
 		 *
-		 * //What is the maximum robot id?
-		 * $id = Robots::maximum(array('column' => 'id'));
-		 * echo "The maximum robot id is: ", $id, "\n";
+		 * //What is the max robot id?
+		 * $id = Robots::max(array('column' => 'id'));
+		 * echo "The max robot id is: ", $id, "\n";
 		 *
-		 * //What is the maximum id of mechanical robots?
-		 * $sum = Robots::maximum(array("type='mechanical'", 'column' => 'id'));
-		 * echo "The maximum robot id of mechanical robots is ", $id, "\n";
+		 * //What is the max id of mechanical robots?
+		 * $sum = Robots::max(array("type='mechanical'", 'column' => 'id'));
+		 * echo "The max robot id of mechanical robots is ", $id, "\n";
 		 *
 		 * </code>
 		 *
@@ -567,23 +567,23 @@ namespace ManaPHP\Mvc {
 		 * @return mixed
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function maximum($column,$parameters=null, $cacheOptions=null){
+		public static function max($column,$parameters=null, $cacheOptions=null){
 			return self::_groupResult('MAX','maximum',$column, $parameters,$cacheOptions);
 		}
 
 
 		/**
-		 * Allows to get the minimum value of a column that match the specified conditions
+		 * Allows to get the min value of a column that match the specified conditions
 		 *
 		 * <code>
 		 *
-		 * //What is the minimum robot id?
-		 * $id = Robots::minimum(array('column' => 'id'));
-		 * echo "The minimum robot id is: ", $id;
+		 * //What is the min robot id?
+		 * $id = Robots::min(array('column' => 'id'));
+		 * echo "The min robot id is: ", $id;
 		 *
-		 * //What is the minimum id of mechanical robots?
-		 * $sum = Robots::minimum(array("type='mechanical'", 'column' => 'id'));
-		 * echo "The minimum robot id of mechanical robots is ", $id;
+		 * //What is the min id of mechanical robots?
+		 * $sum = Robots::min(array("type='mechanical'", 'column' => 'id'));
+		 * echo "The min robot id of mechanical robots is ", $id;
 		 *
 		 * </code>
 		 *
@@ -593,7 +593,7 @@ namespace ManaPHP\Mvc {
 		 * @return mixed
 		 * @throws \ManaPHP\Di\Exception
 		 */
-		public static function minimum($column,$parameters=null, $cacheOptions=null){
+		public static function min($column,$parameters=null, $cacheOptions=null){
 			return self::_groupResult('MIN', 'minimum', $column, $parameters,$cacheOptions);
 		}
 
