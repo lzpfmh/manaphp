@@ -760,9 +760,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
 			$sql=$this->_lastSQL;
 
-			/**
-			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
-			 */
 			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 			$modelsManager =$this->_dependencyInjector->getShared('modelsManager');
 
