@@ -10,6 +10,7 @@ namespace Application\Home;
 use ManaPHP\Db\Adapter\Mysql;
 use \ManaPHP\Mvc\ModuleInterface;
 use \ManaPHP\Loader;
+use \ManaPHP\DbInterface;
 
 class Module implements ModuleInterface{
     public function registerAutoloaders($di){
@@ -29,7 +30,7 @@ class Module implements ModuleInterface{
                 'port' => 3306
             ]);
 
-            $mysql->attachEvent('db:beforeQuery', function ($event, \ManaPHP\DbInterface $source, $data) {
+            $mysql->attachEvent('db:beforeQuery', function ($event, DbInterface $source, $data) {
                 var_dump($source->getSQLStatement());
             });
 
