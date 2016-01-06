@@ -435,6 +435,7 @@ namespace ManaPHP\Http {
 						return true;
 					}
 				}else{
+					/** @noinspection PhpWrongForeachArgumentTypeInspection */
 					foreach($file['error'] as $error){
 						if(!$onlySuccessful ||$error ===UPLOAD_ERR_OK){
 							return true;
