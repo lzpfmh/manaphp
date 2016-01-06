@@ -6,8 +6,8 @@
  * Time: 0:01
  */
 namespace Models;
-
-class City extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class City extends Model{
     public $city_id;
     public $city;
     public $country_id;

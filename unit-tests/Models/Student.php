@@ -6,8 +6,8 @@
  * Time: 0:05
  */
 namespace Models;
-
-class Student extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class Student extends Model{
     public $id;
     public $age;
     public $name;

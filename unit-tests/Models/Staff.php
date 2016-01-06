@@ -6,8 +6,8 @@
  * Time: 0:05
  */
 namespace Models;
-
-class Staff extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class Staff extends Model{
     public $staff_id;
     public $first_name;
     public $last_name;

@@ -6,8 +6,8 @@
  * Time: 0:01
  */
 namespace Models;
-
-class Customer extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class Customer extends Model{
     public $customer_id;
     public $store_id;
     public $first_name;

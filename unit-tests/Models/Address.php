@@ -6,8 +6,8 @@
  * Time: 0:00
  */
 namespace Models;
-
-class Address extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class Address extends Model{
     public $address_id;
     public $address;
     public $address2;

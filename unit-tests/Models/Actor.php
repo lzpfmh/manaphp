@@ -6,8 +6,8 @@
  * Time: 23:58
  */
 namespace Models;
-
-class Actor extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class Actor extends Model{
     public $actor_id;
     public $first_name;
     public $last_name;

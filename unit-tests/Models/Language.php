@@ -6,8 +6,8 @@
  * Time: 0:04
  */
 namespace Models;
-
-class Language extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class Language extends Model{
     public $language_id;
     public $name;
     public $last_update;

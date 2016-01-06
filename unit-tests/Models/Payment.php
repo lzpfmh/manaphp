@@ -6,8 +6,8 @@
  * Time: 0:04
  */
 namespace Models;
-
-class Payment extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class Payment extends Model{
     public $payment_id;
     public $customer_id;
     public $staff_id;

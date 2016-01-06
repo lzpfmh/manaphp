@@ -6,8 +6,8 @@
  * Time: 0:03
  */
 namespace Models;
-
-class FilmText extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class FilmText extends Model{
     public $film_id;
     public $title;
     public $description;

@@ -6,8 +6,8 @@
  * Time: 0:03
  */
 namespace Models;
-
-class FilmCategory extends \ManaPHP\Mvc\Model{
+use \ManaPHP\Mvc\Model;
+class FilmCategory extends Model{
     public $film_id;
     public $category_id;
     public $last_update;
