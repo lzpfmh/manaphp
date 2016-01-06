@@ -223,6 +223,9 @@ namespace ManaPHP\Mvc {
 						}
 					}
 
+					/**
+					 * @var \ManaPHP\Mvc\ModuleInterface $moduleObject
+					 */
 					$moduleObject=$this->_dependencyInjector->get($className);
 
 					/**
