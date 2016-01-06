@@ -377,11 +377,15 @@ namespace ManaPHP\Mvc {
 		 * @return \ManaPHP\Mvc\Model\Criteria
 		 */
 		public static function query($dependencyInjector=null){
-			if(!is_object($dependencyInjector)){
+			if($dependencyInjector===null){
 				$dependencyInjector=Di::getDefault();
 			}
 
+			/**
+			 * @var \ManaPHP\Mvc\Model\Criteria $criteria
+			 */
 			$criteria=$dependencyInjector->get('ManaPHP\Mvc\Model\Criteria');
+
 			$criteria->setModelName(get_called_class());
 
 			return $criteria;
