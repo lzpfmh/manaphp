@@ -101,9 +101,6 @@ namespace ManaPHP\Http\Response {
 		 * @return \ManaPHP\Http\Cookie
 		 */
 		public function get($name){
-			/**
-			 * @var \ManaPHP\Http\Cookie $cookie
-			 */
 			if(isset($this->_cookies[$name])){
 				return $this->_cookies[$name];
 			}
