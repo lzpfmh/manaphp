@@ -176,14 +176,6 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Events\Exception
 		 */
 		public function handle($uri=null){
-			/**
-			 * @var $router \ManaPHP\Mvc\RouterInterface
-			 * @var $dispatcher \ManaPHP\Mvc\DispatcherInterface
-			 * @var $view \ManaPHP\Mvc\ViewInterface
-			 * @var $response \ManaPHP\Http\ResponseInterface
-			 * @var $moduleObject \ManaPHP\Mvc\ModuleInterface
-			 */
-
 			if(!is_object($this->_dependencyInjector)){
 				throw new Exception('A dependency injection object is required to access internal services');
 			}
@@ -191,7 +183,6 @@ namespace ManaPHP\Mvc {
 			if($this->fireEvent('application:boot', $this) ===false){
 				return false;
 			}
-
 
 			$router =$this->_dependencyInjector->getShared('router');
 
