@@ -312,7 +312,11 @@ namespace ManaPHP\Mvc {
 				$this->_throwDispatchException("A dependency injection object is required to access the 'filter' service", self::EXCEPTION_NO_DI);
 			}
 
-			return $this->_dependencyInjector->getShared('filter')->sanitize($this->_params[$param],$filters);
+			return null;
+			/*
+			 * todo
+			 */
+		//	return $this->_dependencyInjector->getShared('filter')->sanitize($this->_params[$param],$filters);
 		}
 
 
