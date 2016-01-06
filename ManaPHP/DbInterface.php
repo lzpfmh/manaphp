@@ -1,12 +1,13 @@
 <?php 
 
 namespace ManaPHP {
+	use ManaPHP\Events\EventsAwareInterface;
 
 	/**
 	 * \ManaPHP\Db\AdapterInterface initializer
 	 */
 	
-	interface DbInterface {
+	interface DbInterface extends  EventsAwareInterface {
 
 		/**
 		 * Returns the first row in a SQL query result

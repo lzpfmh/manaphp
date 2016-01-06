@@ -17,6 +17,7 @@ class MvcModelTest extends TestCase{
      * @var \ManaPHP\DiInterface
      */
     protected $di;
+
     public function setUp(){
         $this->di=new ManaPHP\Di();
 
