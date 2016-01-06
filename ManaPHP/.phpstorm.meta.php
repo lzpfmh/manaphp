@@ -18,6 +18,9 @@ $STATIC_METHOD_TYPES = [                                 // we make sections for
         'di' instanceof \ManaPHP\Di|\ManaPHP\DiInterface,
         'view' instanceof \ManaPHP\Mvc\ViewInterface,
     ],
+    \ManaPHP\DiInterface::get('') => [           // STATIC call key to make static (1) & dynamic (2) calls work
+        ''=='@',
+    ],
     new \ServiceLocatorInterface => [                // NEW INSTANCE is to make ArrayAccess (3) style factory work
         "special" instanceof \Exception,
     ],
