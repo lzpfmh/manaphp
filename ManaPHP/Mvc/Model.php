@@ -270,9 +270,7 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Di\Exception
 		 */
 		public static function find($parameters=null, $cacheOptions=null){
-			/**
-			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
-			 */
+
 			$dependencyInjector=Di::getDefault();
 			$modelsManager =$dependencyInjector->getShared('modelsManager');
 
@@ -329,10 +327,6 @@ namespace ManaPHP\Mvc {
 		 * @throws \ManaPHP\Mvc\Model\Exception | \ManaPHP\Di\Exception
 		 */
 		public static function findFirst($parameters=null, $cacheOptions=null){
-			/**
-			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
-			 * @var \ManaPHP\Mvc\Model\MetaDataInterface $modelsMetadata
-			 */
 			$dependencyInjector=Di::getDefault();
 			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 			$modelsManager =$dependencyInjector->getShared('modelsManager');
@@ -459,9 +453,6 @@ namespace ManaPHP\Mvc {
 		 */
 		protected static function _groupResult($function, $alias, $column, $parameters, $cacheOptions){
 			$dependencyInjector =Di::getDefault();
-			/**
- 			 * @var \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
-			 */
 			$modelsManager =$dependencyInjector->getShared('modelsManager');
 			if($parameters===null){
 				$parameters=[];
