@@ -9,77 +9,79 @@ namespace ManaPHP\Db {
 
     use ManaPHP\Db\ConditionParser\Exception as ParserException;
 
-    class ConditionParser{
+    class ConditionParser
+    {
         /**
          * @param array|string $conditions
          * @param array|null $binds
          * @return string
          * @throws \ManaPHP\Db\ConditionParser\Exception
          */
-        public function parse($conditions, &$binds){
-            $binds=[];
+        public function parse($conditions, &$binds)
+        {
+            $binds = [];
 
-            if($conditions ===null){
+            if ($conditions === null) {
                 return '';
             }
 
-            if(is_string($conditions)){
+            if (is_string($conditions)) {
                 return $conditions;
             }
 
-            if(!is_array($conditions)){
-                throw new ParserException('invalid condition: '.json_encode($conditions));
+            if (!is_array($conditions)) {
+                throw new ParserException('invalid condition: ' . json_encode($conditions));
             }
 
-            if(count($conditions) ===0){
+            if (count($conditions) === 0) {
                 return '';
             }
 
-            $list=[];
-            foreach($conditions as $key=>$value){
-                if(is_int($key)){
-                    $list[]=$value;
+            $list = [];
+            foreach ($conditions as $key => $value) {
+                if (is_int($key)) {
+                    $list[] = $value;
                     continue;
                 }
 
-                if(!is_string($key)){
-                    throw new ParserException('invalid condition key:'.$key);
+                if (!is_string($key)) {
+                    throw new ParserException('invalid condition key:' . $key);
                 }
 
-                if(strpos($key,' ') ===false){
-                    $field=$key;
-                    $operator='=';
+                if (strpos($key, ' ') === false) {
+                    $field = $key;
+                    $operator = '=';
 
-                    $bindKey=$key;
-                    if(is_scalar($value) ||$value ===null){
-                        $realValue =$value;
-                    }elseif(is_array($value)){
-                        $cnt=count($value);
+                    $bindKey = $key;
+                    if (is_scalar($value) || $value === null) {
+                        $realValue = $value;
+                    } elseif (is_array($value)) {
+                        $cnt = count($value);
 
-                        if($cnt ===1){
-                            $realValue =$value[0];
-                        }elseif($cnt ===2){
-                            $realValue=$value[0];
-                            $bindKey=$value[1];
-                        }else {
-                            throw new ParserException('too many items:'.json_encode($value));
+                        if ($cnt === 1) {
+                            $realValue = $value[0];
+                        } elseif ($cnt === 2) {
+                            $realValue = $value[0];
+                            $bindKey = $value[1];
+                        } else {
+                            throw new ParserException('too many items:' . json_encode($value));
                         }
-                    }else{
-                        throw new ParserException('bind value must be scalar: '.json_encode($value));
+                    } else {
+                        throw new ParserException('bind value must be scalar: ' . json_encode($value));
                     }
-                }else{
-                    $field=$key;
-                    $operator='';
-                    $realValue='';
-                    $bindKey='k';
+                } else {
+                    $field = $key;
+                    $operator = '';
+                    $realValue = '';
+                    $bindKey = 'k';
                 }
 
-                $list[]=$field.$operator.':'.$bindKey;
+                $list[] = $field . $operator . ':' . $bindKey;
 
-                $binds[$bindKey]=$realValue;
+                $binds[$bindKey] = $realValue;
             }
 
-            return implode(' AND ',$list);
+            return implode(' AND ', $list);
         }
     }
 }

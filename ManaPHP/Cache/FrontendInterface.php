@@ -1,63 +1,63 @@
-<?php 
+<?php
 
 namespace ManaPHP\Cache {
 
-	/**
-	 * ManaPHP\Cache\FrontendInterface initializer
-	 */
-	
-	interface FrontendInterface {
+    /**
+     * ManaPHP\Cache\FrontendInterface initializer
+     */
+    interface FrontendInterface
+    {
 
-		/**
-		 * Returns the cache lifetime
-		 *
-		 * @return int
-		 */
-		public function getLifetime();
-
-
-		/**
-		 * Check whether if frontend is buffering output
-		 *
-		 * @return boolean
-		 */
-		public function isBuffering();
+        /**
+         * Returns the cache lifetime
+         *
+         * @return int
+         */
+        public function getLifetime();
 
 
-		/**
-		 * Starts the frontend
-		 */
-		public function start();
+        /**
+         * Check whether if frontend is buffering output
+         *
+         * @return boolean
+         */
+        public function isBuffering();
 
 
-		/**
-		 * Returns output cached content
-		 *
-		 * @return string
-		 */
-		public function getContent();
+        /**
+         * Starts the frontend
+         */
+        public function start();
 
 
-		/**
-		 * Stops the frontend
-		 */
-		public function stop();
+        /**
+         * Returns output cached content
+         *
+         * @return string
+         */
+        public function getContent();
 
 
-		/**
-		 * Serializes data before storing it
-		 *
-		 * @param mixed $data
-		 */
-		public function beforeStore($data);
+        /**
+         * Stops the frontend
+         */
+        public function stop();
 
 
-		/**
-		 * Unserializes data after retrieving it
-		 *
-		 * @param mixed $data
-		 */
-		public function afterRetrieve($data);
+        /**
+         * Serializes data before storing it
+         *
+         * @param mixed $data
+         */
+        public function beforeStore($data);
 
-	}
+
+        /**
+         * Unserializes data after retrieving it
+         *
+         * @param mixed $data
+         */
+        public function afterRetrieve($data);
+
+    }
 }

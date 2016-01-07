@@ -5,22 +5,25 @@
  * Date: 2015/12/20
  * Time: 17:31
  */
-namespace ManaPHP\Di{
-    trait InjectionAware{
+namespace ManaPHP\Di {
+
+    trait InjectionAware
+    {
         /**
          * Dependency Injector
          *
          * @var \ManaPHP\DiInterface
          */
-        protected $_dependencyInjector=null;
+        protected $_dependencyInjector = null;
 
         /**
          * Sets the dependency injector
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function setDI($dependencyInjector){
-            $this->_dependencyInjector=$dependencyInjector;
+        public function setDI($dependencyInjector)
+        {
+            $this->_dependencyInjector = $dependencyInjector;
         }
 
 
@@ -29,7 +32,8 @@ namespace ManaPHP\Di{
          *
          * @return \ManaPHP\DiInterface
          */
-        public function getDI(){
+        public function getDI()
+        {
             return $this->_dependencyInjector;
         }
     }
