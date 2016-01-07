@@ -6,7 +6,8 @@
  * Time: 17:02
  */
 
-namespace ManaPHP\Mvc\Router{
+namespace ManaPHP\Mvc\Router {
+
     /**
      * Phalcon\Mvc\Router\GroupInterface
      *
@@ -19,8 +20,8 @@ namespace ManaPHP\Mvc\Router{
      *
      * //Create a group with a common module and controller
      * $blog = new Group(array(
-     * 	'module' => 'blog',
-     * 	'controller' => 'index'
+     *    'module' => 'blog',
+     *    'controller' => 'index'
      * ));
      *
      * //All the routes start with /blog
@@ -28,18 +29,18 @@ namespace ManaPHP\Mvc\Router{
      *
      * //Add a route to the group
      * $blog->add('/save', array(
-     * 	'action' => 'save'
+     *    'action' => 'save'
      * ));
      *
      * //Add another route to the group
      * $blog->add('/edit/{id}', array(
-     * 	'action' => 'edit'
+     *    'action' => 'edit'
      * ));
      *
      * //This route maps to a controller different than the default
      * $blog->add('/blog', array(
-     * 	'controller' => 'about',
-     * 	'action' => 'index'
+     *    'controller' => 'about',
+     *    'action' => 'index'
      * ));
      *
      * //Add the group to the router
@@ -63,7 +64,7 @@ namespace ManaPHP\Mvc\Router{
          *
          * @param array $paths
          * @return static
-    */
+         */
         public function setPaths($paths);
 
 
