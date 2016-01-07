@@ -3,8 +3,8 @@
 namespace ManaPHP\Http {
 
     use ManaPHP\Di\InjectionAware;
-    use \ManaPHP\Http\Request\Exception;
-    use \ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Http\Request\Exception;
     use ManaPHP\Http\Request\File;
 
     /**

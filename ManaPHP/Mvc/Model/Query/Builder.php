@@ -4,7 +4,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
     use ManaPHP\Db\ConditionParser;
     use ManaPHP\Di;
-    use \ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Di\InjectionAwareInterface;
     use ManaPHP\Mvc\Model\Exception;
     use ManaPHP\Mvc\Model\Query;
 

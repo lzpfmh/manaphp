@@ -2,10 +2,10 @@
 
 namespace ManaPHP\Http\Response {
 
-    use ManaPHP\Di\InjectionAware;
-    use \ManaPHP\Di\InjectionAwareInterface;
+  use ManaPHP\Di\InjectionAware;
+  use ManaPHP\Di\InjectionAwareInterface;
 
-    /**
+  /**
      * ManaPHP\Http\Response\Cookies
      *
      * This class is a bag to manage the cookies

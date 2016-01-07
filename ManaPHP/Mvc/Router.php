@@ -3,11 +3,11 @@
 namespace ManaPHP\Mvc {
 
     use ManaPHP\Di\InjectionAware;
+    use ManaPHP\Di\InjectionAwareInterface;
     use ManaPHP\Events\EventsAware;
+    use ManaPHP\Events\EventsAwareInterface;
     use ManaPHP\Mvc\Router\Exception;
     use ManaPHP\Mvc\Router\Route;
-    use ManaPHP\Di\InjectionAwareInterface;
-    use ManaPHP\Events\EventsAwareInterface;
 
     /**
      * ManaPHP\Mvc\Router

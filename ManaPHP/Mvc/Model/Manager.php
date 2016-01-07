@@ -3,9 +3,9 @@
 namespace ManaPHP\Mvc\Model {
 
     use ManaPHP\Di\InjectionAware;
-    use \ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Di\InjectionAwareInterface;
     use ManaPHP\Events\EventsAware;
-    use \ManaPHP\Events\EventsAwareInterface;
+    use ManaPHP\Events\EventsAwareInterface;
 
     /**
      * ManaPHP\Mvc\Model\Manager

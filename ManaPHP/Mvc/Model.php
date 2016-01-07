@@ -4,8 +4,8 @@ namespace ManaPHP\Mvc {
 
     use ManaPHP\Db\ConditionParser;
     use ManaPHP\Di;
+    use ManaPHP\Di\InjectionAwareInterface;
     use ManaPHP\Mvc\Model\Exception;
-    use \ManaPHP\Di\InjectionAwareInterface;
 
     /**
      * ManaPHP\Mvc\Model

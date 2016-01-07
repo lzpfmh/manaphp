@@ -7,7 +7,7 @@
  */
 namespace ManaPHP\Http\Session\Adapter {
 
-    use \ManaPHP\Http\Session;
+    use ManaPHP\Http\Session;
 
     class File extends Session
     {

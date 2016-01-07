@@ -2,7 +2,7 @@
 
 namespace ManaPHP\Mvc {
 
-    use \ManaPHP\Di\Injectable;
+    use ManaPHP\Di\Injectable;
 
     /**
      * ManaPHP\Mvc\Controller

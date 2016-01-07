@@ -2,7 +2,7 @@
 
 namespace ManaPHP\Mvc\Model {
 
-    use \ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Di\InjectionAwareInterface;
 
     /**
      * ManaPHP\Mvc\Model\Criteria

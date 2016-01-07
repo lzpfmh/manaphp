@@ -4,7 +4,7 @@ namespace ManaPHP\Di {
 
     use ManaPHP\Di;
     use ManaPHP\Events\EventsAware;
-    use \ManaPHP\Events\EventsAwareInterface;
+    use ManaPHP\Events\EventsAwareInterface;
 
     /**
      * ManaPHP\Di\Injectable

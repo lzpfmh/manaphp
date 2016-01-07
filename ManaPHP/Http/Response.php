@@ -2,11 +2,11 @@
 
 namespace ManaPHP\Http {
 
+    use ManaPHP\Di;
+    use ManaPHP\Di\InjectionAwareInterface;
     use ManaPHP\Http\Response\Exception;
     use ManaPHP\Http\Response\Headers;
     use ManaPHP\Mvc\ViewInterface;
-    use ManaPHP\Di\InjectionAwareInterface;
-    use ManaPHP\Di;
 
     /**
      * ManaPHP\Http\Response

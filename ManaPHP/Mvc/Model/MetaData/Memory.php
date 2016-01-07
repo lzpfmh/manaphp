@@ -2,7 +2,7 @@
 
 namespace ManaPHP\Mvc\Model\MetaData {
 
-    use  \ManaPHP\Mvc\Model\MetaData;
+    use ManaPHP\Mvc\Model\MetaData;
 
     /**
      * ManaPHP\Mvc\Model\MetaData\Memory

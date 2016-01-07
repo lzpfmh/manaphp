@@ -3,7 +3,7 @@
 namespace ManaPHP\Http {
 
     use ManaPHP\Di\InjectionAware;
-    use \ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Di\InjectionAwareInterface;
 
     /**
      * ManaPHP\Http\Cookie

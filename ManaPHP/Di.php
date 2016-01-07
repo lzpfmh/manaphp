@@ -3,8 +3,8 @@
 namespace ManaPHP {
 
     use ManaPHP\Di\Exception;
-    use ManaPHP\Di\Service;
     use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Di\Service;
 
     /**
      * ManaPHP\Di
