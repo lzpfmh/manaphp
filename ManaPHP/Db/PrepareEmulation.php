@@ -33,9 +33,9 @@ namespace ManaPHP\Db {
                 }
             } elseif ($type === \PDO::PARAM_INT) {
                 return $value;
-            } else if ($type === \PDO::PARAM_NULL) {
+            } elseif ($type === \PDO::PARAM_NULL) {
                 return 'NULL';
-            } else if ($type === \PDO::PARAM_BOOL) {
+            } elseif ($type === \PDO::PARAM_BOOL) {
                 return (int) $value;
             } else {
                 return $value;
@@ -50,11 +50,11 @@ namespace ManaPHP\Db {
         {
             if (is_string($data)) {
                 return \PDO::PARAM_STR;
-            } else if (is_int($data)) {
+            } elseif (is_int($data)) {
                 return \PDO::PARAM_INT;
-            } else if (is_bool($data)) {
+            } elseif (is_bool($data)) {
                 return \PDO::PARAM_BOOL;
-            } else if ($data === null) {
+            } elseif ($data === null) {
                 return \PDO::PARAM_NULL;
             } else {
                 return \PDO::PARAM_STR;

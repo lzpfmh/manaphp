@@ -124,7 +124,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
             if (isset($params[0])) {
                 $this->_conditions = $params[0];
-            } else if (isset($params['conditions'])) {
+            } elseif (isset($params['conditions'])) {
                 $this->_conditions = $params['conditions'];
             } else {
                 $this->_conditions = $params;

@@ -162,7 +162,7 @@ namespace ManaPHP {
             foreach ($binds as $key => $value) {
                 if (is_int($key)) {
                     $finalKey = $key;
-                } else if (is_string($key)) {
+                } elseif (is_string($key)) {
                     $finalKey = ($key[0] === ':') ? $key : (':' . $key);
                 } else {
                     throw new Exception('invalid binds field: ' . json_encode($key));
@@ -171,11 +171,11 @@ namespace ManaPHP {
                 if (is_scalar($value) || $value === null) {
                     $data = $value;
                     $type = null;
-                } else if (is_array($value)) {
+                } elseif (is_array($value)) {
                     if (count($value) === 1) {
                         $data = $value[0];
                         $type = null;
-                    } else if (count($value) === 2) {
+                    } elseif (count($value) === 2) {
                         $data = $value[0];
                         $type = $value[1];
                     } else {
@@ -188,11 +188,11 @@ namespace ManaPHP {
                 if ($type === null) {
                     if (is_string($data)) {
                         $type = \PDO::PARAM_STR;
-                    } else if (is_int($data)) {
+                    } elseif (is_int($data)) {
                         $type = \PDO::PARAM_INT;
-                    } else if (is_bool($data)) {
+                    } elseif (is_bool($data)) {
                         $type = \PDO::PARAM_BOOL;
-                    } else if ($data === null) {
+                    } elseif ($data === null) {
                         $type = \PDO::PARAM_NULL;
                     } else {
                         $type = \PDO::PARAM_STR;
@@ -217,7 +217,7 @@ namespace ManaPHP {
             foreach ($binds as $key => $value) {
                 if (is_int($key)) {
                     $finalKey = $key;
-                } else if (is_string($key)) {
+                } elseif (is_string($key)) {
                     $finalKey = ($key[0] === ':') ? substr($key, 1) : $key;
                 } else {
                     throw new Exception('invalid binds field: ' . json_encode($key));

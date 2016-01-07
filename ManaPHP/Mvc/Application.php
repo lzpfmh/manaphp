@@ -241,7 +241,7 @@ namespace ManaPHP\Mvc {
                      */
                     $moduleObject->registerAutoloaders($this->_dependencyInjector);
                     $moduleObject->registerServices($this->_dependencyInjector);
-                } else if ($module instanceof \Closure) {
+                } elseif ($module instanceof \Closure) {
                     $moduleObject = call_user_func_array($module, [$this->_dependencyInjector]);
                 } else {
                     throw new Exception('Invalid module definition');

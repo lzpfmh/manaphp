@@ -473,7 +473,7 @@ namespace ManaPHP\Mvc {
             $modelsManager = $dependencyInjector->getShared('modelsManager');
             if ($parameters === null) {
                 $parameters = [];
-            } else if (is_string($parameters)) {
+            } elseif (is_string($parameters)) {
                 $parameters = [$parameters];
             }
 

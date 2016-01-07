@@ -168,7 +168,7 @@ namespace ManaPHP\Mvc\Router {
                     if (isset($actionName)) {
                         $routePaths['action'] = $actionName;
                     }
-                } else if (is_array($paths)) {
+                } elseif (is_array($paths)) {
                     $routePaths = $paths;
                 } else {
                     throw new Exception('--paths must be a string or array.');
