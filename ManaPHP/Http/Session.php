@@ -12,25 +12,27 @@ namespace ManaPHP\Http {
     /**
      * ManaPHP\Http\Session\AdapterInterface initializer
      */
+    class Session implements SessionInterface
+    {
 
-    class Session implements  SessionInterface {
-
-        public function __construct($options=null){
-            if(PHP_SAPI ==='cli'){
+        public function __construct($options = null)
+        {
+            if (PHP_SAPI === 'cli') {
                 return;
             }
 
             session_start();
 
-            $message=error_get_last()['message'];
-            if(strpos($message,'session_start():') ===0){
+            $message = error_get_last()['message'];
+            if (strpos($message, 'session_start():') === 0) {
                 throw new Exception($message);
             }
         }
 
-        public function __destruct(){
+        public function __destruct()
+        {
             session_write_close();
-		}
+        }
 
         /**
          * Gets a session variable from an application context
@@ -39,10 +41,11 @@ namespace ManaPHP\Http {
          * @param mixed $defaultValue
          * @return mixed
          */
-        public function get($name, $defaultValue=null){
-            if(isset($_SESSION[$name])){
+        public function get($name, $defaultValue = null)
+        {
+            if (isset($_SESSION[$name])) {
                 return $_SESSION[$name];
-            }else{
+            } else {
                 return $defaultValue;
             }
         }
@@ -54,8 +57,9 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string $value
          */
-        public function set($name, $value){
-            $_SESSION[$name]=$value;
+        public function set($name, $value)
+        {
+            $_SESSION[$name] = $value;
         }
 
 
@@ -65,7 +69,8 @@ namespace ManaPHP\Http {
          * @param string $name
          * @return boolean
          */
-        public function has($name){
+        public function has($name)
+        {
             return isset($_SESSION[$name]);
         }
 
@@ -75,7 +80,8 @@ namespace ManaPHP\Http {
          *
          * @param string $name
          */
-        public function remove($name){
+        public function remove($name)
+        {
             unset($_SESSION[$name]);
         }
 
@@ -86,29 +92,34 @@ namespace ManaPHP\Http {
          * @return boolean
          * @throws \ManaPHP\Http\Session\Exception
          */
-        public function destroy(){
-            if(PHP_SAPI ==='cli'){
+        public function destroy()
+        {
+            if (PHP_SAPI === 'cli') {
                 return;
             }
 
-            if(!session_destroy()){
+            if (!session_destroy()) {
                 throw new Exception(error_get_last()['message']);
             }
         }
 
-        public function offsetExists($offset){
+        public function offsetExists($offset)
+        {
             return $this->has($offset);
         }
 
-        public function offsetGet($offset){
+        public function offsetGet($offset)
+        {
             return $this->get($offset);
         }
 
-        public function offsetSet($offset, $value){
-            $this->set($offset,$value);
+        public function offsetSet($offset, $value)
+        {
+            $this->set($offset, $value);
         }
 
-        public function offsetUnset($offset){
+        public function offsetUnset($offset)
+        {
             $this->remove($offset);
         }
     }

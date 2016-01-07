@@ -1,222 +1,257 @@
-<?php 
+<?php
 
 namespace ManaPHP\Http {
 
-	use ManaPHP\Di\InjectionAware;
-	use \ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Di\InjectionAware;
+    use \ManaPHP\Di\InjectionAwareInterface;
 
-	/**
-	 * ManaPHP\Http\Cookie
-	 *
-	 * Provide OO wrappers to manage a HTTP cookie
-	 */
-	
-	class Cookie implements InjectionAwareInterface {
-		use InjectionAware;
+    /**
+     * ManaPHP\Http\Cookie
+     *
+     * Provide OO wrappers to manage a HTTP cookie
+     */
+    class Cookie implements InjectionAwareInterface
+    {
+        use InjectionAware;
 
-		protected $_readed;
+        protected $_readed;
 
-		protected $_restored;
+        protected $_restored;
 
-		protected $_useEncryption;
+        protected $_useEncryption;
 
-		protected $_filter;
+        protected $_filter;
 
-		/**
-		 * @var string
-		 */
-		protected $_name;
+        /**
+         * @var string
+         */
+        protected $_name;
 
-		protected $_value;
+        protected $_value;
 
-		protected $_expire;
+        protected $_expire;
 
-		protected $_path;
+        protected $_path;
 
-		protected $_domain;
+        protected $_domain;
 
-		protected $_secure;
+        protected $_secure;
 
-		protected $_httpOnly;
+        protected $_httpOnly;
 
-		/**
-		 * \ManaPHP\Http\Cookie constructor
-		 *
-		 * @param string $name
-		 * @param mixed $value
-		 * @param int $expire
-		 * @param string $path
-		 * @param boolean $secure
-		 * @param string $domain
-		 * @param boolean $httpOnly
-		 */
-		public function __construct($name, $value=null, $expire=null, $path=null, $secure=null, $domain=null, $httpOnly=null){
-			$this->_name =$name;
-			$this->_value =$value;
-			$this->_expire =$expire;
-			$this->_path =$path;
-			$this->_secure=$secure;
-			$this->_domain=$domain;
-			$this->_httpOnly=$httpOnly;
-		}
-
-
-		/**
-		 * Sets the cookie's value
-		 *
-		 * @param string $value
-		 * @return \ManaPHP\Http\Cookie
-		 */
-		public function setValue($value){
-			$this->_value =$value;
-		}
+        /**
+         * \ManaPHP\Http\Cookie constructor
+         *
+         * @param string $name
+         * @param mixed $value
+         * @param int $expire
+         * @param string $path
+         * @param boolean $secure
+         * @param string $domain
+         * @param boolean $httpOnly
+         */
+        public function __construct($name, $value = null, $expire = null, $path = null, $secure = null, $domain = null, $httpOnly = null)
+        {
+            $this->_name = $name;
+            $this->_value = $value;
+            $this->_expire = $expire;
+            $this->_path = $path;
+            $this->_secure = $secure;
+            $this->_domain = $domain;
+            $this->_httpOnly = $httpOnly;
+        }
 
 
-		/**
-		 * Returns the cookie's value
-		 *
-		 * @param string|array $filters
-		 * @param string $defaultValue
-		 * @return mixed
-		 */
-		public function getValue($filters=null, $defaultValue=null){
-
-		}
-
-
-		/**
-		 * Sends the cookie to the HTTP client
-		 * Stores the cookie definition in session
-		 *
-		 * @return static
-		 */
-		public function send(){ }
+        /**
+         * Sets the cookie's value
+         *
+         * @param string $value
+         * @return \ManaPHP\Http\Cookie
+         */
+        public function setValue($value)
+        {
+            $this->_value = $value;
+        }
 
 
-		/**
-		 * Reads the cookie-related info from the SESSION to restore the cookie as it was set
-		 * This method is automatically called internally so normally you don't need to call it
-		 *
-		 * @return static
-		 */
-		public function restore(){ }
+        /**
+         * Returns the cookie's value
+         *
+         * @param string|array $filters
+         * @param string $defaultValue
+         * @return mixed
+         */
+        public function getValue($filters = null, $defaultValue = null)
+        {
+
+        }
 
 
-		/**
-		 * Deletes the cookie by setting an expire time in the past
-		 *
-		 */
-		public function delete(){ }
+        /**
+         * Sends the cookie to the HTTP client
+         * Stores the cookie definition in session
+         *
+         * @return static
+         */
+        public function send()
+        {
+        }
 
 
-		/**
-		 * Sets if the cookie must be encrypted/decrypted automatically
-		 *
-		 * @param boolean $useEncryption
-		 * @return static
-		 */
-		public function useEncryption($useEncryption){ }
+        /**
+         * Reads the cookie-related info from the SESSION to restore the cookie as it was set
+         * This method is automatically called internally so normally you don't need to call it
+         *
+         * @return static
+         */
+        public function restore()
+        {
+        }
 
 
-		/**
-		 * Check if the cookie is using implicit encryption
-		 *
-		 * @return boolean
-		 */
-		public function isUsingEncryption(){ }
+        /**
+         * Deletes the cookie by setting an expire time in the past
+         *
+         */
+        public function delete()
+        {
+        }
 
 
-		/**
-		 * Sets the cookie's expiration time
-		 *
-		 * @param int $expire
-		 * @return static
-		 */
-		public function setExpiration($expire){ }
+        /**
+         * Sets if the cookie must be encrypted/decrypted automatically
+         *
+         * @param boolean $useEncryption
+         * @return static
+         */
+        public function useEncryption($useEncryption)
+        {
+        }
 
 
-		/**
-		 * Returns the current expiration time
-		 *
-		 * @return string
-		 */
-		public function getExpiration(){ }
+        /**
+         * Check if the cookie is using implicit encryption
+         *
+         * @return boolean
+         */
+        public function isUsingEncryption()
+        {
+        }
 
 
-		/**
-		 * Sets the cookie's expiration time
-		 *
-		 * @param string $path
-		 * @return static
-		 */
-		public function setPath($path){ }
+        /**
+         * Sets the cookie's expiration time
+         *
+         * @param int $expire
+         * @return static
+         */
+        public function setExpiration($expire)
+        {
+        }
 
 
-		/**
-		 * Returns the current cookie's path
-		 *
-		 * @return string
-		 */
-		public function getPath(){ }
+        /**
+         * Returns the current expiration time
+         *
+         * @return string
+         */
+        public function getExpiration()
+        {
+        }
 
 
-		/**
-		 * Sets the domain that the cookie is available to
-		 *
-		 * @param string $domain
-		 * @return static
-		 */
-		public function setDomain($domain){ }
+        /**
+         * Sets the cookie's expiration time
+         *
+         * @param string $path
+         * @return static
+         */
+        public function setPath($path)
+        {
+        }
 
 
-		/**
-		 * Returns the domain that the cookie is available to
-		 *
-		 * @return string
-		 */
-		public function getDomain(){ }
+        /**
+         * Returns the current cookie's path
+         *
+         * @return string
+         */
+        public function getPath()
+        {
+        }
 
 
-		/**
-		 * Sets if the cookie must only be sent when the connection is secure (HTTPS)
-		 *
-		 * @param boolean $secure
-		 * @return static
-		 */
-		public function setSecure($secure){ }
+        /**
+         * Sets the domain that the cookie is available to
+         *
+         * @param string $domain
+         * @return static
+         */
+        public function setDomain($domain)
+        {
+        }
 
 
-		/**
-		 * Returns whether the cookie must only be sent when the connection is secure (HTTPS)
-		 *
-		 * @return boolean
-		 */
-		public function getSecure(){ }
+        /**
+         * Returns the domain that the cookie is available to
+         *
+         * @return string
+         */
+        public function getDomain()
+        {
+        }
 
 
-		/**
-		 * Sets if the cookie is accessible only through the HTTP protocol
-		 *
-		 * @param boolean $httpOnly
-		 * @return static
-		 */
-		public function setHttpOnly($httpOnly){ }
+        /**
+         * Sets if the cookie must only be sent when the connection is secure (HTTPS)
+         *
+         * @param boolean $secure
+         * @return static
+         */
+        public function setSecure($secure)
+        {
+        }
 
 
-		/**
-		 * Returns if the cookie is accessible only through the HTTP protocol
-		 *
-		 * @return boolean
-		 */
-		public function getHttpOnly(){ }
+        /**
+         * Returns whether the cookie must only be sent when the connection is secure (HTTPS)
+         *
+         * @return boolean
+         */
+        public function getSecure()
+        {
+        }
 
 
-		/**
-		 * Magic __toString method converts the cookie's value to string
-		 *
-		 * @return mixed
-		 */
-		public function __toString(){ }
+        /**
+         * Sets if the cookie is accessible only through the HTTP protocol
+         *
+         * @param boolean $httpOnly
+         * @return static
+         */
+        public function setHttpOnly($httpOnly)
+        {
+        }
 
-	}
+
+        /**
+         * Returns if the cookie is accessible only through the HTTP protocol
+         *
+         * @return boolean
+         */
+        public function getHttpOnly()
+        {
+        }
+
+
+        /**
+         * Magic __toString method converts the cookie's value to string
+         *
+         * @return mixed
+         */
+        public function __toString()
+        {
+        }
+
+    }
 }

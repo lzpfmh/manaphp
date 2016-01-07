@@ -6,9 +6,11 @@
  * Time: 17:20
  */
 namespace ManaPHP\Http\Session\Adapter {
+
     use \ManaPHP\Http\Session;
 
-    class File extends Session{
+    class File extends Session
+    {
 
     }
 }

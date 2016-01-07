@@ -5,7 +5,8 @@
  * Date: 2015/11/27
  * Time: 23:06
  */
-namespace ManaPHP\Http{
+namespace ManaPHP\Http {
+
     /**
      * Phalcon\Http\CookieInterface
      *

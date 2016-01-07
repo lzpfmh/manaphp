@@ -1,39 +1,41 @@
-<?php 
+<?php
 
 namespace ManaPHP\Events {
 
-	/**
-	 * ManaPHP\Events\Event
-	 *
-	 * This class offers contextual information of a fired event in the EventsManager
-	 */
-	
-	class Event {
+    /**
+     * ManaPHP\Events\Event
+     *
+     * This class offers contextual information of a fired event in the EventsManager
+     */
+    class Event
+    {
 
-		/**
-		 * Event type
-		 *
-		 * @var string
-		 */
-		protected $_type;
+        /**
+         * Event type
+         *
+         * @var string
+         */
+        protected $_type;
 
-		/**
-		 * \ManaPHP\Events\Event constructor
-		 *
-		 * @param string $type
-		 */
-		public function __construct($type){
-			$this->_type =$type;
-		}
+        /**
+         * \ManaPHP\Events\Event constructor
+         *
+         * @param string $type
+         */
+        public function __construct($type)
+        {
+            $this->_type = $type;
+        }
 
 
-		/**
-		 * Returns the event's type
-		 *
-		 * @return string
-		 */
-		public function getType(){
-			return $this->_type;
-		}
-	}
+        /**
+         * Returns the event's type
+         *
+         * @return string
+         */
+        public function getType()
+        {
+            return $this->_type;
+        }
+    }
 }

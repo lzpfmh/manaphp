@@ -1,54 +1,54 @@
-<?php 
+<?php
 
 namespace ManaPHP\Http {
 
-	/**
-	 * ManaPHP\Http\Session\AdapterInterface initializer
-	 */
-	
-	interface SessionInterface extends \ArrayAccess {
+    /**
+     * ManaPHP\Http\Session\AdapterInterface initializer
+     */
+    interface SessionInterface extends \ArrayAccess
+    {
 
-		/**
-		 * Gets a session variable from an application context
-		 *
-		 * @param string $name
-		 * @param mixed $defaultValue
-		 * @return mixed
-		 */
-		public function get($name, $defaultValue=null);
-
-
-		/**
-		 * Sets a session variable in an application context
-		 *
-		 * @param string $name
-		 * @param string $value
-		 */
-		public function set($name, $value);
+        /**
+         * Gets a session variable from an application context
+         *
+         * @param string $name
+         * @param mixed $defaultValue
+         * @return mixed
+         */
+        public function get($name, $defaultValue = null);
 
 
-		/**
-		 * Check whether a session variable is set in an application context
-		 *
-		 * @param string $name
-		 * @return boolean
-		 */
-		public function has($name);
+        /**
+         * Sets a session variable in an application context
+         *
+         * @param string $name
+         * @param string $value
+         */
+        public function set($name, $value);
 
 
-		/**
-		 * Removes a session variable from an application context
-		 *
-		 * @param string $name
-		 */
-		public function remove($name);
+        /**
+         * Check whether a session variable is set in an application context
+         *
+         * @param string $name
+         * @return boolean
+         */
+        public function has($name);
 
 
-		/**
-		 * Destroys the active session
-		 *
-		 * @return boolean
-		 */
-		public function destroy();
-	}
+        /**
+         * Removes a session variable from an application context
+         *
+         * @param string $name
+         */
+        public function remove($name);
+
+
+        /**
+         * Destroys the active session
+         *
+         * @return boolean
+         */
+        public function destroy();
+    }
 }

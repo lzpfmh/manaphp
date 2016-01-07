@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 namespace ManaPHP\Mvc {
 
-	/**
-	 * ManaPHP\Mvc\ControllerInterface initializer
-	 */
-	
-	interface ControllerInterface {
-	}
+    /**
+     * ManaPHP\Mvc\ControllerInterface initializer
+     */
+    interface ControllerInterface
+    {
+    }
 }
