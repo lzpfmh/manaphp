@@ -22,7 +22,6 @@ namespace ManaPHP {
                 $interfaceName = basename(str_replace('\\', DIRECTORY_SEPARATOR, $className));
 
                 eval('namespace ' . $namespaceName . '{interface ' . $interfaceName . ' {}}');
-                //create_function('','interface '.$className.' {}');
                 return true;
             }
 
