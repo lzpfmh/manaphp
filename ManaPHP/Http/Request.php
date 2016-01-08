@@ -315,20 +315,22 @@ namespace ManaPHP\Http {
          */
         public function getClientAddress()
         {
-            if ($this->_client_address !== null) {
-                return $this->_client_address;
-            }
-
-            if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                return $_SERVER['REMOTE_ADDR'];
-            } else {
-                $client_address = $_SERVER['REMOTE_ADDR'];
-                if (strpos($client_address, '127.0.') === 0 || strpos($client_address, '192.168.') === 0 || strpos($client_address, '10.') === 0) {
-                    return $_SERVER['HTTP_X_FORWARDED_FOR'];
+            if ($this->_client_address === null) {
+                if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                    $this->_client_address = $_SERVER['REMOTE_ADDR'];
                 } else {
-                    return $_SERVER['REMOTE_ADDR'];
+                    $client_address = $_SERVER['REMOTE_ADDR'];
+                    if (strpos($client_address, '127.0.') === 0 || strpos($client_address,
+                        '192.168.') === 0 || strpos($client_address, '10.') === 0
+                    ) {
+                        $this->_client_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                    } else {
+                        $this->_client_address = $_SERVER['REMOTE_ADDR'];
+                    }
                 }
             }
+
+            return $this->_client_address;
         }
 
 
