@@ -14,10 +14,9 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          */
-        public function get($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false);
+        public function get($name = null, $filters = null, $defaultValue = null);
 
         /**
          * Gets variable from $_GET superglobal applying filters if needed
@@ -25,10 +24,9 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          */
-        public function getGet($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false);
+        public function getGet($name = null, $filters = null, $defaultValue = null);
 
 
         /**
@@ -37,10 +35,9 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          */
-        public function getPost($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false);
+        public function getPost($name = null, $filters = null, $defaultValue = null);
 
 
         /**
@@ -55,10 +52,9 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          */
-        public function getPut($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false);
+        public function getPut($name = null, $filters = null, $defaultValue = null);
 
 
         /**
@@ -67,10 +63,9 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          */
-        public function getQuery($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false);
+        public function getQuery($name = null, $filters = null, $defaultValue = null);
 
         /**
          * Checks whether $_SERVER superglobal has certain index

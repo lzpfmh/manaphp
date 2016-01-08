@@ -53,11 +53,10 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param mixed $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return string
          * @throws \ManaPHP\Http\Request\Exception
          */
-        protected function _getHelper($source, $name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false)
+        protected function _getHelper($source, $name = null, $filters = null, $defaultValue = null)
         {
             if ($filters !== null) {
                 throw new Exception('filter not supported');
@@ -68,10 +67,6 @@ namespace ManaPHP\Http {
             }
 
             if (!isset($source[$name])) {
-                return $defaultValue;
-            }
-
-            if ($notAllowEmpty === true && empty($source[$name])) {
                 return $defaultValue;
             }
 
@@ -93,13 +88,12 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
-        public function get($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false)
+        public function get($name = null, $filters = null, $defaultValue = null)
         {
-            return $this->_getHelper($_REQUEST, $name, $filters, $defaultValue, $notAllowEmpty);
+            return $this->_getHelper($_REQUEST, $name, $filters, $defaultValue);
         }
 
         /**
@@ -120,13 +114,12 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
-        public function getGet($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false)
+        public function getGet($name = null, $filters = null, $defaultValue = null)
         {
-            return $this->_getHelper($_GET, $name, $filters, $defaultValue, $notAllowEmpty);
+            return $this->_getHelper($_GET, $name, $filters, $defaultValue);
         }
 
 
@@ -145,13 +138,12 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
-        public function getPost($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false)
+        public function getPost($name = null, $filters = null, $defaultValue = null)
         {
-            return $this->_getHelper($_POST, $name, $filters, $defaultValue, $notAllowEmpty);
+            return $this->_getHelper($_POST, $name, $filters, $defaultValue);
         }
 
 
@@ -167,17 +159,16 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
-        public function getPut($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false)
+        public function getPut($name = null, $filters = null, $defaultValue = null)
         {
             if ($this->_putCache === null && $this->isPut()) {
                 parse_str($this->getRawBody(), $this->_putCache);
             }
 
-            return $this->_getHelper($this->_putCache, $name, $filters, $defaultValue, $notAllowEmpty);
+            return $this->_getHelper($this->_putCache, $name, $filters, $defaultValue);
         }
 
 
@@ -199,13 +190,12 @@ namespace ManaPHP\Http {
          * @param string $name
          * @param string|array $filters
          * @param mixed $defaultValue
-         * @param boolean $notAllowEmpty
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
-        public function getQuery($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false)
+        public function getQuery($name = null, $filters = null, $defaultValue = null)
         {
-            return $this->_getHelper($_GET, $name, $filters, $defaultValue, $notAllowEmpty);
+            return $this->_getHelper($_GET, $name, $filters, $defaultValue);
         }
 
 
