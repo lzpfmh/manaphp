@@ -68,7 +68,8 @@ namespace ManaPHP\Mvc\Model {
         {
 
             $readConnection = $model->getReadConnection();
-            $columns = $readConnection->fetchAll('DESCRIBE ' . $readConnection->escapeIdentifier($model->getSource()), null, \PDO::FETCH_NUM);
+            $escapedTable = $readConnection->escapeIdentifier($model->getSource());
+            $columns = $readConnection->fetchAll('DESCRIBE ' . $escapedTable, null, \PDO::FETCH_NUM);
             if (count($columns) === 0) {
                 throw new Exception("Cannot obtain table columns for the mapped source '" . $model->getSource() . "' used in model " . get_class($model));
             }
@@ -90,10 +91,12 @@ namespace ManaPHP\Mvc\Model {
                 }
 
                 $columnType = $column[1];
-                if (strpos($columnType, 'int') !== false || strpos($columnType, 'decimal') !== false || strpos($columnType, 'double') !== false || strpos($columnType,
-                    'float') !== false
-                ) {
-                    $numericTyped[] = $columnName;
+
+                foreach (['unsigned', 'int', 'decimal', 'double', 'float'] as $type) {
+                    if (strpos($columnType, $type) !== false) {
+                        $numericTyped[] = $columnName;
+                        break;
+                    }
                 }
 
                 if ($column[5] === 'auto_increment') {
