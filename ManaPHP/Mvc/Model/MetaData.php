@@ -60,13 +60,35 @@ namespace ManaPHP\Mvc\Model {
         protected $_columnMap;
 
         /**
+         * @param string $columnType
+         * @return bool
+         */
+        protected function _isNumericColumn($columnType)
+        {
+            if (strpos($columnType, 'char') !== false) {
+                return false;
+            }
+
+            if (strpos($columnType, 'int') !== false) {
+                return true;
+            }
+
+            foreach (['unsigned', 'decimal', 'double', 'float'] as $type) {
+                if (strpos($columnType, $type) !== false) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /**
          * @param \ManaPHP\Mvc\ModelInterface $model
          * @return array
          * @throws \ManaPHP\Mvc\Model\Exception
          */
         protected function _fetchMetaDataFromRDBMS($model)
         {
-
             $readConnection = $model->getReadConnection();
             $escapedTable = $readConnection->escapeIdentifier($model->getSource());
             $columns = $readConnection->fetchAll('DESCRIBE ' . $escapedTable, null, \PDO::FETCH_NUM);
@@ -92,11 +114,8 @@ namespace ManaPHP\Mvc\Model {
 
                 $columnType = $column[1];
 
-                foreach (['unsigned', 'int', 'decimal', 'double', 'float'] as $type) {
-                    if (strpos($columnType, $type) !== false) {
-                        $numericTyped[] = $columnName;
-                        break;
-                    }
+                if ($this->_isNumericColumn($columnType)) {
+                    $numericTyped[] = $columnName;
                 }
 
                 if ($column[5] === 'auto_increment') {
