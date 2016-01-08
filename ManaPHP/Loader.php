@@ -68,10 +68,10 @@ namespace ManaPHP {
          */
         public function registerNamespaces($namespaces, $merge = false)
         {
-            if ($merge === false) {
+            if ($merge === false || $this->_namespaces === null) {
                 $this->_namespaces = $namespaces;
             } else {
-                $this->_namespaces = is_array($this->_namespaces) ? array_merge($this->_namespaces, $namespaces) : $namespaces;
+                $this->_namespaces = array_merge($this->_namespaces, $namespaces);
             }
 
             return $this;
@@ -104,10 +104,10 @@ namespace ManaPHP {
          */
         public function registerDirs($directories, $merge = false)
         {
-            if ($merge === false) {
+            if ($merge === false || $this->_directories === null) {
                 $this->_directories = $directories;
             } else {
-                $this->_directories = is_array($this->_directories) ? array_merge($this->_directories, $directories) : $directories;
+                $this->_directories = array_merge($this->_directories, $directories);
             }
             return $this;
         }
@@ -133,10 +133,10 @@ namespace ManaPHP {
          */
         public function registerClasses($classes, $merge = false)
         {
-            if ($merge === false) {
+            if ($merge === false || $this->_classes === null) {
                 $this->_classes = $classes;
             } else {
-                $this->_classes = is_array($this->_classes) ? array_merge($this->_classes, $classes) : $classes;
+                $this->_classes = array_merge($this->_classes, $classes);
             }
 
             return $this;
