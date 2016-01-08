@@ -77,10 +77,11 @@ namespace ManaPHP\Db {
             if (isset($bindParams[0])) {
                 $pos = 0;
 
-                $preparedStatement = preg_replace_callback('/(\?)/', function () use ($bindParams, $bindTypes, &$pos, $preservedStrLength) {
-                    $type = isset($bindTypes[$pos]) ? $bindTypes[$pos] : $this->_inferType($bindParams[$pos]);
-                    return $this->_parseValue($bindParams[$pos++], $type, $preservedStrLength);
-                }, $sqlStatement);
+                $preparedStatement = preg_replace_callback('/(\?)/',
+                  function () use ($bindParams, $bindTypes, &$pos, $preservedStrLength) {
+                      $type = isset($bindTypes[$pos]) ? $bindTypes[$pos] : $this->_inferType($bindParams[$pos]);
+                      return $this->_parseValue($bindParams[$pos++], $type, $preservedStrLength);
+                  }, $sqlStatement);
 
                 if ($pos !== count($bindParams)) {
                     return 'infer failed:' . $sqlStatement;
