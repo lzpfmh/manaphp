@@ -456,15 +456,15 @@ namespace ManaPHP {
                 throw new Exception('Unable to insert into ' . $table . ' without data');
             }
 
-            $escapedTable=$this->escapeIdentifier($table);
+            $escapedTable = $this->escapeIdentifier($table);
             if (isset($columnValues[0])) {
-                $insertedValues=rtrim(str_repeat('?,', count($columnValues)), ',');
+                $insertedValues = rtrim(str_repeat('?,', count($columnValues)), ',');
 
                 $insertSql = "INSERT INTO $escapedTable VALUES ($insertedValues)";
             } else {
                 $this->_parseColumns($columnValues, $columns, $escapedColumns);
-                $insertedValues=':'.implode(',:', $columns);
-                $insertedColumns=implode(',', $escapedColumns);
+                $insertedValues = ':' . implode(',:', $columns);
+                $insertedColumns = implode(',', $escapedColumns);
 
                 $insertSql = "INSERT INTO $escapedTable ($insertedColumns) VALUES ($insertedValues)";
             }
@@ -515,7 +515,9 @@ namespace ManaPHP {
             foreach ($columns as $key => $column) {
                 $setColumns[] = $escapedColumns[$key] . '=:' . $column;
             }
-            $updateSql = 'UPDATE ' . $this->escapeIdentifier($table) . ' SET ' . implode(',', $setColumns) . ' WHERE ' . $where;
+
+            $updateColumns = implode(',', $setColumns);
+            $updateSql = "UPDATE $escapedTable SET $updateColumns WHERE  $where";
 
             $columnValues = array_merge($columnValues, $binds);
 
