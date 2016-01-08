@@ -163,11 +163,11 @@ namespace ManaPHP\Mvc\Model {
          *</code>
          *
          * @param string $expr
-         * @param mixed $minimum
-         * @param mixed $maximum
+         * @param mixed $min
+         * @param mixed $max
          * @return \ManaPHP\Mvc\Model\Query\Builder
          */
-        public function betweenWhere($expr, $minimum, $maximum);
+        public function betweenWhere($expr, $min, $max);
 
 
         /**
@@ -178,11 +178,11 @@ namespace ManaPHP\Mvc\Model {
          *</code>
          *
          * @param string $expr
-         * @param mixed $minimum
-         * @param mixed $maximum
+         * @param mixed $min
+         * @param mixed $max
          * @return \ManaPHP\Mvc\Model\Query\Builder
          */
-        public function notBetweenWhere($expr, $minimum, $maximum);
+        public function notBetweenWhere($expr, $min, $max);
 
 
         /**
