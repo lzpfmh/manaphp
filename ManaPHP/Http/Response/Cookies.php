@@ -2,10 +2,10 @@
 
 namespace ManaPHP\Http\Response {
 
-  use ManaPHP\Di\InjectionAware;
-  use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Di\InjectionAware;
+    use ManaPHP\Di\InjectionAwareInterface;
 
-  /**
+    /**
      * ManaPHP\Http\Response\Cookies
      *
      * This class is a bag to manage the cookies
@@ -63,11 +63,19 @@ namespace ManaPHP\Http\Response {
          * @return static
          * @throws \ManaPHP\Http\Response\Exception
          */
-        public function set($name, $value = null, $expire = null, $path = null, $secure = null, $domain = null, $httpOnly = null)
-        {
+        public function set(
+          $name,
+          $value = null,
+          $expire = null,
+          $path = null,
+          $secure = null,
+          $domain = null,
+          $httpOnly = null
+        ) {
             if (!isset($this->_cookies[$name])) {
 
-                $cookie = $this->_dependencyInjector->get('ManaPHP\Http\Cookie', [$name, $value, $expire, $path, $secure, $domain, $httpOnly]);
+                $cookie = $this->_dependencyInjector->get('ManaPHP\Http\Cookie',
+                  [$name, $value, $expire, $path, $secure, $domain, $httpOnly]);
 
                 $cookie->setDI($this->_dependencyInjector);
                 $cookie->useEncryption($this->_useEncryption);

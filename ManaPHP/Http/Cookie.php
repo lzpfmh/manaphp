@@ -50,8 +50,15 @@ namespace ManaPHP\Http {
          * @param string $domain
          * @param boolean $httpOnly
          */
-        public function __construct($name, $value = null, $expire = null, $path = null, $secure = null, $domain = null, $httpOnly = null)
-        {
+        public function __construct(
+          $name,
+          $value = null,
+          $expire = null,
+          $path = null,
+          $secure = null,
+          $domain = null,
+          $httpOnly = null
+        ) {
             $this->_name = $name;
             $this->_value = $value;
             $this->_expire = $expire;
