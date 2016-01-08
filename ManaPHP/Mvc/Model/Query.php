@@ -2,10 +2,10 @@
 
 namespace ManaPHP\Mvc\Model {
 
-	use ManaPHP\Di\InjectionAwareInterface;
-	use ManaPHP\Mvc\Application;
+    use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Mvc\Application;
 
-	/**
+    /**
      * ManaPHP\Mvc\Model\Query
      *
      * This class takes a PHQL intermediate representation and executes it.
