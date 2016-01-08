@@ -297,7 +297,11 @@ namespace ManaPHP\Http {
          */
         public function setJsonContent($content, $jsonOptions = null)
         {
-            $this->_content = json_encode($content, $jsonOptions | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE, 512);
+            if ($jsonOptions === null) {
+                $jsonOptions = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+            }
+
+            $this->_content = json_encode($content, $jsonOptions, 512);
             return $this;
         }
 
