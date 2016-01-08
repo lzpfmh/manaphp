@@ -391,16 +391,16 @@ namespace ManaPHP\Mvc\Model\Query {
          *</code>
          *
          * @param string $expr
-         * @param mixed $minimum
-         * @param mixed $maximum
+         * @param mixed $min
+         * @param mixed $max
          * @return static
          */
-        public function betweenWhere($expr, $minimum, $maximum)
+        public function betweenWhere($expr, $min, $max)
         {
-            $min_key = 'ABP' . $this->_hiddenParamNumber++;
-            $max_key = 'ABP' . $this->_hiddenParamNumber++;
+            $minKey = 'ABP' . $this->_hiddenParamNumber++;
+            $maxKey = 'ABP' . $this->_hiddenParamNumber++;
 
-            $this->andWhere($expr . ' BETWEEN :' . $min_key . ': AND :' . $max_key . ':', [$min_key => $minimum, $max_key => $maximum]);
+            $this->andWhere("$expr BETWEEN :$minKey: AND :$maxKey:", [$minKey => $min, $maxKey => $max]);
 
             return $this;
         }
@@ -414,16 +414,16 @@ namespace ManaPHP\Mvc\Model\Query {
          *</code>
          *
          * @param string $expr
-         * @param mixed $minimum
-         * @param mixed $maximum
+         * @param mixed $min
+         * @param mixed $max
          * @return static
          */
-        public function notBetweenWhere($expr, $minimum, $maximum)
+        public function notBetweenWhere($expr, $min, $max)
         {
-            $min_key = 'ABP' . $this->_hiddenParamNumber++;
-            $max_key = 'ABP' . $this->_hiddenParamNumber++;
+            $minKey = 'ABP' . $this->_hiddenParamNumber++;
+            $maxKey = 'ABP' . $this->_hiddenParamNumber++;
 
-            $this->andWhere($expr . ' NOT BETWEEN :' . $min_key . ': AND :' . $max_key . ':', [$min_key => $minimum, $max_key => $maximum]);
+            $this->andWhere("$expr NOT BETWEEN :$minKey: AND :$maxKey:", [$minKey => $min, $maxKey => $max]);
 
             return $this;
         }
@@ -452,7 +452,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
             foreach ($values as $value) {
                 $key = 'ABP' . $this->_hiddenParamNumber++;
-                $bindKeys[] = ':' . $key . ':';
+                $bindKeys[] = ":$key:";
                 $binds[$key] = $value;
             }
 
