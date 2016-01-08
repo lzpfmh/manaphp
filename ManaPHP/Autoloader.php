@@ -18,8 +18,10 @@ namespace ManaPHP {
             }
 
             if (self::$_optimizeMode && substr_compare($className, 'Interface', strlen($className) - 9) === 0) {
-                eval('namespace ' . str_replace('/', '\\', dirname(str_replace('\\', DIRECTORY_SEPARATOR, $className))) . '{interface ' . basename(str_replace('\\',
-                    DIRECTORY_SEPARATOR, $className)) . ' {}}');
+                $namespaceName = str_replace('/', '\\', dirname(str_replace('\\', DIRECTORY_SEPARATOR, $className)));
+                $interfaceName = basename(str_replace('\\', DIRECTORY_SEPARATOR, $className));
+
+                eval('namespace ' . $namespaceName . '{interface ' . $interfaceName . ' {}}');
                 //create_function('','interface '.$className.' {}');
                 return true;
             }
