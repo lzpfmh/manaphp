@@ -256,45 +256,5 @@ namespace ManaPHP {
 
             return false;
         }
-
-        public static function autoloadFrameWorkClasses()
-        {
-            static $has_registered = false;
-
-            if ($has_registered) {
-                return;
-            }
-
-            spl_autoload_register(function ($className) {
-
-                static $frameworkRootPath;
-                static $frameworkName;
-
-                if (!isset($frameworkRootPath)) {
-                    $frameworkRootPath = __DIR__;
-                    $frameworkName = basename($frameworkRootPath);
-                    $frameworkRootPath = dirname($frameworkRootPath);
-                }
-
-////				echo $className.'<br/>';
-//				if(strpos($className,'Interface') !==false){
-//					//create_function('','interface '.$className.' {}');
-//					eval('namespace '.str_replace('/','\\',dirname(str_replace('\\',DIRECTORY_SEPARATOR,$className))).'{interface ' . basename(str_replace('\\',DIRECTORY_SEPARATOR,$className)) . ' {}}');
-//					return true;
-//				}
-                if (strncmp($className, $frameworkName, strlen($frameworkName)) === 0) {
-                    $file = $frameworkRootPath . '/' . $className . '.php';
-                    $file = str_replace('\\', '/', $file);
-                    if (is_file($file)) {
-
-                        /** @noinspection PhpIncludeInspection */
-                        require $file;
-                        return true;
-                    }
-                }
-
-                return false;
-            });
-        }
     }
 }
