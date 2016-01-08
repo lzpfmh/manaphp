@@ -456,14 +456,21 @@ namespace ManaPHP {
                 throw new Exception('Unable to insert into ' . $table . ' without data');
             }
 
+            $escapedTable=$this->escapeIdentifier($table);
             if (isset($columnValues[0])) {
-                $insertSql = 'INSERT INTO ' . $this->escapeIdentifier($table) . ' VALUES (' . rtrim(str_repeat('?,', count($columnValues)), ',') . ')';
-                return $this->execute($insertSql, $columnValues) === 1;
+                $insertedValues=rtrim(str_repeat('?,', count($columnValues)), ',');
+
+                $insertSql = "INSERT INTO $escapedTable VALUES ($insertedValues)";
             } else {
                 $this->_parseColumns($columnValues, $columns, $escapedColumns);
-                $insertSql = 'INSERT INTO ' . $this->escapeIdentifier($table) . ' (' . implode(',', $escapedColumns) . ') VALUES (:' . implode(',:', $columns) . ')';
-                return $this->execute($insertSql, $columnValues) === 1;
+                $insertedValues=':'.implode(',:', $columns);
+                $insertedColumns=implode(',', $escapedColumns);
+
+                $insertSql = "INSERT INTO $escapedTable ($insertedColumns) VALUES ($insertedValues)";
             }
+
+            return $this->execute($insertSql, $columnValues) === 1;
+
         }
 
 
