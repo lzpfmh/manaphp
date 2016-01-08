@@ -37,7 +37,15 @@ namespace ManaPHP\Http\Response {
          * @param boolean $httpOnly
          * @return static
          */
-        public function set($name, $value = null, $expire = null, $path = null, $secure = null, $domain = null, $httpOnly = null);
+        public function set(
+          $name,
+          $value = null,
+          $expire = null,
+          $path = null,
+          $secure = null,
+          $domain = null,
+          $httpOnly = null
+        );
 
 
         /**
