@@ -3,7 +3,6 @@
 namespace ManaPHP {
 
     use ManaPHP\Db\ConditionParser;
-    use ManaPHP\Db\Exception;
     use ManaPHP\Db\PrepareEmulation;
     use ManaPHP\Events\EventsAware;
     use ManaPHP\Events\EventsAwareInterface;
