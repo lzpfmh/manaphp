@@ -324,7 +324,8 @@ namespace ManaPHP\Mvc {
             }
 
             if (!is_object($this->_dependencyInjector)) {
-                $this->_throwDispatchException("A dependency injection object is required to access the 'filter' service", self::EXCEPTION_NO_DI);
+                $this->_throwDispatchException("A dependency injection object is required to access the 'filter' service",
+                  self::EXCEPTION_NO_DI);
             }
 
             return null;
@@ -368,7 +369,8 @@ namespace ManaPHP\Mvc {
         public function dispatch()
         {
             if (!is_object($this->_dependencyInjector)) {
-                $this->_throwDispatchException('A dependency injection container is required to access related dispatching services', self::EXCEPTION_NO_DI);
+                $this->_throwDispatchException('A dependency injection container is required to access related dispatching services',
+                  self::EXCEPTION_NO_DI);
                 return false;
             }
 
@@ -384,7 +386,8 @@ namespace ManaPHP\Mvc {
                 $this->_finished = true;
 
                 if ($numberDispatches++ === 256) {
-                    $this->_throwDispatchException('Dispatcher has detected a cyclic routing causing stability problems', self::EXCEPTION_CYCLIC_ROUTING);
+                    $this->_throwDispatchException('Dispatcher has detected a cyclic routing causing stability problems',
+                      self::EXCEPTION_CYCLIC_ROUTING);
                     break;
                 }
 
@@ -401,7 +404,9 @@ namespace ManaPHP\Mvc {
                 $controllerClass = $this->getControllerClass();
 
                 if (!$this->_dependencyInjector->has($controllerClass) && !class_exists($controllerClass)) {
-                    if ($this->_throwDispatchException($controllerClass . ' handler class cannot be loaded', self::EXCEPTION_CONTROLLER_NOT_FOUND) === false) {
+                    if ($this->_throwDispatchException($controllerClass . ' handler class cannot be loaded',
+                        self::EXCEPTION_CONTROLLER_NOT_FOUND) === false
+                    ) {
                         if ($this->_finished === false) {
                             continue;
                         }
@@ -413,7 +418,9 @@ namespace ManaPHP\Mvc {
                 $controller = $this->_dependencyInjector->getShared($controllerClass);
                 $wasFreshInstance = $this->_dependencyInjector->wasFreshInstance();
                 if (!is_object($controller)) {
-                    if ($this->_throwDispatchException('Invalid handler returned from the services container', self::EXCEPTION_INVALID_CONTROLLER) === false) {
+                    if ($this->_throwDispatchException('Invalid handler returned from the services container',
+                        self::EXCEPTION_INVALID_CONTROLLER) === false
+                    ) {
                         if ($this->_finished === false) {
                             continue;
                         }
@@ -694,7 +701,8 @@ namespace ManaPHP\Mvc {
         protected function _throwDispatchException($message, $exceptionCode = 0)
         {
             if (!is_object($this->_dependencyInjector)) {
-                throw new Exception("A dependency injection container is required to access the 'response' service", self::EXCEPTION_NO_DI);
+                throw new Exception("A dependency injection container is required to access the 'response' service",
+                  self::EXCEPTION_NO_DI);
             }
 
             $response = $this->_dependencyInjector->getShared('response');
