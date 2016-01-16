@@ -6,8 +6,6 @@
  */
 namespace ManaPHP\Events;
 
-use ManaPHP\Di\Injectable;
+interface ListenerInterface{
 
-class Listener extends Injectable{
-    
 }
