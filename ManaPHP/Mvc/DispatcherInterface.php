@@ -7,16 +7,6 @@ namespace ManaPHP\Mvc {
      */
     interface DispatcherInterface
     {
-
-        /**
-         * Sets the default action suffix
-         *
-         * @param string $actionSuffix
-         * @return static
-         */
-        public function setActionSuffix($actionSuffix);
-
-
         /**
          * Sets the default namespace
          *
@@ -133,13 +123,6 @@ namespace ManaPHP\Mvc {
          * @return boolean
          */
         public function wasForwarded();
-
-        /**
-         * Sets the default controller suffix
-         *
-         * @param string $controllerSuffix
-         */
-        public function setControllerSuffix($controllerSuffix);
 
 
         /**

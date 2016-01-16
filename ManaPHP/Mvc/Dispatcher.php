@@ -139,18 +139,6 @@ namespace ManaPHP\Mvc {
         {
         }
 
-        /**
-         * Sets the default action suffix
-         *
-         * @param string $actionSuffix
-         * @return static
-         */
-        public function setActionSuffix($actionSuffix)
-        {
-            $this->_actionSuffix = $actionSuffix;
-            return $this;
-        }
-
 
         /**
          * Sets the module where the controller is (only informative)
@@ -605,17 +593,6 @@ namespace ManaPHP\Mvc {
                 $this->_actionName = $this->_defaultAction;
             }
         }
-
-        /**
-         * Sets the default controller suffix
-         *
-         * @param string $controllerSuffix
-         */
-        public function setControllerSuffix($controllerSuffix)
-        {
-            $this->_controllerSuffix = $controllerSuffix;
-        }
-
 
         /**
          * Sets the default controller name
