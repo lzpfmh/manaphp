@@ -121,59 +121,12 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Appends template before controller layout
-         *
-         * @param string|array $templateBefore
-         */
-        public function setTemplateBefore($templateBefore);
-
-
-        /**
-         * Resets any template before layouts
-         *
-         */
-        public function cleanTemplateBefore();
-
-
-        /**
-         * Appends template after controller layout
-         *
-         * @param string|array $templateAfter
-         */
-        public function setTemplateAfter($templateAfter);
-
-
-        /**
-         * Resets any template before layouts
-         *
-         */
-        public function cleanTemplateAfter();
-
-
-        /**
-         * Adds parameters to views (alias of setVar)
-         *
-         * @param string $key
-         * @param mixed $value
-         */
-        public function setParamToView($key, $value);
-
-
-        /**
          * Adds parameters to views
          *
          * @param string $key
          * @param mixed $value
          */
         public function setVar($key, $value);
-
-
-        /**
-         * Returns parameters to views
-         *
-         * @return array
-         */
-        public function getParamsToView();
 
 
         /**
