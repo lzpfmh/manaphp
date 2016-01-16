@@ -4,6 +4,7 @@ namespace ManaPHP\Mvc {
 
     use ManaPHP\Di\InjectionAware;
     use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\DiInterface;
     use ManaPHP\Events\EventsAware;
     use ManaPHP\Events\EventsAwareInterface;
     use ManaPHP\Mvc\Dispatcher\Exception;
@@ -349,7 +350,7 @@ namespace ManaPHP\Mvc {
          */
         public function dispatch()
         {
-            if (!is_object($this->_dependencyInjector)) {
+            if (!$this->_dependencyInjector instanceof DiInterface) {
                 throw new Exception('A dependency injection container is required to access related dispatching services');
             }
 
@@ -371,7 +372,7 @@ namespace ManaPHP\Mvc {
                 $this->_resolveEmptyProperties();
 
                 if ($this->fireEvent('dispatcher:beforeDispatch', $this) === false) {
-                    continue;
+                    return false;
                 }
 
                 if ($this->_finished === false) {
@@ -381,15 +382,15 @@ namespace ManaPHP\Mvc {
                 $controllerClass = $this->getControllerClass();
 
                 if (!$this->_dependencyInjector->has($controllerClass) && !class_exists($controllerClass)) {
-                    if ($this->_throwDispatchException($controllerClass . ' handler class cannot be loaded',
-                        self::EXCEPTION_CONTROLLER_NOT_FOUND) === false
-                    ) {
-                        if ($this->_finished === false) {
-                            continue;
-                        }
+                    if($this->fireEvent('dispatcher:beforeNotFoundController',$this)===false){
+                        return false;
                     }
 
-                    break;
+                    if($this->_finished ===false){
+                        continue;
+                    }
+					
+                    throw new Exception('handler class cannot be loaded: '.$controllerClass);
                 }
 
                 $controller = $this->_dependencyInjector->getShared($controllerClass);
@@ -410,16 +411,7 @@ namespace ManaPHP\Mvc {
                         continue;
                     }
 
-
-                    if ($this->_throwDispatchException('Action \'' . $this->_actionName . '\' was not found on handler \'' . $controllerClass . '\'',
-                        self::EXCEPTION_ACTION_NOT_FOUND) === false
-                    ) {
-                        if ($this->_finished === false) {
-                            continue;
-                        }
-                    }
-
-                    break;
+                    throw new Exception('Action \'' . $this->_actionName . '\' was not found on handler \'' . $controllerClass . '\'');
                 }
 
                 // Calling beforeExecuteRoute as callback
@@ -439,18 +431,8 @@ namespace ManaPHP\Mvc {
                     }
                 }
 
-                try {
-                    $this->_returnedValue = call_user_func_array([$controller, $actionMethod], $this->_params);
-                    $this->_lastController = $controller;
-                } catch (\Exception $e) {
-                    if ($this->_handleException($e) === false) {
-                        if ($this->_finished === false) {
-                            continue;
-                        }
-                    } else {
-                        throw $e;
-                    }
-                }
+                $this->_returnedValue = call_user_func_array([$controller, $actionMethod], $this->_params);
+                $this->_lastController = $controller;
 
                 $value = null;
 
