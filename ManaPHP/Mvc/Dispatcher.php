@@ -374,7 +374,7 @@ namespace ManaPHP\Mvc {
                 return false;
             }
 
-            if ($this->fireEvent('dispatch:beforeDispatchLoop', $this) === false) {
+            if ($this->fireEvent('dispatcher:beforeDispatchLoop', $this) === false) {
                 return false;
             }
 
@@ -393,7 +393,7 @@ namespace ManaPHP\Mvc {
 
                 $this->_resolveEmptyProperties();
 
-                if ($this->fireEvent('dispatch:beforeDispatch', $this) === false) {
+                if ($this->fireEvent('dispatcher:beforeDispatch', $this) === false) {
                     continue;
                 }
 
@@ -432,7 +432,7 @@ namespace ManaPHP\Mvc {
 
                 $actionMethod = $this->_actionName . $this->_actionSuffix;
                 if (!method_exists($controller, $actionMethod)) {
-                    if ($this->fireEvent('dispatch:beforeNotFoundAction', $this) === false) {
+                    if ($this->fireEvent('dispatcher:beforeNotFoundAction', $this) === false) {
                         continue;
                     }
 
@@ -485,7 +485,7 @@ namespace ManaPHP\Mvc {
                 $value = null;
 
                 // Call afterDispatch
-                $this->fireEvent('dispatch:afterDispatch', $this);
+                $this->fireEvent('dispatcher:afterDispatch', $this);
 
                 if (method_exists($controller, 'afterExecuteRoute')) {
                     if ($controller->afterExecuteRoute($this, $value) === false) {
@@ -498,7 +498,7 @@ namespace ManaPHP\Mvc {
                 }
             }
 
-            $this->fireEvent('dispatch:afterDispatchLoop', $this);
+            $this->fireEvent('dispatcher:afterDispatchLoop', $this);
 
             return $controller;
         }
