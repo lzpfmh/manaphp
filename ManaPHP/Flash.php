@@ -44,11 +44,11 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $message
-         * @return string
+         * @return void
          */
         public function error($message)
         {
-            return $this->_message('error', $message);
+            $this->_message('error', $message);
         }
 
 
@@ -60,11 +60,11 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $message
-         * @return string
+         * @return void
          */
         public function notice($message)
         {
-            return $this->_message('notice', $message);
+            $this->_message('notice', $message);
         }
 
 
@@ -76,11 +76,11 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $message
-         * @return string
+         * @return void
          */
         public function success($message)
         {
-            return $this->_message('notice', $message);
+            $this->_message('notice', $message);
         }
 
 
@@ -92,11 +92,11 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $message
-         * @return string
+         * @return void
          */
         public function warning($message)
         {
-            return $this->_message('warning', $message);
+            $this->_message('warning', $message);
         }
 
         /**
