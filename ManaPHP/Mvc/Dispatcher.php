@@ -35,15 +35,9 @@ namespace ManaPHP\Mvc {
     {
         use EventsAware, InjectionAware;
 
-        const EXCEPTION_NO_DI = 0;
-
-        const EXCEPTION_CYCLIC_ROUTING = 1;
-
         const EXCEPTION_CONTROLLER_NOT_FOUND = 2;
 
         const EXCEPTION_INVALID_CONTROLLER = 3;
-
-        const EXCEPTION_INVALID_PARAMS = 4;
 
         const EXCEPTION_ACTION_NOT_FOUND = 5;
 
@@ -259,7 +253,7 @@ namespace ManaPHP\Mvc {
         public function setParams($params)
         {
             if (!is_array($params)) {
-                $this->_throwDispatchException('Parameters must be an Array');
+                throw new Exception('Parameters must be an Array');
             }
             $this->_params = $params;
 
@@ -312,8 +306,7 @@ namespace ManaPHP\Mvc {
             }
 
             if (!is_object($this->_dependencyInjector)) {
-                $this->_throwDispatchException("A dependency injection object is required to access the 'filter' service",
-                  self::EXCEPTION_NO_DI);
+                throw new Exception("A dependency injection object is required to access the 'filter' service");
             }
 
             return null;
@@ -495,8 +488,7 @@ namespace ManaPHP\Mvc {
         public function forward($forward)
         {
             if (!is_array($forward)) {
-                $this->_throwDispatchException('Forward parameter must be an Array');
-                return;
+                throw new Exception('Forward parameter must be an Array');
             }
 
             $this->_previousControllerClass = $this->getControllerClass();
@@ -667,8 +659,7 @@ namespace ManaPHP\Mvc {
         protected function _throwDispatchException($message, $exceptionCode = 0)
         {
             if (!is_object($this->_dependencyInjector)) {
-                throw new Exception("A dependency injection container is required to access the 'response' service",
-                  self::EXCEPTION_NO_DI);
+                throw new Exception("A dependency injection container is required to access the 'response' service");
             }
 
             $response = $this->_dependencyInjector->getShared('response');
