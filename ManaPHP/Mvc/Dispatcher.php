@@ -414,16 +414,9 @@ namespace ManaPHP\Mvc {
                 $controller = $this->_dependencyInjector->getShared($controllerClass);
                 $wasFreshInstance = $this->_dependencyInjector->wasFreshInstance();
                 if (!is_object($controller)) {
-                    if ($this->_throwDispatchException('Invalid handler returned from the services container',
-                        self::EXCEPTION_INVALID_CONTROLLER) === false
-                    ) {
-                        if ($this->_finished === false) {
-                            continue;
-                        }
-                    }
-
-                    break;
+                    throw new Exception('Invalid handler type returned from the services container: '.gettype($controller));
                 }
+
                 $this->_activeController = $controller;
 
                 $actionMethod = $this->_actionName . $this->_actionSuffix;
