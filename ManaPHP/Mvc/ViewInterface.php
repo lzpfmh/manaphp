@@ -25,38 +25,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Sets the layouts sub-directory. Must be a directory under the views directory. Depending of your platform, always add a trailing slash or backslash
-         *
-         * @param string $layoutsDir
-         */
-        public function setLayoutsDir($layoutsDir);
-
-
-        /**
-         * Gets the current layouts sub-directory
-         *
-         * @return string
-         */
-        public function getLayoutsDir();
-
-
-        /**
-         * Sets a partials sub-directory. Must be a directory under the views directory. Depending of your platform, always add a trailing slash or backslash
-         *
-         * @param string $partialsDir
-         */
-        public function setPartialsDir($partialsDir);
-
-
-        /**
-         * Gets the current partials sub-directory
-         *
-         * @return string
-         */
-        public function getPartialsDir();
-
-
-        /**
          * Sets base path. Depending of your platform, always add a trailing slash or backslash
          *
          * @param string $basePath
@@ -86,22 +54,6 @@ namespace ManaPHP\Mvc {
          * @param string $level
          */
         public function setRenderLevel($level);
-
-
-        /**
-         * Sets default view name. Must be a file without extension in the views directory
-         *
-         * @param string $viewPath
-         */
-        public function setMainView($viewPath);
-
-
-        /**
-         * Returns the name of the main view
-         *
-         * @return string
-         */
-        public function getMainView();
 
 
         /**
