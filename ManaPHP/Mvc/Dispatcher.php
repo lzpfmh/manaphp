@@ -369,9 +369,7 @@ namespace ManaPHP\Mvc {
         public function dispatch()
         {
             if (!is_object($this->_dependencyInjector)) {
-                $this->_throwDispatchException('A dependency injection container is required to access related dispatching services',
-                  self::EXCEPTION_NO_DI);
-                return false;
+                throw new Exception('A dependency injection container is required to access related dispatching services');
             }
 
             if ($this->fireEvent('dispatcher:beforeDispatchLoop', $this) === false) {
@@ -385,10 +383,8 @@ namespace ManaPHP\Mvc {
                 // if the user made a forward in the listener,the $this->_finished will be changed to false.
                 $this->_finished = true;
 
-                if ($numberDispatches++ === 256) {
-                    $this->_throwDispatchException('Dispatcher has detected a cyclic routing causing stability problems',
-                      self::EXCEPTION_CYCLIC_ROUTING);
-                    break;
+                if ($numberDispatches++ === 32) {
+                    throw new Exception('Dispatcher has detected a cyclic routing causing stability problems');
                 }
 
                 $this->_resolveEmptyProperties();
