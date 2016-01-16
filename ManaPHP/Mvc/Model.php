@@ -337,7 +337,7 @@ namespace ManaPHP\Mvc {
          * @param int|string|array $parameters
          * @param $cacheOptions
          * @return static
-         * @throws \ManaPHP\Mvc\Model\Exception | \ManaPHP\Di\Exception
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
         public static function findFirst($parameters = null, $cacheOptions = null)
         {
@@ -549,7 +549,7 @@ namespace ManaPHP\Mvc {
          * @param array $parameters
          * @param array $cacheOptions
          * @return mixed
-         * @throws \ManaPHP\Di\Exception |\ManaPHP\Mvc\Model\Exception
+         * @throws \ManaPHP\Di\Exception|\ManaPHP\Mvc\Model\Exception
          */
         public static function sum($column, $parameters = null, $cacheOptions = null)
         {
