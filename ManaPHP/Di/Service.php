@@ -10,7 +10,7 @@ namespace ManaPHP\Di {
      *<code>
      * $service = new ManaPHP\Di\Service('request', 'ManaPHP\Http\Request');
      * $request = $service->resolve();
-     *<code>
+     *</code>
      *
      */
     class Service implements ServiceInterface
