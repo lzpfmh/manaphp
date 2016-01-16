@@ -295,7 +295,8 @@ namespace ManaPHP\Mvc {
                              * Check if the view process has been treated by the developer
                              */
                             if ($renderStatus !== false) {
-                                $view->render($dispatcher->getControllerName(), $dispatcher->getActionName(), $dispatcher->getParams());
+                                $view->render($dispatcher->getControllerName(), $dispatcher->getActionName(),
+                                  $dispatcher->getParams());
                             }
                         }
                     }
