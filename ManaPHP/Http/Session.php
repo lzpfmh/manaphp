@@ -12,7 +12,7 @@ namespace ManaPHP\Http {
     /**
      * ManaPHP\Http\Session\AdapterInterface initializer
      */
-    class Session implements SessionInterface
+    class Session implements SessionInterface, \ArrayAccess
     {
 
         public function __construct($options = null)

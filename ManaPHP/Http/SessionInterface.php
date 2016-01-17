@@ -5,7 +5,7 @@ namespace ManaPHP\Http {
     /**
      * ManaPHP\Http\Session\AdapterInterface initializer
      */
-    interface SessionInterface extends \ArrayAccess
+    interface SessionInterface
     {
 
         /**
