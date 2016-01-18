@@ -3,7 +3,7 @@
 namespace ManaPHP\Events {
 
     /**
-     * ManaPHP\Events\Event
+     * ManaPHP\Event\Event
      *
      * This class offers contextual information of a fired event in the EventsManager
      */
@@ -18,7 +18,7 @@ namespace ManaPHP\Events {
         protected $_type;
 
         /**
-         * \ManaPHP\Events\Event constructor
+         * \ManaPHP\Event\Event constructor
          *
          * @param string $type
          */
