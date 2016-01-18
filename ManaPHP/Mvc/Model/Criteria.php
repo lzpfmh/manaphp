@@ -2,7 +2,7 @@
 
 namespace ManaPHP\Mvc\Model {
 
-    use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Component;
 
     /**
      * ManaPHP\Mvc\Model\Criteria
@@ -19,7 +19,7 @@ namespace ManaPHP\Mvc\Model {
      *    ->execute();
      *</code>
      */
-    class Criteria implements CriteriaInterface, InjectionAwareInterface
+    class Criteria extends Component implements CriteriaInterface
     {
 
         protected $_model;
