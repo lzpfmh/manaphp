@@ -4,8 +4,8 @@ namespace ManaPHP\Mvc {
 
     use ManaPHP\Di\InjectionAware;
     use ManaPHP\Di\InjectionAwareInterface;
-    use ManaPHP\Events\EventsAware;
-    use ManaPHP\Events\EventsAwareInterface;
+    use ManaPHP\Event\EventAware;
+    use ManaPHP\Event\EventAwareInterface;
     use ManaPHP\Mvc\Router\Exception;
     use ManaPHP\Mvc\Router\Route;
 
@@ -35,9 +35,9 @@ namespace ManaPHP\Mvc {
      *</code>
      *
      */
-    class Router implements RouterInterface, InjectionAwareInterface, EventsAwareInterface
+    class Router implements RouterInterface, InjectionAwareInterface, EventAwareInterface
     {
-        use EventsAware, InjectionAware;
+        use EventAware, InjectionAware;
 
         const URI_SOURCE_GET_URL = 0;
 

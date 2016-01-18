@@ -11,7 +11,7 @@ namespace PHPSTORM_META {                                // we want to avoid the
         'response' instanceof \ManaPHP\Http\ResponseInterface,
         'cookies' instanceof \ManaPHP\Http\Response\CookiesInterface,
         'session' instanceof \ManaPHP\Http\SessionInterface,
-        'eventsManager' instanceof \ManaPHP\Events\ManagerInterface,
+        'eventsManager' instanceof \ManaPHP\Event\ManagerInterface,
         'db' instanceof \ManaPHP\DbInterface,
         'modelsManager' instanceof \ManaPHP\Mvc\Model\ManagerInterface,
         'modelsMetadata' instanceof \ManaPHP\Mvc\Model\MetadataInterface,

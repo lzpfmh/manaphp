@@ -4,12 +4,12 @@ namespace ManaPHP {
 
     use ManaPHP\Db\ConditionParser;
     use ManaPHP\Db\PrepareEmulation;
-    use ManaPHP\Events\EventsAware;
-    use ManaPHP\Events\EventsAwareInterface;
+    use ManaPHP\Event\EventAware;
+    use ManaPHP\Event\EventAwareInterface;
 
-    class Db implements EventsAwareInterface, DbInterface
+    class Db implements EventAwareInterface, DbInterface
     {
-        use EventsAware;
+        use EventAware;
         /**
          * Descriptor used to connect to a database
          *

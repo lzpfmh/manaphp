@@ -57,7 +57,7 @@ namespace ManaPHP\Mvc {
 
         protected $_layout;
 
-        protected $_layoutsDir;
+        protected $_layoutsDir='Layouts';
 
         protected $_partialsDir;
 
@@ -404,10 +404,34 @@ namespace ManaPHP\Mvc {
          * @param string $controllerName
          * @param string $actionName
          * @param array $params
-         * @return \ManaPHP\Mvc\View
+         * @return static
          */
         public function render($controllerName, $actionName, $params = null)
         {
+            $this->_controllerName=$controllerName;
+            $this->_actionName=$actionName;
+            $this->_params=$params;
+
+            $this->_currentRenderLevel=0;
+
+            /**
+             * If the view is disabled we simply update the buffer from any output produced in the controller
+             */
+            if($this->_disabled){
+                $this->_content=ob_get_contents();
+                return false;
+            }
+
+
+
+            if($this->_pickView ===null){
+                $renderView=$controllerName.'/'.$actionName;
+                $layoutName=$this->_layoutsDir;
+            }else{
+
+            }
+
+
         }
 
 

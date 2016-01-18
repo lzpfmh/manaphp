@@ -5,12 +5,12 @@
  * Date: 2015/12/20
  * Time: 16:00
  */
-namespace ManaPHP\Events {
+namespace ManaPHP\Event {
 
-    trait EventsAware
+    trait EventAware
     {
         /**
-         * @var \ManaPHP\Events\Manager
+         * @var \ManaPHP\Event\Manager
          */
         protected $_trait_eventsManager = null;
         protected static $_trait_eventPeeks;
@@ -20,7 +20,7 @@ namespace ManaPHP\Events {
          *
          * @param string $event
          * @param object|callable $handler
-         * @throws \ManaPHP\Events\Exception
+         * @throws \ManaPHP\Event\Exception
          */
         public function attachEvent($event, $handler)
         {

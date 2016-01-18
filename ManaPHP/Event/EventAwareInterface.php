@@ -1,11 +1,11 @@
 <?php
 
-namespace ManaPHP\Events {
+namespace ManaPHP\Event {
 
     /**
-     * ManaPHP\Event\EventsAwareInterface initializer
+     * ManaPHP\Event\EventAwareInterface initializer
      */
-    interface EventsAwareInterface
+    interface EventAwareInterface
     {
 
         /**

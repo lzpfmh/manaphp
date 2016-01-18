@@ -180,7 +180,7 @@ namespace ManaPHP\Mvc {
          *
          * @param string $uri
          * @return \ManaPHP\Http\ResponseInterface|boolean
-         * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Events\Exception
+         * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Event\Exception
          */
         public function handle($uri = null)
         {

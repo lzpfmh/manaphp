@@ -3,8 +3,8 @@
 namespace ManaPHP\Di {
 
     use ManaPHP\Di;
-    use ManaPHP\Events\EventsAware;
-    use ManaPHP\Events\EventsAwareInterface;
+    use ManaPHP\Event\EventAware;
+    use ManaPHP\Event\EventAwareInterface;
 
     /**
      * ManaPHP\Di\Injectable
@@ -19,7 +19,7 @@ namespace ManaPHP\Di {
      * @property \ManaPHP\Flash\Direct $flash
      * @property \ManaPHP\Flash\Session $flashSession
      * @property \ManaPHP\Http\SessionInterface $session
-     * @property \ManaPHP\Events\ManagerInterface $eventsManager
+     * @property \ManaPHP\Event\ManagerInterface $eventsManager
      * @property \ManaPHP\DbInterface $db
      * @property \ManaPHP\Security $security
      * @property \ManaPHP\CryptInterface $crypt
@@ -32,9 +32,9 @@ namespace ManaPHP\Di {
      * @property \ManaPHP\Session\BagInterface $persistent
      * @property \ManaPHP\Mvc\ViewInterface $view
      */
-    abstract class Injectable implements InjectionAwareInterface, EventsAwareInterface
+    abstract class Injectable implements InjectionAwareInterface, EventAwareInterface
     {
-        use EventsAware, InjectionAware;
+        use EventAware, InjectionAware;
 
         /**
          * Returns the internal dependency injector

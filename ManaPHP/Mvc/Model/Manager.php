@@ -4,8 +4,8 @@ namespace ManaPHP\Mvc\Model {
 
     use ManaPHP\Di\InjectionAware;
     use ManaPHP\Di\InjectionAwareInterface;
-    use ManaPHP\Events\EventsAware;
-    use ManaPHP\Events\EventsAwareInterface;
+    use ManaPHP\Event\EventAware;
+    use ManaPHP\Event\EventAwareInterface;
 
     /**
      * ManaPHP\Mvc\Model\Manager
@@ -25,9 +25,9 @@ namespace ManaPHP\Mvc\Model {
      * $robot = new Robots($di);
      * </code>
      */
-    class Manager implements ManagerInterface, InjectionAwareInterface, EventsAwareInterface
+    class Manager implements ManagerInterface, InjectionAwareInterface, EventAwareInterface
     {
-        use EventsAware, InjectionAware;
+        use EventAware, InjectionAware;
 
         protected $_readConnectionServices = [];
 

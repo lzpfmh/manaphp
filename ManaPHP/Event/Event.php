@@ -1,6 +1,6 @@
 <?php
 
-namespace ManaPHP\Events {
+namespace ManaPHP\Event {
 
     /**
      * ManaPHP\Event\Event

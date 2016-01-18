@@ -1,6 +1,6 @@
 <?php
 
-namespace ManaPHP\Events {
+namespace ManaPHP\Event {
 
     /**
      * ManaPHP\Event\Manager
@@ -24,7 +24,7 @@ namespace ManaPHP\Events {
          * @param string $event
          * @param object|callable $handler
          * @return static
-         * @throws \ManaPHP\Events\Exception
+         * @throws \ManaPHP\Event\Exception
          */
         public function attachEvent($event, $handler)
         {
@@ -63,7 +63,7 @@ namespace ManaPHP\Events {
          * @param object $source
          * @param mixed $data
          * @return boolean|null
-         * @throws \ManaPHP\Events\Exception
+         * @throws \ManaPHP\Event\Exception
          */
         public function fireEvent($event, $source, $data = null)
         {

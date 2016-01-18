@@ -8,12 +8,12 @@
 namespace ManaPHP\Mvc\Dispatcher {
 
     use ManaPHP\Di\Injectable;
-    use ManaPHP\Events\ListenerInterface;
+    use ManaPHP\Event\ListenerInterface;
 
     class Listener extends Injectable implements ListenerInterface
     {
         /**
-         * @param \ManaPHP\Events\Event $event
+         * @param \ManaPHP\Event\Event $event
          * @param \ManaPHP\Mvc\Dispatcher $dispatcher
          * @return bool
          */
@@ -23,7 +23,7 @@ namespace ManaPHP\Mvc\Dispatcher {
         }
 
         /**
-         * @param \ManaPHP\Events\Event $event
+         * @param \ManaPHP\Event\Event $event
          * @param \ManaPHP\Mvc\Dispatcher $dispatcher
          * @return bool
          */
@@ -33,7 +33,7 @@ namespace ManaPHP\Mvc\Dispatcher {
         }
 
         /**
-         * @param \ManaPHP\Events\Event $event
+         * @param \ManaPHP\Event\Event $event
          * @param \ManaPHP\Mvc\Dispatcher $dispatcher
          * @return void
          */

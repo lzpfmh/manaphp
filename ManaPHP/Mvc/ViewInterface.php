@@ -207,13 +207,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Resets the view component to its factory default values
-         *
-         */
-        public function reset();
-
-
-        /**
          * Whether the automatic rendering is disabled
          *
          * @return bool

@@ -2,12 +2,12 @@
 
 namespace ManaPHP {
 
-    use ManaPHP\Events\EventsAwareInterface;
+    use ManaPHP\Event\EventAwareInterface;
 
     /**
      * \ManaPHP\Db\AdapterInterface initializer
      */
-    interface DbInterface extends EventsAwareInterface
+    interface DbInterface extends EventAwareInterface
     {
 
         /**
