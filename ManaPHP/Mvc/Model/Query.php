@@ -2,7 +2,7 @@
 
 namespace ManaPHP\Mvc\Model {
 
-    use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Component;
     use ManaPHP\Mvc\Application;
 
     /**
@@ -27,7 +27,7 @@ namespace ManaPHP\Mvc\Model {
      *
      *</code>
      */
-    class Query implements QueryInterface, InjectionAwareInterface
+    class Query extends Component implements QueryInterface
     {
 
         const TYPE_SELECT = 309;
