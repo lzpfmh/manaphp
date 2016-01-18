@@ -2,9 +2,9 @@
 
 namespace ManaPHP\Mvc {
 
+    use ManaPHP\Component;
     use ManaPHP\Db\ConditionParser;
     use ManaPHP\Di;
-    use ManaPHP\Di\InjectionAwareInterface;
     use ManaPHP\Mvc\Model\Exception;
 
     /**
@@ -36,10 +36,8 @@ namespace ManaPHP\Mvc {
      * </code>
      *
      */
-    class Model implements ModelInterface, InjectionAwareInterface, \Serializable
+    class Model extends Component implements ModelInterface, \Serializable
     {
-        use Di\InjectionAware;
-
         /**
          * @var \ManaPHP\Mvc\Model\ManagerInterface
          */
