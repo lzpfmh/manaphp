@@ -2,8 +2,8 @@
 
 namespace ManaPHP\Mvc {
 
+    use ManaPHP\Component;
     use ManaPHP\Di\FactoryDefault;
-    use ManaPHP\Di\Injectable;
     use ManaPHP\Http\ResponseInterface;
     use ManaPHP\Mvc\Application\Exception;
 
@@ -50,7 +50,7 @@ namespace ManaPHP\Mvc {
      *
      *</code>
      */
-    class Application extends Injectable
+    class Application extends Component
     {
 
         /**
