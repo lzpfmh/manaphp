@@ -2,7 +2,6 @@
 
 namespace ManaPHP {
 
-    use ManaPHP\Di\InjectionAwareInterface;
     use ManaPHP\Di\Service;
 
     /**
@@ -130,7 +129,7 @@ namespace ManaPHP {
                 }
             }
 
-            if (is_object($instance) && $instance instanceof InjectionAwareInterface) {
+            if (is_object($instance) && $instance instanceof ComponentInterface) {
                 $instance->setDI($this);
             }
 
