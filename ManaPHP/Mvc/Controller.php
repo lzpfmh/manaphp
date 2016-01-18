@@ -2,7 +2,7 @@
 
 namespace ManaPHP\Mvc {
 
-    use ManaPHP\Di\Injectable;
+    use ManaPHP\Component;
 
     /**
      * ManaPHP\Mvc\Controller
@@ -39,7 +39,7 @@ namespace ManaPHP\Mvc {
      *
      *</code>
      */
-    abstract class Controller extends Injectable implements ControllerInterface
+    abstract class Controller extends Component implements ControllerInterface
     {
 
         /**
