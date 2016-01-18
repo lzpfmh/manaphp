@@ -2,18 +2,15 @@
 
 namespace ManaPHP\Http {
 
-    use ManaPHP\Di\InjectionAware;
-    use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Component;
 
     /**
      * ManaPHP\Http\Cookie
      *
      * Provide OO wrappers to manage a HTTP cookie
      */
-    class Cookie implements InjectionAwareInterface
+    class Cookie extends Component
     {
-        use InjectionAware;
-
         protected $_readed;
 
         protected $_restored;
