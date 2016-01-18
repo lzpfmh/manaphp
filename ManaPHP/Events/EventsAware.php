@@ -28,7 +28,7 @@ namespace ManaPHP\Events {
                 $this->_trait_eventsManager = new Manager();
             }
 
-            $this->_trait_eventsManager->attach($event, $handler);
+            $this->_trait_eventsManager->attachEvent($event, $handler);
         }
 
 
@@ -50,7 +50,7 @@ namespace ManaPHP\Events {
 
             if ($this->_trait_eventsManager !== null) {
                 /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-                return $this->_trait_eventsManager->fire($event, $source, $data);
+                return $this->_trait_eventsManager->fireEvent($event, $source, $data);
             }
 
             return null;

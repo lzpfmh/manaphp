@@ -18,7 +18,7 @@ namespace ManaPHP\Events {
          * @param string $event
          * @param object|callable $handler
          */
-        public function attach($event, $handler);
+        public function attachEvent($event, $handler);
 
 
         /**
@@ -28,6 +28,6 @@ namespace ManaPHP\Events {
          * @param object $source
          * @param mixed $data
          */
-        public function fire($event, $source, $data = null);
+        public function fireEvent($event, $source, $data = null);
     }
 }

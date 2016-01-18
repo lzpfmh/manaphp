@@ -26,7 +26,7 @@ namespace ManaPHP\Events {
          * @return static
          * @throws \ManaPHP\Events\Exception
          */
-        public function attach($event, $handler)
+        public function attachEvent($event, $handler)
         {
             if (!is_object($handler)) {
                 throw new Exception('Event handler must be an Object');
@@ -65,7 +65,7 @@ namespace ManaPHP\Events {
          * @return boolean|null
          * @throws \ManaPHP\Events\Exception
          */
-        public function fire($event, $source, $data = null)
+        public function fireEvent($event, $source, $data = null)
         {
             if (strpos($event, ':') === false) {
                 throw new Exception('Invalid event type ' . $event);
