@@ -390,7 +390,7 @@ namespace ManaPHP\Mvc {
                         continue;
                     }
 					
-                    throw new Exception('handler class cannot be loaded: '.$controllerClass);
+                    throw new Exception($controllerClass.' handler class cannot be loaded');
                 }
 
                 $controller = $this->_dependencyInjector->getShared($controllerClass);

@@ -130,18 +130,6 @@ class tDispatcher extends \ManaPHP\Mvc\Dispatcher{
 
 
 class MvcDispatcherTest extends TestCase{
-    public function test_setActionSuffix(){
-        $dispatcher =new tDispatcher();
-
-        $dispatcher->setActionSuffix('');
-        $this->assertEquals('',$dispatcher->getActionSuffix());
-
-        $dispatcher->setActionSuffix('_ACTION');
-        $this->assertEquals('_ACTION',$dispatcher->getActionSuffix());
-
-        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setActionSuffix(''));
-        $this->assertInstanceOf('tDispatcher',$dispatcher->setActionSuffix(''));
-    }
 
     public function test_setDefaultNamespace(){
         $dispatcher =new tDispatcher();
