@@ -2,8 +2,7 @@
 
 namespace ManaPHP\Mvc\Model {
 
-    use ManaPHP\Di\InjectionAware;
-    use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Component;
 
     /**
      * ManaPHP\Mvc\Model\MetaData
@@ -21,10 +20,8 @@ namespace ManaPHP\Mvc\Model {
      * </code>
      *
      */
-    abstract class MetaData implements InjectionAwareInterface, MetaDataInterface
+    abstract class MetaData extends Component implements MetaDataInterface
     {
-        use InjectionAware;
-
         const MODELS_ATTRIBUTES = 0;
 
         const MODELS_PRIMARY_KEY = 1;
