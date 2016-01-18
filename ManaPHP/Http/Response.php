@@ -2,8 +2,8 @@
 
 namespace ManaPHP\Http {
 
+    use ManaPHP\Component;
     use ManaPHP\Di;
-    use ManaPHP\Di\InjectionAwareInterface;
     use ManaPHP\Http\Response\Exception;
     use ManaPHP\Http\Response\Headers;
     use ManaPHP\Mvc\ViewInterface;
@@ -22,9 +22,8 @@ namespace ManaPHP\Http {
      *    $response->send();
      *</code>
      */
-    class Response implements ResponseInterface, InjectionAwareInterface
+    class Response extends Component implements ResponseInterface
     {
-        use Di\InjectionAware;
         /**
          * @var boolean
          */
