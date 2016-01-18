@@ -7,10 +7,10 @@
  */
 namespace ManaPHP\Mvc\Dispatcher {
 
-    use ManaPHP\Di\Injectable;
+    use ManaPHP\Component;
     use ManaPHP\Event\ListenerInterface;
 
-    class Listener extends Injectable implements ListenerInterface
+    class Listener extends Component implements ListenerInterface
     {
         /**
          * @param \ManaPHP\Event\Event $event
