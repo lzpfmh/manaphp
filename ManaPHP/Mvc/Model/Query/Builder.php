@@ -2,9 +2,9 @@
 
 namespace ManaPHP\Mvc\Model\Query {
 
+    use ManaPHP\Component;
     use ManaPHP\Db\ConditionParser;
     use ManaPHP\Di;
-    use ManaPHP\Di\InjectionAwareInterface;
     use ManaPHP\Mvc\Model\Exception;
     use ManaPHP\Mvc\Model\Query;
 
@@ -23,10 +23,8 @@ namespace ManaPHP\Mvc\Model\Query {
      *   ->execute();
      *</code>
      */
-    class Builder implements BuilderInterface, InjectionAwareInterface
+    class Builder extends Component implements BuilderInterface
     {
-        use Di\InjectionAware;
-
         protected $_columns;
 
         /**
