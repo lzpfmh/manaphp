@@ -6,7 +6,8 @@
  */
 namespace ManaPHP\Mvc\User;
 
-use ManaPHP\Di\Injectable;
+use ManaPHP\Component;
+
 
 /**
  * ManaPHP\Mvc\User\Plugin
@@ -14,6 +15,6 @@ use ManaPHP\Di\Injectable;
  * This class can be used to provide user plugins an easy access to services
  * in the application
  */
-class Plugin extends Injectable{
+class Plugin extends Component{
 
 }
