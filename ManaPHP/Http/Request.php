@@ -2,8 +2,7 @@
 
 namespace ManaPHP\Http {
 
-    use ManaPHP\Di\InjectionAware;
-    use ManaPHP\Di\InjectionAwareInterface;
+    use ManaPHP\Component;
     use ManaPHP\Http\Request\Exception;
     use ManaPHP\Http\Request\File;
 
@@ -25,10 +24,8 @@ namespace ManaPHP\Http {
      *</code>
      *
      */
-    class Request implements RequestInterface, InjectionAwareInterface
+    class Request extends Component implements RequestInterface
     {
-        use InjectionAware;
-
         protected $_rawBody;
 
         /**
