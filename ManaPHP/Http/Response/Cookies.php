@@ -74,7 +74,7 @@ namespace ManaPHP\Http\Response {
                 $cookie = $this->_dependencyInjector->get('ManaPHP\Http\Cookie',
                   [$name, $value, $expire, $path, $secure, $domain, $httpOnly]);
 
-                $cookie->setDI($this->_dependencyInjector);
+                $cookie->setDi($this->_dependencyInjector);
                 $cookie->useEncryption($this->_useEncryption);
                 $this->_cookies[$name] = $cookie;
             } else {
@@ -116,7 +116,7 @@ namespace ManaPHP\Http\Response {
 
             $cookie = $this->_dependencyInjector->get('ManaPHP\Http\Cookie', [$name]);
             if (is_object($this->_dependencyInjector)) {
-                $cookie->setDI($this->_dependencyInjector);
+                $cookie->setDi($this->_dependencyInjector);
                 $cookie->useEncryption($this->_useEncryption);
             }
             $this->_cookies[$name] = $cookie;

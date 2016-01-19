@@ -21,7 +21,7 @@ namespace ManaPHP{
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function setDI($dependencyInjector);
+        public function setDi($dependencyInjector);
 
 
         /**
@@ -29,7 +29,7 @@ namespace ManaPHP{
          *
          * @return \ManaPHP\DiInterface
          */
-        public function getDI();
+        public function getDi();
 
 
         /**

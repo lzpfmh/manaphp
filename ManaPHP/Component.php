@@ -37,8 +37,8 @@ namespace ManaPHP{
         /**
          * @var \ManaPHP\Event\Manager
          */
-        protected $_trait_eventsManager = null;
-        protected static $_trait_eventPeeks;
+        protected $_eventsManager = null;
+        protected static $_eventPeeks;
 
         /**
          * Dependency Injector
@@ -52,7 +52,7 @@ namespace ManaPHP{
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function setDI($dependencyInjector)
+        public function setDi($dependencyInjector)
         {
             $this->_dependencyInjector = $dependencyInjector;
         }
@@ -62,7 +62,7 @@ namespace ManaPHP{
          *
          * @return \ManaPHP\DiInterface
          */
-        public function getDI()
+        public function getDi()
         {
             if (!is_object($this->_dependencyInjector)) {
                 $this->_dependencyInjector = Di::getDefault();
@@ -105,11 +105,11 @@ namespace ManaPHP{
          */
         public function attachEvent($event, $handler)
         {
-            if ($this->_trait_eventsManager === null) {
-                $this->_trait_eventsManager = new Manager();
+            if ($this->_eventsManager === null) {
+                $this->_eventsManager = new Manager();
             }
 
-            $this->_trait_eventsManager->attachEvent($event, $handler);
+            $this->_eventsManager->attachEvent($event, $handler);
         }
 
 
@@ -123,15 +123,15 @@ namespace ManaPHP{
          */
         public function fireEvent($event, $source, $data = null)
         {
-            if (self::$_trait_eventPeeks !== null) {
-                foreach (self::$_trait_eventPeeks as $peek) {
+            if (self::$_eventPeeks !== null) {
+                foreach (self::$_eventPeeks as $peek) {
                     $peek($event, $source, $data);
                 }
             }
 
-            if ($this->_trait_eventsManager !== null) {
+            if ($this->_eventsManager !== null) {
                 /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-                return $this->_trait_eventsManager->fireEvent($event, $source, $data);
+                return $this->_eventsManager->fireEvent($event, $source, $data);
             }
 
             return null;
@@ -143,10 +143,10 @@ namespace ManaPHP{
                 throw new Exception('Peek is invalid: not Closure.');
             }
 
-            if (self::$_trait_eventPeeks === null) {
-                self::$_trait_eventPeeks = [$peek];
+            if (self::$_eventPeeks === null) {
+                self::$_eventPeeks = [$peek];
             } else {
-                self::$_trait_eventPeeks[] = $peek;
+                self::$_eventPeeks[] = $peek;
             }
         }
     }

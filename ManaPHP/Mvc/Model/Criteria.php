@@ -33,7 +33,7 @@ namespace ManaPHP\Mvc\Model {
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function setDI($dependencyInjector)
+        public function setDi($dependencyInjector)
         {
             $this->_params['di'] = $dependencyInjector;
         }
@@ -44,7 +44,7 @@ namespace ManaPHP\Mvc\Model {
          *
          * @return \ManaPHP\DiInterface
          */
-        public function getDI()
+        public function getDi()
         {
             return isset($this->_params['di']) ? $this->_params['di'] : null;
         }

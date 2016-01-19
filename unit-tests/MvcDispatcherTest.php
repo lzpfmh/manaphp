@@ -236,8 +236,8 @@ class MvcDispatcherTest extends TestCase{
         $di->set('response',new ManaPHP\Http\Response());
 
         $dispatcher =new ManaPHP\Mvc\Dispatcher();
-        $dispatcher->setDI($di);
-        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDI());
+        $dispatcher->setDi($di);
+        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDi());
         $di->set('dispatcher',$dispatcher);
 
         //camelize the handler class:not require
@@ -345,8 +345,8 @@ class MvcDispatcherTest extends TestCase{
         $di->set('response',new ManaPHP\Http\Response());
 
         $dispatcher =new ManaPHP\Mvc\Dispatcher();
-        $dispatcher->setDI($di);
-        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDI());
+        $dispatcher->setDi($di);
+        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDi());
         $di->set('dispatcher',$dispatcher);
 
         $dispatcher->setControllerName('test2');
@@ -360,8 +360,8 @@ class MvcDispatcherTest extends TestCase{
         $di->set('response',new ManaPHP\Http\Response());
 
         $dispatcher =new ManaPHP\Mvc\Dispatcher();
-        $dispatcher->setDI($di);
-        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDI());
+        $dispatcher->setDi($di);
+        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDi());
         $di->set('dispatcher',$dispatcher);
 
         $dispatcher->setControllerName('test2');
@@ -394,8 +394,8 @@ class MvcDispatcherTest extends TestCase{
         $di->set('response',new ManaPHP\Http\Response());
 
         $dispatcher =new ManaPHP\Mvc\Dispatcher();
-        $dispatcher->setDI($di);
-        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDI());
+        $dispatcher->setDi($di);
+        $this->assertInstanceOf('\ManaPHP\Di',$dispatcher->getDi());
         $di->set('dispatcher',$dispatcher);
 
         $dispatcher->setControllerName('test2');

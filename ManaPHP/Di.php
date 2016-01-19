@@ -130,7 +130,7 @@ namespace ManaPHP {
             }
 
             if (is_object($instance) && $instance instanceof ComponentInterface) {
-                $instance->setDI($this);
+                $instance->setDi($this);
             }
 
             return $instance;

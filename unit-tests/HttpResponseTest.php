@@ -84,7 +84,7 @@ class HttpResponseTest extends TestCase{
 
     public function test_redirect(){
         $response =new tResponse();
-        $response->setDI(new ManaPHP\Di());
+        $response->setDi(new ManaPHP\Di());
 
         $response->redirect('some/local/url');
         $this->assertEquals(['Status'=>'302 Temporarily Moved',
@@ -92,7 +92,7 @@ class HttpResponseTest extends TestCase{
                     $response->getHeaders()->toArray());
 
         $response =new tResponse();
-        $response->setDI(new ManaPHP\Di());
+        $response->setDi(new ManaPHP\Di());
 
         $response->redirect('http://www.manaphp.com',true);
         $this->assertEquals(['Status'=>'302 Temporarily Moved',
@@ -100,7 +100,7 @@ class HttpResponseTest extends TestCase{
             $response->getHeaders()->toArray());
 
         $response =new tResponse();
-        $response->setDI(new ManaPHP\Di());
+        $response->setDi(new ManaPHP\Di());
 
         $response->redirect('http://www.manaphp.com',true,301);
         $this->assertEquals(['Status'=>'301 Permanently Moved',
@@ -109,7 +109,7 @@ class HttpResponseTest extends TestCase{
 
 
         $response =new tResponse();
-        $response->setDI(new ManaPHP\Di());
+        $response->setDi(new ManaPHP\Di());
 
         $response->redirect('http://www.manaphp.com',false,301);
         $this->assertEquals(['Status'=>'301 Permanently Moved',

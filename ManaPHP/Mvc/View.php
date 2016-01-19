@@ -2,7 +2,7 @@
 
 namespace ManaPHP\Mvc {
 
-    use ManaPHP\Di\Injectable;
+    use ManaPHP\Component;
 
     /**
      * ManaPHP\Mvc\View
@@ -25,7 +25,7 @@ namespace ManaPHP\Mvc {
      * echo $view->getContent();
      * </code>
      */
-    class View extends Injectable implements ViewInterface
+    class View extends Component implements ViewInterface
     {
 
         const LEVEL_MAIN_LAYOUT = 5;
