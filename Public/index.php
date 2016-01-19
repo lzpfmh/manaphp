@@ -18,7 +18,7 @@ require MANAPHP_ROOT. '/Autoloader.php';
 
 try{
     $application = new \ManaPHP\Mvc\Application();
-    $di =$application->getDi();
+    $di =$application->getDependencyInjector();
     $di->set('router',function(){
         return require APP_ROOT . '/Config/Routes.php';
     },true);

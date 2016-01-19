@@ -243,7 +243,7 @@ class MvcRouterTest extends TestCase{
         });
 
         $router = new ManaPHP\Mvc\Router();
-        $router->setDi($di);
+        $router->setDependencyInjector($di);
 
         $router->add('/docs/index', array(
             'controller' => 'documentation2',
