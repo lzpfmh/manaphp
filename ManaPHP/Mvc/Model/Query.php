@@ -95,7 +95,7 @@ namespace ManaPHP\Mvc\Model {
             }
 
             if ($dependencyInjector !== null) {
-                $this->setDi($dependencyInjector);
+                $this->setDependencyInjector($dependencyInjector);
             }
         }
 
@@ -105,7 +105,7 @@ namespace ManaPHP\Mvc\Model {
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function setDi($dependencyInjector)
+        public function setDependencyInjector($dependencyInjector)
         {
             $this->_manager = $dependencyInjector->getShared('modelsManager');
             $this->_metaData = $dependencyInjector->getShared('modelsMetadata');
@@ -118,7 +118,7 @@ namespace ManaPHP\Mvc\Model {
          *
          * @return \ManaPHP\DiInterface
          */
-        public function getDi()
+        public function getDependencyInjector()
         {
             return $this->_dependencyInjector;
         }

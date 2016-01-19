@@ -52,7 +52,7 @@ namespace ManaPHP{
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function setDi($dependencyInjector)
+        public function setDependencyInjector($dependencyInjector)
         {
             $this->_dependencyInjector = $dependencyInjector;
         }
@@ -62,7 +62,7 @@ namespace ManaPHP{
          *
          * @return \ManaPHP\DiInterface
          */
-        public function getDi()
+        public function getDependencyInjector()
         {
             if (!is_object($this->_dependencyInjector)) {
                 $this->_dependencyInjector = Di::getDefault();
