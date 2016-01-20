@@ -30,20 +30,17 @@ namespace ManaPHP\Mvc {
     class View extends Component implements ViewInterface
     {
         const LEVEL_ACTION_VIEW = 1;
-        const LEVEL_LAYOUT = 2;
+        const LEVEL_CONTROLLER_LAYOUT = 2;
         const LEVEL_MAIN_LAYOUT = 4;
 
         protected $_options;
 
-        protected $_basePath;
 
         protected $_content;
 
         protected $_renderLevel;
 
-        protected $_currentRenderLevel;
-
-        protected $_disabledLevels;
+        protected $_disabledLevel;
 
         /**
          * @var array
@@ -66,7 +63,7 @@ namespace ManaPHP\Mvc {
          */
         protected $_registeredEngines = [];
 
-        protected $_mainView;
+        protected $_mainView='Main';
 
         protected $_controllerName;
 
@@ -75,12 +72,6 @@ namespace ManaPHP\Mvc {
         protected $_params;
 
         protected $_pickView;
-
-        protected $_cache;
-
-        protected $_cacheLevel;
-
-        protected $_activeRenderPath;
 
         /**
          * @var bool
@@ -186,7 +177,7 @@ namespace ManaPHP\Mvc {
          */
         public function disableLevel($level)
         {
-            $this->_disabledLevels = $level;
+            $this->_disabledLevel = $level;
             return $this;
         }
 
@@ -196,7 +187,7 @@ namespace ManaPHP\Mvc {
          *
          * @return array
          */
-        public function getDisabledLevels()
+        public function getDisabledLevel()
         {
         }
 
@@ -472,13 +463,16 @@ namespace ManaPHP\Mvc {
             } else {
                 $renderView = $this->_pickView;
             }
+            $actionViewPath=$this->_viewsDir.$renderView;
 
             if ($this->_layout === null) {
-                $layout = $controllerName;
+                $controllerLayout = $controllerName;
             } else {
-                $layout = $this->_layout;
+                $controllerLayout = $this->_layout;
             }
+            $controllerLayoutPath=$this->_viewsDir.$this->_layoutsDir.$controllerLayout;
 
+            $mainLayoutPath=$this->_viewsDir.'/'.$this->_mainView;
             $this->fireEvent('view:beforeRender', $this);
 
             $mustClean = true;
@@ -487,17 +481,17 @@ namespace ManaPHP\Mvc {
              * render action view
              */
             if ($this->_renderLevel >= self::LEVEL_ACTION_VIEW) {
-                if (!($this->_disabledLevels & self::LEVEL_ACTION_VIEW)) {
-                    $this->_engineRender($renderView, $mustClean);
+                if (!($this->_disabledLevel & self::LEVEL_ACTION_VIEW)) {
+                    $this->_engineRender($actionViewPath, $mustClean);
                 }
             }
 
             /**
              * render controller layout
              */
-            if ($this->_renderLevel >= self::LEVEL_LAYOUT) {
-                if (!($this->_disabledLevels & self::LEVEL_LAYOUT)) {
-                    $this->_engineRender($layout, $mustClean);
+            if ($this->_renderLevel >= self::LEVEL_CONTROLLER_LAYOUT) {
+                if (!($this->_disabledLevel & self::LEVEL_CONTROLLER_LAYOUT)) {
+                    $this->_engineRender($controllerLayoutPath, $mustClean);
                 }
             }
 
@@ -505,8 +499,8 @@ namespace ManaPHP\Mvc {
              * render main view
              */
             if ($this->_renderLevel >= self::LEVEL_MAIN_LAYOUT) {
-                if (!($this->_disabledLevels & self::LEVEL_MAIN_LAYOUT)) {
-                    $this->_engineRender($layout, $mustClean);
+                if (!($this->_disabledLevel & self::LEVEL_MAIN_LAYOUT)) {
+                    $this->_engineRender($mainLayoutPath, $mustClean);
                 }
             }
 
