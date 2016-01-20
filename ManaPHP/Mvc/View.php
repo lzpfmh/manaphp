@@ -35,11 +35,19 @@ namespace ManaPHP\Mvc {
 
         protected $_options;
 
-
+        /**
+         * @var string
+         */
         protected $_content;
 
+        /**
+         * @var int
+         */
         protected $_renderLevel;
 
+        /**
+         * @var int
+         */
         protected $_disabledLevel;
 
         /**
@@ -47,10 +55,19 @@ namespace ManaPHP\Mvc {
          */
         protected $_viewParams = [];
 
-        protected $_layout;
+        /**
+         * @var string
+         */
+        protected $_controllerView;
 
+        /**
+         * @var string
+         */
         protected $_layoutsDir = 'Layouts';
 
+        /**
+         * @var string
+         */
         protected $_viewsDir;
 
         /**
@@ -63,14 +80,29 @@ namespace ManaPHP\Mvc {
          */
         protected $_registeredEngines = [];
 
+        /**
+         * @var string
+         */
         protected $_mainView='Main';
 
+        /**
+         * @var string
+         */
         protected $_controllerName;
 
+        /**
+         * @var string
+         */
         protected $_actionName;
 
+        /**
+         * @var array
+         */
         protected $_params;
 
+        /**
+         * @var string
+         */
         protected $_pickView;
 
         /**
@@ -114,37 +146,13 @@ namespace ManaPHP\Mvc {
         }
 
         /**
-         * Sets base path. Depending of your platform, always add a trailing slash or backslash
-         *
-         * <code>
-         *    $view->setBasePath(__DIR__ . '/');
-         * </code>
-         *
-         * @param string $basePath
-         * @return \ManaPHP\Mvc\View
-         */
-        public function setBasePath($basePath)
-        {
-        }
-
-
-        /**
-         * Returns the render level for the view
-         *
-         * @return int
-         */
-        public function getCurrentRenderLevel()
-        {
-        }
-
-
-        /**
          * Returns the render level for the view
          *
          * @return int
          */
         public function getRenderLevel()
         {
+            return $this->_renderLevel;
         }
 
 
@@ -157,10 +165,13 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string $level
-         * @return \ManaPHP\Mvc\View
+         * @return static
          */
         public function setRenderLevel($level)
         {
+            $this->_renderLevel=$level;
+
+            return $this;
         }
 
 
@@ -177,7 +188,7 @@ namespace ManaPHP\Mvc {
          */
         public function disableLevel($level)
         {
-            $this->_disabledLevel = $level;
+            $this->_disabledLevel |= $level;
             return $this;
         }
 
@@ -185,27 +196,11 @@ namespace ManaPHP\Mvc {
         /**
          * Returns an array with disabled render levels
          *
-         * @return array
+         * @return int
          */
         public function getDisabledLevel()
         {
-        }
-
-
-        /**
-         * Change the layout to be used instead of using the name of the latest controller name
-         *
-         * <code>
-         *    $this->view->setLayout('main');
-         * </code>
-         *
-         * @param string $layout
-         * @return \ManaPHP\Mvc\View
-         */
-        public function setLayout($layout)
-        {
-            $this->_layout = $layout;
-            return $this;
+            return $this->_disabledLevel;
         }
 
 
@@ -214,9 +209,9 @@ namespace ManaPHP\Mvc {
          *
          * @return string
          */
-        public function getLayout()
+        public function getControllerView()
         {
-            return $this->_layout;
+            return $this->_controllerView;
         }
 
         /**
@@ -465,10 +460,10 @@ namespace ManaPHP\Mvc {
             }
             $actionViewPath=$this->_viewsDir.$renderView;
 
-            if ($this->_layout === null) {
+            if ($this->_controllerView === null) {
                 $controllerLayout = $controllerName;
             } else {
-                $controllerLayout = $this->_layout;
+                $controllerLayout = $this->_controllerView;
             }
             $controllerLayoutPath=$this->_viewsDir.$this->_layoutsDir.$controllerLayout;
 
@@ -529,10 +524,18 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string|array $renderView
-         * @return \ManaPHP\Mvc\View
+         * @return static
          */
-        public function pick($renderView)
+        public function pick($action,$controllerLayout=null)
         {
+            $this->_pickView=$action;
+            if($controllerLayout ===null){
+                $this->_controllerView=explode('/',$action)[0];
+            }else{
+                $this->_controllerView=$controllerLayout;
+            }
+
+            return $this;
         }
 
 
