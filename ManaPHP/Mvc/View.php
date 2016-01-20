@@ -3,6 +3,8 @@
 namespace ManaPHP\Mvc {
 
     use ManaPHP\Component;
+    use ManaPHP\Mvc\View\Engine\Php;
+    use ManaPHP\Mvc\View\Exception;
 
     /**
      * ManaPHP\Mvc\View
@@ -27,16 +29,9 @@ namespace ManaPHP\Mvc {
      */
     class View extends Component implements ViewInterface
     {
-
-        const LEVEL_MAIN_LAYOUT = 5;
-
-
-        const LEVEL_LAYOUT = 3;
-
-
         const LEVEL_ACTION_VIEW = 1;
-
-        const LEVEL_NO_RENDER = 0;
+        const LEVEL_LAYOUT = 2;
+        const LEVEL_MAIN_LAYOUT = 4;
 
         protected $_options;
 
@@ -59,17 +54,17 @@ namespace ManaPHP\Mvc {
 
         protected $_layoutsDir='Layouts';
 
-        protected $_partialsDir;
-
         protected $_viewsDir;
 
-        protected $_templatesBefore;
+        /**
+         * @var array
+         */
+        protected $_resolvedEngines=[];
 
-        protected $_templatesAfter;
-
-        protected $_engines;
-
-        protected $_registeredEngines;
+        /**
+         * @var array
+         */
+        protected $_registeredEngines=[];
 
         protected $_mainView;
 
@@ -87,6 +82,9 @@ namespace ManaPHP\Mvc {
 
         protected $_activeRenderPath;
 
+        /**
+         * @var bool
+         */
         protected $_disabled;
 
         /**
@@ -241,7 +239,7 @@ namespace ManaPHP\Mvc {
          * @param boolean $merge
          * @return static
          */
-        public function setVars($params, $merge = true)
+        public function setParams($params, $merge = true)
         {
             if($merge){
                 $this->_viewParams=array_merge($this->_viewParams,$params);
@@ -333,26 +331,68 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Loads registered template engines, if none is registered it will use \ManaPHP\Mvc\View\Engine\Php
-         *
-         * @return array
+         * @param string $extension
+         * @return \ManaPHP\Mvc\View\EngineInterface
+         * @throws \ManaPHP\Mvc\View\Exception
          */
-        protected function _loadTemplateEngines()
-        {
-        }
+        protected function _loadEngine($extension){
+            $arguments=[$this,$this->_dependencyInjector];
+            $engineService=$this->_registeredEngines[$extension];
+            if($engineService instanceof \Closure){
+                $engine=call_user_func_array($engineService,$arguments);
+            }elseif(is_object($engineService)){
+                $engine=$engineService;
+            }elseif(is_string($engineService)){
+                $engine =$this->_dependencyInjector->getShared($engineService,$arguments);
+            }else{
+                throw new Exception("Invalid template engine registration for extension: " . $extension);
+            }
 
+            if(!($engine instanceof ViewInterface)){
+                    throw new Exception('Invalid template engine: it is not implements \ManaPHP\Mvc\ViewInterface');
+            }
+
+            return $engine;
+        }
 
         /**
          * Checks whether view exists on registered extensions and render it
          *
-         * @param array $engines
-         * @param string $viewPath
-         * @param boolean $silence
+         * @param string $relativePath
          * @param boolean $mustClean
-         * @param \ManaPHP\Cache\BackendInterface $cache
+         * @throws \ManaPHP\Mvc\View\Exception
          */
-        protected function _engineRender()
+        protected function _engineRender($relativePath,$mustClean)
         {
+            $notExists=true;
+
+            $fileWithoutExtension =$this->_viewsDir.$relativePath;
+
+            if(count($this->_registeredEngines) ===0){
+                $this->_registeredEngines[]=['.phtml'=>new Php($this,$this->_dependencyInjector)];
+            }
+
+            foreach($this->_registeredEngines as $extension=>$engine){
+                $file=$fileWithoutExtension.$extension;
+                if(file_exists($file)){
+                    if(isset($this->_resolvedEngines[$extension])){
+                        $engine=$this->_resolvedEngines[$extension];
+                    }else{
+                        $engine =$this->_loadEngine($extension);
+                        $this->_resolvedEngines[$extension]=$engine;
+                    }
+
+                    $this->fireEvent('view:beforeRenderView',$this,$file);
+                    $engine->render($file,$this->_viewParams, $mustClean);
+                    $notExists =false;
+                    $this->fireEvent('view:afterRenderView',$this,$file);
+                    break;
+                }
+            }
+
+            if($notExists){
+                throw new Exception("View '$fileWithoutExtension' was not found in the views directory");
+            }
         }
 
 
@@ -372,7 +412,9 @@ namespace ManaPHP\Mvc {
          */
         public function registerEngines($engines)
         {
+            $this->_resolvedEngines=[];
             $this->_registeredEngines=$engines;
+
             return $this;
         }
 
@@ -403,36 +445,75 @@ namespace ManaPHP\Mvc {
          *
          * @param string $controllerName
          * @param string $actionName
-         * @param array $params
+         * @param array $vars
          * @return static
          */
-        public function render($controllerName, $actionName, $params = null)
+        public function renderAction($controllerName, $actionName, $vars = null)
         {
             $this->_controllerName=$controllerName;
             $this->_actionName=$actionName;
-            $this->_params=$params;
-
-            $this->_currentRenderLevel=0;
+            $this->_viewParams=$vars;
 
             /**
              * If the view is disabled we simply update the buffer from any output produced in the controller
              */
+            $this->_content=ob_get_contents();
+
             if($this->_disabled){
-                $this->_content=ob_get_contents();
                 return false;
             }
 
-
-
+            /**
+             * Check if the user has picked a view diferent than the automatic
+             */
             if($this->_pickView ===null){
                 $renderView=$controllerName.'/'.$actionName;
-                $layoutName=$this->_layoutsDir;
             }else{
-
+                $renderView=$this->_pickView;
             }
 
+            if($this->_layout ===null){
+                $layout=$controllerName;
+            }else{
+                $layout=$this->_layout;
+            }
 
+            $this->fireEvent('view:beforeRender',$this);
+
+            $mustClean=true;
+
+            /**
+             * render action view
+             */
+            if($this->_renderLevel >=self::LEVEL_ACTION_VIEW){
+                if(!($this->_disabledLevels & self::LEVEL_ACTION_VIEW)){
+                    $this->_engineRender($renderView,$mustClean);
+                }
+            }
+
+            /**
+             * render controller layout
+             */
+            if($this->_renderLevel >=self::LEVEL_LAYOUT){
+                if(!($this->_disabledLevels & self::LEVEL_LAYOUT)){
+                    $this->_engineRender($layout,$mustClean);
+                }
+            }
+
+            /**
+             * render main view
+             */
+            if($this->_renderLevel >=self::LEVEL_MAIN_LAYOUT){
+                if(!($this->_disabledLevels &self::LEVEL_MAIN_LAYOUT)){
+                    $this->_engineRender($layout,$mustClean);
+                }
+            }
+
+            $this->fireEvent('view:afterRender',$this);
+
+            return $this;
         }
+
 
 
         /**
@@ -475,83 +556,32 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string $partialPath
-         * @param array $params
+         * @param array $vars
+         * @throws \ManaPHP\Mvc\View\Exception
          */
-        public function partial($partialPath)
+        public function renderPartial($partialPath, $vars=null)
         {
-        }
+            $viewParams=$this->_viewParams;
 
+            if(is_array($vars)){
+                $this->_viewParams=array_merge($this->_viewParams,$vars);
+            }
 
-        /**
-         * Perform the automatic rendering returning the output as a string
-         *
-         * <code>
-         *    $template = $this->view->getRender('products', 'show', array('products' => $products));
-         * </code>
-         *
-         * @param string $controllerName
-         * @param string $actionName
-         * @param array $params
-         * @param mixed $configCallback
-         * @return string
-         */
-        public function getRender($controllerName, $actionName, $params = null, $configCallback = null)
-        {
+            $this->_engineRender($this->_viewsDir.'/'.$partialPath,false);
+
+            $this->_viewParams=$viewParams;
         }
 
 
         /**
          * Finishes the render process by stopping the output buffering
          *
-         * @return \ManaPHP\Mvc\View
+         * @return static
          */
         public function finish()
         {
-        }
-
-
-        /**
-         * Create a \ManaPHP\Cache based on the internal cache options
-         *
-         * @return \ManaPHP\Cache\BackendInterface
-         */
-        protected function _createCache()
-        {
-        }
-
-
-        /**
-         * Check if the component is currently caching the output content
-         *
-         * @return boolean
-         */
-        public function isCaching()
-        {
-        }
-
-
-        /**
-         * Returns the cache instance used to cache
-         *
-         * @return \ManaPHP\Cache\BackendInterface
-         */
-        public function getCache()
-        {
-        }
-
-
-        /**
-         * Cache the actual view render to certain level
-         *
-         *<code>
-         *  $this->view->cache(array('key' => 'my-key', 'lifetime' => 86400));
-         *</code>
-         *
-         * @param boolean|array $options
-         * @return \ManaPHP\Mvc\View
-         */
-        public function cache($options = null)
-        {
+            ob_end_clean();
+            return $this;
         }
 
 
@@ -584,16 +614,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Returns the path of the view that is currently rendered
-         *
-         * @return string
-         */
-        public function getActiveRenderPath()
-        {
-        }
-
-
-        /**
          * Disables the auto-rendering process
          *
          * @return \ManaPHP\Mvc\View
@@ -622,7 +642,7 @@ namespace ManaPHP\Mvc {
          */
         public function isDisabled()
         {
-            return
+            return $this->_disabled;
         }
 
 

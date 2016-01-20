@@ -25,22 +25,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Sets base path. Depending of your platform, always add a trailing slash or backslash
-         *
-         * @param string $basePath
-         */
-        public function setBasePath($basePath);
-
-
-        /**
-         * Gets the current render level
-         *
-         * @return string
-         */
-        public function getCurrentRenderLevel();
-
-
-        /**
          * Gets the render level for the view
          *
          * @return string
@@ -54,22 +38,6 @@ namespace ManaPHP\Mvc {
          * @param string $level
          */
         public function setRenderLevel($level);
-
-
-        /**
-         * Change the layout to be used instead of using the name of the latest controller name
-         *
-         * @param string $layout
-         */
-        public function setLayout($layout);
-
-
-        /**
-         * Returns the name of the main view
-         *
-         * @return string
-         */
-        public function getLayout();
 
 
         /**
@@ -124,9 +92,9 @@ namespace ManaPHP\Mvc {
          *
          * @param string $controllerName
          * @param string $actionName
-         * @param array $params
+         * @param array $vars
          */
-        public function render($controllerName, $actionName, $params = null);
+        public function renderAction($controllerName, $actionName, $vars = null);
 
 
         /**
@@ -141,31 +109,15 @@ namespace ManaPHP\Mvc {
          * Renders a partial view
          *
          * @param string $partialPath
-         * @return string
+         * @param array $vars
          */
-        public function partial($partialPath);
+        public function renderPartial($partialPath,$vars);
 
 
         /**
          * Finishes the render process by stopping the output buffering
          */
         public function finish();
-
-
-        /**
-         * Returns the cache instance used to cache
-         *
-         * @return \ManaPHP\Cache\BackendInterface
-         */
-        public function getCache();
-
-
-        /**
-         * Cache the actual view render to certain level
-         *
-         * @param boolean|array $options
-         */
-        public function cache($options = null);
 
 
         /**
@@ -182,14 +134,6 @@ namespace ManaPHP\Mvc {
          * @return string
          */
         public function getContent();
-
-
-        /**
-         * Returns the path of the view that is currently rendered
-         *
-         * @return string
-         */
-        public function getActiveRenderPath();
 
 
         /**
