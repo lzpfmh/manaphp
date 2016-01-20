@@ -100,9 +100,10 @@ namespace ManaPHP\Mvc {
         /**
          * Choose a view different to render than last-controller/last-action
          *
-         * @param string $renderView
+         * @param string $actionView
+         * @param string $controllerView
          */
-        public function pick($renderView);
+        public function pickView($actionView,$controllerView=null);
 
 
         /**

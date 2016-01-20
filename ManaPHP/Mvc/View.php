@@ -454,20 +454,20 @@ namespace ManaPHP\Mvc {
              * Check if the user has picked a view diferent than the automatic
              */
             if ($this->_pickView === null) {
-                $renderView = $controllerName . '/' . $actionName;
+                $actionView = $controllerName . '/' . $actionName;
             } else {
-                $renderView = $this->_pickView;
+                $actionView = $this->_pickView;
             }
-            $actionViewPath=$this->_viewsDir.$renderView;
+            $actionViewPath=$this->_viewsDir.$actionView;
 
             if ($this->_controllerView === null) {
-                $controllerLayout = $controllerName;
+                $controllerView = $controllerName;
             } else {
-                $controllerLayout = $this->_controllerView;
+                $controllerView = $this->_controllerView;
             }
-            $controllerLayoutPath=$this->_viewsDir.$this->_layoutsDir.$controllerLayout;
+            $controllerViewPath=$this->_viewsDir.$this->_layoutsDir.$controllerView;
 
-            $mainLayoutPath=$this->_viewsDir.'/'.$this->_mainView;
+            $mainViewPath=$this->_viewsDir.'/'.$this->_mainView;
             $this->fireEvent('view:beforeRender', $this);
 
             $mustClean = true;
@@ -486,7 +486,7 @@ namespace ManaPHP\Mvc {
              */
             if ($this->_renderLevel >= self::LEVEL_CONTROLLER) {
                 if (!($this->_disabledLevel & self::LEVEL_CONTROLLER)) {
-                    $this->_engineRender($controllerLayoutPath, $mustClean);
+                    $this->_engineRender($controllerViewPath, $mustClean);
                 }
             }
 
@@ -495,7 +495,7 @@ namespace ManaPHP\Mvc {
              */
             if ($this->_renderLevel >= self::LEVEL_MAIN) {
                 if (!($this->_disabledLevel & self::LEVEL_MAIN)) {
-                    $this->_engineRender($mainLayoutPath, $mustClean);
+                    $this->_engineRender($mainViewPath, $mustClean);
                 }
             }
 
@@ -523,16 +523,17 @@ namespace ManaPHP\Mvc {
          * }
          * </code>
          *
-         * @param string|array $renderView
+         * @param string $actionView
+         * @param string $controllerView
          * @return static
          */
-        public function pick($action,$controllerLayout=null)
+        public function pickView($actionView,$controllerView=null)
         {
-            $this->_pickView=$action;
-            if($controllerLayout ===null){
-                $this->_controllerView=explode('/',$action)[0];
+            $this->_pickView=$actionView;
+            if($controllerView ===null){
+                $this->_controllerView=explode('/',$actionView)[0];
             }else{
-                $this->_controllerView=$controllerLayout;
+                $this->_controllerView=$controllerView;
             }
 
             return $this;
