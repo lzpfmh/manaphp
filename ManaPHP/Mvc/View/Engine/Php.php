@@ -10,8 +10,8 @@ namespace ManaPHP\Mvc\View\Engine {
      *
      * Adapter to use PHP itself as template engine
      */
-
-    class Php extends Component implements EngineInterface{
+    class Php extends Component implements EngineInterface
+    {
         protected $_view;
 
         /**
@@ -20,10 +20,10 @@ namespace ManaPHP\Mvc\View\Engine {
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
         public function __construct($view, $dependencyInjector = null)
-	    {
-		    $this->_view = $view;
-		    $this->_dependencyInjector = $dependencyInjector;
-	    }
+        {
+            $this->_view = $view;
+            $this->_dependencyInjector = $dependencyInjector;
+        }
 
         /**
          * Renders a view using the template engine
@@ -32,19 +32,20 @@ namespace ManaPHP\Mvc\View\Engine {
          * @param array $vars
          * @param bool $mustClean
          */
-        public function render($file, $vars=null, $mustClean=false){
-            if($mustClean){
+        public function render($file, $vars = null, $mustClean = false)
+        {
+            if ($mustClean) {
                 ob_clean();
             }
 
-            if(is_array($vars)){
+            if (is_array($vars)) {
                 extract($vars);
             }
 
             /** @noinspection PhpIncludeInspection */
-            require ($file);
+            require($file);
 
-            if($mustClean){
+            if ($mustClean) {
                 $this->_view->setContent(ob_get_contents());
             }
         }

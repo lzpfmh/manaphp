@@ -5,8 +5,8 @@ namespace ManaPHP\Mvc\View {
     /**
      * ManaPHP\Mvc\View\EngineInterface initializer
      */
-
-    interface EngineInterface {
+    interface EngineInterface
+    {
 
         /**
          * Php constructor.
@@ -22,6 +22,6 @@ namespace ManaPHP\Mvc\View {
          * @param array $vars
          * @param bool $mustClean
          */
-        public function render($file, $vars=null, $mustClean=false);
+        public function render($file, $vars = null, $mustClean = false);
     }
 }

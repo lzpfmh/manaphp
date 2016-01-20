@@ -111,7 +111,7 @@ namespace ManaPHP\Mvc {
          * @param string $partialPath
          * @param array $vars
          */
-        public function renderPartial($partialPath,$vars);
+        public function renderPartial($partialPath, $vars);
 
 
         /**
