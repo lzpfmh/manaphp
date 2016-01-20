@@ -29,9 +29,9 @@ namespace ManaPHP\Mvc {
      */
     class View extends Component implements ViewInterface
     {
-        const LEVEL_ACTION_VIEW = 1;
-        const LEVEL_CONTROLLER_LAYOUT = 2;
-        const LEVEL_MAIN_LAYOUT = 4;
+        const LEVEL_ACTION= 1;
+        const LEVEL_CONTROLLER = 2;
+        const LEVEL_MAIN = 4;
 
         protected $_options;
 
@@ -480,8 +480,8 @@ namespace ManaPHP\Mvc {
             /**
              * render action view
              */
-            if ($this->_renderLevel >= self::LEVEL_ACTION_VIEW) {
-                if (!($this->_disabledLevel & self::LEVEL_ACTION_VIEW)) {
+            if ($this->_renderLevel >= self::LEVEL_ACTION) {
+                if (!($this->_disabledLevel & self::LEVEL_ACTION)) {
                     $this->_engineRender($actionViewPath, $mustClean);
                 }
             }
@@ -489,8 +489,8 @@ namespace ManaPHP\Mvc {
             /**
              * render controller layout
              */
-            if ($this->_renderLevel >= self::LEVEL_CONTROLLER_LAYOUT) {
-                if (!($this->_disabledLevel & self::LEVEL_CONTROLLER_LAYOUT)) {
+            if ($this->_renderLevel >= self::LEVEL_CONTROLLER) {
+                if (!($this->_disabledLevel & self::LEVEL_CONTROLLER)) {
                     $this->_engineRender($controllerLayoutPath, $mustClean);
                 }
             }
@@ -498,8 +498,8 @@ namespace ManaPHP\Mvc {
             /**
              * render main view
              */
-            if ($this->_renderLevel >= self::LEVEL_MAIN_LAYOUT) {
-                if (!($this->_disabledLevel & self::LEVEL_MAIN_LAYOUT)) {
+            if ($this->_renderLevel >= self::LEVEL_MAIN) {
+                if (!($this->_disabledLevel & self::LEVEL_MAIN)) {
                     $this->_engineRender($mainLayoutPath, $mustClean);
                 }
             }
