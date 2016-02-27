@@ -42,12 +42,5 @@ namespace ManaPHP {
          * @return void
          */
         public function warning($message);
-
-
-        /**
-         * Prints the messages accumulated in the flasher
-         * @param bool $remove
-         */
-        public function output($remove = true);
     }
 }
