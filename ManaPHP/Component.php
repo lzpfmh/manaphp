@@ -32,6 +32,7 @@ namespace ManaPHP{
      * @property \ManaPHP\Di|\ManaPHP\DiInterface $di
 //     * @property \ManaPHP\Session\BagInterface $persistent
      * @property \ManaPHP\Mvc\ViewInterface $view
+     * @property \ManaPHP\Mvc\View\Tag $tag
      */
     class Component implements ComponentInterface{
         /**

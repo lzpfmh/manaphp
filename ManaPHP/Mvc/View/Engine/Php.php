@@ -12,16 +12,13 @@ namespace ManaPHP\Mvc\View\Engine {
      */
     class Php extends Component implements EngineInterface
     {
-        protected $_view;
-
         /**
          * Php constructor.
          * @param \ManaPHP\Mvc\ViewInterface $view
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function __construct($view, $dependencyInjector = null)
+        public function __construct($dependencyInjector = null)
         {
-            $this->_view = $view;
             $this->_dependencyInjector = $dependencyInjector;
         }
 
@@ -30,24 +27,15 @@ namespace ManaPHP\Mvc\View\Engine {
          *
          * @param string $file
          * @param array $vars
-         * @param bool $mustClean
          */
-        public function render($file, $vars = null, $mustClean = false)
+        public function render($file, $vars = null)
         {
-            if ($mustClean) {
-                ob_clean();
-            }
-
             if (is_array($vars)) {
                 extract($vars);
             }
 
             /** @noinspection PhpIncludeInspection */
             require($file);
-
-            if ($mustClean) {
-                $this->_view->setContent(ob_get_contents());
-            }
         }
     }
 }

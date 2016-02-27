@@ -4,6 +4,7 @@ namespace ManaPHP\Mvc {
 
     use ManaPHP\Component;
     use ManaPHP\Mvc\View\Engine\Php;
+    use ManaPHP\Mvc\View\EngineInterface;
     use ManaPHP\Mvc\View\Exception;
 
     /**
@@ -33,6 +34,9 @@ namespace ManaPHP\Mvc {
         const LEVEL_CONTROLLER = 2;
         const LEVEL_MAIN = 4;
 
+        /**
+         * @var array
+         */
         protected $_options;
 
         /**
@@ -43,7 +47,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var int
          */
-        protected $_renderLevel;
+        protected $_renderLevel=self::LEVEL_MAIN;
 
         /**
          * @var int
@@ -129,7 +133,7 @@ namespace ManaPHP\Mvc {
          */
         public function setViewsDir($viewsDir)
         {
-            $this->_viewsDir = ltrim('\\/', $viewsDir) . '/';
+            $this->_viewsDir = rtrim($viewsDir,'\\/');
 
             return $this;
         }
@@ -335,7 +339,7 @@ namespace ManaPHP\Mvc {
                 throw new Exception("Invalid template engine registration for extension: " . $extension);
             }
 
-            if (!($engine instanceof ViewInterface)) {
+            if (!($engine instanceof EngineInterface)) {
                 throw new Exception('Invalid template engine: it is not implements \ManaPHP\Mvc\ViewInterface');
             }
 
@@ -353,10 +357,10 @@ namespace ManaPHP\Mvc {
         {
             $notExists = true;
 
-            $fileWithoutExtension = $this->_viewsDir . $relativePath;
+            $fileWithoutExtension =$relativePath;
 
             if (count($this->_registeredEngines) === 0) {
-                $this->_registeredEngines[] = ['.phtml' => new Php($this, $this->_dependencyInjector)];
+                $this->_registeredEngines['.phtml'] = new Php($this->_dependencyInjector);
             }
 
             foreach ($this->_registeredEngines as $extension => $engine) {
@@ -370,7 +374,13 @@ namespace ManaPHP\Mvc {
                     }
 
                     $this->fireEvent('view:beforeRenderView', $this, $file);
-                    $engine->render($file, $this->_viewParams, $mustClean);
+                    if ($mustClean) {
+                        ob_clean();
+                    }
+                    $engine->render($file, $this->_viewParams);
+                    if ($mustClean) {
+                        $this->setContent(ob_get_contents());
+                    }
                     $notExists = false;
                     $this->fireEvent('view:afterRenderView', $this, $file);
                     break;
@@ -458,14 +468,14 @@ namespace ManaPHP\Mvc {
             } else {
                 $actionView = $this->_pickView;
             }
-            $actionViewPath=$this->_viewsDir.$actionView;
+            $actionViewPath=$this->_viewsDir.'/'.$actionView;
 
             if ($this->_controllerView === null) {
                 $controllerView = $controllerName;
             } else {
                 $controllerView = $this->_controllerView;
             }
-            $controllerViewPath=$this->_viewsDir.$this->_layoutsDir.$controllerView;
+            $controllerViewPath=$this->_viewsDir.'/'.$this->_layoutsDir.'/'.$controllerView;
 
             $mainViewPath=$this->_viewsDir.'/'.$this->_mainView;
             $this->fireEvent('view:beforeRender', $this);
@@ -642,59 +652,5 @@ namespace ManaPHP\Mvc {
         {
             return $this->_disabled;
         }
-
-
-        /**
-         * Magic method to pass variables to the views
-         *
-         *<code>
-         *    $this->view->products = $products;
-         *</code>
-         *
-         * @param string $key
-         * @param mixed $value
-         *
-         */
-        public function __set($key, $value)
-        {
-            $this->_viewParams[$key] = $value;
-        }
-
-
-        /**
-         * Magic method to retrieve a variable passed to the view
-         *
-         *<code>
-         *    echo $this->view->products;
-         *</code>
-         *
-         * @param string $key
-         * @return mixed
-         */
-        public function __get($key)
-        {
-            if (isset($this->_viewParams[$key])) {
-                return $this->_viewParams[$key];
-            } else {
-                return null;
-            }
-        }
-
-
-        /**
-         * Magic method to inaccessible a variable passed to the view
-         *
-         *<code>
-         *    isset($this->view->products)
-         *</code>
-         *
-         * @param string $key
-         * @return bool
-         */
-        public function __isset($key)
-        {
-            return isset($this->_viewParams[$key]);
-        }
-
     }
 }

@@ -10,18 +10,16 @@ namespace ManaPHP\Mvc\View {
 
         /**
          * Php constructor.
-         * @param \ManaPHP\Mvc\ViewInterface $view
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function __construct($view, $dependencyInjector = null);
+        public function __construct($dependencyInjector = null);
 
         /**
          * Renders a view using the template engine
          *
          * @param string $file
          * @param array $vars
-         * @param bool $mustClean
          */
-        public function render($file, $vars = null, $mustClean = false);
+        public function render($file, $vars = null);
     }
 }

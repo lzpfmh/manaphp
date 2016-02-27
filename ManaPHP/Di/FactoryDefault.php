@@ -37,7 +37,7 @@ namespace ManaPHP\Di {
               'annotations' => new Service('annotations', 'ManaPHP\Annotations\Adapter\Memory', true),
               'flash' => new Service('flash', 'ManaPHP\Flash\Direct', true),
               'flashSession' => new Service('flashSession', 'ManaPHP\Flash\Session', true),
-              'tag' => new Service('tag', 'ManaPHP\Tag', true),
+              'tag' => new Service('tag', 'ManaPHP\Mvc\View\Tag', true),
               'session' => new Service('session', 'ManaPHP\Http\Session\Adapter\File', true),
               'sessionBag' => new Service('sessionBag', 'ManaPHP\Session\Bag', true),
               'eventsManager' => new Service('eventsManager', 'ManaPHP\Events\Manager', true),
