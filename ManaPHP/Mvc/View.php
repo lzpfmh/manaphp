@@ -449,7 +449,7 @@ namespace ManaPHP\Mvc {
         {
             $this->_controllerName = $controllerName;
             $this->_actionName = $actionName;
-            $this->_viewParams = $vars;
+            $this->_params = $vars;
 
             /**
              * If the view is disabled we simply update the buffer from any output produced in the controller
