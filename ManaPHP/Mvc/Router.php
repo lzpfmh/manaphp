@@ -595,6 +595,23 @@ namespace ManaPHP\Mvc {
             return $this->_module;
         }
 
+        /**
+         * @param string $str
+         * @return string
+         */
+        protected function _camelize($str)
+        {
+            if(strpos($str,'_') !==false){
+                $parts = explode('_', $str);
+                foreach ($parts as $k => $v) {
+                    $parts[$k] = ucfirst($v);
+                }
+
+                return implode('', $parts);
+            }else{
+                return $str;
+            }
+        }
 
         /**
          * Returns the processed controller name
@@ -603,9 +620,8 @@ namespace ManaPHP\Mvc {
          */
         public function getControllerName()
         {
-            return $this->_controller;
+            return $this->_camelize($this->_controller);
         }
-
 
         /**
          * Returns the processed action name
