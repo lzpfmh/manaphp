@@ -72,10 +72,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_registeredEngines = [];
 
-        /**
-         * @var string
-         */
-        protected $_mainView='Main';
 
         /**
          * @var string
