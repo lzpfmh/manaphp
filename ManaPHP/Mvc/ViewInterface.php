@@ -25,19 +25,11 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Gets the render level for the view
-         *
-         * @return string
+         * @param false|string $layout
+         * @return static
          */
-        public function getRenderLevel();
 
-
-        /**
-         * Sets the render level for the view
-         *
-         * @param string $level
-         */
-        public function setRenderLevel($level);
+        public function setLayout($layout='Default');
 
 
         /**

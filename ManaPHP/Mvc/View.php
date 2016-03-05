@@ -30,9 +30,6 @@ namespace ManaPHP\Mvc {
      */
     class View extends Component implements ViewInterface
     {
-        const LEVEL_VIEW= 1;
-        const LEVEL_LAYOUT = 2;
-
         /**
          * @var array
          */
@@ -42,11 +39,6 @@ namespace ManaPHP\Mvc {
          * @var string
          */
         protected $_content;
-
-        /**
-         * @var int
-         */
-        protected $_renderLevel=self::LEVEL_LAYOUT;
 
         /**
          * @var int
@@ -72,6 +64,8 @@ namespace ManaPHP\Mvc {
          * @var string
          */
         protected $_viewsDir;
+
+        protected $_layout=null;
 
         /**
          * @var array
@@ -148,62 +142,15 @@ namespace ManaPHP\Mvc {
             return $this->_viewsDir;
         }
 
-        /**
-         * Returns the render level for the view
-         *
-         * @return int
-         */
-        public function getRenderLevel()
-        {
-            return $this->_renderLevel;
-        }
-
 
         /**
-         * Sets the render level for the view
-         *
-         * <code>
-         *    //Render the view related to the controller only
-         *    $this->view->setRenderLevel(View::LEVEL_LAYOUT);
-         * </code>
-         *
-         * @param string $level
+         * @param false|string $layout
          * @return static
          */
-        public function setRenderLevel($level)
-        {
-            $this->_renderLevel=$level;
+        public function setLayout($layout='Default'){
+            $this->_layout=$layout;
 
             return $this;
-        }
-
-
-        /**
-         * Disables a specific level of rendering
-         *
-         *<code>
-         * //Render all levels except ACTION level
-         * $this->view->disableLevel(View::LEVEL_ACTION_VIEW);
-         *</code>
-         *
-         * @param int $level
-         * @return static
-         */
-        public function disableLevel($level)
-        {
-            $this->_disabledLevel |= $level;
-            return $this;
-        }
-
-
-        /**
-         * Returns an array with disabled render levels
-         *
-         * @return int
-         */
-        public function getDisabledLevel()
-        {
-            return $this->_disabledLevel;
         }
 
 
@@ -441,41 +388,26 @@ namespace ManaPHP\Mvc {
              * Check if the user has picked a view diferent than the automatic
              */
             if ($this->_pickView === null) {
-                $actionView = $controllerName . '/' . $actionName;
+                $view = $controllerName . '/' . $actionName;
             } else {
-                $actionView = $this->_pickView;
+                $view = $this->_pickView;
             }
-            $actionViewPath=$this->_viewsDir.'/'.$actionView;
-
-            if ($this->_controllerView === null) {
-                $controllerView = $controllerName;
-            } else {
-                $controllerView = $this->_controllerView;
-            }
-            $controllerViewPath=$this->_viewsDir.'/'.$this->_layoutsDir.'/'.$controllerView;
 
             $this->fireEvent('view:beforeRender', $this);
 
             $mustClean = true;
 
-            /**
-             * render action view
-             */
-            if ($this->_renderLevel >= self::LEVEL_VIEW) {
-                if (!($this->_disabledLevel & self::LEVEL_VIEW)) {
-                    $this->_engineRender($actionViewPath, $mustClean);
-                }
-            }
+            $this->_engineRender($this->_viewsDir.'/'.$view, $mustClean);
 
-            /**
-             * render controller layout
-             */
-            if ($this->_renderLevel >= self::LEVEL_LAYOUT) {
-                if (!($this->_disabledLevel & self::LEVEL_LAYOUT)) {
-                    $this->_engineRender($controllerViewPath, $mustClean);
+            if($this->_layout !==false){
+                if ($this->_controllerView === null) {
+                    $layout = $controllerName;
+                } else {
+                    $layout = $this->_controllerView;
                 }
-            }
 
+                $this->_engineRender($this->_viewsDir.'/'.$this->_layoutsDir.'/'.$layout, $mustClean);
+            }
 
             $this->fireEvent('view:afterRender', $this);
 
