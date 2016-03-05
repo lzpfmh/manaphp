@@ -92,9 +92,9 @@ namespace ManaPHP\Mvc {
          *
          * @param string $controllerName
          * @param string $actionName
-         * @param array $vars
+         * @param array $params
          */
-        public function renderAction($controllerName, $actionName, $vars = null);
+        public function renderAction($controllerName, $actionName, $params = null);
 
 
         /**

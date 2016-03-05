@@ -57,7 +57,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var array
          */
-        protected $_viewParams = [];
+        protected $_viewVars = [];
 
         /**
          * @var string
@@ -218,28 +218,6 @@ namespace ManaPHP\Mvc {
             return $this->_controllerView;
         }
 
-        /**
-         * Set all the render params
-         *
-         *<code>
-         *    $this->view->setVars(array('products' => $products));
-         *</code>
-         *
-         * @param array $params
-         * @param boolean $merge
-         * @return static
-         */
-        public function setParams($params, $merge = true)
-        {
-            if ($merge) {
-                $this->_viewParams = array_merge($this->_viewParams, $params);
-            } else {
-                $this->_viewParams = $params;
-            }
-
-            return $this;
-        }
-
 
         /**
          * Set a single view parameter
@@ -254,7 +232,7 @@ namespace ManaPHP\Mvc {
          */
         public function setVar($key, $value)
         {
-            $this->_viewParams[$key] = $value;
+            $this->_viewVars[$key] = $value;
         }
 
 
@@ -266,8 +244,8 @@ namespace ManaPHP\Mvc {
          */
         public function getVar($key)
         {
-            if (isset($this->_viewParams[$key])) {
-                return $this->_viewParams[$key];
+            if (isset($this->_viewVars[$key])) {
+                return $this->_viewVars[$key];
             }
 
             return null;
@@ -377,7 +355,7 @@ namespace ManaPHP\Mvc {
                     if ($mustClean) {
                         ob_clean();
                     }
-                    $engine->render($file, $this->_viewParams);
+                    $engine->render($file, $this->_viewVars);
                     if ($mustClean) {
                         $this->setContent(ob_get_contents());
                     }
@@ -442,14 +420,14 @@ namespace ManaPHP\Mvc {
          *
          * @param string $controllerName
          * @param string $actionName
-         * @param array $vars
+         * @param array $params
          * @return static
          */
-        public function renderAction($controllerName, $actionName, $vars = null)
+        public function renderAction($controllerName, $actionName, $params = null)
         {
             $this->_controllerName = $controllerName;
             $this->_actionName = $actionName;
-            $this->_params = $vars;
+            $this->_params = $params;
 
             /**
              * If the view is disabled we simply update the buffer from any output produced in the controller
@@ -569,15 +547,15 @@ namespace ManaPHP\Mvc {
          */
         public function renderPartial($partialPath, $vars = null)
         {
-            $viewParams = $this->_viewParams;
+            $viewVars = $this->_viewVars;
 
             if (is_array($vars)) {
-                $this->_viewParams = array_merge($this->_viewParams, $vars);
+                $this->_viewVars = array_merge($this->_viewVars, $vars);
             }
 
             $this->_engineRender($this->_viewsDir . '/' . $partialPath, false);
 
-            $this->_viewParams = $viewParams;
+            $this->_viewVars = $viewVars;
         }
 
 
