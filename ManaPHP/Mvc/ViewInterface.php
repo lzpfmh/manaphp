@@ -94,7 +94,7 @@ namespace ManaPHP\Mvc {
          * @param string $actionName
          * @param array $params
          */
-        public function renderAction($controllerName, $actionName, $params = null);
+        public function renderView($controllerName, $actionName, $params = null);
 
 
         /**
@@ -112,7 +112,7 @@ namespace ManaPHP\Mvc {
          * @param string $partialPath
          * @param array $vars
          */
-        public function renderPartial($partialPath, $vars);
+        public function renderPartial($partialPath, $vars=null);
 
 
         /**

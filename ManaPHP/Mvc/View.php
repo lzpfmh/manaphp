@@ -30,9 +30,8 @@ namespace ManaPHP\Mvc {
      */
     class View extends Component implements ViewInterface
     {
-        const LEVEL_ACTION= 1;
-        const LEVEL_CONTROLLER = 2;
-        const LEVEL_MAIN = 4;
+        const LEVEL_VIEW= 1;
+        const LEVEL_LAYOUT = 2;
 
         /**
          * @var array
@@ -47,7 +46,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var int
          */
-        protected $_renderLevel=self::LEVEL_MAIN;
+        protected $_renderLevel=self::LEVEL_LAYOUT;
 
         /**
          * @var int
@@ -423,7 +422,7 @@ namespace ManaPHP\Mvc {
          * @param array $params
          * @return static
          */
-        public function renderAction($controllerName, $actionName, $params = null)
+        public function renderView($controllerName, $actionName, $params = null)
         {
             $this->_controllerName = $controllerName;
             $this->_actionName = $actionName;
@@ -455,7 +454,6 @@ namespace ManaPHP\Mvc {
             }
             $controllerViewPath=$this->_viewsDir.'/'.$this->_layoutsDir.'/'.$controllerView;
 
-            $mainViewPath=$this->_viewsDir.'/'.$this->_mainView;
             $this->fireEvent('view:beforeRender', $this);
 
             $mustClean = true;
@@ -463,8 +461,8 @@ namespace ManaPHP\Mvc {
             /**
              * render action view
              */
-            if ($this->_renderLevel >= self::LEVEL_ACTION) {
-                if (!($this->_disabledLevel & self::LEVEL_ACTION)) {
+            if ($this->_renderLevel >= self::LEVEL_VIEW) {
+                if (!($this->_disabledLevel & self::LEVEL_VIEW)) {
                     $this->_engineRender($actionViewPath, $mustClean);
                 }
             }
@@ -472,20 +470,12 @@ namespace ManaPHP\Mvc {
             /**
              * render controller layout
              */
-            if ($this->_renderLevel >= self::LEVEL_CONTROLLER) {
-                if (!($this->_disabledLevel & self::LEVEL_CONTROLLER)) {
+            if ($this->_renderLevel >= self::LEVEL_LAYOUT) {
+                if (!($this->_disabledLevel & self::LEVEL_LAYOUT)) {
                     $this->_engineRender($controllerViewPath, $mustClean);
                 }
             }
 
-            /**
-             * render main view
-             */
-            if ($this->_renderLevel >= self::LEVEL_MAIN) {
-                if (!($this->_disabledLevel & self::LEVEL_MAIN)) {
-                    $this->_engineRender($mainViewPath, $mustClean);
-                }
-            }
 
             $this->fireEvent('view:afterRender', $this);
 
