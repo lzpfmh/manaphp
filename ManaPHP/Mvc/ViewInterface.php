@@ -127,28 +127,5 @@ namespace ManaPHP\Mvc {
          * @return string
          */
         public function getContent();
-
-
-        /**
-         * Disables the auto-rendering process
-         *
-         */
-        public function disable();
-
-
-        /**
-         * Enables the auto-rendering process
-         *
-         */
-        public function enable();
-
-
-        /**
-         * Whether the automatic rendering is disabled
-         *
-         * @return bool
-         */
-        public function isDisabled();
-
     }
 }

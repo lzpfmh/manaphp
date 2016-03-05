@@ -41,11 +41,6 @@ namespace ManaPHP\Mvc {
         protected $_content;
 
         /**
-         * @var int
-         */
-        protected $_disabledLevel;
-
-        /**
          * @var array
          */
         protected $_viewVars = [];
@@ -102,10 +97,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_pickView;
 
-        /**
-         * @var bool
-         */
-        protected $_disabled;
 
         /**
          * \ManaPHP\Mvc\View constructor
@@ -380,10 +371,6 @@ namespace ManaPHP\Mvc {
              */
             $this->_content = ob_get_contents();
 
-            if ($this->_disabled) {
-                return false;
-            }
-
             /**
              * Check if the user has picked a view diferent than the automatic
              */
@@ -518,39 +505,6 @@ namespace ManaPHP\Mvc {
         public function getContent()
         {
             return $this->_content;
-        }
-
-
-        /**
-         * Disables the auto-rendering process
-         *
-         * @return \ManaPHP\Mvc\View
-         */
-        public function disable()
-        {
-            $this->_disabled = true;
-        }
-
-
-        /**
-         * Enables the auto-rendering process
-         *
-         * @return \ManaPHP\Mvc\View
-         */
-        public function enable()
-        {
-            $this->_disabled = false;
-        }
-
-
-        /**
-         * Whether automatic rendering is enabled
-         *
-         * @return bool
-         */
-        public function isDisabled()
-        {
-            return $this->_disabled;
         }
     }
 }
