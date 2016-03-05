@@ -60,7 +60,7 @@ namespace ManaPHP\Mvc {
          */
         protected $_viewsDir;
 
-        protected $_layout=null;
+        protected $_layout = null;
 
         /**
          * @var array
@@ -113,7 +113,7 @@ namespace ManaPHP\Mvc {
          */
         public function setViewsDir($viewsDir)
         {
-            $this->_viewsDir = rtrim($viewsDir,'\\/');
+            $this->_viewsDir = rtrim($viewsDir, '\\/');
 
             return $this;
         }
@@ -134,8 +134,9 @@ namespace ManaPHP\Mvc {
          * @param false|string $layout
          * @return static
          */
-        public function setLayout($layout='Default'){
-            $this->_layout=$layout;
+        public function setLayout($layout = 'Default')
+        {
+            $this->_layout = $layout;
 
             return $this;
         }
@@ -161,7 +162,7 @@ namespace ManaPHP\Mvc {
          *
          * @param string $key
          * @param mixed $value
-         * @return \ManaPHP\Mvc\View
+         * @return static
          */
         public function setVar($key, $value)
         {
@@ -227,6 +228,7 @@ namespace ManaPHP\Mvc {
         {
             ob_start();
             $this->_content = null;
+
             return $this;
         }
 
@@ -268,7 +270,7 @@ namespace ManaPHP\Mvc {
         {
             $notExists = true;
 
-            $fileWithoutExtension =$relativePath;
+            $fileWithoutExtension = $relativePath;
 
             if (count($this->_registeredEngines) === 0) {
                 $this->_registeredEngines['.phtml'] = new Php($this->_dependencyInjector);
@@ -316,7 +318,7 @@ namespace ManaPHP\Mvc {
          *</code>
          *
          * @param array $engines
-         * @return \ManaPHP\Mvc\View
+         * @return static
          */
         public function registerEngines($engines)
         {
@@ -380,16 +382,16 @@ namespace ManaPHP\Mvc {
 
             $mustClean = true;
 
-            $this->_engineRender($this->_viewsDir.'/'.$view, $mustClean);
+            $this->_engineRender($this->_viewsDir . '/' . $view, $mustClean);
 
-            if($this->_layout !==false){
+            if ($this->_layout !== false) {
                 if ($this->_controllerView === null) {
                     $layout = $controllerName;
                 } else {
                     $layout = $this->_controllerView;
                 }
 
-                $this->_engineRender($this->_viewsDir.'/'.$this->_layoutsDir.'/'.$layout, $mustClean);
+                $this->_engineRender($this->_viewsDir . '/' . $this->_layoutsDir . '/' . $layout, $mustClean);
             }
 
             $this->fireEvent('view:afterRender', $this);
@@ -420,13 +422,13 @@ namespace ManaPHP\Mvc {
          * @param string $controllerView
          * @return static
          */
-        public function pickView($actionView,$controllerView=null)
+        public function pickView($actionView, $controllerView = null)
         {
-            $this->_pickView=$actionView;
-            if($controllerView ===null){
-                $this->_controllerView=explode('/',$actionView)[0];
-            }else{
-                $this->_controllerView=$controllerView;
+            $this->_pickView = $actionView;
+            if ($controllerView === null) {
+                $this->_controllerView = explode('/', $actionView)[0];
+            } else {
+                $this->_controllerView = $controllerView;
             }
 
             return $this;
@@ -472,6 +474,7 @@ namespace ManaPHP\Mvc {
         public function finish()
         {
             ob_end_clean();
+
             return $this;
         }
 
