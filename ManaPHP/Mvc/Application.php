@@ -239,7 +239,7 @@ namespace ManaPHP\Mvc {
                 } elseif ($module instanceof \Closure) {
                     $moduleObject = call_user_func_array($module, [$this->_dependencyInjector]);
                 } else {
-                    throw new Exception('Invalid module definition');
+                    throw new Exception('Invalid module definition: '.$moduleName);
                 }
 
                 $this->fireEvent('application:afterStartModule', $this, $moduleObject);
