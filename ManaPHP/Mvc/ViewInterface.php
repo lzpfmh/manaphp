@@ -9,7 +9,7 @@ namespace ManaPHP\Mvc {
     {
 
         /**
-         * Sets views directory. Depending of your platform, always add a trailing slash or backslash
+         * Sets views directory. Depending of your platform
          *
          * @param string $viewsDir
          * @return static
@@ -60,12 +60,6 @@ namespace ManaPHP\Mvc {
         public function getActionName();
 
 
-        /**
-         * Gets extra parameters of the action rendered
-         *
-         * @return array
-         */
-        public function getParams();
 
 
         /**
@@ -90,18 +84,17 @@ namespace ManaPHP\Mvc {
          *
          * @param string $controllerName
          * @param string $actionName
-         * @param array $params
          */
-        public function renderView($controllerName, $actionName, $params = null);
+        public function renderView($controllerName, $actionName);
 
 
         /**
          * Choose a view different to render than last-controller/last-action
          *
-         * @param string $actionView
-         * @param string $controllerView
+         * @param $view
+         * @return static
          */
-        public function pickView($actionView, $controllerView = null);
+        public function pickView($view);
 
 
         /**
@@ -109,6 +102,7 @@ namespace ManaPHP\Mvc {
          *
          * @param string $partialPath
          * @param array $vars
+         * @return static
          */
         public function renderPartial($partialPath, $vars = null);
 
