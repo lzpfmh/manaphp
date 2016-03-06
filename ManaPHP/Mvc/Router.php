@@ -212,18 +212,7 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
-        /**
-         * Returns the name of the default namespace
-         *
-         * @return string
-         */
-        public function getDefaultNamespace()
-        {
-            return $this->_defaultNamespace;
-        }
-
-
+        
         /**
          * Sets the name of the default module
          *
@@ -236,7 +225,7 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-        
+
         /**
          * Handles routing information received from the rewrite engine
          *
