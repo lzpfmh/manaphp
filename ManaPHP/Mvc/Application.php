@@ -183,10 +183,6 @@ namespace ManaPHP\Mvc {
          */
         public function handle($uri = null)
         {
-            if (!is_object($this->_dependencyInjector)) {
-                throw new Exception('A dependency injection object is required to access internal services');
-            }
-
             if ($this->fireEvent('application:boot', $this) === false) {
                 return false;
             }
