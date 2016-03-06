@@ -363,6 +363,7 @@ namespace ManaPHP\Mvc {
         {
             $parts=explode('/',$view);
             if(count($parts) ===1){
+                $this->_controllerName=null;
                 $this->_actionName=$parts[0];
             }else{
                 $this->_controllerName=$parts[0];
