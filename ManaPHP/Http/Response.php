@@ -232,14 +232,6 @@ namespace ManaPHP\Http {
          */
         public function redirect($location, $externalRedirect = false, $statusCode = 302)
         {
-
-            if ($this->_dependencyInjector->has('view')) {
-                $view = $this->_dependencyInjector->getShared('view');
-                if ($view instanceof ViewInterface) {
-                    $view->disable();
-                }
-            }
-
             if (is_string($statusCode)) {
                 $statusCode = (int) $statusCode;
             }
