@@ -341,7 +341,7 @@ namespace ManaPHP\Mvc {
         /**
          * Dispatches a handle action taking into account the routing parameters
          *
-         * @return object|boolean
+         * @return false|\ManaPHP\Mvc\ControllerInterface
          * @throws \ManaPHP\Mvc\Dispatcher\Exception
          */
         public function dispatch()
@@ -367,9 +367,7 @@ namespace ManaPHP\Mvc {
 
                 $this->_resolveEmptyProperties();
 
-                if ($this->fireEvent('dispatcher:beforeDispatch', $this) === false) {
-                    return false;
-                }
+                $this->fireEvent('dispatcher:beforeDispatch', $this);
 
                 if ($this->_finished === false) {
                     continue;

@@ -105,7 +105,7 @@ namespace ManaPHP\Mvc {
         /**
          * Dispatches a handle action taking into account the routing parameters
          *
-         * @return \ManaPHP\Mvc\ControllerInterface
+         * @return false|\ManaPHP\Mvc\ControllerInterface
          */
         public function dispatch();
 
