@@ -42,5 +42,13 @@ namespace ManaPHP {
          * @return void
          */
         public function warning($message);
+
+
+        /**
+         * Prints the messages in the session flasher
+         *
+         * @param $remove bool
+         */
+        public function output($remove = true);
     }
 }

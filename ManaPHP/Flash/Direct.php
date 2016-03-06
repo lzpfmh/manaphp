@@ -12,6 +12,11 @@ namespace ManaPHP\Flash {
     class Direct extends Flash
     {
         /**
+         * @var string[]
+         */
+        protected $_messages=[];
+
+        /**
          * Outputs a message
          *
          * @param  string $type
@@ -25,7 +30,23 @@ namespace ManaPHP\Flash {
             } else {
                 $cssClasses = '';
             }
-            echo '<div class="' . $cssClasses . '">' . $message . '</div>' . PHP_EOL;
+
+            $this->_messages[]='<div class="' . $cssClasses . '">' . $message . '</div>' . PHP_EOL;
+        }
+
+        /**
+         * Prints the messages in the session flasher
+         *
+         * @param $remove bool
+         */
+        public function output($remove = true){
+            foreach($this->_messages  as $message){
+                echo $message;
+            }
+
+            if($remove){
+                $this->_messages=[];
+            }
         }
     }
 }

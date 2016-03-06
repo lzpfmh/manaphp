@@ -12,7 +12,7 @@ namespace ManaPHP {
      * $flash->error("Cannot open the file");
      *</code>
      */
-    abstract class Flash implements FlashInterface
+    abstract class Flash extends Component implements FlashInterface
     {
         protected $_cssClasses;
 
