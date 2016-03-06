@@ -317,14 +317,14 @@ namespace ManaPHP\Mvc {
 
             $mustClean = true;
 
-            $view = $controllerName . '/' . $actionName;
+            $view = $this->_controllerName . '/' . $this->_actionName;
             $this->_engineRender($this->_viewsDir ,$view, $mustClean);
 
             if($this->_layout !==false){
                 if(is_string($this->_layout)){
                     $layout=$this->_layout;
                 }else{
-                    $layout =$controllerName;
+                    $layout =$this->_controllerName;
                 }
 
                 $this->_engineRender($this->_viewsDir, $this->_layoutsDir . '/' . $layout, $mustClean);
