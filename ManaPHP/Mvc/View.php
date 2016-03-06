@@ -313,8 +313,6 @@ namespace ManaPHP\Mvc {
                 $this->_actionName = $actionName;
             }
 
-            $this->_content = ob_get_contents();
-
             $this->fireEvent('view:beforeRender', $this);
 
             $mustClean = true;
