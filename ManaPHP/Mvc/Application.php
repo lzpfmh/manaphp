@@ -163,7 +163,6 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
         /**
          * Returns the default module name
          *
@@ -248,11 +247,6 @@ namespace ManaPHP\Mvc {
                 }
 
                 $this->fireEvent('application:afterStartModule', $this, $moduleObject);
-
-            }
-
-            if ($this->_implicitView === true) {
-                $view = $this->_dependencyInjector->getShared('view');
             }
 
             $dispatcher = $this->_dependencyInjector->getShared('dispatcher');
@@ -262,66 +256,18 @@ namespace ManaPHP\Mvc {
             $dispatcher->setActionName($router->getActionName());
             $dispatcher->setParams($router->getParams());
 
-            if ($this->_implicitView === true) {
-                $view->start();
-            }
-
             if ($this->fireEvent('application:beforeHandleRequest', $this, $dispatcher) === false) {
                 return false;
             }
 
             $controller = $dispatcher->dispatch();
-            $possibleResponse = $dispatcher->getReturnedValue();
-
-            if ($possibleResponse === false) {
-                $response = $this->_dependencyInjector->getShared('response');
-            } else {
-                $returnedResponse = is_object($possibleResponse) ? ($possibleResponse instanceof ResponseInterface) : false;
-
-                $this->fireEvent('application:afterHandleRequest', $this, $controller);
-
-                /**
-                 * If the dispatcher returns an object we try to render the view in auto-rendering mode
-                 */
-                if ($returnedResponse === false) {
-                    if ($this->_implicitView === true) {
-                        if (is_object($controller)) {
-                            $renderStatus = true;
-
-                            $renderStatus = $this->fireEvent('application:viewRender', $this, $view);
-
-                            /**
-                             * Check if the view process has been treated by the developer
-                             */
-                            if ($renderStatus !== false) {
-                                $view->renderView($dispatcher->getControllerName(), $dispatcher->getActionName());
-                            }
-                        }
-                    }
-                }
-
-                /**
-                 * Finish the view component (stop output buffering)
-                 */
-                if ($this->_implicitView === true) {
-                    $view->finish();
-                }
-
-                if ($returnedResponse === false) {
-                    $response = $this->_dependencyInjector->getShared('response');
-                    if ($this->_implicitView === true) {
-                        /**
-                         * The content returned by the view is passed to the response service
-                         */
-                        $response->setContent($view->getContent());
-                    }
-                } else {
-                    /**
-                     * We don't need to create a response because there is one already created
-                     */
-                    $response = $possibleResponse;
-                }
+            if($controller ===false){
+                return false;
             }
+
+            $response=$this->_getResponse($dispatcher->getReturnedValue(),$dispatcher->getControllerName(),$dispatcher->getActionName());
+
+            $this->fireEvent('application:afterHandleRequest', $this, $controller);
 
             $this->fireEvent('application:beforeSendResponse', $this, $response);
 
@@ -329,6 +275,45 @@ namespace ManaPHP\Mvc {
             $response->sendCookies();
 
             return $response;
+        }
+
+
+        /**
+         * @param mixed $actionReturnValue
+         * @param string $controller
+         * @param string $action
+         * @return \ManaPHP\Http\ResponseInterface
+         * @throws \ManaPHP\Mvc\Application\Exception
+         */
+        protected function _getResponse($actionReturnValue,$controller,$action){
+            if ($actionReturnValue === false) {
+                return $this->_dependencyInjector->getShared('response');
+            } elseif($actionReturnValue instanceof ResponseInterface){
+                return $actionReturnValue;
+            }else{
+                if($actionReturnValue ===null){
+                    $content='';
+                }elseif(is_string($actionReturnValue)){
+                    $content=$actionReturnValue;
+                }else{
+                    throw new Exception('the return value of Action is invalid: '.$actionReturnValue);
+                }
+
+                $response =$this->_dependencyInjector->getShared('response');
+
+                if ($this->_implicitView === true) {
+                    $view = $this->_dependencyInjector->getShared('view');
+                    $view->start();
+                    $view->setContent($content);
+                    $view->renderView($controller, $action);
+                    $view->finish();
+                    $response->setContent($view->getContent());
+                }else{
+                    $response->setContent($content);
+                }
+
+                return $response;
+            }
         }
     }
 }
