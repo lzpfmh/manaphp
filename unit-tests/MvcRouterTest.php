@@ -45,13 +45,13 @@ class MvcRouterTest extends TestCase{
             array(
                 'uri' => '/documentation/',
                 'controller' => 'documentation',
-                'action' => null,
+                'action' => 'index',
                 'params' => array()
             ),
             array(
                 'uri' => '/documentation',
                 'controller' => 'documentation',
-                'action' => null,
+                'action' => 'index',
                 'params' => array()
             ),
             array(
@@ -338,7 +338,7 @@ class MvcRouterTest extends TestCase{
         $routes = array(
             '/index/' => array(
                 'controller' => 'index',
-                'action' => '',
+                'action' => 'index',
             ),
             '/session/start/' => array(
                 'controller' => 'session',

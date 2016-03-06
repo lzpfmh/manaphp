@@ -26,36 +26,6 @@ namespace ManaPHP\Mvc {
          */
         public function getDefaultModule();
 
-        /**
-         * Sets the default controller name
-         *
-         * @param string $controllerName
-         */
-        public function setDefaultController($controllerName);
-
-
-        /**
-         * Returns the default controller name
-         *
-         * @return string
-         */
-        public function getDefaultController();
-
-
-        /**
-         * Sets the default action name
-         *
-         * @param string $actionName
-         */
-        public function setDefaultAction($actionName);
-
-        /**
-         * Returns the default action name
-         *
-         * @return string
-         */
-        public function getDefaultAction();
-
 
         /**
          * Handles routing information received from the rewrite engine

@@ -96,12 +96,12 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_defaultController = null;
+        protected $_defaultController = 'Index';
 
         /**
          * @var string
          */
-        protected $_defaultAction = null;
+        protected $_defaultAction = 'index';
 
         /**
          * @var array
@@ -245,54 +245,6 @@ namespace ManaPHP\Mvc {
         public function getDefaultModule()
         {
             return $this->_defaultModule;
-        }
-
-
-        /**
-         * Sets the default controller name
-         *
-         * @param string $controllerName
-         * @return static
-         */
-        public function setDefaultController($controllerName)
-        {
-            $this->_defaultController = $controllerName;
-            return $this;
-        }
-
-
-        /**
-         * Returns the default controller name
-         *
-         * @return string
-         */
-        public function getDefaultController()
-        {
-            return $this->_defaultController;
-        }
-
-
-        /**
-         * Sets the default action name
-         *
-         * @param string $actionName
-         * @return static
-         */
-        public function setDefaultAction($actionName)
-        {
-            $this->_defaultAction = $actionName;
-            return $this;
-        }
-
-
-        /**
-         * Returns the default action name
-         *
-         * @return string
-         */
-        public function getDefaultAction()
-        {
-            return $this->_defaultAction;
         }
 
 
