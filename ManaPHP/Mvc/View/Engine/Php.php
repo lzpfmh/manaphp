@@ -14,7 +14,6 @@ namespace ManaPHP\Mvc\View\Engine {
     {
         /**
          * Php constructor.
-         * @param \ManaPHP\Mvc\ViewInterface $view
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
         public function __construct($dependencyInjector = null)
