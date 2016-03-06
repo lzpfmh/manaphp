@@ -20,14 +20,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Returns the name of the default module
-         *
-         * @return string
-         */
-        public function getDefaultModule();
-
-
-        /**
          * Handles routing information received from the rewrite engine
          *
          * @param string $uri

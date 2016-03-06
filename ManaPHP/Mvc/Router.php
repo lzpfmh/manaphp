@@ -236,18 +236,7 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
-        /**
-         * Returns the name of the default module
-         *
-         * @return string
-         */
-        public function getDefaultModule()
-        {
-            return $this->_defaultModule;
-        }
-
-
+        
         /**
          * Handles routing information received from the rewrite engine
          *
