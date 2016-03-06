@@ -160,17 +160,6 @@ class MvcDispatcherTest extends TestCase{
         $this->assertInstanceOf('tDispatcher',$dispatcher->setModuleName('Api'));
     }
 
-    public function test_setDefaultAction(){
-        $dispatcher =new tDispatcher();
-
-        $this->assertEquals('index',$dispatcher->getDefaultAction());
-
-        $dispatcher->setDefaultAction('index');
-        $this->assertEquals('index',$dispatcher->getDefaultAction());
-
-        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher',$dispatcher->setDefaultAction('index'));
-        $this->assertInstanceOf('tDispatcher',$dispatcher->setDefaultAction('index'));
-    }
 
     public function test_setActionName(){
         $dispatcher =new tDispatcher();

@@ -204,19 +204,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Sets the default action name
-         *
-         * @param string $actionName
-         * @return static
-         */
-        public function setDefaultAction($actionName)
-        {
-            $this->_defaultAction = $actionName;
-            return $this;
-        }
-
-
-        /**
          * Sets the action name to be dispatched
          *
          * @param string $actionName
@@ -560,16 +547,6 @@ namespace ManaPHP\Mvc {
             if ($this->_actionName === null) {
                 $this->_actionName = $this->_defaultAction;
             }
-        }
-
-        /**
-         * Sets the default controller name
-         *
-         * @param string $controllerName
-         */
-        public function setDefaultController($controllerName)
-        {
-            $this->_defaultController = $controllerName;
         }
 
 

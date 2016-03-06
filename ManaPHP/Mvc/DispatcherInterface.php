@@ -30,14 +30,6 @@ namespace ManaPHP\Mvc {
          */
         public function setModuleName($moduleName);
 
-        /**
-         * Sets the default action name
-         *
-         * @param string $actionName
-         * @return static
-         */
-        public function setDefaultAction($actionName);
-
 
         /**
          * Sets the action name to be dispatched
@@ -123,14 +115,6 @@ namespace ManaPHP\Mvc {
          * @return boolean
          */
         public function wasForwarded();
-
-
-        /**
-         * Sets the default controller name
-         *
-         * @param string $controllerName
-         */
-        public function setDefaultController($controllerName);
 
 
         /**
