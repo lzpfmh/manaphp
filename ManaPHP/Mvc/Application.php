@@ -270,11 +270,10 @@ namespace ManaPHP\Mvc {
                 return false;
             }
 
-
             $controller = $dispatcher->dispatch();
             $possibleResponse = $dispatcher->getReturnedValue();
 
-            if (is_bool($possibleResponse) && $possibleResponse === false) {
+            if ($possibleResponse === false) {
                 $response = $this->_dependencyInjector->getShared('response');
             } else {
                 $returnedResponse = is_object($possibleResponse) ? ($possibleResponse instanceof ResponseInterface) : false;
@@ -295,8 +294,7 @@ namespace ManaPHP\Mvc {
                              * Check if the view process has been treated by the developer
                              */
                             if ($renderStatus !== false) {
-                                $view->renderView($dispatcher->getControllerName(), $dispatcher->getActionName(),
-                                  $dispatcher->getParams());
+                                $view->renderView($dispatcher->getControllerName(), $dispatcher->getActionName());
                             }
                         }
                     }
