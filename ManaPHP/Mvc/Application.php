@@ -80,7 +80,7 @@ namespace ManaPHP\Mvc {
             } else {
                 $this->_dependencyInjector = new FactoryDefault();
             }
-            $this->_dependencyInjector->set('application', $this, true);
+            $this->_dependencyInjector->setShared('application', $this, true);
         }
 
 
