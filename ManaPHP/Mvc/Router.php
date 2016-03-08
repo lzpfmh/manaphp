@@ -539,7 +539,7 @@ namespace ManaPHP\Mvc {
 
                 return implode('', $parts);
             }else{
-                return $str;
+               return ucfirst($str);
             }
         }
 
@@ -560,7 +560,7 @@ namespace ManaPHP\Mvc {
          */
         public function getActionName()
         {
-            return $this->_action;
+            return lcfirst($this->_action);
         }
 
 
