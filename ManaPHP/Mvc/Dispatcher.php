@@ -206,7 +206,7 @@ namespace ManaPHP\Mvc {
          */
         public function setActionName($actionName)
         {
-            $this->_actionName = $actionName;
+            $this->_actionName = lcfirst($actionName);
             return $this;
         }
 
@@ -455,12 +455,12 @@ namespace ManaPHP\Mvc {
 
             if (isset($forward['controller'])) {
                 $this->_previousControllerName = $this->_controllerName;
-                $this->_controllerName = $forward['controller'];
+                $this->_controllerName = $this->_camelize($forward['controller']);
             }
 
             if (isset($forward['action'])) {
                 $this->_previousActionName = $this->_actionName;
-                $this->_actionName = $forward['action'];
+                $this->_actionName = lcfirst($forward['action']);
             }
 
             if (isset($forward['params'])) {
@@ -489,12 +489,16 @@ namespace ManaPHP\Mvc {
          */
         protected function _camelize($str)
         {
-            $parts = explode('_', $str);
-            foreach ($parts as $k => $v) {
-                $parts[$k] = ucfirst($v);
-            }
+            if(strpos($str,'_') !==false){
+                $parts = explode('_', $str);
+                foreach ($parts as $k => $v) {
+                    $parts[$k] = ucfirst($v);
+                }
 
-            return implode('', $parts);
+                return implode('', $parts);
+            }else{
+                return ucfirst($str);
+            }
         }
 
         /**
@@ -550,7 +554,7 @@ namespace ManaPHP\Mvc {
          */
         public function setControllerName($controllerName)
         {
-            $this->_controllerName = $controllerName;
+            $this->_controllerName = $this->_camelize($controllerName);
         }
 
 
