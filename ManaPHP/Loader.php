@@ -68,6 +68,14 @@ namespace ManaPHP {
          */
         public function registerNamespaces($namespaces, $merge = false)
         {
+            foreach($namespaces as $namespace=>$path){
+                $path=rtrim($path,'\\/');
+                if(DIRECTORY_SEPARATOR==='\\'){
+                    $path=str_replace('\\','/',$path);
+                }
+                $namespaces[$namespace]=$path;
+            }
+
             if ($merge === false || $this->_namespaces === null) {
                 $this->_namespaces = $namespaces;
             } else {
@@ -104,6 +112,14 @@ namespace ManaPHP {
          */
         public function registerDirs($directories, $merge = false)
         {
+            foreach($directories as $key=>$directory){
+                $directory=rtrim($directory,'\\/');
+                if(DIRECTORY_SEPARATOR ==='\\'){
+                    $directory=str_replace('\\','/',$directory);
+                }
+                $directories[$key]=$directory;
+            }
+
             if ($merge === false || $this->_directories === null) {
                 $this->_directories = $directories;
             } else {
@@ -133,6 +149,12 @@ namespace ManaPHP {
          */
         public function registerClasses($classes, $merge = false)
         {
+            if(DIRECTORY_SEPARATOR ==='\\'){
+                foreach($classes as $class=>$path){
+                    $classes[$class]=str_replace('\\','/',$path);
+                }
+            }
+
             if ($merge === false || $this->_classes === null) {
                 $this->_classes = $classes;
             } else {
@@ -194,8 +216,13 @@ namespace ManaPHP {
         protected function _requireFile($file)
         {
             if (file_exists($file)) {
-
-                /** @noinspection PhpIncludeInspection */
+                if(DIRECTORY_SEPARATOR==='\\') {
+                    $realpath = str_replace('\\', '/', realpath($file));
+                    if ($realpath !== $file) {
+                        trigger_error("File name ($realpath) case mismatch for .$file", E_USER_ERROR);
+                    }
+                }
+                    /** @noinspection PhpIncludeInspection */
                 require $file;
                 return true;
             }
@@ -235,8 +262,7 @@ namespace ManaPHP {
                     if (strncmp($namespace, $className, $len) !== 0) {
                         continue;
                     }
-                    $file = $directory . substr($className, $len) . '.php';
-                    $file = str_replace('\\', '/', $file);
+                    $file = $directory . str_replace('\\','/',substr($className, $len)) . '.php';
                     $this->_requiredFile = $file;
                     return $this->_requireFile($file);
                 }
