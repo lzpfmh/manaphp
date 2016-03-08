@@ -108,7 +108,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_actionSuffix = 'Action';
 
-
         /**
          * @var string
          */
@@ -356,7 +355,7 @@ namespace ManaPHP\Mvc {
                     continue;
                 }
 
-                $controllerClass = $this->getControllerClass();
+                $controllerClass = $this->_getControllerClass();
 
                 if (!$this->_dependencyInjector->has($controllerClass) && !class_exists($controllerClass)) {
                     if($this->fireEvent('dispatcher:beforeNotFoundController',$this)===false){
@@ -366,7 +365,7 @@ namespace ManaPHP\Mvc {
                     if($this->_finished ===false){
                         continue;
                     }
-					
+
                     throw new Exception($controllerClass.' handler class cannot be loaded');
                 }
 
@@ -449,9 +448,7 @@ namespace ManaPHP\Mvc {
             if (!is_array($forward)) {
                 throw new Exception('Forward parameter must be an Array');
             }
-
-            $this->_previousControllerClass = $this->getControllerClass();
-
+            
             if (isset($forward['namespace'])) {
                 $this->_namespaceName = $forward['namespace'];
             }
@@ -498,6 +495,30 @@ namespace ManaPHP\Mvc {
             }
 
             return implode('', $parts);
+        }
+
+        /**
+         * Possible class name that will be located to dispatch the request
+         *
+         * @return string
+         */
+        protected function _getControllerClass()
+        {
+            $this->_resolveEmptyProperties();
+
+            if (strpos($this->_controllerName, '\\') === false) {
+                $camelizedClass = $this->_camelize($this->_controllerName);
+            } else {
+                $camelizedClass = $this->_controllerName;
+            }
+
+            if ($this->_namespaceName) {
+                $handlerClass = rtrim($this->_namespaceName, '\\') . '\\' . $camelizedClass . $this->_controllerSuffix;
+            } else {
+                $handlerClass = $camelizedClass . $this->_controllerSuffix;
+            }
+
+            return $handlerClass;
         }
 
         /**
