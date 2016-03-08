@@ -89,7 +89,7 @@ namespace ManaPHP\Mvc {
          */
         public function setViewsDir($viewsDir)
         {
-            $this->_viewsDir = rtrim($viewsDir, '\\/');
+            $this->_viewsDir =str_replace('\\','/',rtrim($viewsDir, '\\/'));
 
             return $this;
         }
@@ -232,6 +232,13 @@ namespace ManaPHP\Mvc {
             foreach ($this->_registeredEngines as $extension => $engine) {
                 $file = $fileWithoutExtension . $extension;
                 if (file_exists($file)) {
+                    if(DIRECTORY_SEPARATOR==='\\'){
+                        $realpath=str_replace('\\','/',realpath($file));
+                        if($file !==$realpath){
+                            trigger_error("File name ($realpath) case mismatch for $file",E_USER_ERROR);
+                        }
+                    }
+					
                     if (!isset($this->_resolvedEngines[$extension])) {
                         $this->_resolvedEngines[$extension] = $this->_loadEngine($extension);
                     }
@@ -317,7 +324,7 @@ namespace ManaPHP\Mvc {
 
             $mustClean = true;
 
-            $view = $this->_controllerName . '/' . $this->_actionName;
+            $view = $this->_controllerName . '/' . ucfirst($this->_actionName);
             $this->_engineRender($this->_viewsDir ,$view, $mustClean);
 
             if($this->_layout !==false){
@@ -327,7 +334,7 @@ namespace ManaPHP\Mvc {
                     $layout =$this->_controllerName;
                 }
 
-                $this->_engineRender($this->_viewsDir, $this->_layoutsDir . '/' . $layout, $mustClean);
+                $this->_engineRender($this->_viewsDir, $this->_layoutsDir . '/' . ucfirst($layout), $mustClean);
             }
 
             $this->fireEvent('view:afterRender', $this);
