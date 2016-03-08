@@ -112,10 +112,6 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_previousControllerClass;
-        /**
-         * @var string
-         */
         protected $_previousControllerName;
 
         /**
@@ -505,30 +501,6 @@ namespace ManaPHP\Mvc {
         }
 
         /**
-         * Possible class name that will be located to dispatch the request
-         *
-         * @return string
-         */
-        public function getControllerClass()
-        {
-            $this->_resolveEmptyProperties();
-
-            if (strpos($this->_controllerName, '\\') === false) {
-                $camelizedClass = $this->_camelize($this->_controllerName);
-            } else {
-                $camelizedClass = $this->_controllerName;
-            }
-
-            if ($this->_namespaceName) {
-                $handlerClass = rtrim($this->_namespaceName, '\\') . '\\' . $camelizedClass . $this->_controllerSuffix;
-            } else {
-                $handlerClass = $camelizedClass . $this->_controllerSuffix;
-            }
-
-            return $handlerClass;
-        }
-
-        /**
          * Set empty properties to their defaults (where defaults are available)
          */
         protected function _resolveEmptyProperties()
@@ -571,15 +543,6 @@ namespace ManaPHP\Mvc {
             return $this->_controllerName;
         }
 
-        /**
-         * Returns the previous controller class in the dispatcher
-         *
-         * @return string
-         */
-        public function getPreviousControllerClass()
-        {
-            return $this->_previousControllerClass;
-        }
 
         /**
          * Returns the previous controller in the dispatcher
