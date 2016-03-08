@@ -27,10 +27,11 @@ namespace ManaPHP {
 
             $file = self::$_rootPath . '/' . str_replace('\\','/',$className) . '.php';
             if (is_file($file)) {
-                /** @noinspection PhpIncludeInspection */
                 if(DIRECTORY_SEPARATOR==='\\' &&str_replace('\\','/',realpath($file)) !==$file){
                     trigger_error('File name case mismatch for '.$file,E_USER_ERROR);
                 }
+
+                /** @noinspection PhpIncludeInspection */
                 require $file;
                 return true;
             }
