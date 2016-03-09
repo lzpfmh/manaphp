@@ -190,6 +190,47 @@ namespace ManaPHP\Mvc {
 
 
         /**
+         * @param string $uri
+         * @param \ManaPHP\Mvc\Router\RouteInterface[] $routes
+         * @param array $parts
+         * @return bool
+         */
+        protected function _findMatchedRoute($uri, $routes, &$parts){
+            $parts = [];
+
+            /**
+             * Routes are traversed in reversed order
+             */
+            for ($i = count($routes) - 1; $i >= 0; $i--) {
+                $route = $routes[$i];
+
+                if ($route->isMatched($uri, $matches)) {
+                    $paths = $route->getPaths();
+                    $parts = $paths;
+
+                    if (is_array($matches)) {
+                        foreach ($matches as $k => $v) {
+                            if (is_string($k)) {
+                                $paths[$k] = $v;
+                            }
+                        }
+                        $parts = $paths;
+
+                        foreach ($paths as $part => $position) {
+                            if (is_int($position) && isset($matches[$position])) {
+                                $parts[$part] = $matches[$position];
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /**
          * Handles routing information received from the rewrite engine
          *
          *<code>
@@ -216,44 +257,8 @@ namespace ManaPHP\Mvc {
 
             $this->fireEvent('router:beforeCheckRoutes', $this);
 
-            $route_found = false;
-            $parts = [];
+            $route_found=$this->_findMatchedRoute($handle_uri,$this->_routes,$parts);
 
-            /**
-             * Routes are traversed in reversed order
-             */
-            for ($i = count($this->_routes) - 1; $i >= 0; $i--) {
-                $route = $this->_routes[$i];
-
-                $route_found = $route->isMatched($handle_uri, $matches);
-
-                if ($route_found) {
-                    $paths = $route->getPaths();
-                    $parts = $paths;
-
-                    if (is_array($matches)) {
-                        foreach ($matches as $k => $v) {
-                            if (is_string($k)) {
-                                $paths[$k] = $v;
-                            }
-                        }
-                        $parts = $paths;
-
-                        foreach ($paths as $part => $position) {
-                            if (is_int($position) && isset($matches[$position])) {
-                                $parts[$part] = $matches[$position];
-                            }
-                        }
-                    }
-
-                    $this->_matchedRoute = $route;
-                    break;
-                }
-            }
-
-            /**
-             * Update the wasMatched property indicating if the route was matched
-             */
             $this->_wasMatched = $route_found;
 
             /**
