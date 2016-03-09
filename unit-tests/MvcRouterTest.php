@@ -177,7 +177,7 @@ class MvcRouterTest extends TestCase{
 
         foreach ($tests as $n => $test) {
             $router->handle($test['uri']);
-            $this->assertEquals($router->getControllerName(), $test['controller'], 'Testing ' . $test['uri']);
+            $this->assertEquals(strtolower($router->getControllerName()), strtolower($test['controller']), 'Testing ' . $test['uri']);
             $this->assertEquals($router->getActionName(), $test['action'], 'Testing ' . $test['uri']);
             $this->assertEquals($router->getParams(), $test['params'], 'Testing ' . $test['uri']);
         }
@@ -283,7 +283,7 @@ class MvcRouterTest extends TestCase{
         foreach ($tests as $n => $test) {
             $_SERVER['REQUEST_METHOD'] = $test['method'];
             $router->handle($test['uri']);
-            $this->assertEquals($router->getControllerName(), $test['controller'], 'Testing ' . $test['uri']);
+            $this->assertEquals(strtolower($router->getControllerName()), strtolower($test['controller']), 'Testing ' . $test['uri']);
             $this->assertEquals($router->getActionName(), $test['action'], 'Testing ' . $test['uri']);
             $this->assertEquals($router->getParams(), $test['params'], 'Testing ' . $test['uri']);
         }
@@ -324,7 +324,7 @@ class MvcRouterTest extends TestCase{
             $_SERVER['REQUEST_METHOD'] = $test['method'];
 
             $router->handle($test['uri']);
-            $this->assertEquals($test['controller'], $router->getControllerName(), 'Testing ' . $test['uri']);
+            $this->assertEquals(strtolower($test['controller']), strtolower($router->getControllerName()), 'Testing ' . $test['uri']);
             $this->assertEquals($test['action'], $router->getActionName(), 'Testing ' . $test['uri']);
             $this->assertEquals($test['params'],$router->getParams(), 'Testing ' . $test['uri']);
         }
@@ -354,7 +354,7 @@ class MvcRouterTest extends TestCase{
             $router->handle($route);
             /** @noinspection DisconnectedForeachInstructionInspection */
             $this->assertTrue($router->wasMatched());
-            $this->assertEquals($paths['controller'], $router->getControllerName());
+            $this->assertEquals(strtolower($paths['controller']), strtolower($router->getControllerName()));
             $this->assertEquals($paths['action'], $router->getActionName());
         }
     }
@@ -407,7 +407,7 @@ class MvcRouterTest extends TestCase{
             /** @noinspection DisconnectedForeachInstructionInspection */
             $this->assertTrue($router->wasMatched());
             $this->assertEquals($paths['module'], $router->getModuleName());
-            $this->assertEquals($paths['controller'], $router->getControllerName());
+            $this->assertEquals(strtolower($paths['controller']), strtolower($router->getControllerName()));
             $this->assertEquals($paths['action'], $router->getActionName());
         }
     }
