@@ -472,16 +472,7 @@ class MvcRouterTest extends TestCase{
 
         //default get from url
         $this->assertEquals('/some/route',$router->getRewriteUri());
-
-        //explicitly get from url
-        $router->setUriSource(ManaPHP\Mvc\Router::URI_SOURCE_GET_URL);
-        $this->assertEquals('/some/route',$router->getRewriteUri());
-
-        //explicitly get from request uri without query string
-        $router->setUriSource(ManaPHP\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI);
-        $_SERVER['REQUEST_URI'] = '/some/route';
-        $this->assertEquals('/some/route',$router->getRewriteUri());
-
+        
         //explicitly get from request uri with query string
         $_SERVER['REQUEST_URI'] = '/some/route?x=1';
         $this->assertEquals('/some/route',$router->getRewriteUri());
