@@ -34,15 +34,6 @@ namespace ManaPHP\Mvc {
      */
     class Router extends Component implements RouterInterface
     {
-        const URI_SOURCE_GET_URL = 0;
-
-        const URI_SOURCE_SERVER_REQUEST_URI = 1;
-
-        /**
-         * @var int
-         */
-        protected $_uriSource = self::URI_SOURCE_GET_URL;
-
         /**
          * @var string
          */
@@ -145,45 +136,17 @@ namespace ManaPHP\Mvc {
          */
         public function getRewriteUri()
         {
-            if ($this->_uriSource === self::URI_SOURCE_GET_URL) {
-                if (!isset($_GET['_url'])) {
-                    if ($_SERVER['SCRIPT_NAME'] === '/index.php') {
-                        $real_url = '/';
-                    } else {
-                        throw new Exception('--$_GET["_url"] not set, may be .htaccess has incorrect config.');
-                    }
-
+            if (!isset($_GET['_url'])) {
+                if ($_SERVER['SCRIPT_NAME'] === '/index.php') {
+                    $real_url = '/';
                 } else {
-                    $real_url = $_GET['_url'];
-                }
-            } elseif ($this->_uriSource === self::URI_SOURCE_SERVER_REQUEST_URI) {
-                if (!isset($_SERVER['REQUEST_URI'])) {
-                    throw new Exception('--$_SERVER["REQUEST_URI"] not set.');
-                } else {
-                    $real_url = explode('?', $_SERVER['REQUEST_URI'], 2)[0];
+                    throw new Exception('--$_GET["_url"] not set, may be .htaccess has incorrect config.');
                 }
             } else {
-                throw new Exception('--invalid URI_SOURCE');
+                $real_url = $_GET['_url'];
             }
 
             return $real_url === '' ? '/' : $real_url;
-        }
-
-
-        /**
-         * Sets the URI source. One of the URI_SOURCE_* constants
-         *
-         *<code>
-         *    $router->setUriSource(Router::URI_SOURCE_SERVER_REQUEST_URI);
-         *</code>
-         *
-         * @param int $uriSource
-         * @return static
-         */
-        public function setUriSource($uriSource)
-        {
-            $this->_uriSource = $uriSource;
-            return $this;
         }
 
 
