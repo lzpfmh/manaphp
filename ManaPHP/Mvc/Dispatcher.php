@@ -86,7 +86,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_defaultNamespace;
+        protected $_defaultNamespace=null;
 
         /**
          * @var string
