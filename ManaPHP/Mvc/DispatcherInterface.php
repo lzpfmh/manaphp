@@ -15,6 +15,12 @@ namespace ManaPHP\Mvc {
          */
         public function setDefaultNamespace($namespace);
 
+        /**
+         * Returns the default namespace
+         *
+         * @return string
+         */
+        public function getDefaultNamespace();
 
         /**
          * Sets the namespace which the controller belongs to
