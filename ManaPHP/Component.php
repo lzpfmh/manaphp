@@ -33,6 +33,7 @@ namespace ManaPHP{
 //     * @property \ManaPHP\Session\BagInterface $persistent
      * @property \ManaPHP\Mvc\ViewInterface $view
      * @property \ManaPHP\Mvc\View\Tag $tag
+     * @property \ManaPHP\Loader $loader
      */
     class Component implements ComponentInterface{
         /**
