@@ -151,5 +151,10 @@ namespace ManaPHP{
                 self::$_eventPeeks[] = $peek;
             }
         }
+
+        public function __debugInfo()
+        {
+            return get_object_vars($this);
+        }
     }
 }
