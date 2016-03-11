@@ -37,11 +37,6 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_namespace = null;
-
-        /**
-         * @var string
-         */
         protected $_module = null;
 
         /**
@@ -74,10 +69,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_wasMatched = false;
 
-        /**
-         * @var string
-         */
-        protected $_defaultNamespace = null;
 
         /**
          * @var string
@@ -159,19 +150,6 @@ namespace ManaPHP\Mvc {
         public function removeExtraSlashes($remove)
         {
             $this->_removeExtraSlashes = $remove;
-            return $this;
-        }
-
-
-        /**
-         * Sets the name of the default namespace
-         *
-         * @param string $namespaceName
-         * @return static
-         */
-        public function setDefaultNamespace($namespaceName)
-        {
-            $this->_defaultNamespace = $namespaceName;
             return $this;
         }
 
@@ -271,20 +249,12 @@ namespace ManaPHP\Mvc {
                 }
             }
 
-            $this->_namespace = $this->_defaultNamespace;
             $this->_module = $this->_defaultModule;
             $this->_controller = $this->_defaultController;
             $this->_action = $this->_defaultAction;
             $this->_params = $this->_defaultParams;
 
             if ($route_found) {
-                if (isset($parts['namespace'])) {
-                    if (!is_numeric($parts['namespace'])) {
-                        $this->_namespace = $parts['namespace'];
-                    }
-                    unset($parts['namespace']);
-                }
-
                 if (isset($parts['module'])) {
                     if (!is_numeric($parts['module'])) {
                         $this->_module = $parts['module'];
@@ -470,16 +440,6 @@ namespace ManaPHP\Mvc {
         {
             $this->_notFoundPaths = $paths;
             return $this;
-        }
-
-        /**
-         * Returns the processed namespace name
-         *
-         * @return string
-         */
-        public function getNamespaceName()
-        {
-            return $this->_namespace;
         }
 
 

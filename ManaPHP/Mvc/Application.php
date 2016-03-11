@@ -202,8 +202,9 @@ namespace ManaPHP\Mvc {
                     $dispatcher->setDefaultNamespace($this->_baseNamespace."\\$moduleName\\Controllers");
                 }
             }
+            $moduleName=$router->getModuleName();
             $dispatcher->setModuleName($router->getModuleName());
-            $dispatcher->setNamespaceName($router->getNamespaceName());
+            $dispatcher->setNamespaceName($this->_baseNamespace.($moduleName===''?'':"\\$moduleName")."\\Controllers");
             $dispatcher->setControllerName($router->getControllerName());
             $dispatcher->setActionName($router->getActionName());
             $dispatcher->setParams($router->getParams());

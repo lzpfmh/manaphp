@@ -126,13 +126,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Returns processed namespace name
-         *
-         * @return string
-         */
-        public function getNamespaceName();
-
-        /**
          * Returns processed controller name
          *
          * @return string
