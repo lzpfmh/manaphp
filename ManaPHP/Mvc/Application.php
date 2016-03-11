@@ -131,17 +131,17 @@ namespace ManaPHP\Mvc {
          */
         public function registerModules($modules=null)
         {
-            if($modules===null ||count($modules)===0){
+            if($modules===null){
                 $this->_modules=[''=>$this->_baseNamespace.'\\Module'];
                 $this->_defaultModule='';
             }else{
                 foreach($modules as $module=>$definition){
                     if(is_string($module)){
-                        $moduleName=$module;
+                        $moduleName=ucfirst($module);
                         $this->_modules[$moduleName]=$definition;
                     }else{
-                        $moduleName=$definition;
-                        $this->_modules[$moduleName]=$this->_baseNamespace.'\\'.ucfirst($moduleName).'\\Module';
+                        $moduleName=ucfirst($definition);
+                        $this->_modules[$moduleName]=$this->_baseNamespace."\\$moduleName\\Module";
                     }
 
                     if($this->_defaultModule ===null){
