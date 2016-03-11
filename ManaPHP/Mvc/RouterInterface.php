@@ -15,6 +15,7 @@ namespace ManaPHP\Mvc {
          * Sets the name of the default module
          *
          * @param string $moduleName
+         * @return static
          */
         public function setDefaultModule($moduleName);
 
