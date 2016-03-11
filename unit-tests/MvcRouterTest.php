@@ -415,52 +415,48 @@ class MvcRouterTest extends TestCase{
     public function test_shortPaths(){
         $router = new ManaPHP\Mvc\Router(false);
 
-        $route = $router->add('/route0', 'Feed');
+        $route = $router->add('/route0', 'feed');
         $this->assertEquals($route->getPaths(), array(
-            'controller' => 'feed'
+            'controller' => 'Feed'
         ));
 
         $route = $router->add('/route1', 'Feed::get');
         $this->assertEquals($route->getPaths(), array(
-            'controller' => 'feed',
+            'controller' => 'Feed',
             'action' => 'get',
         ));
 
         $route = $router->add('/route2', 'News::Posts::show');
         $this->assertEquals($route->getPaths(), array(
             'module' => 'News',
-            'controller' => 'posts',
+            'controller' => 'Posts',
             'action' => 'show',
         ));
 
         $route = $router->add('/route3', 'MyApp\Controllers\Posts::show');
         $this->assertEquals($route->getPaths(), array(
-            'namespace' => 'MyApp\Controllers',
-            'controller' => 'posts',
+            'controller' => 'MyApp\Controllers\Posts',
             'action' => 'show',
         ));
 
         //incompatible with phalcon
         $route = $router->add('/route3', 'MyApp\Controllers\::show');
         $this->assertEquals($route->getPaths(), array(
-            'namespace' => 'MyApp\Controllers',
-            'controller' => '',
+            'controller' => 'MyApp\Controllers\\',
             'action' => 'show',
         ));
 
         $route = $router->add('/route3', 'News::MyApp\Controllers\Posts::show');
         $this->assertEquals($route->getPaths(), array(
             'module' => 'News',
-            'namespace' => 'MyApp\Controllers',
-            'controller' => 'posts',
+            'controller' => 'MyApp\Controllers\Posts',
             'action' => 'show',
         ));
 
         //incompatible with phalcon
         $route = $router->add('/route3', '\Posts::show');
         $this->assertEquals($route->getPaths(), array(
-            'namespace'=>'',
-            'controller' => 'posts',
+            'controller' => '\Posts',
             'action' => 'show',
         ));
     }

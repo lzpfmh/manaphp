@@ -70,7 +70,6 @@ namespace ManaPHP\Mvc\Router {
             if (strpos($pattern, ':') !== false) {
                 $pattern = str_replace('/:module', '/{module:[\w-]+}', $pattern);
                 $pattern = str_replace('/:controller', '/{controller:[\w-]+}', $pattern);
-                $pattern = str_replace('/:namespace', '/{namespace:[\w-]+}', $pattern);
                 $pattern = str_replace('/:action', '/{action:[\w-]+}', $pattern);
                 $pattern = str_replace('/:params', '/{params:.+}', $pattern);
                 $pattern = str_replace('/:int', '/(\d+)', $pattern);
@@ -155,13 +154,10 @@ namespace ManaPHP\Mvc\Router {
                     }
 
                     if (isset($controllerName)) {
-                        if (strpos($controllerName, '\\') !== false) {
-                            $pos = strrpos($controllerName, '\\');
-                            $routePaths['namespace'] = substr($controllerName, 0, $pos);
-                            $routePaths['controller'] = strtolower(substr($controllerName, $pos + 1));
+                        if (strpos($controllerName, '\\') === false) {
+                            $routePaths['controller'] = ucfirst($controllerName);
                         } else {
-                            // Always pass the controller to lowercase
-                            $routePaths['controller'] = self::_uncamelize($controllerName);
+                            $routePaths['controller'] =$controllerName;
                         }
                     }
 
