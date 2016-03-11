@@ -5,6 +5,7 @@ namespace ManaPHP\Mvc {
     use ManaPHP\Component;
     use ManaPHP\Di\FactoryDefault;
     use ManaPHP\Http\ResponseInterface;
+    use ManaPHP\Loader;
     use ManaPHP\Mvc\Application\Exception;
 
     /**
@@ -52,6 +53,15 @@ namespace ManaPHP\Mvc {
      */
     class Application extends Component
     {
+        /**
+         * @var string
+         */
+        protected $_baseDirectory;
+
+        /**
+         * var string
+         */
+        protected $_baseNamespace;
 
         /**
          * @var string
@@ -61,7 +71,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var array
          */
-        protected $_modules = [];
+        protected $_modules=null;
 
         /**
          * @var boolean
@@ -71,9 +81,10 @@ namespace ManaPHP\Mvc {
         /**
          * \ManaPHP\Mvc\Application
          *
+         * @param string $baseDirectory
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function __construct($dependencyInjector = null)
+        public function __construct($baseDirectory,$dependencyInjector = null)
         {
             if (is_object($dependencyInjector)) {
                 $this->_dependencyInjector = $dependencyInjector;
@@ -81,6 +92,13 @@ namespace ManaPHP\Mvc {
                 $this->_dependencyInjector = new FactoryDefault();
             }
             $this->_dependencyInjector->setShared('application', $this, true);
+
+            $baseDirectory=str_replace('\\','/',rtrim($baseDirectory,'\\/'));
+            $baseNamespace=ucfirst(basename($baseDirectory));
+
+            $this->_baseDirectory=$baseDirectory;
+            $this->_baseNamespace=$baseNamespace;
+            $this->loader->registerNamespaces([$baseNamespace=>$baseDirectory])->register();
         }
 
 
@@ -103,74 +121,36 @@ namespace ManaPHP\Mvc {
          *
          *<code>
          *    $this->registerModules(array(
-         *        'frontend' => array(
-         *            'className' => 'Multiple\Frontend\Module',
-         *            'path' => '../apps/frontend/Module.php'
-         *        ),
-         *        'backend' => array(
-         *            'className' => 'Multiple\Backend\Module',
-         *            'path' => '../apps/backend/Module.php'
-         *        )
-         *    ));
+         *        'frontend' => 'Multiple\Frontend\Module',
+         *        'backend' => 'Multiple\Backend\Module'));
          *</code>
          *
          * @param array $modules
-         * @param boolean $merge
          * @return static
-         */
-        public function registerModules($modules, $merge = false)
-        {
-            $this->_modules = $merge === false ? $modules : array_merge($this->_modules, $modules);
-            return $this;
-        }
-
-
-        /**
-         * Return the modules registered in the application
-         *
-         * @return array
-         */
-        public function getModules()
-        {
-            return $this->_modules;
-        }
-
-        /**
-         * Gets the module definition registered in the application via module name
-         *
-         * @param string $name
-         * @return array|callable
          * @throws \ManaPHP\Mvc\Application\Exception
          */
-        public function getModule($name)
+        public function registerModules($modules=null)
         {
-            if (!isset($this->_modules[$name])) {
-                throw new Exception("Module '" . $name . "' isn't registered in the application container");
+            if($modules===null ||count($modules)===0){
+                $this->_modules=[''=>$this->_baseNamespace.'\\Module'];
+                $this->_defaultModule='';
+            }else{
+                foreach($modules as $module=>$definition){
+                    if(is_string($module)){
+                        $moduleName=$module;
+                        $this->_modules[$moduleName]=$definition;
+                    }else{
+                        $moduleName=$definition;
+                        $this->_modules[$moduleName]=$this->_baseNamespace.'\\'.ucfirst($moduleName).'\\Module';
+                    }
+
+                    if($this->_defaultModule ===null){
+                        $this->_defaultModule=$moduleName;
+                    }
+                }
             }
 
-            return $this->_modules[$name];
-        }
-
-        /**
-         * Sets the module name to be used if the router doesn't return a valid module
-         *
-         * @param string $defaultModule
-         * @return static
-         */
-        public function setDefaultModule($defaultModule)
-        {
-            $this->_defaultModule = $defaultModule;
             return $this;
-        }
-
-        /**
-         * Returns the default module name
-         *
-         * @return string
-         */
-        public function getDefaultModule()
-        {
-            return $this->_defaultModule;
         }
 
 
@@ -193,75 +173,49 @@ namespace ManaPHP\Mvc {
 
             $router->handle($uri);
 
-            $moduleName = $router->getModuleName();
-            $moduleObject = null;
-
-            if ($moduleName !== null) {
-                if ($this->fireEvent('application:beforeStartModule', $this, $moduleName) === false) {
-                    return false;
-                }
-
-                $module = $this->getModule($moduleName);
-
-                /**
-                 * An array module definition contains a path to a module definition class
-                 */
-                if (is_array($module)) {
-                    /**
-                     * Class name used to load the module definition
-                     */
-                    $className = isset($module['className']) ? $module['className'] : 'Module';
-
-                    /**
-                     * If developer specify a path try to include the file
-                     */
-                    if (isset($module['path'])) {
-                        if (!class_exists($className, false)) {
-                            if (file_exists($module['path'])) {
-                                /** @noinspection PhpIncludeInspection */
-                                require($module['path']);
-                            } else {
-                                throw new Exception("Module definition path '" . $module['path'] . "' doesn't exist");
-                            }
-                        }
-                    }
-
-                    /**
-                     * @var \ManaPHP\Mvc\ModuleInterface $moduleObject
-                     */
-                    $moduleObject = $this->_dependencyInjector->get($className);
-
-                    /**
-                     * 'registerAutoloaders' and 'registerServices' are automatically called
-                     */
-                    $moduleObject->registerAutoloaders($this->_dependencyInjector);
-                    $moduleObject->registerServices($this->_dependencyInjector);
-                } elseif ($module instanceof \Closure) {
-                    $moduleObject = call_user_func_array($module, [$this->_dependencyInjector]);
-                } else {
-                    throw new Exception('Invalid module definition: '.$moduleName);
-                }
-
-                $this->fireEvent('application:afterStartModule', $this, $moduleObject);
+            if($this->_modules ===null){
+                throw new Exception('modules is empty. please register it first.');
             }
 
+            $moduleName = $router->getModuleName();
+            if($moduleName ===null){
+                $moduleName='';
+            }
+
+            if(!isset($this->_modules[$moduleName])){
+                throw new Exception('Module does not exists: \''.$moduleName.'\'');
+            }
+
+            $moduleObject = null;
+
+            $this->fireEvent('application:beforeStartModule', $this, $moduleName);
+            $moduleObject = $this->_dependencyInjector->get($this->_modules[$moduleName]);
+            $moduleObject->registerAutoloaders($this->_dependencyInjector);
+            $moduleObject->registerServices($this->_dependencyInjector);
+            $this->fireEvent('application:afterStartModule', $this, $moduleObject);
+
             $dispatcher = $this->_dependencyInjector->getShared('dispatcher');
+            if($dispatcher->getDefaultNamespace() ===null){
+                if($moduleName===''){
+                    $dispatcher->setDefaultNamespace($this->_baseNamespace.'\\Controllers');
+                }else{
+                    $dispatcher->setDefaultNamespace($this->_baseNamespace."\\$moduleName\\Controllers");
+                }
+            }
             $dispatcher->setModuleName($router->getModuleName());
             $dispatcher->setNamespaceName($router->getNamespaceName());
             $dispatcher->setControllerName($router->getControllerName());
             $dispatcher->setActionName($router->getActionName());
             $dispatcher->setParams($router->getParams());
 
-            if ($this->fireEvent('application:beforeHandleRequest', $this, $dispatcher) === false) {
-                return false;
-            }
+            $this->fireEvent('application:beforeHandleRequest', $this, $dispatcher);
 
             $controller = $dispatcher->dispatch();
             if($controller ===false){
                 return false;
             }
 
-            $response=$this->_getResponse($dispatcher->getReturnedValue(),$dispatcher->getControllerName(),$dispatcher->getActionName());
+            $response=$this->_getResponse($dispatcher->getReturnedValue(),$moduleName,$dispatcher->getControllerName(),$dispatcher->getActionName());
 
             $this->fireEvent('application:afterHandleRequest', $this, $controller);
 
@@ -276,12 +230,13 @@ namespace ManaPHP\Mvc {
 
         /**
          * @param mixed $actionReturnValue
+         * @param $moduleName
          * @param string $controller
          * @param string $action
          * @return \ManaPHP\Http\ResponseInterface
          * @throws \ManaPHP\Mvc\Application\Exception
          */
-        protected function _getResponse($actionReturnValue,$controller,$action){
+        protected function _getResponse($actionReturnValue,$moduleName,$controller,$action){
             if ($actionReturnValue === false) {
                 return $this->_dependencyInjector->getShared('response');
             } elseif($actionReturnValue instanceof ResponseInterface){
@@ -299,6 +254,14 @@ namespace ManaPHP\Mvc {
 
                 if ($this->_implicitView === true) {
                     $view = $this->_dependencyInjector->getShared('view');
+                    if($view->getViewsDir() ===null){
+                        if($moduleName===''){
+                            $view->setViewsDir($this->_baseDirectory."/Views");
+                        }else{
+                            $view->setViewsDir($this->_baseDirectory."/$moduleName/Views");
+                        }
+                    }
+
                     $view->start();
                     $view->setContent($content);
                     $view->renderView($controller, $action);
