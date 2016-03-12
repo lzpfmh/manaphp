@@ -366,27 +366,22 @@ class MvcRouterTest extends TestCase{
     public function test_mount(){
         $router = new ManaPHP\Mvc\Router(false);
 
-        $group = new ManaPHP\Mvc\Router\Group(array(
-            'module' => 'blog',
-            'controller' => 'index'
-        ));
+        $group = new ManaPHP\Mvc\Router\Group();
 
-        $group->setPrefix('/blog');
-
-        $group->add('/save', array(
+        $group->add('/blog/save', array(
             'action' => 'save'
         ));
 
-        $group->add('/edit/{id}', array(
+        $group->add('/blog/edit/{id}', array(
             'action' => 'edit'
         ));
 
-        $group->add('/about', array(
+        $group->add('/blog/about', array(
             'controller' => 'about',
             'action' => 'index'
         ));
 
-        $router->mount(null,$group);
+        $router->mount('blog',$group);
 
         $routes = array(
             '/blog/save' => array(
