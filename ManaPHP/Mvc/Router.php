@@ -285,11 +285,11 @@ namespace ManaPHP\Mvc {
         /**
          * Mounts a group of routes in the router
          *
-         * @param string $module
          * @param \ManaPHP\Mvc\Router\GroupInterface $group
+		 * @param string $module
          * @return static
          */
-        public function mount($module, $group)
+        public function mount($group,$module=null)
         {
             $this->_groups[$module] = $group;
 

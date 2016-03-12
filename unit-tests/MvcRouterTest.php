@@ -175,7 +175,7 @@ class MvcRouterTest extends TestCase{
 
         $group->add('/show/{id:video([0-9]+)}/{title:[a-z\-]+}', 'Videos::show');
 
-        $router->mount(null,$group);
+        $router->mount($group);
         foreach ($tests as $n => $test) {
             $router->handle($test['uri']);
             $this->assertEquals(strtolower($router->getControllerName()), strtolower($test['controller']), 'Testing ' . $test['uri']);
@@ -281,7 +281,7 @@ class MvcRouterTest extends TestCase{
             'action' => 'index'
         ));
 
-        $router->mount(null,$group);
+        $router->mount($group);
         foreach ($tests as $n => $test) {
             $_SERVER['REQUEST_METHOD'] = $test['method'];
             $router->handle($test['uri']);
@@ -322,7 +322,7 @@ class MvcRouterTest extends TestCase{
         $group->add('/some/{name}/{id:[0-9]+}',['controller'=>'c','action'=>'a']);
         $group->add('/some/{name}/{id:[0-9]+}/{date}',['controller'=>'c','action'=>'a']);
 
-        $router->mount(null,$group);
+        $router->mount($group);
 
         foreach ($tests as $n => $test) {
             $_SERVER['REQUEST_METHOD'] = $test['method'];
@@ -381,7 +381,7 @@ class MvcRouterTest extends TestCase{
             'action' => 'index'
         ));
 
-        $router->mount('blog',$group);
+        $router->mount($group,'blog');
 
         $routes = array(
             '/blog/save' => array(
