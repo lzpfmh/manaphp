@@ -16,7 +16,7 @@ require MANAPHP_ROOT. '/Autoloader.php';
 
 \ManaPHP\Autoloader::register(false);
 
-try{
+//try{
     $application = new \ManaPHP\Mvc\Application(APP_ROOT);
     $di =$application->getDependencyInjector();
     $di->set('router',function(){
@@ -27,12 +27,12 @@ try{
     $application->registerModules(['Home']);
 
     echo $application->handle()->getContent();
-    var_dump($application->__debugInfo());
-}catch (\Exception $e){
-    var_dump($e->getMessage());
-    var_dump($_GET);
-    var_dump($_SERVER);
-}
+    //var_dump($application->__debugInfo());
+//}catch (\Exception $e){
+//    var_dump($e->getMessage());
+//    var_dump($_GET);
+//    var_dump($_SERVER);
+//}
  class ddd extends \ManaPHP\Mvc\Dispatcher\Listener{
      public function afterDispatch(
          /* @noinspection PhpUnusedParameterInspection */
