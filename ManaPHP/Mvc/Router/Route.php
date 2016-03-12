@@ -62,11 +62,13 @@ namespace ManaPHP\Mvc\Router {
         {
             // If a pattern contains ':', maybe there are placeholders to replace
             if (strpos($pattern, ':') !== false) {
-                $pattern = str_replace('/:module', '/{module:[\w-]+}', $pattern);
-                $pattern = str_replace('/:controller', '/{controller:[\w-]+}', $pattern);
-                $pattern = str_replace('/:action', '/{action:[\w-]+}', $pattern);
-                $pattern = str_replace('/:params', '/{params:.+}', $pattern);
-                $pattern = str_replace('/:int', '/(\d+)', $pattern);
+                $pattern = strtr($pattern, [
+                  '/:module' => '/{module:[a-z\d_-]+}',
+                  '/:controller' => '/{controller:[a-z\d_-]+}',
+                  '/:action' => '/{action:[a-z\d_-]+}',
+                  '/:params' => '/{params:.+}',
+                  '/:int' => '/(\d+)'
+                ]);
             }
 
             if (strpos($pattern, '{') !== false) {

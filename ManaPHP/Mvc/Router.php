@@ -203,10 +203,11 @@ namespace ManaPHP\Mvc {
          *</code>
          *
          * @param string $uri
+         * @param string $host
          * @return boolean
          * @throws \ManaPHP\Mvc\Router\Exception
          */
-        public function handle($uri = null)
+        public function handle($uri = null,$host=null)
         {
             $uri = ($uri === null || $uri === '') ? $this->getRewriteUri() : $uri;
 

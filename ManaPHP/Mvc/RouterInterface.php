@@ -13,15 +13,34 @@ namespace ManaPHP\Mvc {
         /**
          * Handles routing information received from the rewrite engine
          *
+         * <code>
+         *
+         *  $router->handle();  //==>$router->handle($_GET['_url'],$_SERVER['HTTP_HOST']);
+         *
+         *  $router->handle('/blog');   //==>$router->handle('/blog',$_SERVER['HTTP_HOST']);
+         *
+         * $router->handle('/blog','www.manaphp.com');
+         *
+         * </code>
          * @param string $uri
+         * @param string $host
          * @return boolean
          */
-        public function handle($uri = null);
+        public function handle($uri = null, $host=null);
 
 
         /**
          * Mounts a group of routes in the router
          *
+         * <code>
+         *  $group=new \ManaPHP\Mvc\Router\Group();
+         *
+         *  $group->addGet('/blog','blog::list');
+         *  $group->addGet('/blog/{id:\d+}','blog::detail')
+         *
+         *  $router=new \ManaPHP\Mvc\Router();
+         *  $router->mount($group,'home');
+         * </code>
          * @param \ManaPHP\Mvc\Router\GroupInterface $group
          * @param string $module
          * @return  static
