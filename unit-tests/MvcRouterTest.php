@@ -435,9 +435,7 @@ class MvcRouterTest extends TestCase{
             'controller' => 'Posts',
             'action' => 'show',
         ));
-
-
-         }
+    }
 
     public function test_getRewriteUri(){
         $_GET['_url'] = '/some/route';
