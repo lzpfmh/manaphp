@@ -8,6 +8,33 @@
 defined('UNIT_TESTS_ROOT')||require 'bootstrap.php';
 
 class MvcRouterRouteTest extends TestCase{
+    public function test_construct(){
+
+        //  literal route test
+        $route=new \ManaPHP\Mvc\Router\Route('/blog/edit');
+        $this->assertTrue($route->isMatched('/blog/edit',$matches));
+        $this->assertEquals(null,$matches);
+
+        // :module, :controller, :action, :params
+        $route=new \ManaPHP\Mvc\Router\Route('/:module/:controller/:action/:params');
+        $this->assertTrue($route->isMatched('/admin/blog/edit/a/b/c',$matches));
+        $this->assertEquals('admin',$matches['module']);
+        $this->assertEquals('blog',$matches['controller']);
+        $this->assertEquals('edit',$matches['action']);
+        $this->assertEquals('a/b/c',$matches['params']);
+
+        //  normal pcre
+        $route=new \ManaPHP\Mvc\Router\Route('/blog/{user:[a-z0-9]{4,}}/view-{id:\d+}.html');
+        $this->assertTrue($route->isMatched('/blog/mana/view-1234.html',$matches));
+        $this->assertEquals('1234',$matches['id']);
+        $this->assertEquals('mana',$matches['user']);
+
+        $route=new \ManaPHP\Mvc\Router\Route('/blog/{id:\d+}');
+        $this->assertTrue($route->isMatched('/blog/1234',$matches));
+        $this->assertEquals('1234',$matches['id']);
+
+    }
+	
     public function test_router(){
         $_GET['_url'] = '';
 

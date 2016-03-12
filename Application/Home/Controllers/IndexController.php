@@ -87,6 +87,8 @@ class IndexController extends Controller{
         $rows=$this->modelsManager->createBuilder()
             ->where('address_id <=100')
             ->addFrom(get_class(new Address()))->getQuery()->execute();
+        $route=new \ManaPHP\Mvc\Router\Route('/:module/:controller/:action/:params');
+        $route->isMatched('/admin/blog/edit/a/b/c',$matches);
     }
 
     public function test2Action(){
