@@ -187,7 +187,7 @@ namespace ManaPHP\Mvc {
             $moduleObject = null;
 
             $this->fireEvent('application:beforeStartModule', $this, $moduleName);
-            $moduleObject = $this->_dependencyInjector->get($this->_modules[$moduleName]);
+            $moduleObject = $this->_dependencyInjector->getShared($this->_modules[$moduleName]);
             $moduleObject->registerAutoloaders($this->_dependencyInjector);
             $moduleObject->registerServices($this->_dependencyInjector);
             $this->fireEvent('application:afterStartModule', $this, $moduleObject);
