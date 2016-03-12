@@ -169,8 +169,6 @@ namespace ManaPHP\Mvc {
 
             $router = $this->_dependencyInjector->getShared('router');
 
-            $router->setDefaultModule($this->_defaultModule);
-
             $router->handle($uri);
 
             if($this->_modules ===null){
@@ -179,7 +177,7 @@ namespace ManaPHP\Mvc {
 
             $moduleName = $router->getModuleName();
             if($moduleName ===null){
-                $moduleName='';
+                $moduleName=$this->_defaultModule;
             }
 
             if(!isset($this->_modules[$moduleName])){
@@ -202,8 +200,8 @@ namespace ManaPHP\Mvc {
                     $dispatcher->setDefaultNamespace($this->_baseNamespace."\\$moduleName\\Controllers");
                 }
             }
-            $moduleName=$router->getModuleName();
-            $dispatcher->setModuleName($router->getModuleName());
+
+            $dispatcher->setModuleName($moduleName);
             $dispatcher->setNamespaceName($this->_baseNamespace.($moduleName===''?'':"\\$moduleName")."\\Controllers");
             $dispatcher->setControllerName($router->getControllerName());
             $dispatcher->setActionName($router->getActionName());
