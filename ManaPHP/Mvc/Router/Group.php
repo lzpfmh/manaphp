@@ -53,27 +53,9 @@ namespace ManaPHP\Mvc\Router {
         protected $_prefix;
 
         /**
-         * @var array
-         */
-        protected $_paths;
-
-        /**
          * @var \ManaPHP\Mvc\Router\RouteInterface[]
          */
         protected $_routes;
-
-
-        /**
-         * \ManaPHP\Mvc\Router\Group constructor
-         *
-         * @param array $paths
-         */
-        public function __construct($paths = null)
-        {
-            if (is_array($paths)) {
-                $this->_paths = $paths;
-            }
-        }
 
 
         /**
@@ -85,19 +67,6 @@ namespace ManaPHP\Mvc\Router {
         public function setPrefix($prefix)
         {
             $this->_prefix = $prefix;
-            return $this;
-        }
-
-
-        /**
-         * Set common paths for all the routes in the group
-         *
-         * @param array $paths
-         * @return static
-         */
-        public function setPaths($paths)
-        {
-            $this->_paths = $paths;
             return $this;
         }
 
@@ -124,9 +93,7 @@ namespace ManaPHP\Mvc\Router {
          */
         protected function _addRoute($pattern, $paths = null, $httpMethods = null)
         {
-            $mergedPaths = is_array($paths) ? array_merge($this->_paths, $paths) : $this->_paths;
-
-            $route = new Route($this->_prefix . $pattern, $mergedPaths, $httpMethods);
+            $route = new Route($this->_prefix . $pattern, $paths, $httpMethods);
             $this->_routes[] = $route;
 
             return $route;

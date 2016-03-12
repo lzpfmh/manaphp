@@ -60,15 +60,6 @@ namespace ManaPHP\Mvc\Router {
 
 
         /**
-         * Set common paths for all the routes in the group
-         *
-         * @param array $paths
-         * @return static
-         */
-        public function setPaths($paths);
-
-
-        /**
          * Returns the routes added to the group
          * @return \ManaPHP\Mvc\Router\RouteInterface[]
          */

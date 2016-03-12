@@ -21,10 +21,12 @@ namespace ManaPHP\Mvc {
 
         /**
          * Mounts a group of routes in the router
-         * @param \ManaPHP\Mvc\Router\GroupInterface
+         *
+         * @param string $module
+         * @param \ManaPHP\Mvc\Router\GroupInterface $group
          * @return  static
          */
-        public function mount($group);
+        public function mount($module,$group);
 
 
         /**
@@ -73,13 +75,5 @@ namespace ManaPHP\Mvc {
          * @return bool
          */
         public function wasMatched();
-
-
-        /**
-         * Return all the routes defined in the router
-         *
-         * @return \ManaPHP\Mvc\Router\RouteInterface[]
-         */
-        public function getRoutes();
     }
 }

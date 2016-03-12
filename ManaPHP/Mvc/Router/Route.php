@@ -36,12 +36,6 @@ namespace ManaPHP\Mvc\Router {
 
 
         /**
-         * @var callable
-         */
-        protected $_beforeMatch;
-
-
-        /**
          * \ManaPHP\Mvc\Router\Route constructor
          *
          * @param string $pattern
@@ -191,25 +185,6 @@ namespace ManaPHP\Mvc\Router {
         }
 
         /**
-         * Sets a callback that is called if the route is matched.
-         * The developer can implement any arbitrary conditions here
-         * If the callback returns false the route is treaded as not matched
-         *
-         * @param callback $callback
-         * @return static
-         * @throws \ManaPHP\Mvc\Router\Exception
-         */
-        public function beforeMatch($callback)
-        {
-            if (!is_callable($callback)) {
-                throw new Exception('Before-Match callback is not callable');
-            }
-            $this->_beforeMatch = $callback;
-            return $this;
-        }
-
-
-        /**
          * Returns the paths
          *
          * @return array
@@ -251,16 +226,6 @@ namespace ManaPHP\Mvc\Router {
                 $is_matched = $r === 1;
             } else {
                 $is_matched = $this->_compiledPattern === $handle_uri;
-            }
-
-            if ($is_matched) {
-                if ($this->_beforeMatch !== null) {
-                    if (!is_callable($this->_beforeMatch)) {
-                        throw new Exception('Before-Match callback is not callable in matched route');
-                    }
-
-                    $is_matched = call_user_func_array($this->_beforeMatch, [$handle_uri, $this]);
-                }
             }
 
             return $is_matched;

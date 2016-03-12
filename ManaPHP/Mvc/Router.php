@@ -4,7 +4,7 @@ namespace ManaPHP\Mvc {
 
     use ManaPHP\Component;
     use ManaPHP\Mvc\Router\Exception;
-    use ManaPHP\Mvc\Router\Route;
+    use ManaPHP\Mvc\Router\Group;
 
     /**
      * ManaPHP\Mvc\Router
@@ -55,10 +55,14 @@ namespace ManaPHP\Mvc {
         protected $_params = [];
 
         /**
-         * @var \ManaPHP\Mvc\Router\RouteInterface[]
+         * @var \ManaPHP\Mvc\Router\GroupInterface[]
          */
-        protected $_routes;
+        protected $_groups=[];
 
+        /**
+         * @var \ManaPHP\Mvc\Router\GroupInterface
+         */
+        protected $_defaultGroup=null;
         /**
          * @var \ManaPHP\Mvc\Router\RouteInterface
          */
@@ -98,17 +102,19 @@ namespace ManaPHP\Mvc {
          */
         public function __construct($defaultRoutes = true)
         {
-            $this->_routes = [];
-
             if ($defaultRoutes) {
-                $this->_routes[] = new Route('/');
-                $this->_routes[] = new Route('/:controller/?');
-                $this->_routes[] = new Route('/:controller/:action/?');
-                $this->_routes[] = new Route('/:controller/:action/:params');
+                $group=new Group();
+				
+                $group->add('/');
+                $group->add('/:controller/?');
+                $group->add('/:controller/:action/?');
+                $group->add('/:controller/:action/:params');
+
+                $this->_defaultGroup =$group;
             }
         }
 
-
+       
         /**
          * Get rewrite info. This info is read from $_GET['_url']. This returns '/' if the rewrite information cannot be read
          *
@@ -212,12 +218,24 @@ namespace ManaPHP\Mvc {
 
             $this->fireEvent('router:beforeCheckRoutes', $this);
 
-            $route_found=$this->_findMatchedRoute($handle_uri,$this->_routes,$parts);
+            $module=null;
+            $route_found=false;
+            foreach($this->_groups as $module=>$group){
+                $route_found=$this->_findMatchedRoute($handle_uri,$group->getRoutes(),$parts);
+                if($route_found){
+                    break;
+                }
+            }
 
+            if(!$route_found){
+                $module=null;
+                $route_found=$this->_findMatchedRoute($handle_uri,$this->_defaultGroup->getRoutes(),$parts);
+            }
             $this->_wasMatched = $route_found;
 
             if ($route_found) {
-                $this->_module=null;
+
+                $this->_module=$module;
                 $this->_controller = $this->_defaultController;
                 $this->_action = $this->_defaultAction;
                 $this->_params = $this->_defaultParams;
@@ -267,12 +285,13 @@ namespace ManaPHP\Mvc {
         /**
          * Mounts a group of routes in the router
          *
+         * @param string $module
          * @param \ManaPHP\Mvc\Router\GroupInterface $group
          * @return static
          */
-        public function mount($group)
+        public function mount($module, $group)
         {
-            $this->_routes = array_merge($this->_routes, $group->getRoutes());
+            $this->_groups[$module] = $group;
 
             return $this;
         }
@@ -356,17 +375,6 @@ namespace ManaPHP\Mvc {
         public function wasMatched()
         {
             return $this->_wasMatched;
-        }
-
-
-        /**
-         * Returns all the routes defined in the router
-         *
-         * @return \ManaPHP\Mvc\Router\RouteInterface[]
-         */
-        public function getRoutes()
-        {
-            return $this->_routes;
         }
     }
 }
