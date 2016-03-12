@@ -430,33 +430,14 @@ class MvcRouterTest extends TestCase{
             'action' => 'show',
         ));
 
-        $route = new \ManaPHP\Mvc\Router\Route('/route3', 'MyApp\Controllers\Posts::show');
+        $route = new \ManaPHP\Mvc\Router\Route('/route3', 'Posts::show');
         $this->assertEquals($route->getPaths(), array(
-            'controller' => 'MyApp\Controllers\Posts',
+            'controller' => 'Posts',
             'action' => 'show',
         ));
 
-        //incompatible with phalcon
-        $route = new \ManaPHP\Mvc\Router\Route('/route3', 'MyApp\Controllers\::show');
-        $this->assertEquals($route->getPaths(), array(
-            'controller' => 'MyApp\Controllers\\',
-            'action' => 'show',
-        ));
 
-        $route = new \ManaPHP\Mvc\Router\Route('/route3', 'News::MyApp\Controllers\Posts::show');
-        $this->assertEquals($route->getPaths(), array(
-            'module' => 'News',
-            'controller' => 'MyApp\Controllers\Posts',
-            'action' => 'show',
-        ));
-
-        //incompatible with phalcon
-        $route = new \ManaPHP\Mvc\Router\Route('/route3', '\Posts::show');
-        $this->assertEquals($route->getPaths(), array(
-            'controller' => '\Posts',
-            'action' => 'show',
-        ));
-    }
+         }
 
     public function test_getRewriteUri(){
         $_GET['_url'] = '/some/route';

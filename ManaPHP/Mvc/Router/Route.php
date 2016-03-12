@@ -148,11 +148,11 @@ namespace ManaPHP\Mvc\Router {
                     }
 
                     if (isset($controllerName)) {
-                        if (strpos($controllerName, '\\') === false) {
-                            $routePaths['controller'] = ucfirst($controllerName);
-                        } else {
-                            $routePaths['controller'] =$controllerName;
+                        if (strpos($controllerName, '\\') !== false) {
+                            throw new Exception('route parts is invalid: '.$paths);
                         }
+
+                        $routePaths['controller'] =ucfirst($controllerName);
                     }
 
                     if (isset($actionName)) {
