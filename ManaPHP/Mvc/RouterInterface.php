@@ -10,16 +10,6 @@ namespace ManaPHP\Mvc {
      */
     interface RouterInterface
     {
-
-        /**
-         * Sets the name of the default module
-         *
-         * @param string $moduleName
-         * @return static
-         */
-        public function setDefaultModule($moduleName);
-
-
         /**
          * Handles routing information received from the rewrite engine
          *

@@ -69,12 +69,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_wasMatched = false;
 
-
-        /**
-         * @var string
-         */
-        protected $_defaultModule = null;
-
         /**
          * @var string
          */
@@ -95,10 +89,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_removeExtraSlashes = false;
 
-        /**
-         * @var array
-         */
-        protected $_notFoundPaths = null;
 
         /**
          * ManaPHP\Mvc\Router constructor
@@ -150,19 +140,6 @@ namespace ManaPHP\Mvc {
         public function removeExtraSlashes($remove)
         {
             $this->_removeExtraSlashes = $remove;
-            return $this;
-        }
-
-        
-        /**
-         * Sets the name of the default module
-         *
-         * @param string $moduleName
-         * @return static
-         */
-        public function setDefaultModule($moduleName)
-        {
-            $this->_defaultModule = $moduleName;
             return $this;
         }
 
@@ -239,22 +216,12 @@ namespace ManaPHP\Mvc {
 
             $this->_wasMatched = $route_found;
 
-            /**
-             * The route was n't found, try to use the not-found paths
-             */
-            if (!$route_found) {
-                if ($this->_notFoundPaths !== null) {
-                    $parts = Route::getRoutePaths($this->_notFoundPaths);
-                    $route_found = true;
-                }
-            }
-
-            $this->_module = $this->_defaultModule;
-            $this->_controller = $this->_defaultController;
-            $this->_action = $this->_defaultAction;
-            $this->_params = $this->_defaultParams;
-
             if ($route_found) {
+                $this->_module=null;
+                $this->_controller = $this->_defaultController;
+                $this->_action = $this->_defaultAction;
+                $this->_params = $this->_defaultParams;
+
                 if (isset($parts['module'])) {
                     if (!is_numeric($parts['module'])) {
                         $this->_module = $parts['module'];
@@ -426,19 +393,6 @@ namespace ManaPHP\Mvc {
         {
             $this->_routes = array_merge($this->_routes, $group->getRoutes());
 
-            return $this;
-        }
-
-
-        /**
-         * Set a group of paths to be returned when none of the defined routes are matched
-         *
-         * @param array $paths
-         * @return static
-         */
-        public function notFound($paths)
-        {
-            $this->_notFoundPaths = $paths;
             return $this;
         }
 
