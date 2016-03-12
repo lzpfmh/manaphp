@@ -28,6 +28,22 @@ namespace ManaPHP\Mvc {
          */
         public function mount($module,$group);
 
+        /**
+         * Set whether router must remove the extra slashes in the handled routes
+         *
+         * @param boolean $remove
+         * @return static
+         */
+        public function removeExtraSlashes($remove);
+
+        /**
+         * Get rewrite info. This info is read from $_GET['_url']. This returns '/' if the rewrite information cannot be read
+         *
+         * @return string
+         * @throws \ManaPHP\Mvc\Router\Exception
+         */
+        public function getRewriteUri();
+
 
         /**
          * Returns processed module name
@@ -59,14 +75,6 @@ namespace ManaPHP\Mvc {
          * @return array
          */
         public function getParams();
-
-
-        /**
-         * Returns the route that matches the handled URI
-         *
-         * @return \ManaPHP\Mvc\Router\RouteInterface
-         */
-        public function getMatchedRoute();
 
 
         /**

@@ -358,16 +358,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Returns the route that matches the handled URI
-         *
-         * @return \ManaPHP\Mvc\Router\RouteInterface
-         */
-        public function getMatchedRoute()
-        {
-            return $this->_matchedRoute;
-        }
-
-        /**
          * Checks if the router matches any of the defined routes
          *
          * @return bool
