@@ -6,13 +6,17 @@
  * Time: 0:01
  */
 namespace Models;
-use \ManaPHP\Mvc\Model;
-class Country extends Model{
+
+use ManaPHP\Mvc\Model;
+
+class Country extends Model
+{
     public $country_id;
     public $country;
     public $last_update;
 
-    public function getSource(){
+    public function getSource()
+    {
         return 'country';
     }
 }

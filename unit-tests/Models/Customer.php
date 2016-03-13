@@ -6,8 +6,11 @@
  * Time: 0:01
  */
 namespace Models;
-use \ManaPHP\Mvc\Model;
-class Customer extends Model{
+
+use ManaPHP\Mvc\Model;
+
+class Customer extends Model
+{
     public $customer_id;
     public $store_id;
     public $first_name;
@@ -18,7 +21,8 @@ class Customer extends Model{
     public $create_date;
     public $last_update;
 
-    public function getSource(){
+    public function getSource()
+    {
         return 'customer';
     }
 }

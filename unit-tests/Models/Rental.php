@@ -6,8 +6,11 @@
  * Time: 0:04
  */
 namespace Models;
-use \ManaPHP\Mvc\Model;
-class Rental extends Model{
+
+use ManaPHP\Mvc\Model;
+
+class Rental extends Model
+{
     public $rental_id;
     public $rental_date;
     public $inventory_id;
@@ -16,7 +19,8 @@ class Rental extends Model{
     public $staff_id;
     public $last_update;
 
-    public function getSource(){
+    public function getSource()
+    {
         return 'rental';
     }
 }

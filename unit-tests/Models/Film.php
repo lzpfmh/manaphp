@@ -6,8 +6,11 @@
  * Time: 0:02
  */
 namespace Models;
-use \ManaPHP\Mvc\Model;
-class Film extends Model{
+
+use ManaPHP\Mvc\Model;
+
+class Film extends Model
+{
     public $film_id;
     public $title;
     public $description;
@@ -22,7 +25,8 @@ class Film extends Model{
     public $special_features;
     public $last_update;
 
-    public function getSource(){
+    public function getSource()
+    {
         return 'film';
     }
 }

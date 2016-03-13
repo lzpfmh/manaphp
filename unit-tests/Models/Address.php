@@ -6,8 +6,11 @@
  * Time: 0:00
  */
 namespace Models;
-use \ManaPHP\Mvc\Model;
-class Address extends Model{
+
+use ManaPHP\Mvc\Model;
+
+class Address extends Model
+{
     public $address_id;
     public $address;
     public $address2;
@@ -17,7 +20,8 @@ class Address extends Model{
     public $phone;
     public $last_update;
 
-    public function getSource(){
+    public function getSource()
+    {
         return 'address';
     }
 }

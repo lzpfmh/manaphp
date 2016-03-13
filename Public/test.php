@@ -20,6 +20,4 @@ echo date('Y-m-d H:i:s');
 //}
 //var_dump(microtime(true)-$start);
 
-var_dump(implode(',',[]));
-
-$conditions=['id'=>23,'id LIKE'=>[24,'']]
+var_dump(implode(',', []));

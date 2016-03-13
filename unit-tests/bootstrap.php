@@ -6,22 +6,22 @@
  * Time: 17:44
  */
 
-define('UNIT_TESTS_ROOT', str_replace('\\','/',dirname(__DIR__)));
+define('UNIT_TESTS_ROOT', str_replace('\\', '/', dirname(__DIR__)));
 
-spl_autoload_register(function($className){
+spl_autoload_register(function ($className) {
     static $frameworkRootPath;
     static $frameworkName;
 
-    if(!isset($frameworkRootPath)){
-        $frameworkRootPath=dirname(__DIR__).'/ManaPHP';
-        $frameworkName='ManaPHP';
-        $frameworkRootPath=dirname($frameworkRootPath);
+    if (!isset($frameworkRootPath)) {
+        $frameworkRootPath = dirname(__DIR__) . '/ManaPHP';
+        $frameworkName = 'ManaPHP';
+        $frameworkRootPath = dirname($frameworkRootPath);
     }
 
-    if(strncmp($className,$frameworkName, strlen($frameworkName)) ===0){
-        $file =$frameworkRootPath.'/'.$className.'.php';
-        $file =str_replace('\\','/',$file);
-        if(is_file($file)){
+    if (strncmp($className, $frameworkName, strlen($frameworkName)) === 0) {
+        $file = $frameworkRootPath . '/' . $className . '.php';
+        $file = str_replace('\\', '/', $file);
+        if (is_file($file)) {
 
             /** @noinspection PhpIncludeInspection */
             require $file;
@@ -29,9 +29,9 @@ spl_autoload_register(function($className){
         }
     }
 
-    if(strpos($className,'Models') !==false){
-        $file=str_replace('\\','/',__DIR__.'/'.$className).'.php';
-        if(is_file($file)){
+    if (strpos($className, 'Models') !== false) {
+        $file = str_replace('\\', '/', __DIR__ . '/' . $className) . '.php';
+        if (is_file($file)) {
             /** @noinspection PhpIncludeInspection */
             require $file;
             return true;
@@ -42,6 +42,7 @@ spl_autoload_register(function($className){
 });
 
 
-class TestCase extends PHPUnit_Framework_TestCase{
+class TestCase extends PHPUnit_Framework_TestCase
+{
 
 }

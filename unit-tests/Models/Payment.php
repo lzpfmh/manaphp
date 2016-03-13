@@ -6,8 +6,11 @@
  * Time: 0:04
  */
 namespace Models;
-use \ManaPHP\Mvc\Model;
-class Payment extends Model{
+
+use ManaPHP\Mvc\Model;
+
+class Payment extends Model
+{
     public $payment_id;
     public $customer_id;
     public $staff_id;
@@ -16,7 +19,8 @@ class Payment extends Model{
     public $payment_date;
     public $last_update;
 
-    public function getSource(){
+    public function getSource()
+    {
         return 'payment';
     }
 }

@@ -8,26 +8,29 @@
 namespace Application\Home;
 
 use ManaPHP\Db\Adapter\Mysql;
-use \ManaPHP\Mvc\ModuleInterface;
-use \ManaPHP\Loader;
-use \ManaPHP\DbInterface;
+use ManaPHP\DbInterface;
+use ManaPHP\Loader;
+use ManaPHP\Mvc\ModuleInterface;
 
-class Module implements ModuleInterface{
-    public function registerAutoloaders($di){
-        $loader =new Loader();
+class Module implements ModuleInterface
+{
+    public function registerAutoloaders($di)
+    {
+        $loader = new Loader();
         $loader->registerNamespaces([
-            'Application\Home'=>realpath(__DIR__).''
+          'Application\Home' => realpath(__DIR__) . ''
         ])->register();
     }
 
-    public function registerServices($di) {
+    public function registerServices($di)
+    {
         $di->set('db', function () {
             $mysql = new Mysql([
-                'host' => 'localhost',
-                'username' => 'root',
-                'password' => '',
-                'dbname' => 'manaphp_unit_test',
-                'port' => 3306
+              'host' => 'localhost',
+              'username' => 'root',
+              'password' => '',
+              'dbname' => 'manaphp_unit_test',
+              'port' => 3306
             ]);
 
             $mysql->attachEvent('db:beforeQuery', function ($event, DbInterface $source, $data) {

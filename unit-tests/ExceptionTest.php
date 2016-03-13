@@ -5,14 +5,16 @@
  * Date: 2015/12/13
  * Time: 21:49
  */
-defined('UNIT_TESTS_ROOT')||require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
 
-class ExceptionTest extends TestCase{
-    public function test_throw(){
-        try{
+class ExceptionTest extends TestCase
+{
+    public function test_throw()
+    {
+        try {
             throw new \ManaPHP\Exception();
-        }catch (\Exception $e){
-            $this->assertInstanceOf('ManaPHP\Exception',$e);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('ManaPHP\Exception', $e);
         }
     }
 }

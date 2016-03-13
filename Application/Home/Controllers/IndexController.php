@@ -7,22 +7,24 @@
  */
 namespace Application\Home\Controllers;
 
-use Application\Home\Models\Actor;
 use Application\Home\Models\Address;
-use Application\Home\Models\Film;
-use Application\Home\Models\User;
 use ManaPHP\Http\Session;
-use ManaPHP\Mvc\Controller;
+use ManaPHP\Mvc\PhpUnitController;
 
-class SomeComponent{
-    public $someProperty=false;
+class SomeComponent
+{
+    public $someProperty = false;
 
-    public function __construct($v){
-        $this->someProperty =$v;
+    public function __construct($v)
+    {
+        $this->someProperty = $v;
     }
 }
-class IndexController extends Controller{
-    public function indexAction(){
+
+class IndexController extends PhpUnitController
+{
+    public function indexAction()
+    {
         error_reporting(E_ALL);
 //        var_dump($this->db->fetchAll('SELECT * FROM test.user'));
 //        var_dump($this->db->fetchAll('SELECT * FROM test.user WHERE id=:id',\PDO::FETCH_ASSOC,[':id'=>2]));
@@ -35,9 +37,9 @@ class IndexController extends Controller{
 //            echo $user->id;
 //        }
 
-  //     var_dump(User::findFirst('2')->toArray());
+        //     var_dump(User::findFirst('2')->toArray());
 
-      //  var_dump(User::count(['id >1']));
+        //  var_dump(User::count(['id >1']));
 //        $user =new User();
 //        $user->id=12;
 //        $user->age=30;
@@ -57,8 +59,8 @@ class IndexController extends Controller{
 //
 //        var_dump($this->_dependencyInjector->get('getComponent1',[100]));
 //        var_dump($this->_dependencyInjector->get('getComponent2',[50]));
-    //    $this->session->set('times',$this->session->get('times','1')+1);
-      //  echo $this->session->get('times');
+        //    $this->session->set('times',$this->session->get('times','1')+1);
+        //  echo $this->session->get('times');
         //var_dump(get_included_files());
 
 //        foreach(get_included_files() as $file){
@@ -66,8 +68,8 @@ class IndexController extends Controller{
 //                echo substr($file,strlen(Autoloader::getRootPath())),',',PHP_EOL;
 //            }
 //        }
-   //     echo date('Y-m-d H:i:s');
- //       $success=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(?,?,?)',[1,20,'mana']);
+        //     echo date('Y-m-d H:i:s');
+        //       $success=$this->db->execute('INSERT INTO _student(id,age,name) VALUES(?,?,?)',[1,20,'mana']);
 
 //        $builder=$this->modelsManager->createBuilder()
 //            ->addFrom(get_class(new Address()),'a')
@@ -84,30 +86,15 @@ class IndexController extends Controller{
 //        Actor::findFirst(10);
 //        $actor=Actor::findFirst(['conditions'=>'first_name=\'BEN\'','order'=>'actor_id']);
 
-        $rows=$this->modelsManager->createBuilder()
-            ->where('address_id <=100')
-            ->addFrom(get_class(new Address()))->getQuery()->execute();
-        $group =new \ManaPHP\Mvc\Router\Group();
-        $group->add('/article/1',"article::detail");
-
-        //multiple module usage with bind to domain
-        $router=(new \ManaPHP\Mvc\Router())->mount($group,'blog','blog.manaphp.com');
-        $router->handle('/article/1','blog.manaphp.com');
-        assert($router->wasMatched());
-        assert('blog'==$router->getModuleName());
-        assert('article'==strtolower($router->getControllerName()));
-        assert('detail'==strtolower($router->getActionName()));
-
-        //multiple module usage with bind to domain
-        $router=(new \ManaPHP\Mvc\Router())->mount($group,'blog','blog.manaphp.com/p1/p2');
-        $router->handle('/p1/p2/article/1','blog.manaphp.com');
-        assert($router->wasMatched());
-        assert('blog'==$router->getModuleName());
-        assert('article'==strtolower($router->getControllerName()));
-        assert('detail'==strtolower($router->getActionName()));
+        $rows = $this->modelsManager->createBuilder()
+          ->where('address_id <=100')
+          ->addFrom(get_class(new Address()))
+          ->getQuery()
+          ->execute();
     }
 
-    public function test2Action(){
+    public function test2Action()
+    {
         echo date('Y-m-d H:i:s');
     }
 

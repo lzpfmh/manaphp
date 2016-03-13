@@ -7,14 +7,18 @@
  */
 
 namespace Application\Home\Models;
-use \ManaPHP\Mvc\Model;
-class Actor extends Model{
+
+use ManaPHP\Mvc\Model;
+
+class Actor extends Model
+{
     public $actor_id;
     public $first_name;
     public $last_name;
     public $last_update;
 
-    public function getSource(){
+    public function getSource()
+    {
         return 'actor';
     }
 }

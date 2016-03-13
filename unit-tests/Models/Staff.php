@@ -6,8 +6,11 @@
  * Time: 0:05
  */
 namespace Models;
-use \ManaPHP\Mvc\Model;
-class Staff extends Model{
+
+use ManaPHP\Mvc\Model;
+
+class Staff extends Model
+{
     public $staff_id;
     public $first_name;
     public $last_name;
@@ -20,7 +23,8 @@ class Staff extends Model{
     public $password;
     public $last_update;
 
-    public function getSource(){
+    public function getSource()
+    {
         return 'staff';
     }
 }

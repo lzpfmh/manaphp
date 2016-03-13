@@ -5,12 +5,14 @@
  * Date: 2015/12/13
  * Time: 21:45
  */
-defined('UNIT_TESTS_ROOT')||require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
 
-class VersionTest extends TestCase{
-    public function test_get(){
-        $version =\ManaPHP\Version::get();
+class VersionTest extends TestCase
+{
+    public function test_get()
+    {
+        $version = \ManaPHP\Version::get();
         $this->assertTrue(is_string($version));
-        $this->assertRegExp('/\d+\.\d+\.\d+/',$version);
+        $this->assertRegExp('/\d+\.\d+\.\d+/', $version);
     }
 }

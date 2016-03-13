@@ -9,12 +9,14 @@ namespace Application\Home\Models;
 
 use ManaPHP\Mvc\Model;
 
-class User extends Model{
+class User extends Model
+{
     public $id;
     public $age;
     public $name;
 
-    public function getSource(){
+    public function getSource()
+    {
         return 'user';
     }
 }

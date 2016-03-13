@@ -6,13 +6,17 @@
  * Time: 0:05
  */
 namespace Models;
-use \ManaPHP\Mvc\Model;
-class Student extends Model{
+
+use ManaPHP\Mvc\Model;
+
+class Student extends Model
+{
     public $id;
     public $age;
     public $name;
 
-    public function getSource(){
+    public function getSource()
+    {
         return '_student';
     }
 }
