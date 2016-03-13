@@ -50,15 +50,6 @@ namespace ManaPHP\Mvc\Router {
      */
     interface GroupInterface
     {
-
-        /**
-         * Set a common uri prefix for all the routes in this group
-         * @param string $prefix
-         * @return static
-         */
-        public function setPrefix($prefix);
-
-
         /**
          * Returns the routes added to the group
          * @return \ManaPHP\Mvc\Router\RouteInterface[]

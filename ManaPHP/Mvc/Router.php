@@ -55,7 +55,7 @@ namespace ManaPHP\Mvc {
         protected $_params = [];
 
         /**
-         * @var \ManaPHP\Mvc\Router\GroupInterface[]
+         * @var array
          */
         protected $_groups=[];
 
@@ -191,6 +191,7 @@ namespace ManaPHP\Mvc {
             return false;
         }
 
+
         /**
          * Handles routing information received from the rewrite engine
          *
@@ -209,28 +210,65 @@ namespace ManaPHP\Mvc {
          */
         public function handle($uri = null,$host=null)
         {
-            $uri = ($uri === null || $uri === '') ? $this->getRewriteUri() : $uri;
-
-            if ($this->_removeExtraSlashes && $uri !== '/') {
-                $handle_uri = rtrim($uri, '/');
-            } else {
-                $handle_uri = $uri;
+            if($uri===null){
+                $uri=$this->getRewriteUri();
             }
+
+            if ($this->_removeExtraSlashes) {
+                $uri = rtrim($uri, '/');
+            }
+            $refined_uri=$uri===''?'/':$uri;
 
             $this->fireEvent('router:beforeCheckRoutes', $this);
 
             $module=null;
             $route_found=false;
-            foreach($this->_groups as $module=>$group){
+            foreach($this->_groups as $definition){
+                /**
+                 * @var \ManaPHP\Mvc\Router\Group $group
+                 */
+                list($path,$module,$group)=$definition;
+
+                if($path !==''){
+                    $pos=strpos($path,'/');
+                    if($pos===0){
+                        if(stripos($refined_uri,$path)!==0){
+                            continue;
+                        }
+                        $handle_uri=substr($refined_uri,strlen($path));
+                    }else{
+                        if(!isset($refined_host)){
+                            if($host===null){
+                                if(isset($_SERVER['HTTP_HOST'])){
+                                    $refined_host=$_SERVER['HTTP_HOST'];
+                                }else{
+                                    throw new Exception('router handle need host, but can not fetch.');
+                                }
+                            }else{
+                                $refined_host=$host;
+                            }
+                        }
+
+                        if(stripos($refined_host.$refined_uri,$path) !==0)
+                        {
+                            continue;
+                        }
+
+                        $handle_uri=substr($refined_uri,$pos);
+                    }
+                }else{
+                    $handle_uri=$refined_uri;
+                }
+
                 $route_found=$this->_findMatchedRoute($handle_uri,$group->getRoutes(),$parts);
                 if($route_found){
                     break;
                 }
             }
 
-            if(!$route_found){
+            if(!$route_found &&$this->_defaultGroup !==null){
                 $module=null;
-                $route_found=$this->_findMatchedRoute($handle_uri,$this->_defaultGroup->getRoutes(),$parts);
+                $route_found=$this->_findMatchedRoute($refined_uri,$this->_defaultGroup->getRoutes(),$parts);
             }
             $this->_wasMatched = $route_found;
 
@@ -288,11 +326,28 @@ namespace ManaPHP\Mvc {
          *
          * @param \ManaPHP\Mvc\Router\GroupInterface $group
 		 * @param string $module
+         * @param string $path
          * @return static
          */
-        public function mount($group,$module=null)
+        public function mount($group,$module=null,$path=null)
         {
-            $this->_groups[$module] = $group;
+            if($path===null){
+                if($module !==null){
+                    $path='/'.$module;
+                }else{
+                    $path='';
+                }
+            }
+            if($module!==null &&$path===null){
+                $path='/'.$module;
+            }
+
+            if($module===null){
+                $module='';
+            }
+
+
+            $this->_groups[] =[$path,$module,$group];
 
             return $this;
         }

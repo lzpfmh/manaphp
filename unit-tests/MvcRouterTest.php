@@ -368,15 +368,15 @@ class MvcRouterTest extends TestCase{
 
         $group = new ManaPHP\Mvc\Router\Group();
 
-        $group->add('/blog/save', array(
+        $group->add('/save', array(
             'action' => 'save'
         ));
 
-        $group->add('/blog/edit/{id}', array(
+        $group->add('/edit/{id}', array(
             'action' => 'edit'
         ));
 
-        $group->add('/blog/about', array(
+        $group->add('/about', array(
             'controller' => 'about',
             'action' => 'index'
         ));

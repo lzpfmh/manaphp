@@ -46,29 +46,10 @@ namespace ManaPHP\Mvc\Router {
      */
     class Group implements GroupInterface
     {
-
-        /*
-         * var string
-         */
-        protected $_prefix;
-
         /**
          * @var \ManaPHP\Mvc\Router\RouteInterface[]
          */
         protected $_routes;
-
-
-        /**
-         * Set a common uri prefix for all the routes in this group
-         *
-         * @param string $prefix
-         * @return static
-         */
-        public function setPrefix($prefix)
-        {
-            $this->_prefix = $prefix;
-            return $this;
-        }
 
 
         /**
@@ -93,7 +74,7 @@ namespace ManaPHP\Mvc\Router {
          */
         protected function _addRoute($pattern, $paths = null, $httpMethods = null)
         {
-            $route = new Route($this->_prefix . $pattern, $paths, $httpMethods);
+            $route = new Route($pattern, $paths, $httpMethods);
             $this->_routes[] = $route;
 
             return $route;
