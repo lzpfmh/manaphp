@@ -87,8 +87,24 @@ class IndexController extends Controller{
         $rows=$this->modelsManager->createBuilder()
             ->where('address_id <=100')
             ->addFrom(get_class(new Address()))->getQuery()->execute();
-        $route=new \ManaPHP\Mvc\Router\Route('/:module/:controller/:action/:params');
-        $route->isMatched('/admin/blog/edit/a/b/c',$matches);
+        $group =new \ManaPHP\Mvc\Router\Group();
+        $group->add('/article/1',"article::detail");
+
+        //multiple module usage with bind to domain
+        $router=(new \ManaPHP\Mvc\Router())->mount($group,'blog','blog.manaphp.com');
+        $router->handle('/article/1','blog.manaphp.com');
+        assert($router->wasMatched());
+        assert('blog'==$router->getModuleName());
+        assert('article'==strtolower($router->getControllerName()));
+        assert('detail'==strtolower($router->getActionName()));
+
+        //multiple module usage with bind to domain
+        $router=(new \ManaPHP\Mvc\Router())->mount($group,'blog','blog.manaphp.com/p1/p2');
+        $router->handle('/p1/p2/article/1','blog.manaphp.com');
+        assert($router->wasMatched());
+        assert('blog'==$router->getModuleName());
+        assert('article'==strtolower($router->getControllerName()));
+        assert('detail'==strtolower($router->getActionName()));
     }
 
     public function test2Action(){

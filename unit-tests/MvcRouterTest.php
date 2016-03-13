@@ -409,6 +409,41 @@ class MvcRouterTest extends TestCase{
             $this->assertEquals(strtolower($paths['controller']), strtolower($router->getControllerName()));
             $this->assertEquals($paths['action'], $router->getActionName());
         }
+
+        $group =new \ManaPHP\Mvc\Router\Group();
+        $group->add('/article/1',"article::detail");
+
+        //single module usage
+        $router=(new \ManaPHP\Mvc\Router())->mount($group);
+        $router->handle('/article/1');
+        $this->assertTrue($router->wasMatched());
+        $this->assertEquals(null,$router->getModuleName());
+        $this->assertEquals('article',strtolower($router->getControllerName()));
+        $this->assertEquals('detail',strtolower($router->getActionName()));
+
+        //multiple module usage with bind to /blog path
+        $router=(new \ManaPHP\Mvc\Router())->mount($group,'blog');
+        $router->handle('/blog/article/1');
+        $this->assertTrue($router->wasMatched());
+        $this->assertEquals('blog',$router->getModuleName());
+        $this->assertEquals('article',strtolower($router->getControllerName()));
+        $this->assertEquals('detail',strtolower($router->getActionName()));
+
+        //multiple module usage with bind to domain
+        $router=(new \ManaPHP\Mvc\Router())->mount($group,'blog','blog.manaphp.com');
+        $router->handle('/article/1','blog.manaphp.com');
+        $this->assertTrue($router->wasMatched());
+        $this->assertEquals('blog',$router->getModuleName());
+        $this->assertEquals('article',strtolower($router->getControllerName()));
+        $this->assertEquals('detail',strtolower($router->getActionName()));
+
+        //multiple module usage with bind to domain
+        $router=(new \ManaPHP\Mvc\Router())->mount($group,'blog','blog.manaphp.com/p1/p2');
+        $router->handle('/p1/p2/article/1','blog.manaphp.com');
+        $this->assertTrue($router->wasMatched());
+        $this->assertEquals('blog',$router->getModuleName());
+        $this->assertEquals('article',strtolower($router->getControllerName()));
+        $this->assertEquals('detail',strtolower($router->getActionName()));
     }
 
     public function test_shortPaths(){

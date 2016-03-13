@@ -254,7 +254,11 @@ namespace ManaPHP\Mvc {
                             continue;
                         }
 
-                        $handle_uri=substr($refined_uri,$pos);
+                        if($pos ===false){
+                            $handle_uri=$refined_uri;
+                        }else{
+                            $handle_uri=substr($refined_uri,strlen($path)-$pos);
+                        }
                     }
                 }else{
                     $handle_uri=$refined_uri;
