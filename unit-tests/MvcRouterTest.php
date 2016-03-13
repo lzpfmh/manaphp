@@ -296,6 +296,35 @@ class MvcRouterTest extends TestCase
         }
     }
 
+    public function test_add_usage(){
+        $group =new \ManaPHP\Mvc\Router\Group();
+
+        $group->add(
+          "/news/{year:([0-9]{4})}/{month:([0-9]{2})}/{day:([0-9]{2})}/:params",
+          array(
+            "controller" => "posts",
+            "action"     => "show",
+            "year"       => 1, // ([0-9]{4})
+            "month"      => 2, // ([0-9]{2})
+            "day"        => 3, // ([0-9]{2})
+            "params"     => 4  // :params
+          )
+        );
+
+        $router=new \ManaPHP\Mvc\Router(false);
+        $router->mount($group);
+        $router->handle('/news/2016/03/12/china');
+        $this->assertTrue($router->wasMatched());
+        $this->assertEquals(null,$router->getModuleName());
+        $this->assertEquals('Posts',$router->getControllerName());
+        $this->assertEquals('show',$router->getActionName());
+        $this->assertEquals('2016',$router->getParams()['year']);
+        $this->assertEquals('03',$router->getParams()['month']);
+        $this->assertEquals('12',$router->getParams()['day']);
+        $this->assertEquals('china',$router->getParams()['0']);
+    }
+	
+	
     public function test_params()
     {
         $router = new ManaPHP\Mvc\Router(false);
@@ -482,6 +511,39 @@ class MvcRouterTest extends TestCase
           'controller' => 'Posts',
           'action' => 'show',
         ));
+    }
+
+    public function test_shortPaths_usage(){
+        $group =new \ManaPHP\Mvc\Router\Group();
+        $group->add('/','admin::user::list');
+        $router=new \ManaPHP\Mvc\Router(false);
+        $router->mount($group);
+        $router->handle('/');
+        $this->assertTrue($router->wasMatched());
+        $this->assertEquals('admin',$router->getModuleName());
+        $this->assertEquals('user',strtolower($router->getControllerName()));
+        $this->assertEquals('list',strtolower($router->getActionName()));
+
+
+        $group =new \ManaPHP\Mvc\Router\Group();
+        $group->add('/','user::list');
+        $router=new \ManaPHP\Mvc\Router(false);
+        $router->mount($group);
+        $router->handle('/');
+        $this->assertTrue($router->wasMatched());
+        $this->assertEquals(null,$router->getModuleName());
+        $this->assertEquals('user',strtolower($router->getControllerName()));
+        $this->assertEquals('list',strtolower($router->getActionName()));
+
+        $group =new \ManaPHP\Mvc\Router\Group();
+        $group->add('/','user');
+        $router=new \ManaPHP\Mvc\Router(false);
+        $router->mount($group);
+        $router->handle('/');
+        $this->assertTrue($router->wasMatched());
+        $this->assertEquals(null,$router->getModuleName());
+        $this->assertEquals('user',strtolower($router->getControllerName()));
+        $this->assertEquals('index',strtolower($router->getActionName()));
     }
 
     public function test_getRewriteUri()
