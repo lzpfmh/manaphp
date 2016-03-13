@@ -1,11 +1,13 @@
 <?php
 
 namespace ManaPHP\Mvc\View {
-    class Tag{
+
+    class Tag
+    {
         /**
          * @var string
          */
-        protected $_documentTitle='';
+        protected $_documentTitle = '';
 
         /**
          * @var string
@@ -22,8 +24,9 @@ namespace ManaPHP\Mvc\View {
          * @param string $title
          * @return static
          */
-        public function setTitle($title){
-            $this->_documentTitle =$title;
+        public function setTitle($title)
+        {
+            $this->_documentTitle = $title;
             return $this;
         }
 
@@ -31,8 +34,9 @@ namespace ManaPHP\Mvc\View {
          * @param $title
          * @return static
          */
-        public function appendTitle($title){
-            $this->_documentTitle .=$title;
+        public function appendTitle($title)
+        {
+            $this->_documentTitle .= $title;
             return $this;
         }
 
@@ -40,7 +44,8 @@ namespace ManaPHP\Mvc\View {
         /**
          * @return string
          */
-        public function getTitle(){
+        public function getTitle()
+        {
             return $this->_documentTitle;
         }
 
@@ -48,8 +53,9 @@ namespace ManaPHP\Mvc\View {
          * @param string $description
          * @return static
          */
-        public function setDescription($description){
-            $this->_documentDescription=$description;
+        public function setDescription($description)
+        {
+            $this->_documentDescription = $description;
 
             return $this;
         }
@@ -57,7 +63,8 @@ namespace ManaPHP\Mvc\View {
         /**
          * @return string
          */
-        public function getDescription(){
+        public function getDescription()
+        {
             return $this->_documentDescription;
         }
 

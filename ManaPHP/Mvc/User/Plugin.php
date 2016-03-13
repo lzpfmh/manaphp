@@ -15,6 +15,7 @@ use ManaPHP\Component;
  * This class can be used to provide user plugins an easy access to services
  * in the application
  */
-class Plugin extends Component{
+class Plugin extends Component
+{
 
 }

@@ -14,7 +14,7 @@ namespace ManaPHP {
             }
 
             if (self::$_rootPath === null) {
-                self::$_rootPath = str_replace('\\','/',dirname(__DIR__));
+                self::$_rootPath = str_replace('\\', '/', dirname(__DIR__));
             }
 
             if (self::$_optimizeMode && substr_compare($className, 'Interface', strlen($className) - 9) === 0) {
@@ -25,10 +25,10 @@ namespace ManaPHP {
                 return true;
             }
 
-            $file = self::$_rootPath . '/' . str_replace('\\','/',$className) . '.php';
+            $file = self::$_rootPath . '/' . str_replace('\\', '/', $className) . '.php';
             if (is_file($file)) {
-                if(DIRECTORY_SEPARATOR==='\\' &&str_replace('\\','/',realpath($file)) !==$file){
-                    trigger_error('File name case mismatch for '.$file,E_USER_ERROR);
+                if (DIRECTORY_SEPARATOR === '\\' && str_replace('\\', '/', realpath($file)) !== $file) {
+                    trigger_error('File name case mismatch for ' . $file, E_USER_ERROR);
                 }
 
                 /** @noinspection PhpIncludeInspection */

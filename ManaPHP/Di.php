@@ -108,8 +108,8 @@ namespace ManaPHP {
          */
         public function get($name, $parameters = null)
         {
-            if(!is_string($name)){
-                throw new Exception ('service name is not a string: '.json_encode($name,JSON_UNESCAPED_SLASHES));
+            if (!is_string($name)) {
+                throw new Exception ('service name is not a string: ' . json_encode($name, JSON_UNESCAPED_SLASHES));
             }
 
             if (isset($this->_services[$name])) {
@@ -122,7 +122,7 @@ namespace ManaPHP {
                  * The DI also acts as builder for any class even if it isn't defined in the DI
                  */
                 if (!class_exists($name)) {
-                    throw new Exception('Class is not exist: "' . $name. '"');
+                    throw new Exception('Class is not exist: "' . $name . '"');
                 }
 
                 if (is_array($parameters)) {

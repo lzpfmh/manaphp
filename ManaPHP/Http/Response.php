@@ -6,7 +6,6 @@ namespace ManaPHP\Http {
     use ManaPHP\Di;
     use ManaPHP\Http\Response\Exception;
     use ManaPHP\Http\Response\Headers;
-    use ManaPHP\Mvc\ViewInterface;
 
     /**
      * ManaPHP\Http\Response

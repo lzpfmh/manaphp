@@ -151,10 +151,10 @@ namespace ManaPHP\Mvc\Router {
 
                     if (isset($controllerName)) {
                         if (strpos($controllerName, '\\') !== false) {
-                            throw new Exception('route parts is invalid: '.$paths);
+                            throw new Exception('route parts is invalid: ' . $paths);
                         }
 
-                        $routePaths['controller'] =$controllerName;
+                        $routePaths['controller'] = $controllerName;
                     }
 
                     if (isset($actionName)) {

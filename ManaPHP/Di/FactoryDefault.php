@@ -43,8 +43,8 @@ namespace ManaPHP\Di {
               'eventsManager' => new Service('eventsManager', 'ManaPHP\Events\Manager', true),
               'transactionManager' => new Service('transactionManager', 'ManaPHP\Mvc\Model\Transaction\Manager', true),
               'assets' => new Service('assets', 'ManaPHP\Assets\Manager', true),
-              'loader'=>new Service('loader','ManaPHP\Loader',true),
-               'view'=>new Service('view','ManaPHP\Mvc\View',true)
+              'loader' => new Service('loader', 'ManaPHP\Loader', true),
+              'view' => new Service('view', 'ManaPHP\Mvc\View', true)
             ];
         }
 

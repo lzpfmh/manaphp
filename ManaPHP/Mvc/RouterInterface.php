@@ -26,7 +26,7 @@ namespace ManaPHP\Mvc {
          * @param string $host
          * @return boolean
          */
-        public function handle($uri = null, $host=null);
+        public function handle($uri = null, $host = null);
 
 
         /**
@@ -46,7 +46,7 @@ namespace ManaPHP\Mvc {
          * @param string $path
          * @return  static
          */
-        public function mount($group,$module=null,$path=null);
+        public function mount($group, $module = null, $path = null);
 
         /**
          * Set whether router must remove the extra slashes in the handled routes

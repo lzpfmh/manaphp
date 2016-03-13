@@ -4,7 +4,7 @@
  * User: Mark
  * Date: 2016/1/18
  */
-namespace ManaPHP{
+namespace ManaPHP {
 
     use ManaPHP\Event\Manager;
 
@@ -28,14 +28,15 @@ namespace ManaPHP{
      * @property \ManaPHP\EscaperInterface $escaper
      * @property \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
      * @property \ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
-//     * @property \ManaPHP\Assets\Manager $assets
+    //     * @property \ManaPHP\Assets\Manager $assets
      * @property \ManaPHP\Di|\ManaPHP\DiInterface $di
-//     * @property \ManaPHP\Session\BagInterface $persistent
+    //     * @property \ManaPHP\Session\BagInterface $persistent
      * @property \ManaPHP\Mvc\ViewInterface $view
      * @property \ManaPHP\Mvc\View\Tag $tag
      * @property \ManaPHP\Loader $loader
      */
-    class Component implements ComponentInterface{
+    class Component implements ComponentInterface
+    {
         /**
          * @var \ManaPHP\Event\Manager
          */

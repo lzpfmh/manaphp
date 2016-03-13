@@ -57,12 +57,12 @@ namespace ManaPHP\Mvc {
         /**
          * @var array
          */
-        protected $_groups=[];
+        protected $_groups = [];
 
         /**
          * @var \ManaPHP\Mvc\Router\GroupInterface
          */
-        protected $_defaultGroup=null;
+        protected $_defaultGroup = null;
         /**
          * @var \ManaPHP\Mvc\Router\RouteInterface
          */
@@ -103,18 +103,18 @@ namespace ManaPHP\Mvc {
         public function __construct($defaultRoutes = true)
         {
             if ($defaultRoutes) {
-                $group=new Group();
-				
+                $group = new Group();
+
                 $group->add('/');
                 $group->add('/:controller/?');
                 $group->add('/:controller/:action/?');
                 $group->add('/:controller/:action/:params');
 
-                $this->_defaultGroup =$group;
+                $this->_defaultGroup = $group;
             }
         }
 
-       
+
         /**
          * Get rewrite info. This info is read from $_GET['_url']. This returns '/' if the rewrite information cannot be read
          *
@@ -156,7 +156,8 @@ namespace ManaPHP\Mvc {
          * @param array $parts
          * @return bool
          */
-        protected function _findMatchedRoute($uri, $routes, &$parts){
+        protected function _findMatchedRoute($uri, $routes, &$parts)
+        {
             $parts = [];
 
             /**
@@ -208,77 +209,76 @@ namespace ManaPHP\Mvc {
          * @return boolean
          * @throws \ManaPHP\Mvc\Router\Exception
          */
-        public function handle($uri = null,$host=null)
+        public function handle($uri = null, $host = null)
         {
-            if($uri===null){
-                $uri=$this->getRewriteUri();
+            if ($uri === null) {
+                $uri = $this->getRewriteUri();
             }
 
             if ($this->_removeExtraSlashes) {
                 $uri = rtrim($uri, '/');
             }
-            $refined_uri=$uri===''?'/':$uri;
+            $refined_uri = $uri === '' ? '/' : $uri;
 
             $this->fireEvent('router:beforeCheckRoutes', $this);
 
-            $module=null;
-            $route_found=false;
-            for($i=count($this->_groups)-1; $i>=0;$i--){
+            $module = null;
+            $route_found = false;
+            for ($i = count($this->_groups) - 1; $i >= 0; $i--) {
                 /**
                  * @var \ManaPHP\Mvc\Router\Group $group
                  */
-                list($path,$module,$group)=$this->_groups[$i];
+                list($path, $module, $group) = $this->_groups[$i];
 
-                if($path !==''){
-                    $pos=strpos($path,'/');
-                    if($pos===0){
-                        if(stripos($refined_uri,$path)!==0){
+                if ($path !== '') {
+                    $pos = strpos($path, '/');
+                    if ($pos === 0) {
+                        if (stripos($refined_uri, $path) !== 0) {
                             continue;
                         }
-                        $handle_uri=substr($refined_uri,strlen($path));
-                    }else{
-                        if(!isset($refined_host)){
-                            if($host===null){
-                                if(isset($_SERVER['HTTP_HOST'])){
-                                    $refined_host=$_SERVER['HTTP_HOST'];
-                                }else{
+                        $handle_uri = substr($refined_uri, strlen($path));
+                    } else {
+                        if (!isset($refined_host)) {
+                            if ($host === null) {
+                                if (isset($_SERVER['HTTP_HOST'])) {
+                                    $refined_host = $_SERVER['HTTP_HOST'];
+                                } else {
                                     throw new Exception('router handle need host, but can not fetch.');
                                 }
-                            }else{
-                                $refined_host=$host;
+                            } else {
+                                $refined_host = $host;
                             }
                         }
 
-                        if(stripos($refined_host.$refined_uri,$path) !==0)
-                        {
+                        if (stripos($refined_host . $refined_uri, $path) !== 0) {
                             continue;
                         }
 
-                        if($pos ===false){
-                            $handle_uri=$refined_uri;
-                        }else{
-                            $handle_uri=substr($refined_uri,strlen($path)-$pos);
+                        if ($pos === false) {
+                            $handle_uri = $refined_uri;
+                        } else {
+                            $handle_uri = substr($refined_uri, strlen($path) - $pos);
                         }
                     }
-                }else{
-                    $handle_uri=$refined_uri;
+                } else {
+                    $handle_uri = $refined_uri;
                 }
 
-                $route_found=$this->_findMatchedRoute($handle_uri,$group->getRoutes(),$parts);
-                if($route_found){
+                $route_found = $this->_findMatchedRoute($handle_uri, $group->getRoutes(), $parts);
+                if ($route_found) {
                     break;
                 }
             }
 
-            if(!$route_found &&$this->_defaultGroup !==null){
-                $module=null;
-                $route_found=$this->_findMatchedRoute($refined_uri,$this->_defaultGroup->getRoutes(),$parts);
+            if (!$route_found && $this->_defaultGroup !== null) {
+                $module = null;
+                $route_found = $this->_findMatchedRoute($refined_uri, $this->_defaultGroup->getRoutes(), $parts);
             }
             $this->_wasMatched = $route_found;
 
             if ($route_found) {
 
-                $this->_module=$module;
+                $this->_module = $module;
                 $this->_controller = $this->_defaultController;
                 $this->_action = $this->_defaultAction;
                 $this->_params = $this->_defaultParams;
@@ -329,25 +329,25 @@ namespace ManaPHP\Mvc {
          * Mounts a group of routes in the router
          *
          * @param \ManaPHP\Mvc\Router\GroupInterface $group
-		 * @param string $module
+         * @param string $module
          * @param string $path
          * @return static
          */
-        public function mount($group,$module=null,$path=null)
+        public function mount($group, $module = null, $path = null)
         {
-            if($module===null){
-                $module='';
+            if ($module === null) {
+                $module = '';
             }
 
-            if($path===null){
-                if($module !==''){
-                    $path='/'.$module;
-                }else{
-                    $path='';
+            if ($path === null) {
+                if ($module !== '') {
+                    $path = '/' . $module;
+                } else {
+                    $path = '';
                 }
             }
-            
-            $this->_groups[] =[$path,$module,$group];
+
+            $this->_groups[] = [$path, $module, $group];
 
             return $this;
         }

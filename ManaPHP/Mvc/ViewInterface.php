@@ -27,7 +27,7 @@ namespace ManaPHP\Mvc {
 
         /**
          * @param false|string $layout
-         * 
+         *
          * @return static
          */
 
@@ -58,8 +58,6 @@ namespace ManaPHP\Mvc {
          * @return string
          */
         public function getActionName();
-
-
 
 
         /**

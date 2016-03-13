@@ -617,7 +617,8 @@ namespace ManaPHP {
          */
         public function getEmulatePrepareSQLStatement($preservedStrLength = -1)
         {
-            return (new PrepareEmulation($this->_pdo))->emulate($this->_sqlStatement, $this->_sqlBindParams, $this->_sqlBindTypes, $preservedStrLength);
+            return (new PrepareEmulation($this->_pdo))->emulate($this->_sqlStatement, $this->_sqlBindParams,
+              $this->_sqlBindTypes, $preservedStrLength);
         }
 
         /**

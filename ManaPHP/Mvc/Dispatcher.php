@@ -4,7 +4,6 @@ namespace ManaPHP\Mvc {
 
     use ManaPHP\Component;
     use ManaPHP\DiInterface;
-
     use ManaPHP\Mvc\Dispatcher\Exception;
 
     /**
@@ -86,7 +85,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_defaultNamespace=null;
+        protected $_defaultNamespace = null;
 
         /**
          * @var string
@@ -359,21 +358,21 @@ namespace ManaPHP\Mvc {
                 $controllerClass = $this->_getControllerClass();
 
                 if (!$this->_dependencyInjector->has($controllerClass) && !class_exists($controllerClass)) {
-                    if($this->fireEvent('dispatcher:beforeNotFoundController',$this)===false){
+                    if ($this->fireEvent('dispatcher:beforeNotFoundController', $this) === false) {
                         return false;
                     }
 
-                    if($this->_finished ===false){
+                    if ($this->_finished === false) {
                         continue;
                     }
 
-                    throw new Exception($controllerClass.' handler class cannot be loaded');
+                    throw new Exception($controllerClass . ' handler class cannot be loaded');
                 }
 
                 $controller = $this->_dependencyInjector->getShared($controllerClass);
                 $wasFreshInstance = $this->_dependencyInjector->wasFreshInstance();
                 if (!is_object($controller)) {
-                    throw new Exception('Invalid handler type returned from the services container: '.gettype($controller));
+                    throw new Exception('Invalid handler type returned from the services container: ' . gettype($controller));
                 }
 
                 $this->_activeController = $controller;
@@ -449,7 +448,7 @@ namespace ManaPHP\Mvc {
             if (!is_array($forward)) {
                 throw new Exception('Forward parameter must be an Array');
             }
-            
+
             if (isset($forward['namespace'])) {
                 $this->_namespaceName = $forward['namespace'];
             }
@@ -490,14 +489,14 @@ namespace ManaPHP\Mvc {
          */
         protected function _camelize($str)
         {
-            if(strpos($str,'_') !==false){
+            if (strpos($str, '_') !== false) {
                 $parts = explode('_', $str);
                 foreach ($parts as $k => $v) {
                     $parts[$k] = ucfirst($v);
                 }
 
                 return implode('', $parts);
-            }else{
+            } else {
                 return ucfirst($str);
             }
         }

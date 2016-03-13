@@ -14,7 +14,7 @@ namespace ManaPHP\Flash {
         /**
          * @var string[]
          */
-        protected $_messages=[];
+        protected $_messages = [];
 
         /**
          * Outputs a message
@@ -31,7 +31,7 @@ namespace ManaPHP\Flash {
                 $cssClasses = '';
             }
 
-            $this->_messages[]='<div class="' . $cssClasses . '">' . $message . '</div>' . PHP_EOL;
+            $this->_messages[] = '<div class="' . $cssClasses . '">' . $message . '</div>' . PHP_EOL;
         }
 
         /**
@@ -39,13 +39,14 @@ namespace ManaPHP\Flash {
          *
          * @param $remove bool
          */
-        public function output($remove = true){
-            foreach($this->_messages  as $message){
+        public function output($remove = true)
+        {
+            foreach ($this->_messages as $message) {
                 echo $message;
             }
 
-            if($remove){
-                $this->_messages=[];
+            if ($remove) {
+                $this->_messages = [];
             }
         }
     }

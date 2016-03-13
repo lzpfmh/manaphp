@@ -6,6 +6,7 @@
  */
 namespace ManaPHP\Event;
 
-interface ListenerInterface{
+interface ListenerInterface
+{
 
 }

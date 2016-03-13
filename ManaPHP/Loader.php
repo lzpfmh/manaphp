@@ -68,12 +68,12 @@ namespace ManaPHP {
          */
         public function registerNamespaces($namespaces, $merge = false)
         {
-            foreach($namespaces as $namespace=>$path){
-                $path=rtrim($path,'\\/');
-                if(DIRECTORY_SEPARATOR==='\\'){
-                    $path=str_replace('\\','/',$path);
+            foreach ($namespaces as $namespace => $path) {
+                $path = rtrim($path, '\\/');
+                if (DIRECTORY_SEPARATOR === '\\') {
+                    $path = str_replace('\\', '/', $path);
                 }
-                $namespaces[$namespace]=$path;
+                $namespaces[$namespace] = $path;
             }
 
             if ($merge === false || $this->_namespaces === null) {
@@ -112,12 +112,12 @@ namespace ManaPHP {
          */
         public function registerDirs($directories, $merge = false)
         {
-            foreach($directories as $key=>$directory){
-                $directory=rtrim($directory,'\\/');
-                if(DIRECTORY_SEPARATOR ==='\\'){
-                    $directory=str_replace('\\','/',$directory);
+            foreach ($directories as $key => $directory) {
+                $directory = rtrim($directory, '\\/');
+                if (DIRECTORY_SEPARATOR === '\\') {
+                    $directory = str_replace('\\', '/', $directory);
                 }
-                $directories[$key]=$directory;
+                $directories[$key] = $directory;
             }
 
             if ($merge === false || $this->_directories === null) {
@@ -149,9 +149,9 @@ namespace ManaPHP {
          */
         public function registerClasses($classes, $merge = false)
         {
-            if(DIRECTORY_SEPARATOR ==='\\'){
-                foreach($classes as $class=>$path){
-                    $classes[$class]=str_replace('\\','/',$path);
+            if (DIRECTORY_SEPARATOR === '\\') {
+                foreach ($classes as $class => $path) {
+                    $classes[$class] = str_replace('\\', '/', $path);
                 }
             }
 
@@ -216,13 +216,13 @@ namespace ManaPHP {
         protected function _requireFile($file)
         {
             if (file_exists($file)) {
-                if(DIRECTORY_SEPARATOR==='\\') {
+                if (DIRECTORY_SEPARATOR === '\\') {
                     $realpath = str_replace('\\', '/', realpath($file));
                     if ($realpath !== $file) {
                         trigger_error("File name ($realpath) case mismatch for .$file", E_USER_ERROR);
                     }
                 }
-                    /** @noinspection PhpIncludeInspection */
+                /** @noinspection PhpIncludeInspection */
                 require $file;
                 return true;
             }
@@ -262,7 +262,7 @@ namespace ManaPHP {
                     if (strncmp($namespace, $className, $len) !== 0) {
                         continue;
                     }
-                    $file = $directory . str_replace('\\','/',substr($className, $len)) . '.php';
+                    $file = $directory . str_replace('\\', '/', substr($className, $len)) . '.php';
                     $this->_requiredFile = $file;
                     return $this->_requireFile($file);
                 }

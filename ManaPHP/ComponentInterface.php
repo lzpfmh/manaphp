@@ -5,8 +5,10 @@
  * Date: 2016/1/18
  */
 
-namespace ManaPHP{
-    interface ComponentInterface{
+namespace ManaPHP {
+
+    interface ComponentInterface
+    {
 
         /**
          * Magic method __get

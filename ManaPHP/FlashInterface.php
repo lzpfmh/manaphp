@@ -5,8 +5,8 @@ namespace ManaPHP {
     /**
      * ManaPHP\FlashInterface initializer
      */
-
-    interface FlashInterface {
+    interface FlashInterface
+    {
 
         /**
          * Shows a HTML error message
