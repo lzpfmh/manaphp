@@ -223,11 +223,11 @@ namespace ManaPHP\Mvc {
 
             $module=null;
             $route_found=false;
-            foreach($this->_groups as $definition){
+            for($i=count($this->_groups)-1; $i>=0;$i--){
                 /**
                  * @var \ManaPHP\Mvc\Router\Group $group
                  */
-                list($path,$module,$group)=$definition;
+                list($path,$module,$group)=$this->_groups[$i];
 
                 if($path !==''){
                     $pos=strpos($path,'/');
