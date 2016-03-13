@@ -5,8 +5,6 @@ namespace ManaPHP\Mvc {
     /**
      * ManaPHP\Mvc\RouterInterface initializer
      *
-     * PHP_NOTE:
-     *        1. remove the clear method
      */
     interface RouterInterface
     {
@@ -57,7 +55,7 @@ namespace ManaPHP\Mvc {
         public function removeExtraSlashes($remove);
 
         /**
-         * Get rewrite info. This info is read from $_GET['_url']. This returns '/' if the rewrite information cannot be read
+         * Get rewrite info. This info is read from $_GET['_url'] or _SERVER["REQUEST_URI"].
          *
          * @return string
          * @throws \ManaPHP\Mvc\Router\Exception

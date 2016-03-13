@@ -116,24 +116,22 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Get rewrite info. This info is read from $_GET['_url']. This returns '/' if the rewrite information cannot be read
+         * Get rewrite info. This info is read from $_GET['_url'] or _SERVER["REQUEST_URI"].
          *
          * @return string
          * @throws \ManaPHP\Mvc\Router\Exception
          */
         public function getRewriteUri()
         {
-            if (!isset($_GET['_url'])) {
-                if ($_SERVER['SCRIPT_NAME'] === '/index.php') {
-                    $real_url = '/';
-                } else {
-                    throw new Exception('--$_GET["_url"] not set, may be .htaccess has incorrect config.');
-                }
-            } else {
-                $real_url = $_GET['_url'];
+            if (isset($_GET['_url'])) {
+                $url =$_GET['_url'];
+            } else if(isset($_SERVER['REQUEST_URI'])){
+                $url =explode('?',$_SERVER['REQUEST_URI'])[0];
+            }else{
+                throw new Exception('Get rewrite info failed');
             }
 
-            return $real_url === '' ? '/' : $real_url;
+            return $url;
         }
 
 
