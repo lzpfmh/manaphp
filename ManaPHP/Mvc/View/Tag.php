@@ -29,6 +29,7 @@ namespace ManaPHP\Mvc\View {
 
         /**
          * @param $title
+         * @return static
          */
         public function appendTitle($title){
             $this->_documentTitle .=$title;

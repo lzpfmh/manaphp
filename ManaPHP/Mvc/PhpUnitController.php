@@ -13,7 +13,7 @@ namespace ManaPHP\Mvc {
         public function assertNotContains($needle, $haystack, $message = '', $ignoreCase = false, $checkForObjectIdentity = true, $checkForNonObjectIdentity = false){}
         public function assertAttributeNotContains($needle, $haystackAttributeName, $haystackClassOrObject, $message = '', $ignoreCase = false, $checkForObjectIdentity = true, $checkForNonObjectIdentity = false){}
         public function assertContainsOnly($type, $haystack, $isNativeType = null, $message = ''){}
-        public function assertContainsOnlyInstancesOf($classname, $haystack, $message = ''){}
+        public function assertContainsOnlyInstancesOf($class_name, $haystack, $message = ''){}
         public function assertAttributeContainsOnly($type, $haystackAttributeName, $haystackClassOrObject, $isNativeType = null, $message = ''){}
         public function assertNotContainsOnly($type, $haystack, $isNativeType = null, $message = ''){}
         public function assertAttributeNotContainsOnly($type, $haystackAttributeName, $haystackClassOrObject, $isNativeType = null, $message = ''){}
