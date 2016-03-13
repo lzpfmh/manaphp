@@ -58,7 +58,6 @@ namespace ManaPHP\Mvc {
          * Get rewrite info. This info is read from $_GET['_url'] or _SERVER["REQUEST_URI"].
          *
          * @return string
-         * @throws \ManaPHP\Mvc\Router\Exception
          */
         public function getRewriteUri();
 

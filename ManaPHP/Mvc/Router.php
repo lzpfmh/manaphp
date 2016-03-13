@@ -63,10 +63,6 @@ namespace ManaPHP\Mvc {
          * @var \ManaPHP\Mvc\Router\GroupInterface
          */
         protected $_defaultGroup = null;
-        /**
-         * @var \ManaPHP\Mvc\Router\RouteInterface
-         */
-        protected $_matchedRoute = null;
 
         /**
          * @var boolean
