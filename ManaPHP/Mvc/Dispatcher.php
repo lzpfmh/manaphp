@@ -134,7 +134,8 @@ namespace ManaPHP\Mvc {
          */
         public function setModuleName($moduleName)
         {
-            $this->_moduleName = $moduleName;
+            $this->_moduleName = $this->_camelize($moduleName);
+
             return $this;
         }
 
@@ -510,11 +511,7 @@ namespace ManaPHP\Mvc {
         {
             $this->_resolveEmptyProperties();
 
-            if (strpos($this->_controllerName, '\\') === false) {
-                $camelizedClass = $this->_camelize($this->_controllerName);
-            } else {
-                $camelizedClass = $this->_controllerName;
-            }
+            $camelizedClass = $this->_controllerName;
 
             if ($this->_namespaceName) {
                 $handlerClass = rtrim($this->_namespaceName, '\\') . '\\' . $camelizedClass . $this->_controllerSuffix;

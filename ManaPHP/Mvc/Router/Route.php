@@ -154,7 +154,7 @@ namespace ManaPHP\Mvc\Router {
                             throw new Exception('route parts is invalid: '.$paths);
                         }
 
-                        $routePaths['controller'] =ucfirst($controllerName);
+                        $routePaths['controller'] =$controllerName;
                     }
 
                     if (isset($actionName)) {

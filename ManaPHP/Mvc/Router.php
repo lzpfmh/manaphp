@@ -76,7 +76,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_defaultController = 'Index';
+        protected $_defaultController = 'index';
 
         /**
          * @var string
@@ -363,23 +363,6 @@ namespace ManaPHP\Mvc {
             return $this->_module;
         }
 
-        /**
-         * @param string $str
-         * @return string
-         */
-        protected function _camelize($str)
-        {
-            if(strpos($str,'_') !==false){
-                $parts = explode('_', $str);
-                foreach ($parts as $k => $v) {
-                    $parts[$k] = ucfirst($v);
-                }
-
-                return implode('', $parts);
-            }else{
-               return ucfirst($str);
-            }
-        }
 
         /**
          * Returns the processed controller name
@@ -388,7 +371,7 @@ namespace ManaPHP\Mvc {
          */
         public function getControllerName()
         {
-            return $this->_camelize($this->_controller);
+            return $this->_controller;
         }
 
         /**
@@ -398,7 +381,7 @@ namespace ManaPHP\Mvc {
          */
         public function getActionName()
         {
-            return lcfirst($this->_action);
+            return $this->_action;
         }
 
 
