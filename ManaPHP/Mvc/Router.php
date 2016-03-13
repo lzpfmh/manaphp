@@ -335,22 +335,18 @@ namespace ManaPHP\Mvc {
          */
         public function mount($group,$module=null,$path=null)
         {
+            if($module===null){
+                $module='';
+            }
+
             if($path===null){
-                if($module !==null){
+                if($module !==''){
                     $path='/'.$module;
                 }else{
                     $path='';
                 }
             }
-            if($module!==null &&$path===null){
-                $path='/'.$module;
-            }
-
-            if($module===null){
-                $module='';
-            }
-
-
+            
             $this->_groups[] =[$path,$module,$group];
 
             return $this;

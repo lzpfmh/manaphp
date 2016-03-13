@@ -418,7 +418,9 @@ class MvcRouterTest extends TestCase
             $this->assertEquals(strtolower($paths['controller']), strtolower($router->getControllerName()));
             $this->assertEquals($paths['action'], $router->getActionName());
         }
+    }
 
+    public function test_mount_for_usage(){
         $group = new \ManaPHP\Mvc\Router\Group();
         $group->add('/article/1', "article::detail");
 
@@ -430,7 +432,7 @@ class MvcRouterTest extends TestCase
         $this->assertEquals('article', strtolower($router->getControllerName()));
         $this->assertEquals('detail', strtolower($router->getActionName()));
 
-        //multiple module usage with bind to /blog path
+        //multiple module usage with binding to /blog path
         $router = (new \ManaPHP\Mvc\Router())->mount($group, 'blog');
         $router->handle('/blog/article/1');
         $this->assertTrue($router->wasMatched());
@@ -438,7 +440,7 @@ class MvcRouterTest extends TestCase
         $this->assertEquals('article', strtolower($router->getControllerName()));
         $this->assertEquals('detail', strtolower($router->getActionName()));
 
-        //multiple module usage with bind to domain
+        //multiple module usage with binding to domain
         $router = (new \ManaPHP\Mvc\Router())->mount($group, 'blog', 'blog.manaphp.com');
         $router->handle('/article/1', 'blog.manaphp.com');
         $this->assertTrue($router->wasMatched());
