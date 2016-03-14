@@ -120,21 +120,6 @@ namespace ManaPHP\Mvc {
         {
         }
 
-
-        /**
-         * Sets the module where the controller is (only informative)
-         *
-         * @param string $moduleName
-         * @return static
-         */
-        public function setModuleName($moduleName)
-        {
-            $this->_moduleName = $this->_camelize($moduleName);
-
-            return $this;
-        }
-
-
         /**
          * Gets the module where the controller class is
          *
@@ -171,19 +156,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Sets the action name to be dispatched
-         *
-         * @param string $actionName
-         * @return static
-         */
-        public function setActionName($actionName)
-        {
-            $this->_actionName = lcfirst($actionName);
-            return $this;
-        }
-
-
-        /**
          * Gets the latest dispatched action name
          *
          * @return string
@@ -195,24 +167,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Sets action params to be dispatched
-         *
-         * @param array $params
-         * @return static
-         * @throws \ManaPHP\Mvc\Dispatcher\Exception
-         */
-        public function setParams($params)
-        {
-            if (!is_array($params)) {
-                throw new Exception('Parameters must be an Array');
-            }
-            $this->_params = $params;
-
-            return $this;
-        }
-
-
-        /**
          * Gets action params
          *
          * @return array
@@ -220,20 +174,6 @@ namespace ManaPHP\Mvc {
         public function getParams()
         {
             return $this->_params;
-        }
-
-
-        /**
-         * Set a param by its name or numeric index
-         *
-         * @param  string|int $param
-         * @param  mixed $value
-         * @return static
-         */
-        public function setParam($param, $value)
-        {
-            $this->_params[$param] = $value;
-            return $this;
         }
 
 
@@ -295,11 +235,20 @@ namespace ManaPHP\Mvc {
         /**
          * Dispatches a handle action taking into account the routing parameters
          *
+         * @param string $module
+         * @param string $controller
+         * @param string $action
+         * @param array $params
          * @return false|\ManaPHP\Mvc\ControllerInterface
          * @throws \ManaPHP\Mvc\Dispatcher\Exception
          */
-        public function dispatch()
+        public function dispatch($module,$controller, $action,$params=[])
         {
+            $this->_moduleName=$this->_camelize($module);
+            $this->_controllerName=$this->_camelize($controller);
+            $this->_actionName=lcfirst($action);
+            $this->_params=$params;
+
             if (!$this->_dependencyInjector instanceof DiInterface) {
                 throw new Exception('A dependency injection container is required to access related dispatching services');
             }

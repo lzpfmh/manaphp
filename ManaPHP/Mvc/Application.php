@@ -196,22 +196,13 @@ namespace ManaPHP\Mvc {
                 $dispatcher->setRootNamespace($this->_baseNamespace);
             }
 
-            $dispatcher->setModuleName($moduleName);
-            $dispatcher->setControllerName($router->getControllerName());
-            $dispatcher->setActionName($router->getActionName());
-            $dispatcher->setParams($router->getParams());
-
-            $this->fireEvent('application:beforeHandleRequest', $this, $dispatcher);
-
-            $controller = $dispatcher->dispatch();
+            $controller = $dispatcher->dispatch($moduleName,$router->getControllerName(),$router->getActionName(),$router->getParams());
             if ($controller === false) {
                 return false;
             }
 
             $response = $this->_getResponse($dispatcher->getReturnedValue(), $moduleName,
               $dispatcher->getControllerName(), $dispatcher->getActionName());
-
-            $this->fireEvent('application:afterHandleRequest', $this, $controller);
 
             $this->fireEvent('application:beforeSendResponse', $this, $response);
 

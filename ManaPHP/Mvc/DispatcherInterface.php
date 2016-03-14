@@ -24,23 +24,6 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Sets the module name which the application belongs to
-         * @param string $moduleName
-         * @return static
-         */
-        public function setModuleName($moduleName);
-
-
-        /**
-         * Sets the action name to be dispatched
-         *
-         * @param string $actionName
-         * @return static
-         */
-        public function setActionName($actionName);
-
-
-        /**
          * Gets last dispatched action name
          *
          * @return string
@@ -49,30 +32,11 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Sets action params to be dispatched
-         *
-         * @param array $params
-         * @return static
-         */
-        public function setParams($params);
-
-
-        /**
          * Gets action params
          *
          * @return array
          */
         public function getParams();
-
-
-        /**
-         * Set a param by its name or numeric index
-         *
-         * @param  string|int $param
-         * @param  mixed $value
-         * @return static
-         */
-        public function setParam($param, $value);
 
 
         /**
@@ -97,9 +61,13 @@ namespace ManaPHP\Mvc {
         /**
          * Dispatches a handle action taking into account the routing parameters
          *
+         * @param string $module
+         * @param string $controller
+         * @param string $action
+         * @param array $params
          * @return false|\ManaPHP\Mvc\ControllerInterface
          */
-        public function dispatch();
+        public function dispatch($module,$controller, $action,$params=[]);
 
 
         /**
@@ -115,14 +83,6 @@ namespace ManaPHP\Mvc {
          * @return boolean
          */
         public function wasForwarded();
-
-
-        /**
-         * Sets the controller name to be dispatched
-         *
-         * @param string $controllerName
-         */
-        public function setControllerName($controllerName);
 
 
         /**
