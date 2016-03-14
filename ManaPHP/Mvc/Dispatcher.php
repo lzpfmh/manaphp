@@ -335,7 +335,14 @@ namespace ManaPHP\Mvc {
                     continue;
                 }
 
-                $controllerClass = $this->_getControllerClass();
+                $controllerClass='';
+                if(!empty($this->_rootNamespace)){
+                    $controllerClass .=$this->_rootNamespace.'\\';
+                }
+                if(!empty($this->_moduleName)){
+                    $controllerClass.=$this->_moduleName.'\\Controllers\\';
+                }
+                $controllerClass .= $this->_controllerName.$this->_controllerSuffix;
 
                 if (!$this->_dependencyInjector->has($controllerClass) && !class_exists($controllerClass)) {
                     if ($this->fireEvent('dispatcher:beforeNotFoundController', $this) === false) {
@@ -481,23 +488,6 @@ namespace ManaPHP\Mvc {
             }
         }
 
-        /**
-         * Possible class name that will be located to dispatch the request
-         *
-         * @return string
-         */
-        protected function _getControllerClass()
-        {
-            $camelizedClass = $this->_controllerName;
-
-            if(empty($this->_rootNamespace)){
-                $handlerClass =$camelizedClass . $this->_controllerSuffix;
-            }else{
-                $handlerClass =$this->_rootNamespace.'\\'. $camelizedClass . $this->_controllerSuffix;
-            }
-
-            return $handlerClass;
-        }
 
         /**
          * Sets the controller name to be dispatched
