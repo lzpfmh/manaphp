@@ -94,24 +94,6 @@ namespace ManaPHP\Mvc {
         protected $_previousActionName;
 
         /**
-         * \ManaPHP\Dispatcher constructor
-         */
-        public function __construct()
-        {
-        }
-
-        /**
-         * Gets the module where the controller class is
-         *
-         * @return string
-         */
-        public function getModuleName()
-        {
-            return $this->_moduleName;
-        }
-
-
-        /**
          * Sets the namespace where the controller class is
          *
          * @param string $namespaceName
@@ -123,7 +105,6 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
         /**
          * Gets a namespace to be prepended to the current handler name
          *
@@ -132,6 +113,16 @@ namespace ManaPHP\Mvc {
         public function getRootNamespace()
         {
             return $this->_rootNamespace;
+        }
+
+        /**
+         * Gets the module where the controller class is
+         *
+         * @return string
+         */
+        public function getModuleName()
+        {
+            return $this->_moduleName;
         }
 
         /**
@@ -217,7 +208,7 @@ namespace ManaPHP\Mvc {
          * @return false|\ManaPHP\Mvc\ControllerInterface
          * @throws \ManaPHP\Mvc\Dispatcher\Exception
          */
-        public function dispatch($module,$controller, $action,$params=[])
+        public function dispatch($module,$controller, $action, $params=[])
         {
             $this->_moduleName=$this->_camelize($module);
             $this->_controllerName=$this->_camelize($controller);
@@ -348,7 +339,7 @@ namespace ManaPHP\Mvc {
             }
 
             if (isset($forward['module'])) {
-                $this->_rootNamespace= $forward['module'];
+                $this->_moduleName= $forward['module'];
             }
 
             if (isset($forward['controller'])) {
