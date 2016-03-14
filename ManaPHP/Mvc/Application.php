@@ -192,16 +192,11 @@ namespace ManaPHP\Mvc {
             $this->fireEvent('application:afterStartModule', $this, $moduleObject);
 
             $dispatcher = $this->_dependencyInjector->getShared('dispatcher');
-            if ($dispatcher->getDefaultNamespace() === null) {
-                if ($moduleName === '') {
-                    $dispatcher->setDefaultNamespace($this->_baseNamespace . '\\Controllers');
-                } else {
-                    $dispatcher->setDefaultNamespace($this->_baseNamespace . "\\$moduleName\\Controllers");
-                }
+            if ($dispatcher->getRootNamespace() === null) {
+                $dispatcher->setRootNamespace($this->_baseNamespace);
             }
 
             $dispatcher->setModuleName($moduleName);
-            $dispatcher->setNamespaceName($this->_baseNamespace . ($moduleName === '' ? '' : "\\$moduleName") . "\\Controllers");
             $dispatcher->setControllerName($router->getControllerName());
             $dispatcher->setActionName($router->getActionName());
             $dispatcher->setParams($router->getParams());
