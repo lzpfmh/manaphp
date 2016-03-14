@@ -21,11 +21,7 @@ namespace ManaPHP\Mvc {
      *
      *  $dispatcher->setDI($di);
      *
-     *    $dispatcher->setControllerName('posts');
-     *    $dispatcher->setActionName('index');
-     *    $dispatcher->setParams(array());
-     *
-     *    $controller = $dispatcher->dispatch();
+     *  $controller = $dispatcher->dispatch('app','posts','index');
      *
      *</code>
      */
@@ -36,7 +32,6 @@ namespace ManaPHP\Mvc {
         const EXCEPTION_INVALID_CONTROLLER = 3;
 
         const EXCEPTION_ACTION_NOT_FOUND = 5;
-
 
         /**
          * @var boolean
@@ -77,19 +72,6 @@ namespace ManaPHP\Mvc {
          * @var mixed
          */
         protected $_returnedValue;
-
-        protected $_lastController;
-
-
-        /**
-         * @var string
-         */
-        protected $_defaultController = 'Index';
-
-        /**
-         * @var string
-         */
-        protected $_defaultAction = 'index';
 
         /**
          * @var string
@@ -261,16 +243,6 @@ namespace ManaPHP\Mvc {
                     throw new Exception('Dispatcher has detected a cyclic routing causing stability problems');
                 }
 
-                // If the handler is null we use the set in this->_defaultHandler
-                if ($this->_controllerName === null) {
-                    $this->_controllerName = $this->_defaultController;
-                }
-
-                // If the action is null we use the set in this->_defaultAction
-                if ($this->_actionName === null) {
-                    $this->_actionName = $this->_defaultAction;
-                }
-
                 $this->fireEvent('dispatcher:beforeDispatch', $this);
 
                 if ($this->_finished === false) {
@@ -335,7 +307,6 @@ namespace ManaPHP\Mvc {
                 }
 
                 $this->_returnedValue = call_user_func_array([$controller, $actionMethod], $this->_params);
-                $this->_lastController = $controller;
 
                 $value = null;
 
