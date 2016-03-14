@@ -58,7 +58,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_namespaceName;
+        protected $_rootNamespace;
 
         /**
          * @var string
@@ -82,10 +82,6 @@ namespace ManaPHP\Mvc {
 
         protected $_lastController;
 
-        /**
-         * @var string
-         */
-        protected $_defaultNamespace = null;
 
         /**
          * @var string
@@ -156,9 +152,9 @@ namespace ManaPHP\Mvc {
          * @param string $namespaceName
          * @return static
          */
-        public function setNamespaceName($namespaceName)
+        public function setRootNamespace($namespaceName)
         {
-            $this->_namespaceName = $namespaceName;
+            $this->_rootNamespace = $namespaceName;
             return $this;
         }
 
@@ -168,33 +164,9 @@ namespace ManaPHP\Mvc {
          *
          * @return string
          */
-        public function getNamespaceName()
+        public function getRootNamespace()
         {
-            return $this->_namespaceName;
-        }
-
-
-        /**
-         * Sets the default namespace
-         *
-         * @param string $namespace
-         * @return static
-         */
-        public function setDefaultNamespace($namespace)
-        {
-            $this->_defaultNamespace = $namespace;
-            return $this;
-        }
-
-
-        /**
-         * Returns the default namespace
-         *
-         * @return string
-         */
-        public function getDefaultNamespace()
-        {
-            return $this->_defaultNamespace;
+            return $this->_rootNamespace;
         }
 
 
@@ -347,7 +319,15 @@ namespace ManaPHP\Mvc {
                     throw new Exception('Dispatcher has detected a cyclic routing causing stability problems');
                 }
 
-                $this->_resolveEmptyProperties();
+                // If the handler is null we use the set in this->_defaultHandler
+                if ($this->_controllerName === null) {
+                    $this->_controllerName = $this->_defaultController;
+                }
+
+                // If the action is null we use the set in this->_defaultAction
+                if ($this->_actionName === null) {
+                    $this->_actionName = $this->_defaultAction;
+                }
 
                 $this->fireEvent('dispatcher:beforeDispatch', $this);
 
@@ -449,8 +429,8 @@ namespace ManaPHP\Mvc {
                 throw new Exception('Forward parameter must be an Array');
             }
 
-            if (isset($forward['namespace'])) {
-                $this->_namespaceName = $forward['namespace'];
+            if (isset($forward['module'])) {
+                $this->_rootNamespace= $forward['module'];
             }
 
             if (isset($forward['controller'])) {
@@ -508,40 +488,16 @@ namespace ManaPHP\Mvc {
          */
         protected function _getControllerClass()
         {
-            $this->_resolveEmptyProperties();
-
             $camelizedClass = $this->_controllerName;
 
-            if ($this->_namespaceName) {
-                $handlerClass = rtrim($this->_namespaceName, '\\') . '\\' . $camelizedClass . $this->_controllerSuffix;
-            } else {
-                $handlerClass = $camelizedClass . $this->_controllerSuffix;
+            if(empty($this->_rootNamespace)){
+                $handlerClass =$camelizedClass . $this->_controllerSuffix;
+            }else{
+                $handlerClass =$this->_rootNamespace.'\\'. $camelizedClass . $this->_controllerSuffix;
             }
 
             return $handlerClass;
         }
-
-        /**
-         * Set empty properties to their defaults (where defaults are available)
-         */
-        protected function _resolveEmptyProperties()
-        {
-            // If the current namespace is null we used the set in this->_defaultNamespace
-            if ($this->_namespaceName === null) {
-                $this->_namespaceName = $this->_defaultNamespace;
-            }
-
-            // If the handler is null we use the set in this->_defaultHandler
-            if ($this->_controllerName === null) {
-                $this->_controllerName = $this->_defaultController;
-            }
-
-            // If the action is null we use the set in this->_defaultAction
-            if ($this->_actionName === null) {
-                $this->_actionName = $this->_defaultAction;
-            }
-        }
-
 
         /**
          * Sets the controller name to be dispatched
