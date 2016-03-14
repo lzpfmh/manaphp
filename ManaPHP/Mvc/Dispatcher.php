@@ -38,8 +38,6 @@ namespace ManaPHP\Mvc {
         const EXCEPTION_ACTION_NOT_FOUND = 5;
 
 
-        protected $_activeController;
-
         /**
          * @var boolean
          */
@@ -200,10 +198,6 @@ namespace ManaPHP\Mvc {
             }
 
             return null;
-            /*
-             * todo
-             */
-            //	return $this->_dependencyInjector->getShared('filter')->sanitize($this->_params[$param],$filters);
         }
 
 
@@ -309,8 +303,6 @@ namespace ManaPHP\Mvc {
                 if (!is_object($controller)) {
                     throw new Exception('Invalid handler type returned from the services container: ' . gettype($controller));
                 }
-
-                $this->_activeController = $controller;
 
                 $actionMethod = $this->_actionName . $this->_actionSuffix;
                 if (!method_exists($controller, $actionMethod)) {
