@@ -24,6 +24,12 @@ namespace ManaPHP\Mvc {
 
 
         /**
+         * Gets the module where the controller class is
+         */
+        public function getModuleName();
+
+
+        /**
          * Gets last dispatched action name
          *
          * @return string

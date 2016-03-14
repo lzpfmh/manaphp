@@ -154,7 +154,6 @@ namespace ManaPHP\Mvc {
             return $this->_rootNamespace;
         }
 
-
         /**
          * Gets the latest dispatched action name
          *
