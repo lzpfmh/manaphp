@@ -138,26 +138,26 @@ class tDispatcher extends \ManaPHP\Mvc\Dispatcher
 class MvcDispatcherTest extends TestCase
 {
 
-    public function test_setDefaultNamespace()
+    public function test_setRootNamespace()
     {
         $dispatcher = new tDispatcher();
 
-        $dispatcher->setDefaultNamespace('Application\Api');
-        $this->assertEquals('Application\Api', $dispatcher->getDefaultNamespace());
+        $dispatcher->setRootNamespace('Application\Api');
+        $this->assertEquals('Application\Api', $dispatcher->getRootNamespace());
 
-        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher', $dispatcher->setDefaultNamespace('Application\Api'));
-        $this->assertInstanceOf('tDispatcher', $dispatcher->setDefaultNamespace('Application\Api'));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher', $dispatcher->setRootNamespace('Application\Api'));
+        $this->assertInstanceOf('tDispatcher', $dispatcher->setRootNamespace('Application\Api'));
     }
 
     public function test_setNamespaceName()
     {
         $dispatcher = new tDispatcher();
 
-        $dispatcher->setNamespaceName('Application\Api');
-        $this->assertEquals('Application\Api', $dispatcher->getNamespaceName());
+        $dispatcher->setRootNamespace('Application\Api');
+        $this->assertEquals('Application\Api', $dispatcher->getRootNamespace());
 
-        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher', $dispatcher->setNamespaceName('Application\Api'));
-        $this->assertInstanceOf('tDispatcher', $dispatcher->setNamespaceName('Application\Api'));
+        $this->assertInstanceOf('\ManaPHP\Mvc\Dispatcher', $dispatcher->setRootNamespace('Application\Api'));
+        $this->assertInstanceOf('tDispatcher', $dispatcher->setRootNamespace('Application\Api'));
     }
 
     public function test_setModuleName()
