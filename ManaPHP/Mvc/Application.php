@@ -55,12 +55,12 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_baseDirectory;
+        protected $_rootDirectory;
 
         /**
          * var string
          */
-        protected $_baseNamespace;
+        protected $_rootNamespace;
 
         /**
          * @var string
@@ -80,10 +80,11 @@ namespace ManaPHP\Mvc {
         /**
          * \ManaPHP\Mvc\Application
          *
-         * @param string $baseDirectory
+         * @param string $rootDirectory
+         * @param string $rootNamespace
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function __construct($baseDirectory, $dependencyInjector = null)
+        public function __construct($rootDirectory, $rootNamespace=null, $dependencyInjector = null)
         {
             if (is_object($dependencyInjector)) {
                 $this->_dependencyInjector = $dependencyInjector;
@@ -92,12 +93,14 @@ namespace ManaPHP\Mvc {
             }
             $this->_dependencyInjector->setShared('application', $this, true);
 
-            $baseDirectory = str_replace('\\', '/', rtrim($baseDirectory, '\\/'));
-            $baseNamespace = ucfirst(basename($baseDirectory));
+            $rootDirectory = str_replace('\\', '/', rtrim($rootDirectory, '\\/'));
+            if($rootNamespace===null){
+                $rootNamespace=ucfirst(basename($rootDirectory));
+            }
 
-            $this->_baseDirectory = $baseDirectory;
-            $this->_baseNamespace = $baseNamespace;
-            $this->loader->registerNamespaces([$baseNamespace => $baseDirectory])->register();
+            $this->_rootDirectory = $rootDirectory;
+            $this->_rootNamespace = $rootNamespace;
+            $this->loader->registerNamespaces([$rootNamespace => $rootDirectory])->register();
         }
 
 
@@ -128,24 +131,19 @@ namespace ManaPHP\Mvc {
          * @return static
          * @throws \ManaPHP\Mvc\Application\Exception
          */
-        public function registerModules($modules = null)
+        public function registerModules($modules)
         {
-            if ($modules === null) {
-                $this->_modules = ['' => $this->_baseNamespace . '\\Module'];
-                $this->_defaultModule = '';
-            } else {
-                foreach ($modules as $module => $definition) {
-                    if (is_string($module)) {
-                        $moduleName = ucfirst($module);
-                        $this->_modules[$moduleName] = $definition;
-                    } else {
-                        $moduleName = ucfirst($definition);
-                        $this->_modules[$moduleName] = $this->_baseNamespace . "\\$moduleName\\Module";
-                    }
+            foreach ($modules as $module => $definition) {
+                if (is_string($module)) {
+                    $moduleName = ucfirst($module);
+                    $this->_modules[$moduleName] = $definition;
+                } else {
+                    $moduleName = ucfirst($definition);
+                    $this->_modules[$moduleName] = $this->_rootNamespace . "\\$moduleName\\Module";
+                }
 
-                    if ($this->_defaultModule === null) {
-                        $this->_defaultModule = $moduleName;
-                    }
+                if ($this->_defaultModule === null) {
+                    $this->_defaultModule = $moduleName;
                 }
             }
 
@@ -193,7 +191,7 @@ namespace ManaPHP\Mvc {
 
             $dispatcher = $this->_dependencyInjector->getShared('dispatcher');
             if ($dispatcher->getRootNamespace() === null) {
-                $dispatcher->setRootNamespace($this->_baseNamespace);
+                $dispatcher->setRootNamespace($this->_rootNamespace);
             }
 
             $controller = $dispatcher->dispatch($moduleName,$router->getControllerName(),$router->getActionName(),$router->getParams());
@@ -242,9 +240,9 @@ namespace ManaPHP\Mvc {
                     $view = $this->_dependencyInjector->getShared('view');
                     if ($view->getViewsDir() === null) {
                         if ($moduleName === '') {
-                            $view->setViewsDir($this->_baseDirectory . "/Views");
+                            $view->setViewsDir($this->_rootDirectory . "/Views");
                         } else {
-                            $view->setViewsDir($this->_baseDirectory . "/$moduleName/Views");
+                            $view->setViewsDir($this->_rootDirectory . "/$moduleName/Views");
                         }
                     }
 
