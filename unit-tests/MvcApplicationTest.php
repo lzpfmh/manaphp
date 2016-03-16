@@ -8,13 +8,13 @@ class MvcApplicationTest extends TestCase
     {
         $application = new \ManaPHP\Mvc\Application('D:\Test\Application');
         $properties = $application->__debugInfo();
-        $this->assertEquals('D:/Test/Application', $properties['_baseDirectory']);
-        $this->assertEquals('Application', $properties['_baseNamespace']);
+        $this->assertEquals('D:/Test/Application', $properties['_rootDirectory']);
+        $this->assertEquals('Application', $properties['_rootNamespace']);
 
         $application = new \ManaPHP\Mvc\Application('d:\test\application\\');
         $properties = $application->__debugInfo();
-        $this->assertEquals('d:/test/application', $properties['_baseDirectory']);
-        $this->assertEquals('Application', $properties['_baseNamespace']);
+        $this->assertEquals('d:/test/application', $properties['_rootDirectory']);
+        $this->assertEquals('Application', $properties['_rootNamespace']);
     }
 
     public function test_useImplicitView()
@@ -26,28 +26,5 @@ class MvcApplicationTest extends TestCase
         $this->assertInstanceOf('ManaPHP\Mvc\Application', $application->useImplicitView(false));
         $properties = $application->__debugInfo();
         $this->assertEquals(false, $properties['_implicitView']);
-    }
-
-    public function test_registerModules()
-    {
-        $application = new \ManaPHP\Mvc\Application('D:\Test\Application');
-        $this->assertInstanceOf('ManaPHP\Mvc\Application', $application->registerModules());
-        $properties = $application->__debugInfo();
-        $this->assertEquals(['' => 'Application\Module'], $properties['_modules']);
-        $this->assertEquals('', $properties['_defaultModule']);
-
-
-        $application = new \ManaPHP\Mvc\Application('D:\Test\Application');
-        $this->assertInstanceOf('ManaPHP\Mvc\Application', $application->registerModules(null));
-        $properties = $application->__debugInfo();
-        $this->assertEquals(['' => 'Application\Module'], $properties['_modules']);
-        $this->assertEquals('', $properties['_defaultModule']);
-
-        $application = new \ManaPHP\Mvc\Application('D:\Test\Application');
-        $application->registerModules(['m1', 'm2']);
-        $properties = $application->__debugInfo();
-        $this->assertEquals('M1', $properties['_defaultModule']);
-        $this->assertEquals(['M1' => 'Application\M1\Module', 'M2' => 'Application\M2\Module'],
-          $properties['_modules']);
     }
 }
