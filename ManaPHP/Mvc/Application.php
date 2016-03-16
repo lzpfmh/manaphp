@@ -133,6 +133,14 @@ namespace ManaPHP\Mvc {
          */
         public function registerModules($modules)
         {
+            if($modules===null){
+                throw new Exception('The provided modules are null');
+            }
+
+            if(is_string($modules)){
+                $modules=[$modules];
+            }
+
             foreach ($modules as $module => $definition) {
                 if (is_string($module)) {
                     $moduleName = ucfirst($module);
