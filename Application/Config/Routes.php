@@ -7,5 +7,5 @@
  */
 $router = new \ManaPHP\Mvc\Router();
 
-$router->removeExtraSlashes(true);
+//$router->removeExtraSlashes(true);
 return $router;

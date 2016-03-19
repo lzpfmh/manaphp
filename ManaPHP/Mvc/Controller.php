@@ -38,6 +38,12 @@ namespace ManaPHP\Mvc {
      *}
      *
      *</code>
+     *
+     * @method void initialize();
+     * @method bool beforeExecuteRoute();
+     * @method bool afterExecuteRoute();
+     * @method onConstruct();
+     *
      */
     abstract class Controller extends Component implements ControllerInterface
     {

@@ -25,6 +25,7 @@ $di->set('router', function () {
 $application->useImplicitView(false);
 
 $application->registerModules(['Home']);
+$application->router->mount(new \ManaPHP\Mvc\Router\Group(),'Home','/');
 
 echo $application->handle()->getContent();
 //var_dump($application->__debugInfo());

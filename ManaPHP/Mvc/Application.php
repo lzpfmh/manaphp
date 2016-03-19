@@ -168,17 +168,18 @@ namespace ManaPHP\Mvc {
          */
         public function handle($uri = null)
         {
+            if ($this->_modules === null) {
+                throw new Exception('modules is empty. please register it first.');
+            }
+
             if ($this->fireEvent('application:boot', $this) === false) {
                 return false;
             }
 
             $router = $this->_dependencyInjector->getShared('router');
 
-            $router->handle($uri);
 
-            if ($this->_modules === null) {
-                throw new Exception('modules is empty. please register it first.');
-            }
+            $router->handle($uri);
 
             $moduleName = $router->getModuleName();
             if ($moduleName === null) {

@@ -177,12 +177,13 @@ class MvcRouterTest extends TestCase
 
         $group->add('/show/{id:video([0-9]+)}/{title:[a-z\-]+}', 'videos::show');
 
-        $router->mount($group);
+        $router->mount($group,'app','/');
         foreach ($tests as $n => $test) {
             $router->handle($test['uri']);
-            $this->assertEquals($router->getControllerName(), $test['controller'], 'Testing ' . $test['uri']);
-            $this->assertEquals($router->getActionName(), $test['action'], 'Testing ' . $test['uri']);
-            $this->assertEquals($router->getParams(), $test['params'], 'Testing ' . $test['uri']);
+            $this->assertEquals('app',$router->getModuleName());
+            $this->assertEquals($test['controller'], $router->getControllerName(),'Testing ' . $test['uri']);
+            $this->assertEquals($test['action'], $router->getActionName(), 'Testing ' . $test['uri']);
+            $this->assertEquals($test['params'],$router->getParams(), 'Testing ' . $test['uri']);
         }
     }
 
@@ -284,13 +285,14 @@ class MvcRouterTest extends TestCase
           'action' => 'index'
         ));
 
-        $router->mount($group);
+        $router->mount($group,'app','/');
         foreach ($tests as $n => $test) {
             $_SERVER['REQUEST_METHOD'] = $test['method'];
             $router->handle($test['uri']);
-            $this->assertEquals($router->getControllerName(), $test['controller'], 'Testing ' . $test['uri']);
-            $this->assertEquals($router->getActionName(), $test['action'], 'Testing ' . $test['uri']);
-            $this->assertEquals($router->getParams(), $test['params'], 'Testing ' . $test['uri']);
+            $this->assertEquals('app',$router->getModuleName());
+            $this->assertEquals($test['controller'],$router->getControllerName(),'Testing ' . $test['uri']);
+            $this->assertEquals($test['action'], $router->getActionName(), 'Testing ' . $test['uri']);
+            $this->assertEquals($test['params'],$router->getParams(), 'Testing ' . $test['uri']);
         }
     }
 
@@ -298,7 +300,7 @@ class MvcRouterTest extends TestCase
     {
         $group = new \ManaPHP\Mvc\Router\Group();
 
-        $group->add("/news/{year:([0-9]{4})}/{month:([0-9]{2})}/{day:([0-9]{2})}/:params", array(
+        $group->add("/news/{year:[0-9]{4}}/{month:[0-9]{2}}/{day:[0-9]{2}}/:params", array(
             "controller" => "posts",
             "action" => "show",
             "year" => 1, // ([0-9]{4})
@@ -308,10 +310,10 @@ class MvcRouterTest extends TestCase
           ));
 
         $router = new \ManaPHP\Mvc\Router(false);
-        $router->mount($group);
+        $router->mount($group,'news','/');
         $router->handle('/news/2016/03/12/china');
         $this->assertTrue($router->wasMatched());
-        $this->assertEquals(null, $router->getModuleName());
+        $this->assertEquals('news', $router->getModuleName());
         $this->assertEquals('posts', $router->getControllerName());
         $this->assertEquals('show', $router->getActionName());
         $this->assertEquals('2016', $router->getParams()['year']);
@@ -353,12 +355,13 @@ class MvcRouterTest extends TestCase
         $group->add('/some/{name}/{id:[0-9]+}', ['controller' => 'c', 'action' => 'a']);
         $group->add('/some/{name}/{id:[0-9]+}/{date}', ['controller' => 'c', 'action' => 'a']);
 
-        $router->mount($group);
+        $router->mount($group,'app','/');
 
         foreach ($tests as $n => $test) {
             $_SERVER['REQUEST_METHOD'] = $test['method'];
 
             $router->handle($test['uri']);
+            $this->assertEquals('app',$router->getModuleName());
             $this->assertEquals($test['controller'], $router->getControllerName(), 'Testing ' . $test['uri']);
             $this->assertEquals($test['action'], $router->getActionName(), 'Testing ' . $test['uri']);
             $this->assertEquals($test['params'], $router->getParams(), 'Testing ' . $test['uri']);
@@ -386,6 +389,7 @@ class MvcRouterTest extends TestCase
           ),
         );
 
+        $router->mount(new \ManaPHP\Mvc\Router\Group(),'app','/');
         foreach ($routes as $route => $paths) {
             $router->handle($route);
             /** @noinspection DisconnectedForeachInstructionInspection */
@@ -414,7 +418,7 @@ class MvcRouterTest extends TestCase
           'action' => 'index'
         ));
 
-        $router->mount($group, 'blog');
+        $router->mount($group, 'blog','/blog');
 
         $routes = array(
           '/blog/save' => array(
@@ -438,27 +442,27 @@ class MvcRouterTest extends TestCase
             $router->handle($route);
             /** @noinspection DisconnectedForeachInstructionInspection */
             $this->assertTrue($router->wasMatched());
-            $this->assertEquals($paths['module'], $router->getModuleName());
-            $this->assertEquals($paths['controller'], $router->getControllerName());
-            $this->assertEquals($paths['action'], $router->getActionName());
+            $this->assertEquals($paths['module'], $router->getModuleName(),$route);
+            $this->assertEquals($paths['controller'], $router->getControllerName(),$route);
+            $this->assertEquals($paths['action'], $router->getActionName(),$route);
         }
     }
 
     public function test_mount_for_usage()
     {
         $group = new \ManaPHP\Mvc\Router\Group();
-        $group->add('/article/1', "article::detail");
+        $group->add('/article/{id:\\d+}', "article::detail");
 
         //single module usage
-        $router = (new \ManaPHP\Mvc\Router())->mount($group);
+        $router = (new \ManaPHP\Mvc\Router())->mount($group,'app','/');
         $router->handle('/article/1');
         $this->assertTrue($router->wasMatched());
-        $this->assertEquals(null, $router->getModuleName());
+        $this->assertEquals('app', $router->getModuleName());
         $this->assertEquals('article', $router->getControllerName());
         $this->assertEquals('detail', $router->getActionName());
 
         //multiple module usage with binding to /blog path
-        $router = (new \ManaPHP\Mvc\Router())->mount($group, 'blog');
+        $router = (new \ManaPHP\Mvc\Router())->mount($group, 'blog','/blog');
         $router->handle('/blog/article/1');
         $this->assertTrue($router->wasMatched());
         $this->assertEquals('blog', $router->getModuleName());
@@ -514,7 +518,7 @@ class MvcRouterTest extends TestCase
         $group = new \ManaPHP\Mvc\Router\Group();
         $group->add('/', 'admin::user::list');
         $router = new \ManaPHP\Mvc\Router(false);
-        $router->mount($group);
+        $router->mount($group,'app','/');
         $router->handle('/');
         $this->assertTrue($router->wasMatched());
         $this->assertEquals('admin', $router->getModuleName());
@@ -525,20 +529,20 @@ class MvcRouterTest extends TestCase
         $group = new \ManaPHP\Mvc\Router\Group();
         $group->add('/', 'user::list');
         $router = new \ManaPHP\Mvc\Router(false);
-        $router->mount($group);
+        $router->mount($group,'app','/');
         $router->handle('/');
         $this->assertTrue($router->wasMatched());
-        $this->assertEquals(null, $router->getModuleName());
+        $this->assertEquals('app', $router->getModuleName());
         $this->assertEquals('user', $router->getControllerName());
         $this->assertEquals('list', $router->getActionName());
 
         $group = new \ManaPHP\Mvc\Router\Group();
         $group->add('/', 'user');
         $router = new \ManaPHP\Mvc\Router(false);
-        $router->mount($group);
+        $router->mount($group,'app','/');
         $router->handle('/');
         $this->assertTrue($router->wasMatched());
-        $this->assertEquals(null, $router->getModuleName());
+        $this->assertEquals('app', $router->getModuleName());
         $this->assertEquals('user', $router->getControllerName());
         $this->assertEquals('index', $router->getActionName());
     }

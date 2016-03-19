@@ -98,7 +98,7 @@ namespace ManaPHP\Mvc {
          */
         public function __construct($defaultRoutes = true)
         {
-            if ($defaultRoutes) {
+            if (true) {
                 $group = new Group();
 
                 $group->add('/');
@@ -224,50 +224,47 @@ namespace ManaPHP\Mvc {
                  */
                 list($path, $module, $group) = $this->_groups[$i];
 
-                if ($path !== '') {
-                    $pos = strpos($path, '/');
-                    if ($pos === 0) {
-                        if (stripos($refined_uri, $path) !== 0) {
-                            continue;
-                        }
-                        $handle_uri = substr($refined_uri, strlen($path));
-                    } else {
-                        if (!isset($refined_host)) {
-                            if ($host === null) {
-                                if (isset($_SERVER['HTTP_HOST'])) {
-                                    $refined_host = $_SERVER['HTTP_HOST'];
-                                } else {
-                                    throw new Exception('router handle need host, but can not fetch.');
-                                }
+                $pos = strpos($path, '/');
+                if ($pos === 0) {
+                    if (stripos($refined_uri, $path) !== 0) {
+                        continue;
+                    }
+                    $handle_uri =substr($refined_uri, strlen($path)-1);
+                } else {
+                    if (!isset($refined_host)) {
+                        if ($host === null) {
+                            if (isset($_SERVER['HTTP_HOST'])) {
+                                $refined_host = $_SERVER['HTTP_HOST'];
                             } else {
-                                $refined_host = $host;
+                                throw new Exception('router handle need host, but can not fetch.');
                             }
-                        }
-
-                        if (stripos($refined_host . $refined_uri, $path) !== 0) {
-                            continue;
-                        }
-
-                        if ($pos === false) {
-                            $handle_uri = $refined_uri;
                         } else {
-                            $handle_uri = substr($refined_uri, strlen($path) - $pos);
+                            $refined_host = $host;
                         }
                     }
-                } else {
-                    $handle_uri = $refined_uri;
+
+                    if (stripos($refined_host . $refined_uri, $path) !== 0) {
+                        continue;
+                    }
+
+                    if ($pos === false) {
+                        $handle_uri = $refined_uri;
+                    } else {
+                        $handle_uri = substr($refined_uri, strlen($path) - $pos-1);
+                    }
                 }
 
                 $route_found = $this->_findMatchedRoute($handle_uri, $group->getRoutes(), $parts);
                 if ($route_found) {
                     break;
                 }
+
+                $route_found = $this->_findMatchedRoute($handle_uri, $this->_defaultGroup->getRoutes(), $parts);
+                if($route_found){
+                    break;
+                }
             }
 
-            if (!$route_found && $this->_defaultGroup !== null) {
-                $module = null;
-                $route_found = $this->_findMatchedRoute($refined_uri, $this->_defaultGroup->getRoutes(), $parts);
-            }
             $this->_wasMatched = $route_found;
 
             if ($route_found) {
@@ -332,6 +329,8 @@ namespace ManaPHP\Mvc {
             if ($path === null) {
                 $path = '/' . $module;
             }
+
+            $path=rtrim($path,'/').'/';
 
             $this->_groups[] = [$path, $module, $group];
 
