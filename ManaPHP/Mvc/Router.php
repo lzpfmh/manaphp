@@ -215,11 +215,7 @@ namespace ManaPHP\Mvc {
                         continue;
                     }
 
-                    if ($pos === false) {
-                        $handle_uri = $refined_uri;
-                    } else {
-                        $handle_uri = substr($refined_uri, strlen($path) - $pos-1);
-                    }
+                    $handle_uri = substr($refined_uri, strlen($path) - $pos-1);
                 }
 
                 $route_found = $this->_findMatchedRoute($handle_uri, $group->getRoutes(), $parts);
@@ -238,23 +234,17 @@ namespace ManaPHP\Mvc {
                 $this->_params = $this->_defaultParams;
 
                 if (isset($parts['module'])) {
-                    if (!is_numeric($parts['module'])) {
-                        $this->_module = $parts['module'];
-                    }
+                    $this->_module = $parts['module'];
                     unset($parts['module']);
                 }
 
                 if (isset($parts['controller'])) {
-                    if (!is_numeric($parts['controller'])) {
-                        $this->_controller = $parts['controller'];
-                    }
+                    $this->_controller = $parts['controller'];
                     unset($parts['controller']);
                 }
 
                 if (isset($parts['action'])) {
-                    if (!is_numeric($parts['action'])) {
-                        $this->_action = $parts['action'];
-                    }
+                    $this->_action = $parts['action'];
                     unset($parts['action']);
                 }
 
