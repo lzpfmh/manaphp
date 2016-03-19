@@ -49,8 +49,15 @@ namespace ManaPHP\Mvc\Router {
         /**
          * @var \ManaPHP\Mvc\Router\RouteInterface[]
          */
-        protected $_routes;
+        protected $_routes=[];
 
+        public function __construct($useDefaultRoutes=true)
+        {
+            $this->add('/');
+            $this->add('/:controller/?');
+            $this->add('/:controller/:action/?');
+            $this->add('/:controller/:action/:params');
+        }
 
         /**
          * Returns the routes added to the group

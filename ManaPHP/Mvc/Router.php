@@ -60,11 +60,6 @@ namespace ManaPHP\Mvc {
         protected $_groups = [];
 
         /**
-         * @var \ManaPHP\Mvc\Router\GroupInterface
-         */
-        protected $_defaultGroup = null;
-
-        /**
          * @var boolean
          */
         protected $_wasMatched = false;
@@ -89,26 +84,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_removeExtraSlashes = false;
 
-
-        /**
-         * ManaPHP\Mvc\Router constructor
-         *
-         * @param boolean $defaultRoutes
-         * @throws \ManaPHP\Mvc\Router\Exception
-         */
-        public function __construct($defaultRoutes = true)
-        {
-            if (true) {
-                $group = new Group();
-
-                $group->add('/');
-                $group->add('/:controller/?');
-                $group->add('/:controller/:action/?');
-                $group->add('/:controller/:action/:params');
-
-                $this->_defaultGroup = $group;
-            }
-        }
 
 
         /**
@@ -256,11 +231,6 @@ namespace ManaPHP\Mvc {
 
                 $route_found = $this->_findMatchedRoute($handle_uri, $group->getRoutes(), $parts);
                 if ($route_found) {
-                    break;
-                }
-
-                $route_found = $this->_findMatchedRoute($handle_uri, $this->_defaultGroup->getRoutes(), $parts);
-                if($route_found){
                     break;
                 }
             }
