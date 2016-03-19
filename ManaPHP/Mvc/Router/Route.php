@@ -172,19 +172,6 @@ namespace ManaPHP\Mvc\Router {
             return $routePaths;
         }
 
-        static protected function _uncamelize($str)
-        {
-            $first = true;
-            $str = preg_replace_callback('/([A-Z])/', function ($matches) use (&$first) {
-                if ($first) {
-                    $first = false;
-                    return strtolower($matches[1]);
-                } else {
-                    return '_' . strtolower($matches[1]);
-                }
-            }, $str);
-            return $str;
-        }
 
         /**
          * Returns the paths
