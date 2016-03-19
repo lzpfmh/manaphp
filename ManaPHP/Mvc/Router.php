@@ -327,18 +327,10 @@ namespace ManaPHP\Mvc {
          * @param string $path
          * @return static
          */
-        public function mount($group, $module = null, $path = null)
+        public function mount($group, $module, $path = null)
         {
-            if ($module === null) {
-                $module = '';
-            }
-
             if ($path === null) {
-                if ($module !== '') {
-                    $path = '/' . $module;
-                } else {
-                    $path = '';
-                }
+                $path = '/' . $module;
             }
 
             $this->_groups[] = [$path, $module, $group];

@@ -44,7 +44,7 @@ namespace ManaPHP\Mvc {
          * @param string $path
          * @return  static
          */
-        public function mount($group, $module = null, $path = null);
+        public function mount($group, $module, $path = null);
 
         /**
          * Set whether router must remove the extra slashes in the handled routes
