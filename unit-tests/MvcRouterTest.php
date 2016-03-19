@@ -484,6 +484,32 @@ class MvcRouterTest extends TestCase
         $this->assertEquals('blog', $router->getModuleName());
         $this->assertEquals('article', $router->getControllerName());
         $this->assertEquals('detail', $router->getActionName());
+
+        $groupPath=new \ManaPHP\Mvc\Router\Group();
+
+        $groupDomain=new \ManaPHP\Mvc\Router\Group();
+
+        $groupDomainPath=new \ManaPHP\Mvc\Router\Group();
+
+        $router=new \ManaPHP\Mvc\Router();
+        $router->mount($groupPath,'path','/');
+        $router->mount($groupDomain,'domain','blog.manaphp.com');
+        $router->mount($groupDomainPath,'domain_path','www.manaphp.com/blog');
+
+        $this->assertTrue($router->handle('/article','blog.manaphp.com'));
+        $this->assertEquals('domain',$router->getModuleName());
+        $this->assertEquals('article',$router->getControllerName());
+        $this->assertEquals('index',$router->getActionName());
+
+        $this->assertTrue($router->handle('/blog/add','manaphp.com'));
+        $this->assertEquals('path',$router->getModuleName());
+        $this->assertEquals('blog',$router->getControllerName());
+        $this->assertEquals('add',$router->getActionName());
+
+        $this->assertTrue($router->handle('/blog/comments/list','www.manaphp.com'));
+        $this->assertEquals('domain_path',$router->getModuleName());
+        $this->assertEquals('comments',$router->getControllerName());
+        $this->assertEquals('list',$router->getActionName());
     }
 
     public function test_shortPaths()
