@@ -4,7 +4,6 @@ namespace ManaPHP\Mvc {
 
     use ManaPHP\Component;
     use ManaPHP\Mvc\Router\Exception;
-    use ManaPHP\Mvc\Router\Group;
 
     /**
      * ManaPHP\Mvc\Router
@@ -132,21 +131,19 @@ namespace ManaPHP\Mvc {
                 $route = $routes[$i];
 
                 if ($route->isMatched($uri, $matches)) {
-                    $paths = $route->getPaths();
-                    $parts = $paths;
-
-                    if (is_array($matches)) {
-                        foreach ($matches as $k => $v) {
-                            if (is_string($k)) {
-                                $paths[$k] = $v;
-                            }
+                    foreach ($matches as $k => $v) {
+                        if (is_string($k)) {
+                            $parts[$k]=$v;
                         }
-                        $parts = $paths;
+                    }
 
-                        foreach ($paths as $part => $position) {
-                            if (is_int($position) && isset($matches[$position])) {
-                                $parts[$part] = $matches[$position];
+                    foreach ($route->getPaths() as $k => $v) {
+                        if (is_int($v)) {
+                            if(isset($matches[$v])){
+                                $parts[$k] = $matches[$v];
                             }
+                        }else{
+                            $parts[$k]=$v;
                         }
                     }
 

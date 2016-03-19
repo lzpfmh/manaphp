@@ -15,7 +15,7 @@ class MvcRouterRouteTest extends TestCase
         //  literal route test
         $route = new \ManaPHP\Mvc\Router\Route('/blog/edit');
         $this->assertTrue($route->isMatched('/blog/edit', $matches));
-        $this->assertEquals(null, $matches);
+        $this->assertEquals([], $matches);
 
         // :module, :controller, :action, :params
         $route = new \ManaPHP\Mvc\Router\Route('/:module/:controller/:action/:params');
@@ -81,7 +81,7 @@ class MvcRouterRouteTest extends TestCase
             $this->assertEquals($test['params'], $router->getParams(), 'Testing ' . $test['uri']);
         }
     }
-    
+
     public function test_shortPaths()
     {
         $route = new \ManaPHP\Mvc\Router\Route('/route0', 'feed');

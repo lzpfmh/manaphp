@@ -205,8 +205,6 @@ namespace ManaPHP\Mvc\Router {
          */
         public function isMatched($handle_uri, &$matches)
         {
-            $matches = null;
-
             if ($this->_httpMethods !== null) {
                 if (is_string($this->_httpMethods)) {
                     if ($this->_httpMethods !== $_SERVER['REQUEST_METHOD']) {
@@ -228,6 +226,7 @@ namespace ManaPHP\Mvc\Router {
                 $is_matched = $r === 1;
             } else {
                 $is_matched = $this->_compiledPattern === $handle_uri;
+                $matches=[];
             }
 
             return $is_matched;
