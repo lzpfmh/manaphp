@@ -55,7 +55,7 @@ namespace ManaPHP\Mvc {
         protected $_params = [];
 
         /**
-         * @var array
+         * @var \ManaPHP\Mvc\Router\GroupInterface[]
          */
         protected $_groups = [];
 
@@ -83,7 +83,6 @@ namespace ManaPHP\Mvc {
          * @var boolean
          */
         protected $_removeExtraSlashes = false;
-
 
 
         /**
@@ -129,9 +128,6 @@ namespace ManaPHP\Mvc {
         {
             $parts = [];
 
-            /**
-             * Routes are traversed in reversed order
-             */
             for ($i = count($routes) - 1; $i >= 0; $i--) {
                 $route = $routes[$i];
 

@@ -53,10 +53,12 @@ namespace ManaPHP\Mvc\Router {
 
         public function __construct($useDefaultRoutes=true)
         {
-            $this->add('/');
-            $this->add('/:controller/?');
-            $this->add('/:controller/:action/?');
-            $this->add('/:controller/:action/:params');
+            if($useDefaultRoutes){
+                $this->add('/');
+                $this->add('/:controller/?');
+                $this->add('/:controller/:action/?');
+                $this->add('/:controller/:action/:params');
+            }
         }
 
         /**
