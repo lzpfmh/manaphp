@@ -15,7 +15,7 @@ namespace ManaPHP{
         const LEVEL_INFO=40;
         const LEVEL_DEBUG=50;
 
-        const LEVEL_ALL=-1;
+        const LEVEL_ALL=100;
 
         /**
          * @var int
