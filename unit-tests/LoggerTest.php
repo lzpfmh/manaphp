@@ -21,6 +21,7 @@ class LoggerTest extends TestCase{
         $this->assertEquals(null,$context);
 
         // To confirm the level can set correctly
+        $logger=new ManaPHP\Logger();
         $logger->setLevel(ManaPHP\Logger::LEVEL_OFF);
         $this->assertEquals(ManaPHP\Logger::LEVEL_OFF,$logger->getLevel());
 
