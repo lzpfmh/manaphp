@@ -1,0 +1,25 @@
+<?php
+namespace ManaPHP\Logger\Adapter{
+
+    use ManaPHP\Logger\AdapterInterface;
+
+    class Memory implements AdapterInterface{
+        protected $_logs=[];
+        /**
+         * @param string $level
+         * @param string $message
+         * @param array $context
+         * @return void
+         */
+        public function log($level,$message,$context=null){
+            $this->_logs[]=[$level,$message,$context];
+        }
+
+        /**
+         * @return array
+         */
+        public function getLogs(){
+            return $this->_logs;
+        }
+    }
+}

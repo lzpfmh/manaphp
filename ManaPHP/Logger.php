@@ -5,15 +5,27 @@
  * Date: 2016/3/20
  */
 namespace ManaPHP{
-    abstract class Logger
+    class Logger
     {
-        const LEVEL_FATAL=1;
-        const LEVEL_ERROR=2;
-        const LEVEL_WARNING=3;
-        const LEVEL_INFO=4;
-        const LEVEL_DEBUG=5;
+        const LEVEL_OFF=0;
 
-        protected $_level=self::LEVEL_DEBUG;
+        const LEVEL_FATAL=10;
+        const LEVEL_ERROR=20;
+        const LEVEL_WARNING=30;
+        const LEVEL_INFO=40;
+        const LEVEL_DEBUG=50;
+
+        const LEVEL_ALL=-1;
+
+        /**
+         * @var int
+         */
+        protected $_level=self::LEVEL_ALL;
+
+        /**
+         * @var \ManaPHP\Logger\AdapterInterface[]
+         */
+        protected $_adapters=[];
 
         /**
          * Filters the logs sent to the handlers to be greater or equals than a specific level
@@ -37,8 +49,38 @@ namespace ManaPHP{
             return $this->_level;
         }
 
-        abstract function _log($type,$message, $context);
 
+        /**
+         * @param \ManaPHP\Logger\AdapterInterface $adapter
+         * @return static
+         */
+        public function addAdapter($adapter){
+            $this->_adapters[]=$adapter;
+
+            return $this;
+        }
+
+        /**
+         * @param int $level
+         * @param string $message
+         * @param array $context
+         * @return static
+         */
+        protected function _log($level,$message, $context){
+            if($level >$this->_level){
+                return $this;
+            }
+
+            foreach($this->_adapters as $adapter){
+                try{
+                    $adapter->log($level,$message,$context);
+                } catch(\Exception $e){
+                    trigger_error('Logger Failed: '.$e->getMessage(), E_USER_ERROR);
+                }
+            }
+
+            return $this;
+        }
 
         /**
          * Sends/Writes a debug message to the log
