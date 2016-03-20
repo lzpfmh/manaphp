@@ -15,10 +15,10 @@ class LoggerTest extends TestCase{
 
         // To confirm the debug message correctly
         $this->assertCount(1,$memory->getLogs());
-        list($level,$message,$context)=$memory->getLogs()[0];
-        $this->assertEquals(ManaPHP\Logger::LEVEL_DEBUG,$level);
-        $this->assertContains('**debug**',$message);
-        $this->assertEquals(null,$context);
+        $log=$memory->getLogs()[0];
+        $this->assertEquals(ManaPHP\Logger::LEVEL_DEBUG,$log['level']);
+        $this->assertContains('**debug**',$log['message']);
+        $this->assertEquals(null,$log['context']);
 
         // To confirm the level can set correctly
         $logger=new ManaPHP\Logger();
@@ -48,10 +48,10 @@ class LoggerTest extends TestCase{
 
         // To confirm the debug message correctly
         $this->assertCount(1,$memory->getLogs());
-        list($level,$message,$context)=$memory->getLogs()[0];
-        $this->assertEquals(ManaPHP\Logger::LEVEL_DEBUG,$level);
-        $this->assertContains('**debug**',$message);
-        $this->assertEquals(null,$context);
+        $log=$memory->getLogs()[0];
+        $this->assertEquals(ManaPHP\Logger::LEVEL_DEBUG,$log['level']);
+        $this->assertContains('**debug**',$log['message']);
+        $this->assertEquals(null,$log['context']);
     }
 
     public function test_info(){
@@ -63,10 +63,10 @@ class LoggerTest extends TestCase{
 
         // To confirm the debug message correctly
         $this->assertCount(1,$memory->getLogs());
-        list($level,$message,$context)=$memory->getLogs()[0];
-        $this->assertEquals(ManaPHP\Logger::LEVEL_INFO,$level);
-        $this->assertContains('**info**',$message);
-        $this->assertEquals(null,$context);
+        $log=$memory->getLogs()[0];
+        $this->assertEquals(ManaPHP\Logger::LEVEL_INFO,$log['level']);
+        $this->assertContains('**info**',$log['message']);
+        $this->assertEquals(null,$log['context']);
     }
 
     public function test_warning(){
@@ -78,10 +78,10 @@ class LoggerTest extends TestCase{
 
         // To confirm the debug message correctly
         $this->assertCount(1,$memory->getLogs());
-        list($level,$message,$context)=$memory->getLogs()[0];
-        $this->assertEquals(ManaPHP\Logger::LEVEL_WARNING,$level);
-        $this->assertContains('**warning**',$message);
-        $this->assertEquals(null,$context);
+        $log=$memory->getLogs()[0];
+        $this->assertEquals(ManaPHP\Logger::LEVEL_WARNING,$log['level']);
+        $this->assertContains('**warning**',$log['message']);
+        $this->assertEquals(null,$log['context']);
     }
 
     public function test_error(){
@@ -93,10 +93,10 @@ class LoggerTest extends TestCase{
 
         // To confirm the debug message correctly
         $this->assertCount(1,$memory->getLogs());
-        list($level,$message,$context)=$memory->getLogs()[0];
-        $this->assertEquals(ManaPHP\Logger::LEVEL_ERROR,$level);
-        $this->assertContains('**error**',$message);
-        $this->assertEquals(null,$context);
+        $log=$memory->getLogs()[0];
+        $this->assertEquals(ManaPHP\Logger::LEVEL_ERROR,$log['level']);
+        $this->assertContains('**error**',$log['message']);
+        $this->assertEquals(null,$log['context']);
     }
 
     public function test_fatal(){
@@ -108,9 +108,9 @@ class LoggerTest extends TestCase{
 
         // To confirm the debug message correctly
         $this->assertCount(1,$memory->getLogs());
-        list($level,$message,$context)=$memory->getLogs()[0];
-        $this->assertEquals(ManaPHP\Logger::LEVEL_FATAL,$level);
-        $this->assertContains('**fatal**',$message);
-        $this->assertEquals(null,$context);
+        $log=$memory->getLogs()[0];
+        $this->assertEquals(ManaPHP\Logger::LEVEL_FATAL,$log['level']);
+        $this->assertContains('**fatal**',$log['message']);
+        $this->assertEquals(null,$log['context']);
     }
 }

@@ -12,7 +12,7 @@ namespace ManaPHP\Logger\Adapter{
          * @return void
          */
         public function log($level,$message,$context=null){
-            $this->_logs[]=[$level,$message,$context];
+            $this->_logs[]=['level'=>$level,'message'=>$message,'context'=>$context];
         }
 
         /**

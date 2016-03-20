@@ -34,6 +34,7 @@ namespace ManaPHP {
      * @property \ManaPHP\Mvc\ViewInterface $view
      * @property \ManaPHP\Mvc\View\Tag $tag
      * @property \ManaPHP\Loader $loader
+     * @property \ManaPHP\Logger $logger
      */
     class Component implements ComponentInterface
     {

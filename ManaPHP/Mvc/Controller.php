@@ -40,8 +40,8 @@ namespace ManaPHP\Mvc {
      *</code>
      *
      * @method void initialize();
-     * @method bool beforeExecuteRoute();
-     * @method bool afterExecuteRoute();
+     * @method bool beforeExecuteRoute(\ManaPHP\Mvc\DispatcherInterface $dispatcher);
+     * @method bool afterExecuteRoute(\ManaPHP\Mvc\DispatcherInterface $dispatcher);
      * @method onConstruct();
      *
      */
