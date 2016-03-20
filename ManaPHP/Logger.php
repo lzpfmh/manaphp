@@ -67,20 +67,32 @@ namespace ManaPHP{
          * @return static
          */
         protected function _log($level,$message, $context){
+
             if($level >$this->_level){
                 return $this;
+            }
+
+            if(is_array($context)){
+                $replaces=[];
+
+                foreach($context as $k=>$v){
+                    $replaces["{$k}"]=$v;
+                }
+
+                $message=strtr($message,$replaces);
             }
 
             foreach($this->_adapters as $adapter){
                 try{
                     $adapter->log($level,$message,$context);
                 } catch(\Exception $e){
-                    trigger_error('Logger Failed: '.$e->getMessage(), E_USER_ERROR);
+                    error_log('Logger Failed: '.$e->getMessage(), 0);
                 }
             }
 
             return $this;
         }
+
 
         /**
          * Sends/Writes a debug message to the log
