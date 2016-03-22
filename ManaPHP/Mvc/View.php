@@ -205,7 +205,7 @@ namespace ManaPHP\Mvc {
             } elseif (is_string($engineService)) {
                 $engine = $this->_dependencyInjector->getShared($engineService, $arguments);
             } else {
-                throw new Exception("Invalid template engine registration for extension: " . $extension);
+                throw new Exception('Invalid template engine registration for extension: ' . $extension);
             }
 
             if (!($engine instanceof EngineInterface)) {
