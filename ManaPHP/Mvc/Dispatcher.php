@@ -339,7 +339,7 @@ namespace ManaPHP\Mvc {
             }
 
             if (isset($forward['module'])) {
-                $this->_moduleName= $forward['module'];
+                $this->_moduleName= $this->_camelize($forward['module']);
             }
 
             if (isset($forward['controller'])) {
@@ -450,28 +450,7 @@ namespace ManaPHP\Mvc {
             $response = $this->_dependencyInjector->getShared('response');
             $response->setStatusCode(404, 'Not Found');
 
-            $exception = new Exception($message, $exceptionCode);
-
-            if ($this->_handleException($exception) === false) {
-                return false;
-            }
-
-            throw $exception;
-        }
-
-
-        /**
-         * Handles a user exception
-         *
-         * @param \Exception $exception
-         * @return boolean
-         *
-         * @warning If any additional logic is to be implemented here, please check
-         * ManaPHP_dispatcher_fire_event() first
-         */
-        protected function _handleException($exception)
-        {
-
+            throw new Exception($message, $exceptionCode);
         }
     }
 }
