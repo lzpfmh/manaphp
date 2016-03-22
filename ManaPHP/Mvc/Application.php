@@ -249,7 +249,7 @@ namespace ManaPHP\Mvc {
                     $view = $this->_dependencyInjector->getShared('view');
                     if ($view->getViewsDir() === null) {
                         if ($moduleName === '') {
-                            $view->setViewsDir($this->_rootDirectory . "/Views");
+                            $view->setViewsDir($this->_rootDirectory . '/Views');
                         } else {
                             $view->setViewsDir($this->_rootDirectory . "/$moduleName/Views");
                         }
