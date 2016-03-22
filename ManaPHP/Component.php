@@ -13,19 +13,19 @@ namespace ManaPHP {
      *
      * @property \ManaPHP\Mvc\DispatcherInterface $dispatcher;
      * @property \ManaPHP\Mvc\RouterInterface $router
-     * @property \ManaPHP\Mvc\UrlInterface $url
+     //* @property \ManaPHP\Mvc\UrlInterface $url
      * @property \ManaPHP\Http\RequestInterface $request
      * @property \ManaPHP\Http\ResponseInterface $response
      * @property \ManaPHP\Http\Response\CookiesInterface $cookies
-     * @property \ManaPHP\FilterInterface $filter
+     //* @property \ManaPHP\FilterInterface $filter
      * @property \ManaPHP\Flash\Direct $flash
-     * @property \ManaPHP\Flash\Session $flashSession
+     //* @property \ManaPHP\Flash\Session $flashSession
      * @property \ManaPHP\Http\SessionInterface $session
      * @property \ManaPHP\Event\ManagerInterface $eventsManager
      * @property \ManaPHP\DbInterface $db
-     * @property \ManaPHP\Security $security
-     * @property \ManaPHP\CryptInterface $crypt
-     * @property \ManaPHP\EscaperInterface $escaper
+     //* @property \ManaPHP\Security $security
+     //* @property \ManaPHP\CryptInterface $crypt
+    // * @property \ManaPHP\EscaperInterface $escaper
      * @property \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
      * @property \ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
     //     * @property \ManaPHP\Assets\Manager $assets
