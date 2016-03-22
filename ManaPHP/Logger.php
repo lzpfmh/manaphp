@@ -5,6 +5,9 @@
  * Date: 2016/3/20
  */
 namespace ManaPHP{
+
+    use ManaPHP\Logger\Exception;
+
     class Logger
     {
         const LEVEL_OFF=0;
@@ -23,18 +26,46 @@ namespace ManaPHP{
         protected $_level=self::LEVEL_ALL;
 
         /**
+         * @var array
+         */
+        protected $_level_i2s;
+
+        /**
          * @var \ManaPHP\Logger\AdapterInterface[]
          */
         protected $_adapters=[];
 
+        public function __construct()
+        {
+            $this->_level_i2s=[
+              self::LEVEL_OFF=>'OFF',
+              self::LEVEL_FATAL=>'FATAL',
+              self::LEVEL_ERROR=>'ERROR',
+              self::LEVEL_WARNING=>'WARNING',
+              self::LEVEL_INFO=>'INFO',
+              self::LEVEL_DEBUG=>'DEBUG',
+              self::LEVEL_ALL=>'ALL',
+            ];
+        }
+
         /**
          * Filters the logs sent to the handlers to be greater or equals than a specific level
          *
-         * @param int $level
+         * @param int|string $level
          * @return static
+         * @throws \ManaPHP\Logger\Exception
          */
         public function setLevel($level){
-            $this->_level=$level;
+            if(is_int($level)){
+                $this->_level=$level;
+            }else{
+                $s2i=array_flip($this->_level_i2s);
+                if(isset($s2i[$level])){
+                    $this->_level=$s2i[$level];
+                }else{
+                    throw new Exception('Log Level is invalid: '.$level);
+                }
+            }
 
             return $this;
         }
@@ -49,6 +80,17 @@ namespace ManaPHP{
             return $this->_level;
         }
 
+        /**
+         * @param int $level
+         * @return string
+         */
+        public function mapLevelToString($level){
+            if(isset($this->_level_i2s[$level])){
+                return $this->_level_i2s[$level];
+            }else{
+                return 'UNKNOWN';
+            }
+        }
 
         /**
          * @param \ManaPHP\Logger\AdapterInterface $adapter
