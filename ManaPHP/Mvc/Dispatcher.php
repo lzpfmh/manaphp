@@ -208,12 +208,12 @@ namespace ManaPHP\Mvc {
          * @return false|\ManaPHP\Mvc\ControllerInterface
          * @throws \ManaPHP\Mvc\Dispatcher\Exception
          */
-        public function dispatch($module,$controller, $action, $params=[])
+        public function dispatch($module, $controller, $action, $params = [])
         {
-            $this->_moduleName=$this->_camelize($module);
-            $this->_controllerName=$this->_camelize($controller);
-            $this->_actionName=lcfirst($action);
-            $this->_params=$params;
+            $this->_moduleName = $this->_camelize($module);
+            $this->_controllerName = $this->_camelize($controller);
+            $this->_actionName = lcfirst($action);
+            $this->_params = $params;
 
             if (!$this->_dependencyInjector instanceof DiInterface) {
                 throw new Exception('A dependency injection container is required to access related dispatching services');
@@ -240,14 +240,14 @@ namespace ManaPHP\Mvc {
                     continue;
                 }
 
-                $controllerClass='';
-                if($this->_rootNamespace !==null &&$this->_rootNamespace !==''){
-                    $controllerClass .=$this->_rootNamespace.'\\';
+                $controllerClass = '';
+                if ($this->_rootNamespace !== null && $this->_rootNamespace !== '') {
+                    $controllerClass .= $this->_rootNamespace . '\\';
                 }
-                if($this->_rootNamespace !==null &&$this->_moduleName !==''){
-                    $controllerClass.=$this->_moduleName.'\\Controllers\\';
+                if ($this->_rootNamespace !== null && $this->_moduleName !== '') {
+                    $controllerClass .= $this->_moduleName . '\\Controllers\\';
                 }
-                $controllerClass .= $this->_controllerName.$this->_controllerSuffix;
+                $controllerClass .= $this->_controllerName . $this->_controllerSuffix;
 
                 if (!$this->_dependencyInjector->has($controllerClass) && !class_exists($controllerClass)) {
                     if ($this->fireEvent('dispatcher:beforeNotFoundController', $this) === false) {
@@ -339,7 +339,7 @@ namespace ManaPHP\Mvc {
             }
 
             if (isset($forward['module'])) {
-                $this->_moduleName= $this->_camelize($forward['module']);
+                $this->_moduleName = $this->_camelize($forward['module']);
             }
 
             if (isset($forward['controller'])) {
