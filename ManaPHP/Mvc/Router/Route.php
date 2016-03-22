@@ -208,16 +208,16 @@ namespace ManaPHP\Mvc\Router {
                 $r = preg_match($this->_compiledPattern, $handle_uri, $matches);
                 if ($r === false) {
                     throw new Exception('--invalid PCRE: ' . $this->_compiledPattern . ' for ' . $this->_pattern);
-                }else if($r===1){
+                } elseif ($r === 1) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             } else {
-                if($this->_compiledPattern === $handle_uri){
-                    $matches=[];
+                if ($this->_compiledPattern === $handle_uri) {
+                    $matches = [];
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }

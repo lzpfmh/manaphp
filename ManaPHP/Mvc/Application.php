@@ -178,7 +178,6 @@ namespace ManaPHP\Mvc {
 
             $router = $this->_dependencyInjector->getShared('router');
 
-
             $router->handle($uri);
 
             $moduleName = $router->getModuleName();

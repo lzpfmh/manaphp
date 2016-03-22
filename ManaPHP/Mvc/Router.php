@@ -93,10 +93,10 @@ namespace ManaPHP\Mvc {
         public function getRewriteUri()
         {
             if (isset($_GET['_url'])) {
-                $url =$_GET['_url'];
-            } else if(isset($_SERVER['REQUEST_URI'])){
-                $url =explode('?',$_SERVER['REQUEST_URI'])[0];
-            }else{
+                $url = $_GET['_url'];
+            } elseif (isset($_SERVER['REQUEST_URI'])) {
+                $url = explode('?', $_SERVER['REQUEST_URI'])[0];
+            } else {
                 throw new Exception('Get rewrite info failed');
             }
 
