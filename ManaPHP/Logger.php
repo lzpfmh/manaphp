@@ -4,26 +4,26 @@
  * User: Mark
  * Date: 2016/3/20
  */
-namespace ManaPHP{
+namespace ManaPHP {
 
     use ManaPHP\Logger\Exception;
 
     class Logger
     {
-        const LEVEL_OFF=0;
+        const LEVEL_OFF = 0;
 
-        const LEVEL_FATAL=10;
-        const LEVEL_ERROR=20;
-        const LEVEL_WARNING=30;
-        const LEVEL_INFO=40;
-        const LEVEL_DEBUG=50;
+        const LEVEL_FATAL = 10;
+        const LEVEL_ERROR = 20;
+        const LEVEL_WARNING = 30;
+        const LEVEL_INFO = 40;
+        const LEVEL_DEBUG = 50;
 
-        const LEVEL_ALL=100;
+        const LEVEL_ALL = 100;
 
         /**
          * @var int
          */
-        protected $_level=self::LEVEL_ALL;
+        protected $_level = self::LEVEL_ALL;
 
         /**
          * @var array
@@ -33,18 +33,18 @@ namespace ManaPHP{
         /**
          * @var \ManaPHP\Logger\AdapterInterface[]
          */
-        protected $_adapters=[];
+        protected $_adapters = [];
 
         public function __construct()
         {
-            $this->_level_i2s=[
-              self::LEVEL_OFF=>'OFF',
-              self::LEVEL_FATAL=>'FATAL',
-              self::LEVEL_ERROR=>'ERROR',
-              self::LEVEL_WARNING=>'WARNING',
-              self::LEVEL_INFO=>'INFO',
-              self::LEVEL_DEBUG=>'DEBUG',
-              self::LEVEL_ALL=>'ALL',
+            $this->_level_i2s = [
+              self::LEVEL_OFF => 'OFF',
+              self::LEVEL_FATAL => 'FATAL',
+              self::LEVEL_ERROR => 'ERROR',
+              self::LEVEL_WARNING => 'WARNING',
+              self::LEVEL_INFO => 'INFO',
+              self::LEVEL_DEBUG => 'DEBUG',
+              self::LEVEL_ALL => 'ALL',
             ];
         }
 
@@ -55,15 +55,16 @@ namespace ManaPHP{
          * @return static
          * @throws \ManaPHP\Logger\Exception
          */
-        public function setLevel($level){
-            if(is_int($level)){
-                $this->_level=$level;
-            }else{
-                $s2i=array_flip($this->_level_i2s);
-                if(isset($s2i[$level])){
-                    $this->_level=$s2i[$level];
-                }else{
-                    throw new Exception('Log Level is invalid: '.$level);
+        public function setLevel($level)
+        {
+            if (is_int($level)) {
+                $this->_level = $level;
+            } else {
+                $s2i = array_flip($this->_level_i2s);
+                if (isset($s2i[$level])) {
+                    $this->_level = $s2i[$level];
+                } else {
+                    throw new Exception('Log Level is invalid: ' . $level);
                 }
             }
 
@@ -76,7 +77,8 @@ namespace ManaPHP{
          *
          * @return int
          */
-        public function getLevel(){
+        public function getLevel()
+        {
             return $this->_level;
         }
 
@@ -84,10 +86,11 @@ namespace ManaPHP{
          * @param int $level
          * @return string
          */
-        public function mapLevelToString($level){
-            if(isset($this->_level_i2s[$level])){
+        public function mapLevelToString($level)
+        {
+            if (isset($this->_level_i2s[$level])) {
                 return $this->_level_i2s[$level];
-            }else{
+            } else {
                 return 'UNKNOWN';
             }
         }
@@ -96,8 +99,9 @@ namespace ManaPHP{
          * @param \ManaPHP\Logger\AdapterInterface $adapter
          * @return static
          */
-        public function addAdapter($adapter){
-            $this->_adapters[]=$adapter;
+        public function addAdapter($adapter)
+        {
+            $this->_adapters[] = $adapter;
 
             return $this;
         }
@@ -108,27 +112,28 @@ namespace ManaPHP{
          * @param array $context
          * @return static
          */
-        protected function _log($level,$message, $context){
+        protected function _log($level, $message, $context)
+        {
 
-            if($level >$this->_level){
+            if ($level > $this->_level) {
                 return $this;
             }
 
-            if(is_array($context)){
-                $replaces=[];
+            if (is_array($context)) {
+                $replaces = [];
 
-                foreach($context as $k=>$v){
-                    $replaces["{$k}"]=$v;
+                foreach ($context as $k => $v) {
+                    $replaces["{$k}"] = $v;
                 }
 
-                $message=strtr($message,$replaces);
+                $message = strtr($message, $replaces);
             }
 
-            foreach($this->_adapters as $adapter){
-                try{
-                    $adapter->log($level,$message,$context);
-                } catch(\Exception $e){
-                    error_log('Logger Failed: '.$e->getMessage(), 0);
+            foreach ($this->_adapters as $adapter) {
+                try {
+                    $adapter->log($level, $message, $context);
+                } catch (\Exception $e) {
+                    error_log('Logger Failed: ' . $e->getMessage(), 0);
                 }
             }
 
@@ -143,8 +148,9 @@ namespace ManaPHP{
          * @param array $context
          * @return static
          */
-        public function debug($message, $context=null){
-            return $this->_log(self::LEVEL_DEBUG,$message,$context);
+        public function debug($message, $context = null)
+        {
+            return $this->_log(self::LEVEL_DEBUG, $message, $context);
         }
 
 
@@ -155,8 +161,9 @@ namespace ManaPHP{
          * @param array $context
          * @return static
          */
-        public function info($message, $context=null){
-            return $this->_log(self::LEVEL_INFO,$message,$context);
+        public function info($message, $context = null)
+        {
+            return $this->_log(self::LEVEL_INFO, $message, $context);
         }
 
 
@@ -167,8 +174,9 @@ namespace ManaPHP{
          * @param array $context
          * @return static
          */
-        public function warning($message, $context=null){
-            return $this->_log(self::LEVEL_WARNING,$message,$context);
+        public function warning($message, $context = null)
+        {
+            return $this->_log(self::LEVEL_WARNING, $message, $context);
         }
 
 
@@ -179,8 +187,9 @@ namespace ManaPHP{
          * @param array $context
          * @return static
          */
-        public function error($message, $context=null){
-            return $this->_log(self::LEVEL_ERROR,$message,$context);
+        public function error($message, $context = null)
+        {
+            return $this->_log(self::LEVEL_ERROR, $message, $context);
         }
 
 
@@ -191,8 +200,9 @@ namespace ManaPHP{
          * @param array $context
          * @return static
          */
-        public function fatal($message, $context=null){
-            return $this->_log(self::LEVEL_FATAL,$message,$context);
+        public function fatal($message, $context = null)
+        {
+            return $this->_log(self::LEVEL_FATAL, $message, $context);
         }
     }
 }
