@@ -73,7 +73,7 @@ namespace ManaPHP\Mvc {
          * @param array $params
          * @return false|\ManaPHP\Mvc\ControllerInterface
          */
-        public function dispatch($module,$controller, $action,$params=[]);
+        public function dispatch($module, $controller, $action, $params = []);
 
 
         /**
