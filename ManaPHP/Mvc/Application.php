@@ -84,7 +84,7 @@ namespace ManaPHP\Mvc {
          * @param string $rootNamespace
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function __construct($rootDirectory, $rootNamespace=null, $dependencyInjector = null)
+        public function __construct($rootDirectory, $rootNamespace = null, $dependencyInjector = null)
         {
             if (is_object($dependencyInjector)) {
                 $this->_dependencyInjector = $dependencyInjector;
@@ -94,8 +94,8 @@ namespace ManaPHP\Mvc {
             $this->_dependencyInjector->setShared('application', $this, true);
 
             $rootDirectory = str_replace('\\', '/', rtrim($rootDirectory, '\\/'));
-            if($rootNamespace===null){
-                $rootNamespace=ucfirst(basename($rootDirectory));
+            if ($rootNamespace === null) {
+                $rootNamespace = ucfirst(basename($rootDirectory));
             }
 
             $this->_rootDirectory = $rootDirectory;
@@ -137,7 +137,7 @@ namespace ManaPHP\Mvc {
             assert(is_array($modules));
             //endregion
 
-            if($modules===null){
+            if ($modules === null) {
                 throw new Exception('The provided modules are null');
             }
 
