@@ -127,11 +127,6 @@ class tDispatcher extends \ManaPHP\Mvc\Dispatcher
     {
         return $this->_moduleName;
     }
-
-    public function getDefaultAction()
-    {
-        return $this->_defaultAction;
-    }
 }
 
 
