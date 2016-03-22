@@ -19,8 +19,8 @@ namespace ManaPHP\Mvc\Dispatcher {
          */
         public function beforeDispatchLoop($event, $dispatcher)
         {
-            true ||$event;
-            true ||$dispatcher;
+            true || $event;
+            true || $dispatcher;
 
             return true;
         }
