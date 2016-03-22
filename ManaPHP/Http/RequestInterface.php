@@ -9,7 +9,7 @@ namespace ManaPHP\Http {
     {
 
         /**
-         * Gets a variable from the $_REQUEST superglobal applying filters if needed
+         * Gets a variable from the $_REQUEST applying filters if needed
          *
          * @param string $name
          * @param string|array $filters
@@ -19,7 +19,7 @@ namespace ManaPHP\Http {
         public function get($name = null, $filters = null, $defaultValue = null);
 
         /**
-         * Gets variable from $_GET superglobal applying filters if needed
+         * Gets variable from $_GET applying filters if needed
          *
          * @param string $name
          * @param string|array $filters
@@ -30,7 +30,7 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Gets a variable from the $_POST superglobal applying filters if needed
+         * Gets a variable from the $_POST applying filters if needed
          *
          * @param string $name
          * @param string|array $filters
@@ -58,7 +58,7 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Gets variable from $_GET superglobal applying filters if needed
+         * Gets variable from $_GET applying filters if needed
          *
          * @param string $name
          * @param string|array $filters
@@ -68,7 +68,7 @@ namespace ManaPHP\Http {
         public function getQuery($name = null, $filters = null, $defaultValue = null);
 
         /**
-         * Checks whether $_SERVER superglobal has certain index
+         * Checks whether $_SERVER has certain index
          *
          * @param string $name
          * @return boolean
@@ -77,7 +77,7 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Checks whether $_GET superglobal has certain index
+         * Checks whether $_GET has certain index
          *
          * @param string $name
          * @return boolean
@@ -86,7 +86,7 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Checks whether $_POST superglobal has certain index
+         * Checks whether $_POST has certain index
          *
          * @param string $name
          * @return boolean
@@ -104,7 +104,7 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Checks whether $_GET superglobal has certain index
+         * Checks whether $_GET has certain index
          *
          * @param string $name
          * @return boolean

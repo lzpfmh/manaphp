@@ -72,7 +72,7 @@ namespace ManaPHP\Di {
 
             $instance = null;
             $definition = $this->_definition;
-            $canNotBeResolvedError = 'Service \'' . $this->_name . '\' cannot be resolved';
+            $canNotBeResolvedError = "Service '{$this->_name}' cannot be resolved";
 
             if (is_string($definition)) {
                 if (class_exists($definition)) {
@@ -104,6 +104,23 @@ namespace ManaPHP\Di {
             $this->_resolved = true;
 
             return $instance;
+        }
+
+        /**
+         * Returns true if the service was resolved
+         *
+         * @return bool
+         */
+        public function isResolved(){
+            return $this->_resolved;
+        }
+
+        /**
+         * @return array
+         */
+        public function __debugInfo()
+        {
+            return get_object_vars($this);
         }
     }
 }

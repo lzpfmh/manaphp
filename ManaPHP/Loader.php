@@ -48,11 +48,6 @@ namespace ManaPHP {
         protected $_registered = false;
 
         /**
-         * @var string|boolean
-         */
-        protected $_requiredFile = false;
-
-        /**
          * Register namespaces and their related directories
          *
          * <code>
@@ -184,7 +179,7 @@ namespace ManaPHP {
         public function register()
         {
             if ($this->_registered === false) {
-                spl_autoload_register([$this, '_autoload']);
+                spl_autoload_register([$this, '___autoload']);
                 $this->_registered = true;
             }
 
@@ -200,7 +195,7 @@ namespace ManaPHP {
         public function unregister()
         {
             if ($this->_registered === true) {
-                spl_autoload_unregister([$this, '_autoLoad']);
+                spl_autoload_unregister([$this, '___autoload']);
                 $this->_registered = false;
             }
             return $this;
@@ -211,60 +206,44 @@ namespace ManaPHP {
          * If a file exists, require it from the file system.
          *
          * @param string $file The file to require.
-         * @return bool True if the file exists, false if not.
          */
-        protected function _requireFile($file)
+        protected function ___requireFile($file)
         {
             if (file_exists($file)) {
                 if (DIRECTORY_SEPARATOR === '\\') {
-                    $realpath = str_replace('\\', '/', realpath($file));
-                    if ($realpath !== $file) {
-                        trigger_error("File name ($realpath) case mismatch for .$file", E_USER_ERROR);
+                    $realPath = str_replace('\\', '/', realpath($file));
+                    if ($realPath !== $file) {
+                        trigger_error("File name ($realPath) case mismatch for .$file", E_USER_ERROR);
                     }
                 }
                 /** @noinspection PhpIncludeInspection */
                 require $file;
-                return true;
             }
-            return false;
-        }
-
-        /**
-         * get the latest loaded file path
-         * @return string
-         */
-        public function getRequiredFile()
-        {
-            return $this->_requiredFile;
         }
 
         /**
          * Makes the work of autoload registered classes
          *
          * @param string $className
-         * @return boolean
+         * @return bool
          */
-        protected function _autoLoad($className)
+        protected function ___autoload($className)
         {
-            $this->_requiredFile = false;
-
-            if (is_array($this->_classes)) {
-                if (isset($this->_classes[$className])) {
-                    $this->_requiredFile = $this->_classes[$className];
-                    return $this->_requireFile($this->_classes[$className]);
-                }
+            if (is_array($this->_classes) && isset($this->_classes[$className])) {
+                $this->___requireFile($this->_classes[$className]);
+                return true;
             }
 
             if (is_array($this->_namespaces)) {
                 /** @noinspection LoopWhichDoesNotLoopInspection */
                 foreach ($this->_namespaces as $namespace => $directory) {
-                    $len = strlen($namespace);
-                    if (strncmp($namespace, $className, $len) !== 0) {
+                    if (strpos($className, $namespace) !== 0) {
                         continue;
                     }
+                    $len = strlen($namespace);
                     $file = $directory . str_replace('\\', '/', substr($className, $len)) . '.php';
-                    $this->_requiredFile = $file;
-                    return $this->_requireFile($file);
+                    $this->___requireFile($file);
+                    return true;
                 }
             }
 
@@ -272,9 +251,8 @@ namespace ManaPHP {
                 foreach ($this->_directories as $directory) {
                     $file = $directory . basename($className) . '.php';
                     $file = str_replace('\\', '/', $file);
-                    $r = $this->_requireFile($file);
-                    if ($r === true) {
-                        $this->_requiredFile = $file;
+                    if (file_exists($file)) {
+                        $this->___requireFile($file);
                         return true;
                     }
                 }

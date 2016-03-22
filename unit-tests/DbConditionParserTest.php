@@ -28,20 +28,24 @@ class DbConditionParserTest extends TestCase
         $this->assertEquals('id=1', $conditions);
         $this->assertEquals([], $binds);
 
+        $conditions = $conditionParser->parse(['id=1','city_id'=>2], $binds);
+        $this->assertEquals('id=1 AND `city_id`=:city_id', $conditions);
+        $this->assertEquals(['city_id'=>2], $binds);
+
         $conditions = $conditionParser->parse(['id' => 2], $binds);
-        $this->assertEquals('id=:id', $conditions);
+        $this->assertEquals('`id`=:id', $conditions);
         $this->assertEquals(['id' => 2], $binds);
 
         $conditions = $conditionParser->parse(['id' => [2]], $binds);
-        $this->assertEquals('id=:id', $conditions);
+        $this->assertEquals('`id`=:id', $conditions);
         $this->assertEquals(['id' => 2], $binds);
 
         $conditions = $conditionParser->parse(['id' => [2, 'city_id']], $binds);
-        $this->assertEquals('id=:city_id', $conditions);
+        $this->assertEquals('`id`=:city_id', $conditions);
         $this->assertEquals(['city_id' => 2], $binds);
 
         $conditions = $conditionParser->parse(['age' => 21, 'name' => 'mana'], $binds);
-        $this->assertEquals('age=:age AND name=:name', $conditions);
+        $this->assertEquals('`age`=:age AND `name`=:name', $conditions);
         $this->assertEquals(['age' => 21, 'name' => 'mana'], $binds);
     }
 }

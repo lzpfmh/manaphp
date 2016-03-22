@@ -4,13 +4,26 @@ namespace ManaPHP {
 
     class Autoloader
     {
+        /**
+         * @var string
+         */
         protected static $_rootPath;
+
+        /**
+         * @var bool
+         */
         protected static $_optimizeMode;
 
-        public static function autoload($className)
+        protected static $_loadedClasses=[];
+
+        public static function ___autoload($className)
         {
-            if (strncmp($className, 'ManaPHP', 7) !== 0) {
+            if (strpos($className, 'ManaPHP') !== 0) {
                 return false;
+            }
+
+            if(!self::$_optimizeMode){
+                self::$_loadedClasses[]=$className;
             }
 
             if (self::$_rootPath === null) {
@@ -40,14 +53,21 @@ namespace ManaPHP {
         }
 
         /**
-         * @param bool|true $optimizeMode
+         * @param bool $optimizeMode
          * @return bool
          */
         public static function register($optimizeMode = true)
         {
             self::$_optimizeMode = $optimizeMode;
 
-            return spl_autoload_register([__CLASS__, 'autoload']);
+            return spl_autoload_register([__CLASS__, '___autoload']);
+        }
+
+        /**
+         * @return array
+         */
+        public static function getLoadedClasses(){
+            return self::$_loadedClasses;
         }
     }
 }

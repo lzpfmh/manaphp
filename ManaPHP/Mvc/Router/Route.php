@@ -97,11 +97,11 @@ namespace ManaPHP\Mvc\Router {
             $right_token = '!_!';
             $need_restore_token = false;
 
-            if (preg_match('#{\d#', $pattern) === 1) {
-                if (strpos($pattern, $left_token) === false && strpos($pattern, $right_token) === false) {
+            if (preg_match('#{\d#', $pattern) === 1
+                &&strpos($pattern, $left_token) === false
+                && strpos($pattern, $right_token) === false) {
                     $need_restore_token = true;
                     $pattern = preg_replace('#{(\d+,?\d*)}#', $left_token . '\1' . $right_token, $pattern);
-                }
             }
 
             if (preg_match_all('#{([A-Z].*)}#Ui', $pattern, $matches, PREG_SET_ORDER) > 0) {
@@ -134,12 +134,9 @@ namespace ManaPHP\Mvc\Router {
                 if (is_string($paths)) {
                     $parts = explode('::', $paths);
                     if (count($parts) === 3) {
-                        $moduleName = $parts[0];
-                        $controllerName = $parts[1];
-                        $actionName = $parts[2];
+                        list($moduleName, $controllerName, $actionName) = $parts;
                     } elseif (count($parts) === 2) {
-                        $controllerName = $parts[0];
-                        $actionName = $parts[1];
+                        list($controllerName, $actionName) = $parts;
                     } else {
                         $controllerName = $parts[0];
                     }
@@ -208,16 +205,16 @@ namespace ManaPHP\Mvc\Router {
                 $r = preg_match($this->_compiledPattern, $handle_uri, $matches);
                 if ($r === false) {
                     throw new Exception('--invalid PCRE: ' . $this->_compiledPattern . ' for ' . $this->_pattern);
-                }else if($r===1){
+                } elseif ($r === 1) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             } else {
-                if($this->_compiledPattern === $handle_uri){
-                    $matches=[];
+                if ($this->_compiledPattern === $handle_uri) {
+                    $matches = [];
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }

@@ -18,7 +18,7 @@ spl_autoload_register(function ($className) {
         $frameworkRootPath = dirname($frameworkRootPath);
     }
 
-    if (strncmp($className, $frameworkName, strlen($frameworkName)) === 0) {
+    if (strpos($className, $frameworkName) === 0) {
         $file = $frameworkRootPath . '/' . $className . '.php';
         $file = str_replace('\\', '/', $file);
         if (is_file($file)) {
@@ -40,7 +40,6 @@ spl_autoload_register(function ($className) {
 
     return false;
 });
-
 
 class TestCase extends PHPUnit_Framework_TestCase
 {

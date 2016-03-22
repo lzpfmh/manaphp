@@ -7,7 +7,7 @@ namespace ManaPHP\Http\Request {
     /**
      * ManaPHP\Http\Request\File
      *
-     * Provides OO wrappers to the $_FILES superglobal
+     * Provides OO wrappers to the $_FILES
      *
      *<code>
      *    class PostsController extends \ManaPHP\Mvc\Controller
@@ -167,7 +167,7 @@ namespace ManaPHP\Http\Request {
             }
 
             $dir = dirname($destination);
-            if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+            if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
                 throw new FileException('Unable to create \'' . $dir . '\' directory: ' . error_get_last()['message']);
             }
 

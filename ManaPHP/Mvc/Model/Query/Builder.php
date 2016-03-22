@@ -398,7 +398,7 @@ namespace ManaPHP\Mvc\Model\Query {
             $minKey = 'ABP' . $this->_hiddenParamNumber++;
             $maxKey = 'ABP' . $this->_hiddenParamNumber++;
 
-            $this->andWhere("$expr BETWEEN :$minKey: AND :$maxKey:", [$minKey => $min, $maxKey => $max]);
+            $this->andWhere("$expr BETWEEN :$minKey AND :$maxKey", [$minKey => $min, $maxKey => $max]);
 
             return $this;
         }
@@ -421,7 +421,7 @@ namespace ManaPHP\Mvc\Model\Query {
             $minKey = 'ABP' . $this->_hiddenParamNumber++;
             $maxKey = 'ABP' . $this->_hiddenParamNumber++;
 
-            $this->andWhere("$expr NOT BETWEEN :$minKey: AND :$maxKey:", [$minKey => $min, $maxKey => $max]);
+            $this->andWhere("$expr NOT BETWEEN :$minKey AND :$maxKey", [$minKey => $min, $maxKey => $max]);
 
             return $this;
         }
@@ -450,7 +450,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
             foreach ($values as $value) {
                 $key = 'ABP' . $this->_hiddenParamNumber++;
-                $bindKeys[] = ":$key:";
+                $bindKeys[] = ":$key";
                 $binds[$key] = $value;
             }
 
@@ -482,7 +482,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
             foreach ($values as $value) {
                 $key = 'ABP' . $this->_hiddenParamNumber++;
-                $bindKeys[] = ':' . $key . ':';
+                $bindKeys[] = ':' . $key;
                 $binds[$key] = $value;
             }
             $this->andWhere($expr . ' NOT IN (' . implode(', ', $bindKeys) . ')', $binds);
@@ -596,7 +596,7 @@ namespace ManaPHP\Mvc\Model\Query {
          * Returns a SQL statement built based on the builder parameters
          *
          * @return string
-         * @throws \ManaPHP\Mvc\Model\Exception
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Db\ConditionParser\Exception
          */
         public function getSql()
         {
@@ -631,7 +631,7 @@ namespace ManaPHP\Mvc\Model\Query {
                         if (is_int($alias)) {
                             $selectedColumns[] = '[' . $model . '].*';
                         } else {
-                            $selectedColumns[] = '[' . $alias . '].*';
+                            $selectedColumns[] = '`' . $alias . '`.*';
                         }
                     }
                     $sql .= implode(', ', $selectedColumns);
@@ -645,7 +645,7 @@ namespace ManaPHP\Mvc\Model\Query {
             $selectedModels = [];
             foreach ($this->_models as $alias => $model) {
                 if (is_string($alias)) {
-                    $selectedModels[] = '[' . $model . '] AS [' . $alias . ']';
+                    $selectedModels[] = '[' . $model . '] AS `' . $alias . '`';
                 } else {
                     $selectedModels[] = '[' . $model . ']';
                 }
@@ -672,7 +672,7 @@ namespace ManaPHP\Mvc\Model\Query {
                 $sql .= ' JOIN [' . $joinModel . ']';
 
                 if ($joinAlias !== null) {
-                    $sql .= ' AS [' . $joinAlias . ']';
+                    $sql .= ' AS `' . $joinAlias . '`';
                 }
 
                 if ($joinCondition) {
@@ -745,106 +745,28 @@ namespace ManaPHP\Mvc\Model\Query {
          * Returns the query built
          *
          * @return \ManaPHP\Mvc\Model\QueryInterface
-         * @throws \ManaPHP\Mvc\Model\Exception
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Db\ConditionParser\Exception|\ManaPHP\Di\Exception
          */
         public function getQuery()
         {
             $this->_lastSQL = $this->getSql();
-            return $this;
+
+            $query = $this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query',
+              [$this->_lastSQL, $this->_models, $this->_dependencyInjector]);
+            $query->setBinds($this->_binds);
+
+            return $query;
         }
 
         /**
-         * Tells to the query if only the first row in the resultset must be returned
-         * @param boolean $uniqueRow
-         * @return static
-         */
-        public function setUniqueRow($uniqueRow)
-        {
-            $this->_uniqueRow = $uniqueRow;
-            return $this;
-        }
-
-        /**
-         * Executes a parsed SQL statement
-         *
          * @param array $binds
-         * @return mixed
-         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
+         * @param array $cache
+         * @return array
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Db\ConditionParser\Exception|\ManaPHP\Di\Exception
          */
-        public function execute($binds = null)
+        public function execute($binds = null, $cache = null)
         {
-            if ($binds !== null) {
-                $mergedBinds = array_merge($this->_binds, $binds);
-            } else {
-                $mergedBinds = $this->_binds;
-            }
-
-            $sql = $this->_lastSQL;
-
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-            $modelsManager = $this->_dependencyInjector->getShared('modelsManager');
-
-            $readConnection = null;
-            foreach ($this->_models as $model) {
-                $modelInstance = $modelsManager->load($model, false);
-
-                if ($readConnection === null) {
-                    $readConnection = $modelInstance->getReadConnection();
-                }
-
-                $escapedTable = $readConnection->escapeIdentifier($modelInstance->getSource());
-                $sql = str_replace('[' . $model . ']', $escapedTable, $sql);
-            }
-
-            /** @noinspection StrTrUsageAsStrReplaceInspection */
-            $sql = strtr($sql, '[]', '``');
-
-            if (is_array($mergedBinds)) {
-                $replaces = [];
-                foreach ($mergedBinds as $key => $value) {
-                    $replaces[':' . $key . ':'] = ':' . $key;
-                }
-
-                $sql = strtr($sql, $replaces);
-            }
-
-            try {
-                if ($this->_uniqueRow) {
-                    $result = $readConnection->fetchOne($sql, $mergedBinds);
-                } else {
-                    $result = $readConnection->fetchAll($sql, $mergedBinds);
-                }
-            } catch (\Exception $e) {
-                throw new Exception($e->getMessage() . ':' . $sql);
-            }
-
-            return $result;
-        }
-
-        /**
-         * Set default bind parameters
-         *
-         * @param array $binds
-         * @param bool $merge
-         * @return static
-         */
-        public function setBinds($binds, $merge = false)
-        {
-            if ($merge === false) {
-                $this->_binds = $binds;
-            } else {
-                $this->_binds = array_merge($this->_binds, $binds);
-            }
-
-            return $this;
-        }
-
-        /**
-         * @param array $options
-         */
-        public function cache($options)
-        {
-
+            return $this->getQuery()->cache($cache)->execute($binds);
         }
     }
 }

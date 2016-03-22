@@ -84,7 +84,7 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Returns coookies set by the user
+         * Returns cookies set by the user
          *
          * @return \ManaPHP\Http\Response\CookiesInterface
          */

@@ -23,7 +23,7 @@ namespace ManaPHP\Mvc {
      *
      * $robot = new Robots();
      * $robot->type = 'mechanical';
-     * $robot->name = 'Astro Boy';
+     * $robot->name = 'Boy';
      * $robot->year = 1952;
      * if ($robot->save() == false) {
      *  echo "Umh, We can store robots: ";
@@ -35,8 +35,9 @@ namespace ManaPHP\Mvc {
      * }
      * </code>
      *
+     * @method initialize()
      */
-    class Model extends Component implements ModelInterface, \Serializable
+    class Model extends Component implements ModelInterface
     {
         /**
          * @var \ManaPHP\Mvc\Model\ManagerInterface
@@ -53,19 +54,19 @@ namespace ManaPHP\Mvc {
         /**
          * \ManaPHP\Mvc\Model constructor
          *
-         * @param \ManaPHP\DiInterface $dependencyInjector
-         * @param \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
          * @param array $data
+         * @param \ManaPHP\DiInterface $dependencyInjector
+         * @throws \ManaPHP\Di\Exception
          */
-        final public function __construct($dependencyInjector = null, $modelsManager = null, $data = null)
+        final public function __construct($data = null,$dependencyInjector = null)
         {
-            $this->_dependencyInjector = $dependencyInjector === null ? Di::getDefault() : $dependencyInjector;
-            $this->_modelsManager = $modelsManager === null ? $this->_dependencyInjector->getShared('modelsManager') : $modelsManager;
+            $this->_dependencyInjector = $dependencyInjector ?: Di::getDefault();
+            $this->_modelsManager = $this->_dependencyInjector->getShared('modelsManager');
 
             /**
              * The manager always initializes the object
              */
-            $this->_modelsManager->initialize($this);
+            $this->_modelsManager->initModel($this);
 
             /**
              * This allows the developer to execute initialization stuff every time an instance is created
@@ -87,6 +88,7 @@ namespace ManaPHP\Mvc {
          * Returns the models meta-data service related to the entity instance
          *
          * @return \ManaPHP\Mvc\Model\MetaDataInterface
+         * @throws \ManaPHP\Di\Exception
          */
         protected function _getModelsMetaData()
         {
@@ -98,13 +100,16 @@ namespace ManaPHP\Mvc {
         }
 
         /**
-         * Refreshes the model attributes re-querying the record from the database
+         * Sets table name which model should be mapped
+         *
+         * @param $source
+         * @return static
          */
-        public function refresh()
+        protected function setSource($source)
         {
-
+            $this->_modelsManager->setModelSource($this, $source);
+            return $this;
         }
-
 
         /**
          * Returns table name mapped in the model
@@ -121,7 +126,7 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service name
          *
          * @param string $connectionService
-         * @return $this
+         * @return static
          */
         public function setConnectionService($connectionService)
         {
@@ -134,7 +139,7 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service name used to read data
          *
          * @param string $connectionService
-         * @return $this
+         * @return static
          */
         public function setReadConnectionService($connectionService)
         {
@@ -147,7 +152,7 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service name used to write data
          *
          * @param string $connectionService
-         * @return $this
+         * @return static
          */
         public function setWriteConnectionService($connectionService)
         {
@@ -206,42 +211,28 @@ namespace ManaPHP\Mvc {
          *<code>
          *$robot->assign(array(
          *  'type' => 'mechanical',
-         *  'name' => 'Astro Boy',
+         *  'name' => 'Boy',
          *  'year' => 1952
          *));
          *</code>
          *
          * @param array $data
-         * @param array $columnMap
          * @param array $whiteList
-         * @return $this
-         * @throws \ManaPHP\Mvc\Model\Exception
+         * @return static
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
-        public function assign($data, $columnMap = null, $whiteList = null)
+        public function assign($data, $whiteList = null)
         {
-            if ($columnMap !== null) {
-                $dataMapped = [];
-                foreach ($data as $k => $v) {
-                    if (isset($columnMap[$k])) {
-                        $dataMapped[$columnMap[$k]] = $v;
-                    } else {
-                        $dataMapped[$k] = $v;
-                    }
-                }
-            } else {
-                $dataMapped = $data;
-            }
-
-            $attributes = $this->_getModelsMetaData()->getAttributes($this);
-            foreach ($dataMapped as $attribute => $value) {
-                if ($whiteList !== null && !in_array($attribute, $whiteList, true)) {
+            foreach ($this->_getModelsMetaData()->getAttributes($this) as $attribute) {
+                if(!isset($data[$attribute])){
                     continue;
                 }
 
-                if (!in_array($attribute, $attributes, true)) {
-                    throw new Exception('attribute `' . $attribute . '` not belong to ' . get_called_class());
+                if ($whiteList !== null && !in_array($attribute, $whiteList, true)) {
+                    continue;
                 }
-                $this->{$attribute} = $value;
+                
+                $this->{$attribute} = $data[$attribute];
             }
 
             return $this;
@@ -276,12 +267,11 @@ namespace ManaPHP\Mvc {
          *
          * @param    array $parameters
          * @param  array $cacheOptions
-         * @return  static[]
+         * @return  static[]|false
          * @throws \ManaPHP\Di\Exception
          */
         public static function find($parameters = null, $cacheOptions = null)
         {
-
             $dependencyInjector = Di::getDefault();
             $modelsManager = $dependencyInjector->getShared('modelsManager');
 
@@ -291,9 +281,7 @@ namespace ManaPHP\Mvc {
             $query = $builder->getQuery();
 
             if (isset($params['bind'])) {
-                if (is_array($params['bind'])) {
-                    $query->setBinds($params['bind'], true);
-                }
+                $query->setBinds($params['bind'], true);
             }
 
             $query->cache($cacheOptions);
@@ -303,8 +291,7 @@ namespace ManaPHP\Mvc {
             if (is_array($resultset)) {
                 $modelInstances = [];
                 foreach ($resultset as $result) {
-                    $class = get_called_class();
-                    $modelInstances[] = new $class(null, null, $result);
+                    $modelInstances[] = new static($result, $dependencyInjector);
                 }
                 return $modelInstances;
             } else {
@@ -332,7 +319,7 @@ namespace ManaPHP\Mvc {
          *
          * </code>
          *
-         * @param int|string|array $parameters
+         * @param string|array $parameters
          * @param $cacheOptions
          * @return static
          * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
@@ -340,19 +327,19 @@ namespace ManaPHP\Mvc {
         public static function findFirst($parameters = null, $cacheOptions = null)
         {
             $dependencyInjector = Di::getDefault();
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $modelsManager = $dependencyInjector->getShared('modelsManager');
 
-            if (is_int($parameters) || is_numeric($parameters)) {
-                /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+            if (is_numeric($parameters)) {
                 $modelsMetadata = $dependencyInjector->getShared('modelsMetadata');
-                $primaryKeys = $modelsMetadata->getPrimaryKeyAttributes(new static);
+                $primaryKeys = $modelsMetadata->getPrimaryKeyAttributes(get_called_class());
 
                 if (count($primaryKeys) !== 1) {
                     throw new Exception('parameter is integer, but the model\'s primary key has more than one column');
                 }
 
                 $parameters = [$primaryKeys[0] => $parameters];
+            } elseif (is_string($parameters)) {
+                $parameters = [$parameters];
             }
 
             $builder = $modelsManager->createBuilder($parameters);
@@ -361,23 +348,17 @@ namespace ManaPHP\Mvc {
 
             $query = $builder->getQuery();
 
-            if (is_array($parameters)) {
-                if (isset($parameters['bind'])) {
-                    if (is_array($parameters['bind'])) {
-                        $query->setBinds($parameters['bind'], true);
-                    }
-                }
+            if (isset($parameters['bind'])) {
+                $query->setBinds($parameters['bind'], true);
             }
 
             $query->cache($cacheOptions);
-            $query->setUniqueRow(true);
             $result = $query->execute();
 
-            if (is_array($result)) {
-                $class = get_called_class();
-                return new $class(null, null, $result);
+            if (is_array($result) && isset($result[0])) {
+                return new static($result[0], $dependencyInjector);
             } else {
-                return $result;
+                return false;
             }
         }
 
@@ -386,22 +367,14 @@ namespace ManaPHP\Mvc {
          * Create a criteria for a specific model
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
-         * @return \ManaPHP\Mvc\Model\Criteria
+         * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+         * @throws \ManaPHP\Di\Exception
          */
         public static function query($dependencyInjector = null)
         {
-            if ($dependencyInjector === null) {
-                $dependencyInjector = Di::getDefault();
-            }
+            $dependencyInjector = $dependencyInjector ?: Di::getDefault();
 
-            /**
-             * @var \ManaPHP\Mvc\Model\Criteria $criteria
-             */
-            $criteria = $dependencyInjector->get('ManaPHP\Mvc\Model\Criteria');
-
-            $criteria->setModelName(get_called_class());
-
-            return $criteria;
+            return $dependencyInjector->getShared('modelsManager')->createBuilder();
         }
 
 
@@ -447,11 +420,11 @@ namespace ManaPHP\Mvc {
                 }
             }
 
-            $escapedTable = $connection->escapeIdentifier($this->getSource());
-            $sql = 'SELECT COUNT(*) as rowcount' . ' FROM ' . $escapedTable . ' WHERE ' . implode(' AND ', $conditions);
+            $sql = 'SELECT COUNT(*) as row_count' . ' FROM `' . $this->getSource() . '` WHERE ' . implode(' AND ',
+                $conditions);
             $num = $connection->fetchOne($sql, $binds, \PDO::FETCH_ASSOC);
 
-            return $num['rowcount'] > 0;
+            return $num['row_count'] > 0;
         }
 
 
@@ -519,7 +492,7 @@ namespace ManaPHP\Mvc {
          */
         public static function count($parameters = null, $column = '*', $cacheOptions = null)
         {
-            $result = self::_groupResult('COUNT', 'rowcount', $column, $parameters, $cacheOptions);
+            $result = self::_groupResult('COUNT', 'row_count', $column, $parameters, $cacheOptions);
             if (is_string($result)) {
                 return (int) $result;
             } else {
@@ -746,11 +719,10 @@ namespace ManaPHP\Mvc {
          * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
          * @param \ManaPHP\DbInterface $connection
          * @return boolean
-         * @throws \ManaPHP\Mvc\Model\Exception
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
         protected function _doLowUpdate($metaData, $connection)
         {
-
             $conditions = [];
             foreach ($metaData->getPrimaryKeyAttributes($this) as $attributeField) {
                 if (!isset($this->{$attributeField})) {
@@ -773,7 +745,7 @@ namespace ManaPHP\Mvc {
                 return true;
             }
 
-            $success = $connection->update($this->getSource(), $conditions, $columnValues);
+            $success = $connection->update($this->getSource(), $columnValues, $conditions);
 
             if ($success) {
                 $this->_snapshot = $this->toArray();
@@ -790,7 +762,7 @@ namespace ManaPHP\Mvc {
          *    //Creating a new robot
          *    $robot = new Robots();
          *    $robot->type = 'mechanical';
-         *    $robot->name = 'Astro Boy';
+         *    $robot->name = 'Boy';
          *    $robot->year = 1952;
          *    $robot->save();
          *
@@ -803,12 +775,12 @@ namespace ManaPHP\Mvc {
          * @param array $data
          * @param array $whiteList
          * @return boolean
-         * @throws \ManaPHP\Mvc\Model\Exception
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
         public function save($data = null, $whiteList = null)
         {
             if (is_array($data) && count($data) > 0) {
-                $this->assign($data, null, $whiteList);
+                $this->assign($data, $whiteList);
             }
 
             $metaData = $this->_getModelsMetaData();
@@ -841,7 +813,7 @@ namespace ManaPHP\Mvc {
          *    //Creating a new robot
          *    $robot = new Robots();
          *    $robot->type = 'mechanical';
-         *    $robot->name = 'Astro Boy';
+         *    $robot->name = 'Boy';
          *    $robot->year = 1952;
          *    $robot->create();
          *
@@ -849,7 +821,7 @@ namespace ManaPHP\Mvc {
          *  $robot = new Robots();
          *  $robot->create(array(
          *      'type' => 'mechanical',
-         *      'name' => 'Astroy Boy',
+         *      'name' => 'Boy',
          *      'year' => 1952
          *  ));
          *</code>
@@ -857,7 +829,7 @@ namespace ManaPHP\Mvc {
          * @param array $data
          * @param array $whiteList
          * @return boolean
-         * @throws \ManaPHP\Mvc\Model\Exception
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
         public function create($data = null, $whiteList = null)
         {
@@ -883,7 +855,7 @@ namespace ManaPHP\Mvc {
          * @param array $data
          * @param array $whiteList
          * @return boolean
-         * @throws \ManaPHP\Mvc\Model\Exception
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
         public function update($data = null, $whiteList = null)
         {
@@ -908,7 +880,7 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @return boolean
-         * @throws \ManaPHP\Mvc\Model\Exception
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
         public function delete()
         {
@@ -924,7 +896,6 @@ namespace ManaPHP\Mvc {
                 return false;
             }
 
-            $binds = [];
             $conditions = [];
             foreach ($primaryKeys as $attributeField) {
 
@@ -935,63 +906,16 @@ namespace ManaPHP\Mvc {
                     throw new Exception("Cannot delete the record because the primary key attribute: '" . $attributeField . "' wasn't set");
                 }
 
-                $bindKey = ':' . $attributeField;
-                $binds[$bindKey] = $this->{$attributeField};
-                $conditions[] = $writeConnection->escapeIdentifier($attributeField) . ' =' . $bindKey;
+                $conditions[$attributeField] = $this->{$attributeField};
             }
 
-            $success = $writeConnection->delete($this->getSource(), implode(' AND ', $conditions), $binds);
+            $success = $writeConnection->delete($this->getSource(), $conditions);
 
             if ($success === true) {
                 $this->_fireEvent('afterDelete');
             }
 
             return $success;
-        }
-
-        /**
-         * Serializes the object ignoring connections, services, related objects or static properties
-         *
-         * @return string
-         */
-        public function serialize()
-        {
-            return serialize($this->toArray());
-        }
-
-
-        /**
-         * Unserializes the object from a serialized string
-         *
-         * @param string $data
-         * @throws \ManaPHP\Di\Exception
-         */
-        public function unserialize($data)
-        {
-            $attributes = unserialize($data);
-            if (is_array($attributes)) {
-                $this->_modelsManager = Di::getDefault()->getShared('modelsManager');
-
-                $this->_modelsManager->initialize($this);
-
-                foreach ($attributes as $k => $v) {
-                    $this->{$k} = $v;
-                }
-            }
-        }
-
-        /**
-         * Returns a simple representation of the object that can be used with var_dump
-         *
-         *<code>
-         * var_dump($robot->dump());
-         *</code>
-         *
-         * @return array
-         */
-        public function dump()
-        {
-            return get_object_vars($this);
         }
 
 
@@ -1002,35 +926,36 @@ namespace ManaPHP\Mvc {
          * print_r($robot->toArray());
          *</code>
          *
-         * @param array $columns
          * @return array
+         * @throws \ManaPHP\Di\Exception
          */
-        public function toArray($columns = null)
+        public function toArray()
         {
             $data = [];
-            $metaData = $this->_getModelsMetaData();
 
-            foreach ($metaData->getAttributes($this) as $attributeField) {
-                if (is_array($columns) && !in_array($attributeField, $columns, true)) {
-                    continue;
-                }
-
+            foreach ($this->_getModelsMetaData()->getAttributes($this) as $attributeField) {
                 $data[$attributeField] = isset($this->{$attributeField}) ? $this->{$attributeField} : null;
             }
 
             return $data;
         }
 
-
         /**
-         * Enables/disables options in the ORM
-         * Available options:
-         * events                — Enables/Disables globally the internal events
-         *
-         * @param array $options
+         * @return array
          */
-        public static function setup($options)
+        public function __debugInfo()
         {
+            $data = [];
+
+            foreach (parent::__debugInfo() as $k => $v) {
+                if ($k === '_modelsManager') {
+                    continue;
+                }
+
+                $data[$k] = $v;
+            }
+
+            return $data;
         }
     }
 }

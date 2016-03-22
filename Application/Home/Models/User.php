@@ -15,8 +15,7 @@ class User extends Model
     public $age;
     public $name;
 
-    public function getSource()
-    {
-        return 'user';
+    public function initialize(){
+        $this->setSource('_student');
     }
 }

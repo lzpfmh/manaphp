@@ -3,6 +3,7 @@
 namespace ManaPHP {
 
     use ManaPHP\Db\ConditionParser;
+    use ManaPHP\Db\Exception;
     use ManaPHP\Db\PrepareEmulation;
 
     class Db extends Component implements DbInterface
@@ -66,8 +67,15 @@ namespace ManaPHP {
          */
         public function __construct($descriptor)
         {
+            if (!isset($descriptor['options'])) {
+                $descriptor['options'] = [];
+            }
+
+            $descriptor['options'] = [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
+
             $this->_type = 'mysql';
             $this->_descriptor = $descriptor;
+
             $this->_connect();
         }
 
@@ -96,7 +104,7 @@ namespace ManaPHP {
 
             $username = isset($descriptor['username']) ? $descriptor['username'] : null;
             $password = isset($descriptor['password']) ? $descriptor['password'] : null;
-            $options = isset($descriptor['options']) ? $descriptor['options'] : [];
+            $options = $descriptor['options'];
             unset($descriptor['username'], $descriptor['password'], $descriptor['options']);
 
             if (isset($descriptor['dsn'])) {
@@ -109,7 +117,6 @@ namespace ManaPHP {
                 $dsn = implode(';', $dsn_parts);
             }
 
-            $options[\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
             $this->_pdo = new \PDO($this->_type . ':' . $dsn, $username, $password, $options);
         }
 
@@ -118,7 +125,7 @@ namespace ManaPHP {
          *
          *<code>
          * $statement = $db->prepare('SELECT * FROM robots WHERE name = :name');
-         * $result = $connection->executePrepared($statement, array('name' => 'Voltron'));
+         * $result = $connection->executePrepared($statement, array('name' => 'Volt'));
          *</code>
          *
          * @param \PDOStatement statement
@@ -142,7 +149,12 @@ namespace ManaPHP {
             return $statement;
         }
 
-
+        /**
+         * @param $binds
+         * @param $bindParams
+         * @param $bindTypes
+         * @throws \ManaPHP\Db\Exception
+         */
         protected function _parseBinds($binds, &$bindParams, &$bindTypes)
         {
             $bindParams = null;
@@ -155,30 +167,31 @@ namespace ManaPHP {
             $bindParams = [];
             $bindTypes = [];
 
-            foreach ($binds as $key => $value) {
-                if (is_int($key)) {
-                    $finalKey = $key;
-                } elseif (is_string($key)) {
-                    $finalKey = ($key[0] === ':') ? $key : (':' . $key);
+            foreach ($binds as $k => $v) {
+                if (is_int($k)) {
+                    $column = $k;
                 } else {
-                    throw new Exception('invalid binds field: ' . json_encode($key));
+                    $column = ($k[0] === ':') ? $k : (':' . $k);
                 }
 
-                if (is_scalar($value) || $value === null) {
-                    $data = $value;
+                if (is_scalar($v) || $v === null) {
+                    $data = $v;
                     $type = null;
-                } elseif (is_array($value)) {
-                    if (count($value) === 1) {
-                        $data = $value[0];
+                } elseif (is_array($v)) {
+                    if (count($v) === 1) {
+                        $data = $v[0];
                         $type = null;
-                    } elseif (count($value) === 2) {
-                        $data = $value[0];
-                        $type = $value[1];
+                    } elseif (count($v) === 2) {
+                        list($data, $type) = $v;
                     } else {
-                        throw new Exception('one value of binds has invalid values: ' . json_encode($value));
+                        throw new Exception('one of binds has invalid values: ' . $column);
                     }
                 } else {
-                    throw new Exception('one value of binds has invalid value: ' . json_encode($value));
+                    throw new Exception('one of binds has invalid values: ' . $column);
+                }
+
+                if (!is_scalar($data) && $data !== null) {
+                    throw new Exception('one of binds has invalid values: ' . $column);
                 }
 
                 if ($type === null) {
@@ -195,32 +208,8 @@ namespace ManaPHP {
                     }
                 }
 
-                $bindParams[$finalKey] = $data;
-                $bindTypes[$finalKey] = $type;
-            }
-        }
-
-        protected function _parseColumns($binds, &$columns, &$escapedColumns)
-        {
-            $columns = null;
-            $escapedColumns = null;
-            if ($binds === null) {
-                return;
-            }
-
-            $columns = [];
-            $escapedColumns = [];
-            foreach ($binds as $key => $value) {
-                if (is_int($key)) {
-                    $finalKey = $key;
-                } elseif (is_string($key)) {
-                    $finalKey = ($key[0] === ':') ? substr($key, 1) : $key;
-                } else {
-                    throw new Exception('invalid binds field: ' . json_encode($key));
-                }
-
-                $columns[] = $finalKey;
-                $escapedColumns[] = '`' . $finalKey . '`';
+                $bindParams[$column] = $data;
+                $bindTypes[$column] = $type;
             }
         }
 
@@ -234,17 +223,17 @@ namespace ManaPHP {
          *    $resultset = $connection->query("SELECT * FROM robots WHERE type=?", array("mechanical"));
          *</code>
          *
-         * @param string $sqlStatement
+         * @param string $sql
          * @param array $binds
          * @param int $fetchMode
          * @return \PdoStatement
          * @throws \ManaPHP\Db\Exception
          */
-        public function query($sqlStatement, $binds = null, $fetchMode = \PDO::FETCH_ASSOC)
+        public function query($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC)
         {
             $this->_parseBinds($binds, $bindParams, $bindTypes);
 
-            $this->_sqlStatement = $sqlStatement;
+            $this->_sqlStatement = $sql;
             $this->_sqlBindParams = $bindParams;
             $this->_sqlBindTypes = $bindTypes;
 
@@ -254,10 +243,10 @@ namespace ManaPHP {
 
             try {
                 if ($bindParams !== null) {
-                    $statement = $this->_pdo->prepare($sqlStatement);
+                    $statement = $this->_pdo->prepare($sql);
                     $statement = $this->_executePrepared($statement, $bindParams, $bindTypes);
                 } else {
-                    $statement = $this->_pdo->query($sqlStatement);
+                    $statement = $this->_pdo->query($sql);
                 }
 
                 $statement->setFetchMode($fetchMode);
@@ -272,23 +261,23 @@ namespace ManaPHP {
 
         /**
          * Sends SQL statements to the database server returning the success state.
-         * Use this method only when the SQL statement sent to the server doesn't return any rows
+         * Use this method only when the SQL statement sent to the server does n't return any rows
          *
          *<code>
          *    //Inserting data
-         *    $success = $connection->execute("INSERT INTO robots VALUES (1, 'Astro Boy')");
-         *    $success = $connection->execute("INSERT INTO robots VALUES (?, ?)", array(1, 'Astro Boy'));
+         *    $success = $connection->execute("INSERT INTO robots VALUES (1, 'Boy')");
+         *    $success = $connection->execute("INSERT INTO robots VALUES (?, ?)", array(1, 'Boy'));
          *</code>
-         * @param string $sqlStatement
+         * @param string $sql
          * @param array $binds
          * @return int
          * @throws \ManaPHP\Db\Exception
          */
-        public function execute($sqlStatement, $binds = null)
+        public function execute($sql, $binds = null)
         {
             $this->_parseBinds($binds, $bindParams, $bindTypes);
 
-            $this->_sqlStatement = $sqlStatement;
+            $this->_sqlStatement = $sql;
             $this->_sqlBindParams = $bindParams;
             $this->_sqlBindTypes = $bindTypes;
 
@@ -298,11 +287,11 @@ namespace ManaPHP {
 
             try {
                 if ($bindParams !== null) {
-                    $statement = $this->_pdo->prepare($sqlStatement);
+                    $statement = $this->_pdo->prepare($sql);
                     $newStatement = $this->_executePrepared($statement, $bindParams, $bindTypes);
                     $this->_affectedRows = $newStatement->rowCount();
                 } else {
-                    $this->_affectedRows = $this->_pdo->exec($sqlStatement);
+                    $this->_affectedRows = $this->_pdo->exec($sql);
                 }
             } catch (\PDOException $e) {
                 throw new Exception($e->getMessage());
@@ -380,15 +369,15 @@ namespace ManaPHP {
          *    print_r($robot);
          *</code>
          *
-         * @param string $sqlQuery
+         * @param string $sql
          * @param array $binds
          * @param int $fetchMode
          * @throws \ManaPHP\Db\Exception
          * @return array|false
          */
-        public function fetchOne($sqlQuery, $binds = null, $fetchMode = \PDO::FETCH_ASSOC)
+        public function fetchOne($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC)
         {
-            $result = $this->query($sqlQuery, $binds, $fetchMode);
+            $result = $this->query($sql, $binds, $fetchMode);
             return $result->fetch();
         }
 
@@ -413,32 +402,32 @@ namespace ManaPHP {
          *    }
          *</code>
          *
-         * @param string $sqlQuery
+         * @param string $sql
          * @param array $binds
          * @param int $fetchMode
          * @throws \ManaPHP\Db\Exception
          * @return array
          */
-        public function fetchAll($sqlQuery, $binds = null, $fetchMode = \PDO::FETCH_ASSOC)
+        public function fetchAll($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC)
         {
-            $result = $this->query($sqlQuery, $binds, $fetchMode);
+            $result = $this->query($sql, $binds, $fetchMode);
             return $result->fetchAll();
         }
 
 
         /**
-         * Inserts data into a table using custom RBDMS SQL syntax
+         * Inserts data into a table using custom SQL syntax
          *
          * <code>
          * //Inserting a new robot
          * $success = $connection->insert(
          *     "robots",
-         *     array("Astro Boy", 1952),
+         *     array("Boy", 1952),
          *     array("name", "year")
          * );
          *
          * //Next SQL sentence is sent to the database system
-         * INSERT INTO `robots` (`name`, `year`) VALUES ("Astro boy", 1952);
+         * INSERT INTO `robots` (`name`, `year`) VALUES ("boy", 1952);
          * </code>
          *
          * @param    string $table
@@ -453,76 +442,78 @@ namespace ManaPHP {
             }
 
             $escapedTable = $this->escapeIdentifier($table);
-            if (isset($columnValues[0])) {
+            if (array_key_exists(0, $columnValues)) {
                 $insertedValues = rtrim(str_repeat('?,', count($columnValues)), ',');
 
-                $insertSql = "INSERT INTO $escapedTable VALUES ($insertedValues)";
+                $sql = /** @lang Text */
+                  "INSERT INTO $escapedTable VALUES ($insertedValues)";
             } else {
-                $this->_parseColumns($columnValues, $columns, $escapedColumns);
+                $columns = array_keys($columnValues);
                 $insertedValues = ':' . implode(',:', $columns);
-                $insertedColumns = implode(',', $escapedColumns);
+                $insertedColumns = '`' . implode('`,`', $columns) . '`';
 
-                $insertSql = "INSERT INTO $escapedTable ($insertedColumns) VALUES ($insertedValues)";
+                $sql = /** @lang Text */
+                  "INSERT INTO $escapedTable ($insertedColumns) VALUES ($insertedValues)";
             }
 
-            return $this->execute($insertSql, $columnValues) === 1;
-
+            return $this->execute($sql, $columnValues) === 1;
         }
 
 
         /**
-         * Updates data on a table using custom RBDMS SQL syntax
+         * Updates data on a table using custom SQL syntax
          *
          * <code>
          * //Updating existing robot
          * $success = $connection->update(
          *     "robots",
          *     array("name"),
-         *     array("New Astro Boy"),
+         *     array("New Boy"),
          *     "id = 101"
          * );
          *
          * //Next SQL sentence is sent to the database system
-         * UPDATE `robots` SET `name` = "Astro boy" WHERE id = 101
+         * UPDATE `robots` SET `name` = "boy" WHERE id = 101
          * </code>
          *
          * @param    string $table
          * @param    array $columnValues
-         * @param    string $whereCondition
-         * @return    boolean
+         * @param    string|array $conditions
+         * @param    array $binds
+         * @return    int|false
          * @throws \ManaPHP\Db\Exception
          */
-        public function update($table, $whereCondition = null, $columnValues)
+        public function update($table, $columnValues, $conditions, $binds = null)
         {
-            $escapedTable = $this->escapeIdentifier($table);
+            $escapedTable = "`$table`";
 
             if (count($columnValues) === 0) {
                 throw new Exception('Unable to update ' . $table . ' without data');
             }
 
-            if ($whereCondition === '' || $whereCondition === null) {
-                throw new Exception('Danger DELETE \'' . $escapedTable . '\'operation without any condition');
+            $where = (new ConditionParser())->parse($conditions, $conditionBinds);
+            if ($binds === null) {
+                $binds = $conditionBinds;
+            } else {
+                $binds = array_merge($conditionBinds, $binds);
             }
 
-            $where = (new ConditionParser())->parse($whereCondition, $binds);
-
-            $this->_parseColumns($columnValues, $columns, $escapedColumns);
             $setColumns = [];
-            foreach ($columns as $key => $column) {
-                $setColumns[] = $escapedColumns[$key] . '=:' . $column;
+            foreach ($columnValues as $k => $v) {
+                $setColumns[] = "`$k`=:$k";
+                $binds[$k] = $v;
             }
 
             $updateColumns = implode(',', $setColumns);
-            $updateSql = "UPDATE $escapedTable SET $updateColumns WHERE  $where";
+            $updateSql = /** @lang Text */
+              "UPDATE $escapedTable SET $updateColumns WHERE  $where";
 
-            $columnValues = array_merge($columnValues, $binds);
-
-            return $this->execute($updateSql, $columnValues);
+            return $this->execute($updateSql, $binds);
         }
 
 
         /**
-         * Deletes data from a table using custom RBDMS SQL syntax
+         * Deletes data from a table using custom SQL syntax
          *
          * <code>
          * //Deleting existing robot
@@ -536,20 +527,23 @@ namespace ManaPHP {
          * </code>
          *
          * @param  string $table
-         * @param  string $whereCondition
+         * @param  string|array $conditions
          * @param  array $binds
          * @return boolean
          * @throws \ManaPHP\Db\Exception
          */
-        public function delete($table, $whereCondition, $binds = null)
+        public function delete($table, $conditions, $binds = null)
         {
-            $escapedTable = $this->escapeIdentifier($table);
+            $where = (new ConditionParser())->parse($conditions, $conditionBinds);
 
-            if ($whereCondition === '' || $whereCondition === null) {
-                throw new Exception('Danger DELETE \'' . $escapedTable . '\'operation without any condition');
+            $sql = /**@lang Text */
+              "DELETE FROM `$table` WHERE " . $where;
+
+            if ($binds === null) {
+                $binds = $conditionBinds;
+            } else {
+                $binds = array_merge($conditionBinds, $binds);
             }
-
-            $sql = 'DELETE FROM ' . $this->escapeIdentifier($table) . ' WHERE ' . $whereCondition;
 
             return $this->execute($sql, $binds);
         }
@@ -562,40 +556,15 @@ namespace ManaPHP {
          *    echo $connection->limit("SELECT * FROM robots", 5);
          * </code>
          *
-         * @param    string $sqlQuery
+         * @param    string $sql
          * @param    int $number
          * @param   int $offset
          * @return    string
          */
-        public function limit($sqlQuery, $number, $offset = null)
+        public function limit($sql, $number, $offset = null)
         {
-            return $sqlQuery . ' LIMIT ' . $number . ($offset === null ? '' : (' OFFSET ' . $offset));
+            return $sql . ' LIMIT ' . $number . ($offset === null ? '' : (' OFFSET ' . $offset));
         }
-
-
-        /**
-         * Returns a SQL modified with a FOR UPDATE clause
-         *
-         * @param string $sqlQuery
-         * @return string
-         */
-        public function forUpdate($sqlQuery)
-        {
-            return $sqlQuery . ' FOR UPDATE';
-        }
-
-
-        /**
-         * Returns a SQL modified with a LOCK IN SHARE MODE clause
-         *
-         * @param string $sqlQuery
-         * @return string
-         */
-        public function sharedLock($sqlQuery)
-        {
-            return $sqlQuery . ' LOCK IN SHARE MODE';
-        }
-
 
         /**
          * Active SQL statement in the object
@@ -734,5 +703,4 @@ namespace ManaPHP {
             return $this->_pdo;
         }
     }
-
 }

@@ -33,7 +33,7 @@ namespace ManaPHP {
          * Removes a service from the service container
          *
          * @param string $name
-         * @return void
+         * @return static
          */
         public function remove($name);
 
@@ -65,14 +65,6 @@ namespace ManaPHP {
          * @return boolean
          */
         public function has($name);
-
-
-        /**
-         * Check whether the last service obtained via getShared produced a fresh instance or an existing one
-         *
-         * @return boolean
-         */
-        public function wasFreshInstance();
 
 
         /**

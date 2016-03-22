@@ -20,7 +20,7 @@ namespace ManaPHP {
          */
         public function calc($total_items, $limit, $current)
         {
-            $totalPages = intval(ceil($total_items / $limit));
+            $totalPages = ceil($total_items / $limit);
 
             $this->first = 1;
             $this->before = max(1, $current - 1);

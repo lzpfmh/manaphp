@@ -84,7 +84,7 @@ namespace ManaPHP\Mvc {
          * @param string $rootNamespace
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function __construct($rootDirectory, $rootNamespace=null, $dependencyInjector = null)
+        public function __construct($rootDirectory, $rootNamespace = null, $dependencyInjector = null)
         {
             if (is_object($dependencyInjector)) {
                 $this->_dependencyInjector = $dependencyInjector;
@@ -94,8 +94,8 @@ namespace ManaPHP\Mvc {
             $this->_dependencyInjector->setShared('application', $this, true);
 
             $rootDirectory = str_replace('\\', '/', rtrim($rootDirectory, '\\/'));
-            if($rootNamespace===null){
-                $rootNamespace=ucfirst(basename($rootDirectory));
+            if ($rootNamespace === null) {
+                $rootNamespace = ucfirst(basename($rootDirectory));
             }
 
             $this->_rootDirectory = $rootDirectory;
@@ -133,12 +133,12 @@ namespace ManaPHP\Mvc {
          */
         public function registerModules($modules)
         {
-            if($modules===null){
-                throw new Exception('The provided modules are null');
-            }
+            //region DEBUG
+            assert(is_array($modules));
+            //endregion
 
-            if(is_string($modules)){
-                $modules=[$modules];
+            if ($modules === null) {
+                throw new Exception('The provided modules are null');
             }
 
             foreach ($modules as $module => $definition) {
@@ -164,7 +164,7 @@ namespace ManaPHP\Mvc {
          *
          * @param string $uri
          * @return \ManaPHP\Http\ResponseInterface|boolean
-         * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Event\Exception
+         * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Event\Exception|\ManaPHP\Di\Exception
          */
         public function handle($uri = null)
         {
@@ -177,7 +177,6 @@ namespace ManaPHP\Mvc {
             }
 
             $router = $this->_dependencyInjector->getShared('router');
-
 
             $router->handle($uri);
 
@@ -203,7 +202,11 @@ namespace ManaPHP\Mvc {
                 $dispatcher->setRootNamespace($this->_rootNamespace);
             }
 
-            $controller = $dispatcher->dispatch($moduleName,$router->getControllerName(),$router->getActionName(),$router->getParams());
+            $controllerName = $router->getControllerName();
+            $actionName = $router->getActionName();
+            $params = $router->getParams();
+
+            $controller = $dispatcher->dispatch($moduleName, $controllerName, $actionName, $params);
             if ($controller === false) {
                 return false;
             }
@@ -226,7 +229,7 @@ namespace ManaPHP\Mvc {
          * @param string $controller
          * @param string $action
          * @return \ManaPHP\Http\ResponseInterface
-         * @throws \ManaPHP\Mvc\Application\Exception
+         * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Di\Exception
          */
         protected function _getResponse($actionReturnValue, $moduleName, $controller, $action)
         {
@@ -249,7 +252,7 @@ namespace ManaPHP\Mvc {
                     $view = $this->_dependencyInjector->getShared('view');
                     if ($view->getViewsDir() === null) {
                         if ($moduleName === '') {
-                            $view->setViewsDir($this->_rootDirectory . "/Views");
+                            $view->setViewsDir($this->_rootDirectory . '/Views');
                         } else {
                             $view->setViewsDir($this->_rootDirectory . "/$moduleName/Views");
                         }

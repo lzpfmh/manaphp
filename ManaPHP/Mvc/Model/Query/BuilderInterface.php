@@ -206,7 +206,7 @@ namespace ManaPHP\Mvc\Model\Query {
         public function groupBy($group);
 
         /**
-         * Returns a PHQL statement built based on the builder parameters
+         * Returns a SQL statement built based on the builder parameters
          *
          * @return string
          */
@@ -220,14 +220,12 @@ namespace ManaPHP\Mvc\Model\Query {
          */
         public function getQuery();
 
-
-        /**
-         * Set default bind parameters
-         *
+        /**build the query and execute it.
          * @param array $binds
-         * @param bool $merge
-         * @return static
+         * @param array $cache
+         * @return array
          */
-        public function setBinds($binds, $merge = false);
+        public function execute($binds = null, $cache = null);
+
     }
 }

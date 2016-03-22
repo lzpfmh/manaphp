@@ -114,7 +114,7 @@ namespace ManaPHP\Cache {
 
 
         /**
-         * Checks if cache exists and it hasn't expired
+         * Checks if cache exists and it has not expired
          *
          * @param  string $keyName
          * @param  int $lifetime

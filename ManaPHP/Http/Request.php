@@ -71,8 +71,8 @@ namespace ManaPHP\Http {
         }
 
         /**
-         * Gets a variable from the $_REQUEST superglobal applying filters if needed.
-         * If no parameters are given the $_REQUEST superglobal is returned
+         * Gets a variable from the $_REQUEST applying filters if needed.
+         * If no parameters are given the $_REQUEST is returned
          *
          *<code>
          *    //Returns value from $_REQUEST["user_email"] without sanitizing
@@ -94,8 +94,8 @@ namespace ManaPHP\Http {
         }
 
         /**
-         * Gets variable from $_GET superglobal applying filters if needed
-         * If no parameters are given the $_GET superglobal is returned
+         * Gets variable from $_GET applying filters if needed
+         * If no parameters are given the $_GET is returned
          *
          *<code>
          *    //Returns value from $_GET["id"] without sanitizing
@@ -121,8 +121,8 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Gets a variable from the $_POST superglobal applying filters if needed
-         * If no parameters are given the $_POST superglobal is returned
+         * Gets a variable from the $_POST applying filters if needed
+         * If no parameters are given the $_POST is returned
          *
          *<code>
          *    //Returns value from $_POST["user_email"] without sanitizing
@@ -170,8 +170,8 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Gets variable from $_GET superglobal applying filters if needed
-         * If no parameters are given the $_GET superglobal is returned
+         * Gets variable from $_GET applying filters if needed
+         * If no parameters are given the $_GET is returned
          *
          *<code>
          *    //Returns value from $_GET["id"] without sanitizing
@@ -197,7 +197,7 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Checks whether $_REQUEST superglobal has certain index
+         * Checks whether $_REQUEST has certain index
          *
          * @param string $name
          * @return boolean
@@ -209,7 +209,7 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Checks whether $_GET superglobal has certain index
+         * Checks whether $_GET has certain index
          *
          * @param string $name
          * @return boolean
@@ -220,7 +220,7 @@ namespace ManaPHP\Http {
         }
 
         /**
-         * Checks whether $_POST superglobal has certain index
+         * Checks whether $_POST has certain index
          *
          * @param string $name
          * @return boolean
@@ -248,7 +248,7 @@ namespace ManaPHP\Http {
 
 
         /**
-         * Checks whether $_GET superglobal has certain index
+         * Checks whether $_GET has certain index
          *
          * @param string $name
          * @return boolean

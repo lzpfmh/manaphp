@@ -2,6 +2,7 @@
 
 namespace ManaPHP {
 
+    use ManaPHP\Di\Exception;
     use ManaPHP\Di\Service;
 
     /**
@@ -40,25 +41,19 @@ namespace ManaPHP {
     {
 
         /**
-         * List of registered services
          * @var \ManaPHP\Di\ServiceInterface[]
          */
         protected $_services;
 
         /**
-         * List of shared instances
+         * @var array
          */
         protected $_sharedInstances;
 
         /**
-         * To know if the latest resolved instance was shared or not
-         */
-        protected $_freshInstance = false;
-
-        /**
          * Latest DI build
          */
-        protected static $_default;
+        protected static $_default=null;
 
         /**
          * \ManaPHP\Di constructor
@@ -71,6 +66,15 @@ namespace ManaPHP {
             }
         }
 
+        /**
+         * Return the latest DI created
+         *
+         * @return \ManaPHP\Di
+         */
+        public static function getDefault()
+        {
+            return self::$_default;
+        }
 
         /**
          * Registers a service in the services container
@@ -90,11 +94,12 @@ namespace ManaPHP {
          * Removes a service in the services container
          *
          * @param string $name
+         * @return static
          */
         public function remove($name)
         {
-            unset($this->_services[$name]);
-            unset($this->_sharedInstances[$name]);
+            unset($this->_services[$name], $this->_sharedInstances[$name]);
+            return $this;
         }
 
 
@@ -108,21 +113,15 @@ namespace ManaPHP {
          */
         public function get($name, $parameters = null)
         {
-            if (!is_string($name)) {
-                throw new Exception ('service name is not a string: ' . json_encode($name, JSON_UNESCAPED_SLASHES));
-            }
+            //region DEBUG
+                assert(is_string($name),'service name is not a string:'.json_encode($name, JSON_UNESCAPED_SLASHES));
+            //endregion
 
             if (isset($this->_services[$name])) {
-                /**
-                 * The service is registered in the DI
-                 */
                 $instance = $this->_services[$name]->resolve($parameters, $this);
             } else {
-                /**
-                 * The DI also acts as builder for any class even if it isn't defined in the DI
-                 */
                 if (!class_exists($name)) {
-                    throw new Exception('Class is not exist: "' . $name . '"');
+                    throw new Exception("Service '$name' wasn't found in the dependency injection container");
                 }
 
                 if (is_array($parameters)) {
@@ -151,17 +150,11 @@ namespace ManaPHP {
          */
         public function getShared($name, $parameters = null)
         {
-            if (isset($this->_sharedInstances[$name])) {
-                $instance = $this->_sharedInstances[$name];
-                $this->_freshInstance = false;
-            } else {
-                $instance = $this->get($name, $parameters);
-
-                $this->_sharedInstances[$name] = $instance;
-                $this->_freshInstance = true;
+            if (!isset($this->_sharedInstances[$name])) {
+                $this->_sharedInstances[$name] = $this->get($name, $parameters);
             }
 
-            return $instance;
+            return $this->_sharedInstances[$name];
         }
 
 
@@ -174,27 +167,6 @@ namespace ManaPHP {
         public function has($name)
         {
             return isset($this->_services[$name]);
-        }
-
-        /**
-         * Check whether the last service obtained via getShared produced a fresh instance or an existing one
-         *
-         * @return boolean
-         */
-        public function wasFreshInstance()
-        {
-            return $this->_freshInstance;
-        }
-
-
-        /**
-         * Return the latest DI created
-         *
-         * @return \ManaPHP\Di
-         */
-        public static function getDefault()
-        {
-            return self::$_default;
         }
 
 
@@ -221,7 +193,16 @@ namespace ManaPHP {
          */
         public function __call($method, $arguments = null)
         {
-            throw new Exception("Call to undefined method or service '" . $method . "'");
+            throw new Exception("Call to undefined method or service '$method'");
+        }
+
+
+        /**
+         * @return array
+         */
+        public function __debugInfo()
+        {
+            return get_object_vars($this);
         }
     }
 }

@@ -68,11 +68,9 @@ class DiTest extends TestCase
 
         $getSharedObject = $this->_di->getShared('getSharedObject');
         $this->assertInstanceOf('stdClass', $getSharedObject);
-        $this->assertTrue($this->_di->wasFreshInstance());
 
         $getSharedObject2 = $this->_di->getShared('getSharedObject');
         $this->assertInstanceOf('stdClass', $getSharedObject2);
-        $this->assertFalse($this->_di->wasFreshInstance());
 
         $this->assertEquals($getSharedObject->microtime, $getSharedObject2->microtime);
     }

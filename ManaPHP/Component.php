@@ -13,19 +13,19 @@ namespace ManaPHP {
      *
      * @property \ManaPHP\Mvc\DispatcherInterface $dispatcher;
      * @property \ManaPHP\Mvc\RouterInterface $router
-     * @property \ManaPHP\Mvc\UrlInterface $url
+    //* @property \ManaPHP\Mvc\UrlInterface $url
      * @property \ManaPHP\Http\RequestInterface $request
      * @property \ManaPHP\Http\ResponseInterface $response
      * @property \ManaPHP\Http\Response\CookiesInterface $cookies
-     * @property \ManaPHP\FilterInterface $filter
+    //* @property \ManaPHP\FilterInterface $filter
      * @property \ManaPHP\Flash\Direct $flash
-     * @property \ManaPHP\Flash\Session $flashSession
+    //* @property \ManaPHP\Flash\Session $flashSession
      * @property \ManaPHP\Http\SessionInterface $session
      * @property \ManaPHP\Event\ManagerInterface $eventsManager
      * @property \ManaPHP\DbInterface $db
-     * @property \ManaPHP\Security $security
-     * @property \ManaPHP\CryptInterface $crypt
-     * @property \ManaPHP\EscaperInterface $escaper
+    //* @property \ManaPHP\Security $security
+     * //* @property \ManaPHP\CryptInterface $crypt
+     * // * @property \ManaPHP\EscaperInterface $escaper
      * @property \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
      * @property \ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
     //     * @property \ManaPHP\Assets\Manager $assets
@@ -55,10 +55,12 @@ namespace ManaPHP {
          * Sets the dependency injector
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
+         * @return static
          */
         public function setDependencyInjector($dependencyInjector)
         {
             $this->_dependencyInjector = $dependencyInjector;
+            return $this;
         }
 
         /**
@@ -68,7 +70,7 @@ namespace ManaPHP {
          */
         public function getDependencyInjector()
         {
-            if (!is_object($this->_dependencyInjector)) {
+            if ($this->_dependencyInjector ===null) {
                 $this->_dependencyInjector = Di::getDefault();
             }
 
@@ -105,6 +107,7 @@ namespace ManaPHP {
          *
          * @param string $event
          * @param object|callable $handler
+         * @return static
          * @throws \ManaPHP\Event\Exception
          */
         public function attachEvent($event, $handler)
@@ -114,6 +117,7 @@ namespace ManaPHP {
             }
 
             $this->_eventsManager->attachEvent($event, $handler);
+			return $this;
         }
 
 
@@ -156,7 +160,16 @@ namespace ManaPHP {
 
         public function __debugInfo()
         {
-            return get_object_vars($this);
+            $data = [];
+            foreach (get_object_vars($this) as $k => $v) {
+                if ($k === '_eventsManager' || $k === '_dependencyInjector') {
+                    continue;
+                }
+
+                $data[$k] = $v;
+            }
+
+            return $data;
         }
     }
 }

@@ -4,10 +4,11 @@ namespace ManaPHP\Di {
 
     /**
      * ManaPHP\Di\ServiceInterface initializer
+     *
+     * Represents a service in the services container
      */
     interface ServiceInterface
     {
-
         /**
          * Phalcon\Di\ServiceInterface
          *
@@ -25,5 +26,12 @@ namespace ManaPHP\Di {
          * @return object
          */
         public function resolve($parameters = null, $dependencyInjector = null);
+
+        /**
+         * Returns true if the service was resolved
+         *
+         * @return bool
+         */
+        public function isResolved();
     }
 }

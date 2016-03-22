@@ -133,7 +133,7 @@ class DbTest extends TestCase
 
         //recommended method without bind value type
         $this->db->execute('TRUNCATE TABLE _student');
-        $affectedRows = $this->db->insert('_student', [':id' => 1, ':age' => 21, ':name' => 'mana1']);
+        $affectedRows = $this->db->insert('_student', ['id' => 1, 'age' => 21, 'name' => 'mana1']);
         $this->assertEquals(1, $affectedRows);
         $row = $this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
         $this->assertEquals([1, 21, 'mana1'], array_values($row));
@@ -141,7 +141,7 @@ class DbTest extends TestCase
         //recommended method with bind value type completely
         $this->db->execute('TRUNCATE TABLE _student');
         $affectedRows = $this->db->insert('_student',
-          [':id' => [1, \PDO::PARAM_INT], ':age' => [21, \PDO::PARAM_INT], ':name' => ['mana1', \PDO::PARAM_STR]]);
+          ['id' => [1, \PDO::PARAM_INT], 'age' => [21, \PDO::PARAM_INT], 'name' => ['mana1', \PDO::PARAM_STR]]);
         $this->assertEquals(1, $affectedRows);
         $row = $this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
         $this->assertEquals([1, 21, 'mana1'], array_values($row));
@@ -149,14 +149,14 @@ class DbTest extends TestCase
         //recommended method with bind value type partly
         $this->db->execute('TRUNCATE TABLE _student');
         $affectedRows = $this->db->insert('_student',
-          [':id' => 1, ':age' => [21], ':name' => ['mana1', \PDO::PARAM_STR]]);
+          ['id' => 1, 'age' => [21], 'name' => ['mana1', \PDO::PARAM_STR]]);
         $this->assertEquals(1, $affectedRows);
         $row = $this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
         $this->assertEquals([1, 21, 'mana1'], array_values($row));
 
         //value only method
         $this->db->execute('TRUNCATE TABLE _student');
-        $affectedRows = $this->db->insert('_student', [1, 21, 'mana1']);
+        $affectedRows = $this->db->insert('_student', [null, 21, 'mana1']);
         $this->assertEquals(1, $affectedRows);
         $row = $this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
         $this->assertEquals([1, 21, 'mana1'], array_values($row));
@@ -169,7 +169,7 @@ class DbTest extends TestCase
         $this->assertEquals([1, 21, 'mana1'], array_values($row));
 
         for ($i = 0; $i < 10; $i++) {
-            $affectedRows = $this->db->insert('_student', ['age' => $i, ':name' => 'mana' . $i]);
+            $affectedRows = $this->db->insert('_student', ['age' => $i, 'name' => 'mana' . $i]);
             $this->assertEquals(1, $affectedRows);
         }
     }
@@ -177,30 +177,29 @@ class DbTest extends TestCase
     public function test_update()
     {
         $this->db->execute('TRUNCATE TABLE _student');
-        $affectedRows = $this->db->insert('_student', [':id' => 1, ':age' => 21, ':name' => 'mana1']);
+        $affectedRows = $this->db->insert('_student', ['id' => 1, 'age' => 21, 'name' => 'mana1']);
         $this->assertEquals(1, $affectedRows);
 
         //recommended method without bind value type
-        $affectedRows = $this->db->update('_student', 'id=1', [':age' => 22, ':name' => 'mana2']);
+        $affectedRows = $this->db->update('_student', ['age' => 22, 'name' => 'mana2'],'id=1');
         $this->assertEquals(1, $affectedRows);
         $row = $this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
         $this->assertEquals([1, 22, 'mana2'], array_values($row));
 
         //recommended method with bind value type completely
-        $affectedRows = $this->db->update('_student', 'id=1',
-          [':age' => [23, \PDO::PARAM_INT], ':name' => ['mana3', \PDO::PARAM_STR]]);
+        $affectedRows = $this->db->update('_student', ['age' => [23, \PDO::PARAM_INT], 'name' => ['mana3', \PDO::PARAM_STR]],'id=1');
         $this->assertEquals(1, $affectedRows);
         $row = $this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
         $this->assertEquals([1, 23, 'mana3'], array_values($row));
 
         //recommended method with bind value type partly
-        $affectedRows = $this->db->update('_student', 'id=1', [':age' => [24], ':name' => ['mana4', \PDO::PARAM_STR]]);
+        $affectedRows = $this->db->update('_student', ['age' => [24], 'name' => ['mana4', \PDO::PARAM_STR]],'id=1');
         $this->assertEquals(1, $affectedRows);
         $row = $this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
         $this->assertEquals([1, 24, 'mana4'], array_values($row));
 
         //compatible method
-        $affectedRows = $this->db->update('_student', 'id=1', ['age' => 25, 'name' => 'mana5']);
+        $affectedRows = $this->db->update('_student', ['age' => 25, 'name' => 'mana5'],'id=1');
         $this->assertEquals(1, $affectedRows);
         $row = $this->db->fetchOne('SELECT id,age,name FROM _student WHERE id=1');
         $this->assertEquals([1, 25, 'mana5'], array_values($row));
@@ -209,12 +208,12 @@ class DbTest extends TestCase
     public function test_delete()
     {
         $this->db->execute('TRUNCATE TABLE _student');
-        $affectedRows = $this->db->insert('_student', [':id' => 1, ':age' => 21, ':name' => 'mana1']);
+        $affectedRows = $this->db->insert('_student', ['id' => 1, 'age' => 21, 'name' => 'mana1']);
         $this->assertEquals(1, $affectedRows);
         $this->db->delete('_student', 'id=:id', ['id' => 1]);
         $this->assertFalse($this->db->fetchOne('SELECT * FROM _student WHERE id=1'));
 
-        $affectedRows = $this->db->insert('_student', [':id' => 1, ':age' => 21, ':name' => 'mana1']);
+        $affectedRows = $this->db->insert('_student', ['id' => 1, 'age' => 21, 'name' => 'mana1']);
         $this->assertEquals(1, $affectedRows);
         $this->db->delete('_student', 'id=1');
         $this->assertFalse($this->db->fetchOne('SELECT * FROM _student WHERE id=1'));

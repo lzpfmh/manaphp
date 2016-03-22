@@ -38,47 +38,30 @@ namespace ManaPHP\Db {
             }
 
             $list = [];
-            foreach ($conditions as $key => $value) {
-                if (is_int($key)) {
-                    $list[] = $value;
+            foreach ($conditions as $k => $v) {
+                if (is_int($k)) {
+                    $list[] = $v;
                     continue;
                 }
 
-                if (!is_string($key)) {
-                    throw new ParserException('invalid condition key:' . $key);
-                }
-
-                if (strpos($key, ' ') === false) {
-                    $field = $key;
-                    $operator = '=';
-
-                    $bindKey = $key;
-                    if (is_scalar($value) || $value === null) {
-                        $realValue = $value;
-                    } elseif (is_array($value)) {
-                        $cnt = count($value);
-
-                        if ($cnt === 1) {
-                            $realValue = $value[0];
-                        } elseif ($cnt === 2) {
-                            $realValue = $value[0];
-                            $bindKey = $value[1];
-                        } else {
-                            throw new ParserException('too many items:' . json_encode($value));
-                        }
+                if (is_scalar($v) || $v === null) {
+                    $data = $v;
+                    $column = $k;
+                } elseif (is_array($v)) {
+                    if (count($v) === 1) {
+                        $data = $v[0];
+                        $column = $k;
+                    } elseif (count($v) === 2) {
+                        list($data, $column) = $v;
                     } else {
-                        throw new ParserException('bind value must be scalar: ' . json_encode($value));
+                        throw new ParserException('too many items:' . json_encode($v));
                     }
                 } else {
-                    $field = $key;
-                    $operator = '';
-                    $realValue = '';
-                    $bindKey = 'k';
+                    throw new ParserException('bind value must be scalar: ' . json_encode($v));
                 }
 
-                $list[] = $field . $operator . ':' . $bindKey;
-
-                $binds[$bindKey] = $realValue;
+                $list[] = "`$k`=:$column";
+                $binds[$column] = $data;
             }
 
             return implode(' AND ', $list);

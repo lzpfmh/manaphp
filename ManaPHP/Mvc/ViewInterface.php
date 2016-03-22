@@ -35,13 +35,31 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Adds parameters to views
+         * Adds parameter to view
          *
-         * @param string $key
+         * @param string $name
          * @param mixed $value
          * @return static
          */
-        public function setVar($key, $value);
+        public function setVar($name, $value);
+
+
+        /**
+         * Adds parameters to view
+         *
+         * @param $vars
+         * @return static
+         */
+        public function setVars($vars);
+
+
+        /**
+         * Returns a parameter previously set in the view
+         *
+         * @param string $name
+         * @return mixed
+         */
+        public function getVar($name);
 
 
         /**

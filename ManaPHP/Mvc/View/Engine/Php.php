@@ -30,7 +30,7 @@ namespace ManaPHP\Mvc\View\Engine {
         public function render($file, $vars = null)
         {
             if (is_array($vars)) {
-                extract($vars);
+                extract($vars, EXTR_SKIP);
             }
 
             /** @noinspection PhpIncludeInspection */

@@ -24,22 +24,30 @@ namespace ManaPHP\Mvc\Model {
      */
     class Manager extends Component implements ManagerInterface
     {
+        /**
+         * @var array
+         */
         protected $_readConnectionServices = [];
 
+        /**
+         * @var array
+         */
         protected $_writeConnectionServices = [];
 
-        protected $_aliases;
-
+        /**
+         * @var \ManaPHP\Mvc\ModelInterface[]
+         */
         protected $_initialized = [];
 
+        /**
+         * @var array
+         */
         protected $_sources = [];
 
-        protected $_schemas = [];
-
-        protected $_lastQuery;
-
-        protected $_namespaceAliases;
-
+        /**
+         * @var \ManaPHP\Mvc\Model\Query\BuilderInterface
+         */
+        protected $_builder;
 
         /**
          * Initializes a model in the model manager
@@ -47,27 +55,20 @@ namespace ManaPHP\Mvc\Model {
          * @param \ManaPHP\Mvc\ModelInterface $model
          * @return boolean
          */
-        public function initialize($model)
+        public function initModel($model)
         {
-            $className = get_class($model);
+            $modelName = get_class($model);
 
             /**
              * Models are just initialized once per request
              */
-            if (isset($this->_initialized[$className])) {
-                return false;
+            if (!isset($this->_initialized[$modelName])) {
+                $this->_initialized[$modelName] = $model;
+
+                if (method_exists($model, 'initialize')) {
+                    $model->initialize();
+                }
             }
-
-            /**
-             * Update the model as initialized, this avoid cyclic initializations
-             */
-            $this->_initialized[$className] = $model;
-
-            if (method_exists($model, 'initialize')) {
-                $model->initialize();
-            }
-
-            return true;
         }
 
 
@@ -79,17 +80,17 @@ namespace ManaPHP\Mvc\Model {
          * @return \ManaPHP\Mvc\ModelInterface
          * @throws \ManaPHP\Mvc\Model\Exception
          */
-        public function load($modelName, $newInstance)
+        public function getModelInstance($modelName, $newInstance)
         {
             if (isset($this->_initialized[$modelName])) {
                 if ($newInstance) {
-                    return new $modelName($this->_dependencyInjector, $this);
+                    return new $modelName(null,$this->_dependencyInjector);
                 }
 
                 return $this->_initialized[$modelName];
             } else {
                 if (class_exists($modelName)) {
-                    return new $modelName($this->_dependencyInjector, $this);
+                    return new $modelName(null,$this->_dependencyInjector);
                 }
 
                 throw new Exception("Model '" . $modelName . "' could not be loaded");
@@ -100,232 +101,149 @@ namespace ManaPHP\Mvc\Model {
         /**
          * Sets the mapped source for a model
          *
-         * @param \ManaPHP\Mvc\Model $model
+         * @param \ManaPHP\Mvc\ModelInterface|string $model
          * @param string $source
+         * @return static
          */
         public function setModelSource($model, $source)
         {
-            $modelName = get_class($model);
+            $modelName = is_string($model) ? $model : get_class($model);
             $this->_sources[$modelName] = $source;
+
+            return $this;
         }
 
 
         /**
          * Returns the mapped source for a model
          *
-         * @param \ManaPHP\Mvc\Model $model
+         * @param \ManaPHP\Mvc\ModelInterface|string $model
          * @return string
          * @throws \ManaPHP\Mvc\Model\Exception
          */
         public function getModelSource($model)
         {
-            $className = get_class($model);
+            $modelName = is_string($model) ? $model : get_class($model);
 
-            if (!isset($this->_sources[$className])) {
-                $this->_sources[$className] = $model;
-            }
-            throw new Exception('The source is not provided: ' . get_class($model));
-        }
-
-
-        /**
-         * Sets the mapped schema for a model
-         *
-         * @param \ManaPHP\Mvc\Model $model
-         * @param string $schema
-         * @return string
-         */
-        public function setModelSchema($model, $schema)
-        {
-            $className = get_class($model);
-            $this->_schemas[$className] = $schema;
-        }
-
-
-        /**
-         * Returns the mapped schema for a model
-         *
-         * @param \ManaPHP\Mvc\Model $model
-         * @return string
-         */
-        public function getModelSchema($model)
-        {
-            $className = get_class($model);
-            if (isset($this->_schemas[$className])) {
-                return $this->_schemas[$className];
+            if (isset($this->_sources[$modelName])) {
+                return $this->_sources[$modelName];
             } else {
-                return '';
+                throw new Exception('The source is not provided: ' . $modelName);
             }
         }
-
 
         /**
          * Sets both write and read connection service for a model
          *
-         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @param \ManaPHP\Mvc\ModelInterface|string $model
          * @param string $connectionService
+         * @return static
          */
         public function setConnectionService($model, $connectionService)
         {
-            $className = get_class($model);
-            $this->_readConnectionServices[$className] = $connectionService;
-            $this->_writeConnectionServices[$className] = $connectionService;
+            $modelName = is_string($model) ? $model : get_class($model);
+            $this->_readConnectionServices[$modelName] = $connectionService;
+            $this->_writeConnectionServices[$modelName] = $connectionService;
+
+            return $this;
         }
 
 
         /**
          * Sets write connection service for a model
          *
-         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @param \ManaPHP\Mvc\ModelInterface|string $model
          * @param string $connectionService
+         * @return static
          */
         public function setWriteConnectionService($model, $connectionService)
         {
-            $className = get_class($model);
-            $this->_writeConnectionServices[$className] = $connectionService;
+            $modelName = is_string($model) ? $model : get_class($model);
+            $this->_writeConnectionServices[$modelName] = $connectionService;
+
+            return $this;
         }
 
 
         /**
          * Sets read connection service for a model
          *
-         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @param \ManaPHP\Mvc\ModelInterface|string $model
          * @param string $connectionService
+         * @return static
          */
         public function setReadConnectionService($model, $connectionService)
         {
-            $className = get_class($model);
-            $this->_readConnectionServices[$className] = $connectionService;
+            $modelName = is_string($model) ? $model : get_class($model);
+            $this->_readConnectionServices[$modelName] = $connectionService;
+
+            return $this;
         }
 
-
-        /**
-         * Returns the connection to read or write data related to a model depending on the connection services.
-         * @param \ManaPHP\Mvc\ModelInterface $model
-         * @param string[] $connectionServices
-         * @return \ManaPHP\DbInterface
-         */
-        protected function _getConnection($model, $connectionServices)
-        {
-            $className = get_class($model);
-            $serviceName = isset($connectionServices[$className]) ? $connectionServices[$className] : 'db';
-            return $this->_dependencyInjector->getShared($serviceName);
-        }
 
         /**
          * Returns the connection to write data related to a model
          *
-         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @param \ManaPHP\Mvc\ModelInterface|string $model
          * @return \ManaPHP\DbInterface
          */
         public function getWriteConnection($model)
         {
-            return $this->_getConnection($model, $this->_writeConnectionServices);
+            $serviceName = $this->getWriteConnectionService($model);
+            return $this->_dependencyInjector->getShared($serviceName);
         }
 
 
         /**
          * Returns the connection to read data related to a model
          *
-         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @param \ManaPHP\Mvc\ModelInterface|string $model
          * @return \ManaPHP\DbInterface
          */
         public function getReadConnection($model)
         {
-            return $this->_getConnection($model, $this->_readConnectionServices);
+            $serviceName = $this->getReadConnectionService($model);
+            return $this->_dependencyInjector->getShared($serviceName);
         }
 
-        /**
-         * Returns the connection service name used to read or write data related to a model depending on the connection services
-         * @param \ManaPHP\Mvc\ModelInterface $model
-         * @param string[] $connectionServices
-         * @return string
-         */
-        public function _getConnectionService($model, $connectionServices)
-        {
-            $className = get_class($model);
-            return isset($connectionServices[$className]) ? $connectionServices[$className] : 'db';
-        }
 
         /**
          * Returns the connection service name used to read data related to a model
          *
-         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @param \ManaPHP\Mvc\ModelInterface|string $model
          * @return string
          */
         public function getReadConnectionService($model)
         {
-            return $this->_getConnectionService($model, $this->_readConnectionServices);
+            $modelName = is_string($model) ? $model : get_class($model);
+            return isset($this->_readConnectionServices[$modelName]) ? $this->_readConnectionServices[$modelName] : 'db';
         }
 
 
         /**
          * Returns the connection service name used to write data related to a model
          *
-         * @param \ManaPHP\Mvc\ModelInterface $model
+         * @param \ManaPHP\Mvc\ModelInterface|string $model
          * @return string
          */
         public function getWriteConnectionService($model)
         {
-            return $this->_getConnectionService($model, $this->_writeConnectionServices);
+            $modelName = is_string($model) ? $model : get_class($model);
+            return isset($this->_writeConnectionServices[$modelName]) ? $this->_writeConnectionServices[$modelName] : 'db';
         }
-
-
-        /**
-         * Creates a \ManaPHP\Mvc\Model\Query without execute it
-         *
-         * @param string $sql
-         * @return \ManaPHP\Mvc\Model\QueryInterface
-         */
-        public function createQuery($sql)
-        {
-            /**
-             * @var $query \ManaPHP\Mvc\Model\Query
-             */
-            $query = $this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query', [$sql, $this->_dependencyInjector]);
-            $this->_lastQuery = $query;
-            return $query;
-        }
-
-
-        /**
-         * Creates a \ManaPHP\Mvc\Model\Query and execute it
-         *
-         * @param string $sql
-         * @param array $placeholders
-         * @param array $bindTypes
-         * @return \ManaPHP\Mvc\Model\QueryInterface
-         * @throws \ManaPHP\Mvc\Model\Exception
-         */
-        public function executeQuery($sql, $placeholders = null, $bindTypes = null)
-        {
-            /**
-             * @var $query \ManaPHP\Mvc\Model\Query
-             */
-            $query = $this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query', [$sql, $this->_dependencyInjector]);
-            $this->_lastQuery = $query;
-            if (is_array($placeholders)) {
-                $query->setBindParams($placeholders);
-            }
-
-            if (is_array($bindTypes)) {
-                $query->setBindTypes($bindTypes);
-            }
-
-            return $query->execute();
-        }
-
 
         /**
          * Creates a \ManaPHP\Mvc\Model\Query\Builder
          *
          * @param string $params
          * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
+         * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Db\ConditionParser\Exception
          */
         public function createBuilder($params = null)
         {
-            return $this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query\Builder',
+            $this->_builder = $this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query\Builder',
               [$params, $this->_dependencyInjector]);
+            return $this->_builder;
         }
 
 
@@ -336,36 +254,7 @@ namespace ManaPHP\Mvc\Model {
          */
         public function getLastQuery()
         {
-            return $this->_lastQuery;
-        }
-
-
-        /**
-         * Registers shorter aliases for namespaces in PHQL statements
-         *
-         * @param string $alias
-         * @param string $namespace
-         */
-        public function registerNamespaceAlias($alias, $namespace)
-        {
-            $this->_namespaceAliases[$alias] = $namespace;
-        }
-
-
-        /**
-         * Returns a real namespace from its alias
-         *
-         * @param string $alias
-         * @return string
-         * @throws \ManaPHP\Mvc\Model\Exception
-         */
-        public function getNamespaceAlias($alias)
-        {
-            if (isset($this->_namespaceAliases[$alias])) {
-                return $this->_namespaceAliases[$alias];
-            } else {
-                throw new Exception("Namespace alias '" . $alias . "' is not registered");
-            }
+            return $this->_builder->getSql();
         }
     }
 }

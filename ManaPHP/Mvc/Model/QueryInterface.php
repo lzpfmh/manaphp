@@ -7,49 +7,30 @@ namespace ManaPHP\Mvc\Model {
      */
     interface QueryInterface
     {
-
         /**
-         * Parses the intermediate code produced by \ManaPHP\Mvc\Model\Query\Lang generating another
-         * intermediate representation that could be executed by \ManaPHP\Mvc\Model\Query
+         * Executes the sql query statement
          *
+         * @param array $binds
          * @return array
          */
-        public function parse();
-
-
-        /**
-         * Executes a parsed PHQL statement
-         *
-         * @param array $bindParams
-         * @param array $bindTypes
-         * @return mixed
-         */
-        public function execute($bindParams = null, $bindTypes = null);
+        public function execute($binds = null);
 
 
         /**
          * Set default bind parameters
          *
-         * @param array $bindParams
+         * @param array $binds
          * @param boolean $merge
          * @return static
          */
-        public function setBindParams($bindParams, $merge = false);
+        public function setBinds($binds, $merge = false);
 
         /**
          * Sets the cache parameters of the query
          *
-         * @param array $cacheOptions
+         * @param array $options
          * @return static
          */
-        public function cache($cacheOptions);
-
-        /**
-         * Tells to the query if only the first row in the resultset must be returned
-         *
-         * @param boolean $uniqueRow
-         * @return static
-         */
-        public function setUniqueRow($uniqueRow);
+        public function cache($options);
     }
 }

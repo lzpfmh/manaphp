@@ -94,6 +94,11 @@ namespace ManaPHP\Mvc {
         protected $_previousActionName;
 
         /**
+         * @var array
+         */
+        protected $_initializedControllers=[];
+
+        /**
          * Sets the namespace where the controller class is
          *
          * @param string $namespaceName
@@ -208,12 +213,12 @@ namespace ManaPHP\Mvc {
          * @return false|\ManaPHP\Mvc\ControllerInterface
          * @throws \ManaPHP\Mvc\Dispatcher\Exception
          */
-        public function dispatch($module,$controller, $action, $params=[])
+        public function dispatch($module, $controller, $action, $params = null)
         {
-            $this->_moduleName=$this->_camelize($module);
-            $this->_controllerName=$this->_camelize($controller);
-            $this->_actionName=lcfirst($action);
-            $this->_params=$params;
+            $this->_moduleName = $this->_camelize($module);
+            $this->_controllerName = $this->_camelize($controller);
+            $this->_actionName = lcfirst($action);
+            $this->_params = $params === null ? [] : $params;
 
             if (!$this->_dependencyInjector instanceof DiInterface) {
                 throw new Exception('A dependency injection container is required to access related dispatching services');
@@ -223,9 +228,10 @@ namespace ManaPHP\Mvc {
                 return false;
             }
 
-            $controller = null;
+            $controllerInstance = null;
             $numberDispatches = 0;
             $this->_finished = false;
+
             while ($this->_finished === false) {
                 // if the user made a forward in the listener,the $this->_finished will be changed to false.
                 $this->_finished = true;
@@ -240,16 +246,16 @@ namespace ManaPHP\Mvc {
                     continue;
                 }
 
-                $controllerClass='';
-                if(!empty($this->_rootNamespace)){
-                    $controllerClass .=$this->_rootNamespace.'\\';
+                $controllerClassName = '';
+                if ($this->_rootNamespace !== null && $this->_rootNamespace !== '') {
+                    $controllerClassName .= $this->_rootNamespace . '\\';
                 }
-                if(!empty($this->_moduleName)){
-                    $controllerClass.=$this->_moduleName.'\\Controllers\\';
+                if ($this->_rootNamespace !== null && $this->_moduleName !== '') {
+                    $controllerClassName .= $this->_moduleName . '\\Controllers\\';
                 }
-                $controllerClass .= $this->_controllerName.$this->_controllerSuffix;
+                $controllerClassName .= $this->_controllerName . $this->_controllerSuffix;
 
-                if (!$this->_dependencyInjector->has($controllerClass) && !class_exists($controllerClass)) {
+                if (!$this->_dependencyInjector->has($controllerClassName) && !class_exists($controllerClassName)) {
                     if ($this->fireEvent('dispatcher:beforeNotFoundController', $this) === false) {
                         return false;
                     }
@@ -258,17 +264,17 @@ namespace ManaPHP\Mvc {
                         continue;
                     }
 
-                    throw new Exception($controllerClass . ' handler class cannot be loaded');
+                    throw new Exception($controllerClassName . ' handler class cannot be loaded');
                 }
 
-                $controller = $this->_dependencyInjector->getShared($controllerClass);
-                $wasFreshInstance = $this->_dependencyInjector->wasFreshInstance();
-                if (!is_object($controller)) {
-                    throw new Exception('Invalid handler type returned from the services container: ' . gettype($controller));
+                $controllerInstance = $this->_dependencyInjector->getShared($controllerClassName);
+
+                if (!is_object($controllerInstance)) {
+                    throw new Exception('Invalid handler type returned from the services container: ' . gettype($controllerInstance));
                 }
 
                 $actionMethod = $this->_actionName . $this->_actionSuffix;
-                if (!method_exists($controller, $actionMethod)) {
+                if (!method_exists($controllerInstance, $actionMethod)) {
                     if ($this->fireEvent('dispatcher:beforeNotFoundAction', $this) === false) {
                         continue;
                     }
@@ -277,12 +283,12 @@ namespace ManaPHP\Mvc {
                         continue;
                     }
 
-                    throw new Exception('Action \'' . $this->_actionName . '\' was not found on handler \'' . $controllerClass . '\'');
+                    throw new Exception('Action \'' . $this->_actionName . '\' was not found on handler \'' . $controllerClassName . '\'');
                 }
 
                 // Calling beforeExecuteRoute as callback
-                if (method_exists($controller, 'beforeExecuteRoute')) {
-                    if ($controller->beforeExecuteRoute($this) === false) {
+                if (method_exists($controllerInstance, 'beforeExecuteRoute')) {
+                    if ($controllerInstance->beforeExecuteRoute($this) === false) {
                         continue;
                     }
 
@@ -291,21 +297,20 @@ namespace ManaPHP\Mvc {
                     }
                 }
 
-                if ($wasFreshInstance) {
-                    if (method_exists($controller, 'initialize')) {
-                        $controller->initialize();
-                    }
+                if (!in_array($controllerClassName,$this->_initializedControllers,true) && method_exists($controllerInstance, 'initialize')) {
+                    $controllerInstance->initialize();
+                    $this->_initializedControllers[]=$controllerClassName;
                 }
 
-                $this->_returnedValue = call_user_func_array([$controller, $actionMethod], $this->_params);
+                $this->_returnedValue = call_user_func_array([$controllerInstance, $actionMethod], $this->_params);
 
                 $value = null;
 
                 // Call afterDispatch
                 $this->fireEvent('dispatcher:afterDispatch', $this);
 
-                if (method_exists($controller, 'afterExecuteRoute')) {
-                    if ($controller->afterExecuteRoute($this, $value) === false) {
+                if (method_exists($controllerInstance, 'afterExecuteRoute')) {
+                    if ($controllerInstance->afterExecuteRoute($this, $value) === false) {
                         continue;
                     }
 
@@ -317,7 +322,7 @@ namespace ManaPHP\Mvc {
 
             $this->fireEvent('dispatcher:afterDispatchLoop', $this);
 
-            return $controller;
+            return $controllerInstance;
         }
 
 
@@ -339,7 +344,7 @@ namespace ManaPHP\Mvc {
             }
 
             if (isset($forward['module'])) {
-                $this->_moduleName= $forward['module'];
+                $this->_moduleName = $this->_camelize($forward['module']);
             }
 
             if (isset($forward['controller'])) {
@@ -450,28 +455,7 @@ namespace ManaPHP\Mvc {
             $response = $this->_dependencyInjector->getShared('response');
             $response->setStatusCode(404, 'Not Found');
 
-            $exception = new Exception($message, $exceptionCode);
-
-            if ($this->_handleException($exception) === false) {
-                return false;
-            }
-
-            throw $exception;
-        }
-
-
-        /**
-         * Handles a user exception
-         *
-         * @param \Exception $exception
-         * @return boolean
-         *
-         * @warning If any additional logic is to be implemented here, please check
-         * ManaPHP_dispatcher_fire_event() first
-         */
-        protected function _handleException($exception)
-        {
-
+            throw new Exception($message, $exceptionCode);
         }
     }
 }

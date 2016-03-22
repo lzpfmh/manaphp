@@ -22,6 +22,7 @@ namespace ManaPHP {
          * Sets the dependency injector
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
+         * @return static
          */
         public function setDependencyInjector($dependencyInjector);
 
@@ -39,6 +40,7 @@ namespace ManaPHP {
          *
          * @param string $event
          * @param object|callable $handler
+         * @return static
          * @throws \ManaPHP\Event\Exception
          */
         public function attachEvent($event, $handler);

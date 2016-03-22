@@ -8,6 +8,7 @@
 namespace Application\Home\Controllers;
 
 use Application\Home\Models\Address;
+use Application\Home\Models\City;
 use ManaPHP\Http\Session;
 use ManaPHP\Mvc\PhpUnitController;
 
@@ -86,11 +87,17 @@ class IndexController extends PhpUnitController
 //        Actor::findFirst(10);
 //        $actor=Actor::findFirst(['conditions'=>'first_name=\'BEN\'','order'=>'actor_id']);
 
-        $rows = $this->modelsManager->createBuilder()
-          ->where('address_id <=100')
-          ->addFrom(get_class(new Address()))
-          ->getQuery()
-          ->execute();
+        var_dump(memory_get_peak_usage());
+
+//        $rows = $this->modelsManager->createBuilder()
+//          ->where('address_id <=100')
+//          ->addFrom(get_class(new Address()))
+//          ->getQuery()
+//          ->execute();
+//
+        $city=City::findFirst(1);
+        var_dump($city);
+        var_dump(memory_get_peak_usage());
     }
 
     public function test2Action()

@@ -126,7 +126,7 @@ namespace ManaPHP\Http\Response {
 
 
         /**
-         * Check if a cookie is defined in the bag or exists in the $_COOKIE superglobal
+         * Check if a cookie is defined in the bag or exists in the $_COOKIE
          *
          * @param string $name
          * @return boolean
@@ -147,7 +147,7 @@ namespace ManaPHP\Http\Response {
 
         /**
          * Deletes a cookie by its name
-         * This method does not removes cookies from the $_COOKIE superglobal
+         * This method does not removes cookies from the $_COOKIE
          *
          * @param string $name
          * @return boolean
@@ -165,7 +165,7 @@ namespace ManaPHP\Http\Response {
 
         /**
          * Sends the cookies to the client
-         * Cookies aren't sent if headers are sent in the current request
+         * Cookies are not sent if headers are sent in the current request
          *
          * @return boolean
          */

@@ -1,6 +1,8 @@
 <?php
-namespace ManaPHP\Logger{
-    class Exception extends \ManaPHP\Exception{
+namespace ManaPHP\Logger {
+
+    class Exception extends \ManaPHP\Exception
+    {
 
     }
 }

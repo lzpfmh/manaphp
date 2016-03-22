@@ -127,11 +127,6 @@ class tDispatcher extends \ManaPHP\Mvc\Dispatcher
     {
         return $this->_moduleName;
     }
-
-    public function getDefaultAction()
-    {
-        return $this->_defaultAction;
-    }
 }
 
 
@@ -172,7 +167,7 @@ class MvcDispatcherTest extends TestCase
 
         //camelize the handler class:not require
         try {
-            $dispatcher->dispatch(null,'Index','index');
+            $dispatcher->dispatch('app','Index','index');
             $this->fail('why not?');
         } catch (\Manaphp\Exception $e) {
             $this->assertEquals('IndexController handler class cannot be loaded', $e->getMessage());

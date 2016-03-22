@@ -125,13 +125,26 @@ namespace ManaPHP\Mvc {
          *    $this->view->setVar('products', $products);
          *</code>
          *
-         * @param string $key
+         * @param string $name
          * @param mixed $value
          * @return static
          */
-        public function setVar($key, $value)
+        public function setVar($name, $value)
         {
-            $this->_viewVars[$key] = $value;
+            $this->_viewVars[$name] = $value;
+
+            return $this;
+        }
+
+
+        /**
+         * Adds parameters to view
+         *
+         * @param $vars
+         * @return static
+         */
+        public function setVars($vars){
+            $this->_viewVars=array_merge($this->_viewVars,$vars);
 
             return $this;
         }
@@ -140,13 +153,13 @@ namespace ManaPHP\Mvc {
         /**
          * Returns a parameter previously set in the view
          *
-         * @param string $key
+         * @param string $name
          * @return mixed
          */
-        public function getVar($key)
+        public function getVar($name)
         {
-            if (isset($this->_viewVars[$key])) {
-                return $this->_viewVars[$key];
+            if (isset($this->_viewVars[$name])) {
+                return $this->_viewVars[$name];
             }
 
             return null;
@@ -205,7 +218,7 @@ namespace ManaPHP\Mvc {
             } elseif (is_string($engineService)) {
                 $engine = $this->_dependencyInjector->getShared($engineService, $arguments);
             } else {
-                throw new Exception("Invalid template engine registration for extension: " . $extension);
+                throw new Exception('Invalid template engine registration for extension: ' . $extension);
             }
 
             if (!($engine instanceof EngineInterface)) {
@@ -233,9 +246,9 @@ namespace ManaPHP\Mvc {
                 $file = $fileWithoutExtension . $extension;
                 if (file_exists($file)) {
                     if (DIRECTORY_SEPARATOR === '\\') {
-                        $realpath = str_replace('\\', '/', realpath($file));
-                        if ($file !== $realpath) {
-                            trigger_error("File name ($realpath) case mismatch for $file", E_USER_ERROR);
+                        $realPath = str_replace('\\', '/', realpath($file));
+                        if ($file !== $realPath) {
+                            trigger_error("File name ($realPath) case mismatch for $file", E_USER_ERROR);
                         }
                     }
 
@@ -309,6 +322,7 @@ namespace ManaPHP\Mvc {
          * @param string $controllerName
          * @param string $actionName
          * @return static
+         * @throws \ManaPHP\Mvc\View\Exception
          */
         public function renderView($controllerName, $actionName)
         {
@@ -371,8 +385,7 @@ namespace ManaPHP\Mvc {
                 $this->_controllerName = null;
                 $this->_actionName = $parts[0];
             } else {
-                $this->_controllerName = $parts[0];
-                $this->_actionName = $parts[1];
+                list($this->_controllerName, $this->_actionName) = $parts;
             }
 
             return $this;

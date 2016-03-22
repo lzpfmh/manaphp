@@ -7,10 +7,11 @@ namespace ManaPHP\Mvc {
      */
     interface ModelInterface
     {
-
         /**
          * Returns table name mapped in the model
-         *
+         * <code>
+         *  $city->getSource();
+         * </code>
          * @return string
          */
         public function getSource();
@@ -20,6 +21,7 @@ namespace ManaPHP\Mvc {
          * Sets both read/write connection services
          *
          * @param string $connectionService
+         * @return static
          */
         public function setConnectionService($connectionService);
 
@@ -28,6 +30,7 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service used to write data
          *
          * @param string $connectionService
+         * @return static
          */
         public function setWriteConnectionService($connectionService);
 
@@ -36,6 +39,7 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service used to read data
          *
          * @param string $connectionService
+         * @return static
          */
         public function setReadConnectionService($connectionService);
 
@@ -74,20 +78,30 @@ namespace ManaPHP\Mvc {
 
         /**
          * Assigns values to a model from an array
-         *
+         * <code>
+         *  $city->assign(['city_id'=>1,'city_name'=>'beijing']);
+         *  $city->assign(['city_id'=>1,'city_name'=>'beijing'],['city_name']);
+         * </code>
          * @param array $data
-         * @param array $columnMap
+         * @param array $whiteList
          * @return static
          */
-        public function assign($data, $columnMap = null);
+        public function assign($data,$whiteList=null);
 
 
         /**
          * Allows to query a set of records that match the specified conditions
          *
+         * <code>
+         *  $cities=City::find(['country_id'=>2]);
+         *  $cities=City::find(['conditions'=>['country_id'=>2],'order'=>'city_id desc']);
+         *  $cities=City::find([['country_id'=>2],'order'=>'city_id desc']);
+         *  $cities=City::find(['conditions'=>'country_id =:country_id','bind'=>['country_id'=>2]]);
+         *
+         * </code>
          * @param    array $parameters
          * @param   array $cacheOptions
-         * @return  static[]
+         * @return  static[]|false
          */
         public static function find($parameters = null, $cacheOptions = null);
 
@@ -95,6 +109,12 @@ namespace ManaPHP\Mvc {
         /**
          * Allows to query the first record that match the specified conditions
          *
+         * <code>
+         *  $city=City::findFirst(10);
+         *  $city=City::findFirst(['city_id'=>10]);
+         *  $city=City::findFirst(['conditions'=>['city_id'=>10]]);
+         *  $city=City::findFirst(['conditions'=>'city_id =:city_id','bind'=>['city_id'=>10]]);
+         * </code>
          * @param array $parameters
          * @param array $cacheOptions
          * @return static|false
@@ -106,7 +126,7 @@ namespace ManaPHP\Mvc {
          * Create a criteria for a special model
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
-         * @return \ManaPHP\Mvc\Model\CriteriaInterface
+         * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
          */
         public static function query($dependencyInjector = null);
 
@@ -114,6 +134,9 @@ namespace ManaPHP\Mvc {
         /**
          * Allows to count how many records match the specified conditions
          *
+         * <code>
+         * City::count(['country_id'=>2]);
+         * </code>
          * @param array $parameters
          * @param string $column
          * @param array $cacheOptions
@@ -207,20 +230,14 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Refreshes the model attributes re-querying the record from the database
-         */
-        public function refresh();
-
-        /**
          * Returns the instance as an array representation
          *
          *<code>
          * print_r($robot->toArray());
          *</code>
          *
-         * @param array $columns
          * @return array
          */
-        public function toArray($columns = null);
+        public function toArray();
     }
 }
