@@ -203,7 +203,11 @@ namespace ManaPHP\Mvc {
                 $dispatcher->setRootNamespace($this->_rootNamespace);
             }
 
-            $controller = $dispatcher->dispatch($moduleName,$router->getControllerName(),$router->getActionName(),$router->getParams());
+            $controllerName=$router->getControllerName();
+            $actionName=$router->getActionName();
+            $params=$router->getParams();
+
+            $controller = $dispatcher->dispatch($moduleName, $controllerName,$actionName,$params);
             if ($controller === false) {
                 return false;
             }
