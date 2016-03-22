@@ -4,7 +4,14 @@ namespace ManaPHP {
 
     class Autoloader
     {
+        /**
+         * @var string
+         */
         protected static $_rootPath;
+
+        /**
+         * @var bool
+         */
         protected static $_optimizeMode;
 
         public static function autoload($className)
@@ -40,7 +47,7 @@ namespace ManaPHP {
         }
 
         /**
-         * @param bool|true $optimizeMode
+         * @param bool $optimizeMode
          * @return bool
          */
         public static function register($optimizeMode = true)
