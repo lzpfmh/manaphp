@@ -38,11 +38,6 @@ namespace ManaPHP\Mvc\Model {
 
         const TYPE_DELETE = 303;
 
-        /**
-         * @var \ManaPHP\DiInterface
-         */
-        protected $_dependencyInjector;
-
         protected $_manager;
 
         protected $_metaData;
