@@ -241,10 +241,10 @@ namespace ManaPHP\Mvc {
                 }
 
                 $controllerClass='';
-                if(!empty($this->_rootNamespace)){
+                if($this->_rootNamespace !==null &&$this->_rootNamespace !==''){
                     $controllerClass .=$this->_rootNamespace.'\\';
                 }
-                if(!empty($this->_moduleName)){
+                if($this->_rootNamespace !==null &&$this->_moduleName !==''){
                     $controllerClass.=$this->_moduleName.'\\Controllers\\';
                 }
                 $controllerClass .= $this->_controllerName.$this->_controllerSuffix;
