@@ -133,17 +133,17 @@ namespace ManaPHP\Mvc {
                 if ($route->isMatched($uri, $matches)) {
                     foreach ($matches as $k => $v) {
                         if (is_string($k)) {
-                            $parts[$k]=$v;
+                            $parts[$k] = $v;
                         }
                     }
 
                     foreach ($route->getPaths() as $k => $v) {
                         if (is_int($v)) {
-                            if(isset($matches[$v])){
+                            if (isset($matches[$v])) {
                                 $parts[$k] = $matches[$v];
                             }
-                        }else{
-                            $parts[$k]=$v;
+                        } else {
+                            $parts[$k] = $v;
                         }
                     }
 
@@ -197,7 +197,7 @@ namespace ManaPHP\Mvc {
                     if (stripos($refined_uri, $path) !== 0) {
                         continue;
                     }
-                    $handle_uri =substr($refined_uri, strlen($path)-1);
+                    $handle_uri = substr($refined_uri, strlen($path) - 1);
                 } else {
                     if (!isset($refined_host)) {
                         if ($host === null) {
@@ -215,7 +215,7 @@ namespace ManaPHP\Mvc {
                         continue;
                     }
 
-                    $handle_uri = substr($refined_uri, strlen($path) - $pos-1);
+                    $handle_uri = substr($refined_uri, strlen($path) - $pos - 1);
                 }
 
                 $route_found = $this->_findMatchedRoute($handle_uri, $group->getRoutes(), $parts);
@@ -283,7 +283,7 @@ namespace ManaPHP\Mvc {
                 $path = '/' . $module;
             }
 
-            $path=rtrim($path,'/').'/';
+            $path = rtrim($path, '/') . '/';
 
             $this->_groups[] = [$path, $module, $group];
 
