@@ -133,12 +133,12 @@ namespace ManaPHP\Mvc {
          */
         public function registerModules($modules)
         {
+            //region DEBUG
+            assert(is_array($modules));
+            //endregion
+
             if($modules===null){
                 throw new Exception('The provided modules are null');
-            }
-
-            if(is_string($modules)){
-                $modules=[$modules];
             }
 
             foreach ($modules as $module => $definition) {
