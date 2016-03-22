@@ -45,7 +45,7 @@ namespace ManaPHP\Di {
               'assets' => new Service('assets', 'ManaPHP\Assets\Manager', true),
               'loader' => new Service('loader', 'ManaPHP\Loader', true),
               'view' => new Service('view', 'ManaPHP\Mvc\View', true),
-              'logger'=>new Service('logger','ManaPHP\Logger',true)
+              'logger' => new Service('logger', 'ManaPHP\Logger', true)
             ];
         }
 
