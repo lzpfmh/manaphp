@@ -86,20 +86,15 @@ namespace ManaPHP\Mvc {
          */
         public function __construct($rootDirectory, $rootNamespace = null, $dependencyInjector = null)
         {
-            if (is_object($dependencyInjector)) {
-                $this->_dependencyInjector = $dependencyInjector;
-            } else {
-                $this->_dependencyInjector = new FactoryDefault();
-            }
-            $this->_dependencyInjector->setShared('application', $this, true);
+            $this->_dependencyInjector=$dependencyInjector?:new FactoryDefault();
+            $this->_dependencyInjector->setShared('application', $this);
 
             $rootDirectory = str_replace('\\', '/', rtrim($rootDirectory, '\\/'));
-            if ($rootNamespace === null) {
-                $rootNamespace = ucfirst(basename($rootDirectory));
-            }
+            $rootNamespace=$rootNamespace?:ucfirst(basename($rootDirectory));
 
             $this->_rootDirectory = $rootDirectory;
             $this->_rootNamespace = $rootNamespace;
+
             $this->loader->registerNamespaces([$rootNamespace => $rootDirectory])->register();
         }
 
@@ -136,10 +131,6 @@ namespace ManaPHP\Mvc {
             //region DEBUG
             assert(is_array($modules));
             //endregion
-
-            if ($modules === null) {
-                throw new Exception('The provided modules are null');
-            }
 
             foreach ($modules as $module => $definition) {
                 if (is_string($module)) {
@@ -178,9 +169,18 @@ namespace ManaPHP\Mvc {
 
             $router = $this->_dependencyInjector->getShared('router');
 
-            $router->handle($uri);
+            if($router->handle($uri)){
+                $moduleName = $router->getModuleName();
+                $controllerName = $router->getControllerName();
+                $actionName = $router->getActionName();
+                $params = $router->getParams();
+            }else{
+                $moduleName=null;
+                $controllerName=null;
+                $actionName=null;
+                $params=null;
+            }
 
-            $moduleName = $router->getModuleName();
             if ($moduleName === null) {
                 $moduleName = $this->_defaultModule;
             }
@@ -201,10 +201,6 @@ namespace ManaPHP\Mvc {
             if ($dispatcher->getRootNamespace() === null) {
                 $dispatcher->setRootNamespace($this->_rootNamespace);
             }
-
-            $controllerName = $router->getControllerName();
-            $actionName = $router->getActionName();
-            $params = $router->getParams();
 
             $controller = $dispatcher->dispatch($moduleName, $controllerName, $actionName, $params);
             if ($controller === false) {

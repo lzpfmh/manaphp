@@ -50,7 +50,7 @@ namespace ManaPHP\Http\Request {
 
 
         /**
-         * Gets the real mime type of the upload file using finfo
+         * Gets the real mime type of the upload file
          *
          * @return string
          */

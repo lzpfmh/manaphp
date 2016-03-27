@@ -11,7 +11,7 @@ namespace ManaPHP\Mvc {
      * ManaPHP\Mvc\Model
      *
      * <p>ManaPHP\Mvc\Model connects business objects and database tables to create
-     * a persistable domain model where logic and data are presented in one wrapping.
+     * a persistent domain model where logic and data are presented in one wrapping.
      * It's an implementation of the object-relational mapping (ORM).</p>
      *
      * <p>A model represents the information (data) of the application and the rules to manipulate that data.
@@ -502,7 +502,7 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Allows to calculate a summatory on a column that match the specified conditions
+         * Allows to calculate a summary on a column that match the specified conditions
          *
          * <code>
          *
@@ -735,6 +735,7 @@ namespace ManaPHP\Mvc {
             $columnValues = [];
             foreach ($metaData->getAttributes($this) as $attributeField) {
                 if (isset($this->{$attributeField})) {
+                    /** @noinspection NestedPositiveIfStatementsInspection */
                     if (!is_array($this->_snapshot) || !isset($this->_snapshot[$attributeField]) || $this->{$attributeField} !== $this->_snapshot[$attributeField]) {
                         $columnValues[$attributeField] = $this->{$attributeField};
                     }
@@ -806,7 +807,7 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Inserts a model instance. If the instance already exists in the persistance it will throw an exception
+         * Inserts a model instance. If the instance already exists in the persistence it will throw an exception
          * Returning true on success or false otherwise.
          *
          *<code>
@@ -842,7 +843,7 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Updates a model instance. If the instance does n't exist in the persistance it will throw an exception
+         * Updates a model instance. If the instance does n't exist in the persistence it will throw an exception
          * Returning true on success or false otherwise.
          *
          *<code>

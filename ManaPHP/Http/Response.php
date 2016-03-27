@@ -212,7 +212,7 @@ namespace ManaPHP\Http {
          *<code>
          *  //Using a string redirect (internal/external)
          *    $response->redirect("posts/index");
-         *    $response->redirect("http://en.wikipedia.org", true);
+         *    $response->redirect("http://www.google.com", true);
          *    $response->redirect("http://www.example.com/new-location", true, 301);
          *
          *    //Making a redirection based on a named route
@@ -282,7 +282,7 @@ namespace ManaPHP\Http {
          *</code>
          *
          * @param string $content
-         * @param int $jsonOptions bitmask consisting on http://www.php.net/manual/en/json.constants.php
+         * @param int $jsonOptions consisting on http://www.php.net/manual/en/json.constants.php
          * @return static
          */
         public function setJsonContent($content, $jsonOptions = null)

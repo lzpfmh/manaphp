@@ -385,8 +385,8 @@ namespace ManaPHP\Mvc {
         {
             if (strpos($str, '_') !== false) {
                 $parts = explode('_', $str);
-                foreach ($parts as $k => $v) {
-                    $parts[$k] = ucfirst($v);
+                foreach ($parts as &$v) {
+                    $v=ucfirst($v);
                 }
 
                 return implode('', $parts);

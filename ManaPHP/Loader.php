@@ -63,19 +63,16 @@ namespace ManaPHP {
          */
         public function registerNamespaces($namespaces, $merge = false)
         {
-            foreach ($namespaces as $namespace => $path) {
+            foreach ($namespaces as &$path) {
                 $path = rtrim($path, '\\/');
                 if (DIRECTORY_SEPARATOR === '\\') {
+                    /** @noinspection ReferenceMismatchInspection */
                     $path = str_replace('\\', '/', $path);
                 }
-                $namespaces[$namespace] = $path;
             }
+            unset($path);
 
-            if ($merge === false || $this->_namespaces === null) {
-                $this->_namespaces = $namespaces;
-            } else {
-                $this->_namespaces = array_merge($this->_namespaces, $namespaces);
-            }
+            $this->_namespaces =$merge?array_merge($this->_namespaces, $namespaces):$namespaces;
 
             return $this;
         }
@@ -107,19 +104,17 @@ namespace ManaPHP {
          */
         public function registerDirs($directories, $merge = false)
         {
-            foreach ($directories as $key => $directory) {
+            foreach ($directories as &$directory) {
                 $directory = rtrim($directory, '\\/');
                 if (DIRECTORY_SEPARATOR === '\\') {
+                    /** @noinspection ReferenceMismatchInspection */
                     $directory = str_replace('\\', '/', $directory);
                 }
-                $directories[$key] = $directory;
             }
+            unset($directory);
 
-            if ($merge === false || $this->_directories === null) {
-                $this->_directories = $directories;
-            } else {
-                $this->_directories = array_merge($this->_directories, $directories);
-            }
+            $this->_directories = $merge?array_merge($this->_directories, $directories):$directories;
+
             return $this;
         }
 
@@ -145,16 +140,14 @@ namespace ManaPHP {
         public function registerClasses($classes, $merge = false)
         {
             if (DIRECTORY_SEPARATOR === '\\') {
-                foreach ($classes as $class => $path) {
-                    $classes[$class] = str_replace('\\', '/', $path);
+                foreach ($classes as &$path) {
+                    /** @noinspection ReferenceMismatchInspection */
+                    $path= str_replace('\\', '/', $path);
                 }
+                unset($path);
             }
 
-            if ($merge === false || $this->_classes === null) {
-                $this->_classes = $classes;
-            } else {
-                $this->_classes = array_merge($this->_classes, $classes);
-            }
+            $this->_classes =$merge?array_merge($this->_classes, $classes):$classes;
 
             return $this;
         }
@@ -178,7 +171,7 @@ namespace ManaPHP {
          */
         public function register()
         {
-            if ($this->_registered === false) {
+            if (!$this->_registered) {
                 spl_autoload_register([$this, '___autoload']);
                 $this->_registered = true;
             }
@@ -194,10 +187,11 @@ namespace ManaPHP {
          */
         public function unregister()
         {
-            if ($this->_registered === true) {
+            if ($this->_registered) {
                 spl_autoload_unregister([$this, '___autoload']);
                 $this->_registered = false;
             }
+
             return $this;
         }
 
@@ -209,7 +203,7 @@ namespace ManaPHP {
          */
         protected function ___requireFile($file)
         {
-            if (file_exists($file)) {
+            if (is_file($file)) {
                 if (DIRECTORY_SEPARATOR === '\\') {
                     $realPath = str_replace('\\', '/', realpath($file));
                     if ($realPath !== $file) {

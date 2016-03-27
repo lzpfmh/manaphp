@@ -11,19 +11,14 @@ error_reporting(E_ALL);
 date_default_timezone_set('PRC');
 
 define('APP_ROOT', dirname(__DIR__) . '/Application');
-define('MANAPHP_ROOT', dirname(APP_ROOT) . '/ManaPHP');
-require MANAPHP_ROOT . '/Autoloader.php';
+
+require dirname(__DIR__) . '/ManaPHP/Autoloader.php';
 
 \ManaPHP\Autoloader::register(false);
 
 //try{
 $application = new \ManaPHP\Mvc\Application(APP_ROOT);
-$di = $application->getDependencyInjector();
-$di->set('router', function () {
-    return require APP_ROOT . '/Config/Routes.php';
-}, true);
 $application->useImplicitView(false);
-
 $application->registerModules(['Home']);
 $application->router->mount(new \ManaPHP\Mvc\Router\Group(),'Home','/');
 

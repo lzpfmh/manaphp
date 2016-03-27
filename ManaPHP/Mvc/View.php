@@ -285,7 +285,6 @@ namespace ManaPHP\Mvc {
          *$this->view->registerEngines(array(
          *  ".phtml" => "ManaPHP\Mvc\View\Engine\Php",
          *  ".volt" => "ManaPHP\Mvc\View\Engine\Volt",
-         *  ".mhtml" => "MyCustomEngine"
          *));
          *</code>
          *

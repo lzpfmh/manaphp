@@ -24,8 +24,8 @@ namespace ManaPHP {
      * @property \ManaPHP\Event\ManagerInterface $eventsManager
      * @property \ManaPHP\DbInterface $db
     //* @property \ManaPHP\Security $security
-     * //* @property \ManaPHP\CryptInterface $crypt
-     * // * @property \ManaPHP\EscaperInterface $escaper
+     //* @property \ManaPHP\CryptInterface $crypt
+     // * @property \ManaPHP\EscaperInterface $escaper
      * @property \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
      * @property \ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
     //     * @property \ManaPHP\Assets\Manager $assets

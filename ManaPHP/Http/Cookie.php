@@ -11,7 +11,7 @@ namespace ManaPHP\Http {
      */
     class Cookie extends Component
     {
-        protected $_readed;
+        protected $_hasRead;
 
         protected $_restored;
 

@@ -125,7 +125,7 @@ namespace ManaPHP {
          *
          *<code>
          * $statement = $db->prepare('SELECT * FROM robots WHERE name = :name');
-         * $result = $connection->executePrepared($statement, array('name' => 'Volt'));
+         * $result = $connection->executePrepared($statement, array('name' => 'mana'));
          *</code>
          *
          * @param \PDOStatement statement
@@ -492,11 +492,7 @@ namespace ManaPHP {
             }
 
             $where = (new ConditionParser())->parse($conditions, $conditionBinds);
-            if ($binds === null) {
-                $binds = $conditionBinds;
-            } else {
-                $binds = array_merge($conditionBinds, $binds);
-            }
+            $binds =$binds?array_merge($conditionBinds, $binds):$conditionBinds;
 
             $setColumns = [];
             foreach ($columnValues as $k => $v) {

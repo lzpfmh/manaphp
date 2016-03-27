@@ -98,19 +98,19 @@ namespace ManaPHP\Http\Request {
 
 
         /**
-         * Gets the real mime type of the upload file using finfo
+         * Gets the real mime type of the upload file
          *
          * @return string
          */
         public function getRealType()
         {
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            if (!is_resource($finfo)) {
+            $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+            if (!is_resource($fileInfo)) {
                 return '';
             }
 
-            $mime = finfo_file($finfo, $this->_file['tmp_name']);
-            finfo_close($finfo);
+            $mime = finfo_file($fileInfo, $this->_file['tmp_name']);
+            finfo_close($fileInfo);
 
             return $mime;
         }

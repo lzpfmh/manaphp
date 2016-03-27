@@ -97,7 +97,7 @@ namespace ManaPHP\Mvc\Model\Query {
          *    ),
          *    // or 'conditions' => "created > '2013-01-01' AND created < '2015-01-01'",
          *    'group'      => array('id', 'name'),
-         *    'having'     => "name = 'Kamil'",
+         *    'having'     => "name = 'lily'",
          *    'order'      => array('name', 'id'),
          *    'limit'      => 20,
          *    'offset'     => 20,

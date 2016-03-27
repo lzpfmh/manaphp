@@ -43,8 +43,6 @@ namespace ManaPHP\Http {
         }
 
         /**
-         * Helper to get data from superglobals, applying filters if needed.
-         * If no parameters are given the superglobal is returned.
          *
          * @param array $source
          * @param string $name

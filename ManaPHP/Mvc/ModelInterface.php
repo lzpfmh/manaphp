@@ -146,7 +146,7 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Allows to calculate a summatory on a column that match the specified conditions
+         * Allows to calculate a summary on a column that match the specified conditions
          *
          * @param string $column
          * @param array $parameters
@@ -200,7 +200,7 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Inserts a model instance. If the instance already exists in the persistance it will throw an exception
+         * Inserts a model instance. If the instance already exists in the persistence it will throw an exception
          * Returning true on success or false otherwise.
          *
          * @param  array $data
@@ -211,7 +211,7 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Updates a model instance. If the instance doesn't exist in the persistance it will throw an exception
+         * Updates a model instance. If the instance does n't exist in the persistence it will throw an exception
          * Returning true on success or false otherwise.
          *
          * @param  array $data
