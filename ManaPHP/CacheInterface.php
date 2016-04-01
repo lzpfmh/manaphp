@@ -39,6 +39,7 @@ namespace ManaPHP {
          */
         public function delete($key);
 
+
         /** Retrieves the internal adapter instance
          *
          * @return \ManaPHP\Cache\AdapterInterface
