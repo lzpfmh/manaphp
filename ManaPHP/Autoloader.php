@@ -14,7 +14,7 @@ namespace ManaPHP {
          */
         protected static $_optimizeMode;
 
-        protected static $_loadedClasses=[];
+        protected static $_loadedClasses = [];
 
         public static function ___autoload($className)
         {
@@ -22,8 +22,8 @@ namespace ManaPHP {
                 return false;
             }
 
-            if(!self::$_optimizeMode){
-                self::$_loadedClasses[]=$className;
+            if (!self::$_optimizeMode) {
+                self::$_loadedClasses[] = $className;
             }
 
             if (self::$_rootPath === null) {
@@ -66,7 +66,8 @@ namespace ManaPHP {
         /**
          * @return array
          */
-        public static function getLoadedClasses(){
+        public static function getLoadedClasses()
+        {
             return self::$_loadedClasses;
         }
     }

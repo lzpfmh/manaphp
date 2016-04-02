@@ -1,5 +1,6 @@
 <?php
 namespace ManaPHP {
+    use ManaPHP\Cache\Exception;
 
     class Cache implements CacheInterface
     {
@@ -49,8 +50,14 @@ namespace ManaPHP {
 
             if ($content[0] === '{') {
                 $value = json_decode($content, true);
+                if($value===null){
+                    throw new Exception('Cache json_decode failed: '.json_last_error_msg());
+                }
             } else {
-                $value=unserialize($content);
+                $value = unserialize($content);
+                if($value ===false){
+                    throw new Exception('Cache unserialize failed: '.error_get_last()['message']);
+                }
             }
 
             return $value['data'];
@@ -87,9 +94,9 @@ namespace ManaPHP {
          */
         public function set($key, $value, $ttl = null)
         {
-            $packedValue=['ttl'=>$ttl?:$this->_ttl,'data'=>$value];
-            if($this->_canJsonSafely($value)){
-                $content=json_encode($packedValue, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $packedValue = ['ttl' => $ttl ?: $this->_ttl, 'data' => $value];
+            if ($this->_canJsonSafely($value)) {
+                $content = json_encode($packedValue, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             } else {
                 $content = serialize($packedValue);
             }
@@ -124,7 +131,8 @@ namespace ManaPHP {
         /**
          * @return \ManaPHP\Cache\AdapterInterface
          */
-        public function getAdapter(){
+        public function getAdapter()
+        {
             return $this->_adapter;
         }
 

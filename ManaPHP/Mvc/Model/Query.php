@@ -127,7 +127,7 @@ namespace ManaPHP\Mvc\Model {
          */
         public function setBinds($binds, $merge = false)
         {
-            $this->_binds = $merge?array_merge($this->_binds, $binds):$binds;
+            $this->_binds = $merge ? array_merge($this->_binds, $binds) : $binds;
 
             return $this;
         }

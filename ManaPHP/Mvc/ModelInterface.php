@@ -86,7 +86,7 @@ namespace ManaPHP\Mvc {
          * @param array $whiteList
          * @return static
          */
-        public function assign($data,$whiteList=null);
+        public function assign($data, $whiteList = null);
 
 
         /**

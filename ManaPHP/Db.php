@@ -492,7 +492,7 @@ namespace ManaPHP {
             }
 
             $where = (new ConditionParser())->parse($conditions, $conditionBinds);
-            $binds =$binds?array_merge($conditionBinds, $binds):$conditionBinds;
+            $binds = $binds ? array_merge($conditionBinds, $binds) : $conditionBinds;
 
             $setColumns = [];
             foreach ($columnValues as $k => $v) {

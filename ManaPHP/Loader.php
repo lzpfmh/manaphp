@@ -72,7 +72,7 @@ namespace ManaPHP {
             }
             unset($path);
 
-            $this->_namespaces =$merge?array_merge($this->_namespaces, $namespaces):$namespaces;
+            $this->_namespaces = $merge ? array_merge($this->_namespaces, $namespaces) : $namespaces;
 
             return $this;
         }
@@ -113,7 +113,7 @@ namespace ManaPHP {
             }
             unset($directory);
 
-            $this->_directories = $merge?array_merge($this->_directories, $directories):$directories;
+            $this->_directories = $merge ? array_merge($this->_directories, $directories) : $directories;
 
             return $this;
         }
@@ -142,12 +142,12 @@ namespace ManaPHP {
             if (DIRECTORY_SEPARATOR === '\\') {
                 foreach ($classes as &$path) {
                     /** @noinspection ReferenceMismatchInspection */
-                    $path= str_replace('\\', '/', $path);
+                    $path = str_replace('\\', '/', $path);
                 }
                 unset($path);
             }
 
-            $this->_classes =$merge?array_merge($this->_classes, $classes):$classes;
+            $this->_classes = $merge ? array_merge($this->_classes, $classes) : $classes;
 
             return $this;
         }

@@ -24,8 +24,8 @@ namespace ManaPHP {
      * @property \ManaPHP\Event\ManagerInterface $eventsManager
      * @property \ManaPHP\DbInterface $db
     //* @property \ManaPHP\Security $security
-     //* @property \ManaPHP\CryptInterface $crypt
-     // * @property \ManaPHP\EscaperInterface $escaper
+     * //* @property \ManaPHP\CryptInterface $crypt
+     * // * @property \ManaPHP\EscaperInterface $escaper
      * @property \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
      * @property \ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
     //     * @property \ManaPHP\Assets\Manager $assets
@@ -70,7 +70,7 @@ namespace ManaPHP {
          */
         public function getDependencyInjector()
         {
-            if ($this->_dependencyInjector ===null) {
+            if ($this->_dependencyInjector === null) {
                 $this->_dependencyInjector = Di::getDefault();
             }
 
@@ -117,7 +117,7 @@ namespace ManaPHP {
             }
 
             $this->_eventsManager->attachEvent($event, $handler);
-			return $this;
+            return $this;
         }
 
 

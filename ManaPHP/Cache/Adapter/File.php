@@ -83,7 +83,7 @@ namespace ManaPHP\Cache\Adapter {
             }
 
             @touch($cacheFile, time() + $ttl);
-            clearstatcache(true,$cacheFile);
+            clearstatcache(true, $cacheFile);
         }
 
         public function delete($key)

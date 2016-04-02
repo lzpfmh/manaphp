@@ -143,8 +143,9 @@ namespace ManaPHP\Mvc {
          * @param $vars
          * @return static
          */
-        public function setVars($vars){
-            $this->_viewVars=array_merge($this->_viewVars,$vars);
+        public function setVars($vars)
+        {
+            $this->_viewVars = array_merge($this->_viewVars, $vars);
 
             return $this;
         }

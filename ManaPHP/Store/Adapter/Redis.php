@@ -1,9 +1,9 @@
 <?php
 
-namespace ManaPHP\Cache\Adapter {
+namespace ManaPHP\Store\Adapter {
 
-    use ManaPHP\Cache\AdapterInterface;
-    use ManaPHP\Cache\Exception;
+    use ManaPHP\Store\AdapterInterface;
+    use ManaPHP\Store\Exception;
 
     class Redis implements AdapterInterface
     {
@@ -20,12 +20,12 @@ namespace ManaPHP\Cache\Adapter {
         /**
          * @var string
          */
-        protected $_prefix = '';
+        protected $key = '';
 
         /**
          * Redis constructor.
-         * @param array|\ManaPHP\Cache\Adapter\Redis\ConstructOptionsStub $options
-         * @throws \ManaPHP\Cache\Exception
+         * @param array
+         * @throws \ManaPHP\Store\Exception
          */
         public function __construct($options)
         {
@@ -61,7 +61,7 @@ namespace ManaPHP\Cache\Adapter {
         }
 
         /**
-         * @throws \ManaPHP\Cache\Exception
+         * @throws \ManaPHP\Store\Exception
          */
         protected function _connect()
         {
@@ -97,73 +97,83 @@ namespace ManaPHP\Cache\Adapter {
         /**
          * Fetch content
          *
-         * @param string $key
+         * @param string $id
          * @return string|false
-         * @throws \ManaPHP\Cache\Exception
+         * @throws \ManaPHP\Store\Exception
          */
-        public function get($key)
+        public function get($id)
         {
             if ($this->_redis === null) {
                 $this->_connect();
             }
 
-            return $this->_redis->get($this->_prefix . $key);
+            return $this->_redis->hGet($this->key, $id);
+        }
+
+        public function mGet($ids)
+        {
+            if ($this->_redis === null) {
+                $this->_connect();
+            }
+
+            return $this->_redis->hMGet($this->key, $ids);
         }
 
         /**
          * Caches content
-         * @param string $key
+         * @param string $id
          * @param string $value
-         * @param int $ttl
          * @return void
-         * @throws \ManaPHP\Cache\Exception
+         * @throws \ManaPHP\Store\Exception
          */
-        public function set($key, $value, $ttl)
+        public function set($id, $value)
         {
             if ($this->_redis === null) {
                 $this->_connect();
             }
 
-            $this->_redis->set($this->_prefix . $key, $value, $ttl);
+            $this->_redis->hSet($this->key, $id, $value);
+        }
+
+        public function mSet($idValues)
+        {
+            if ($this->_redis === null) {
+                $this->_connect();
+            }
+
+            $this->_redis->hMset($this->key, $idValues);
         }
 
         /**
          * Delete content
          *
-         * @param string $key
+         * @param string $id
          * @void
-         * @throws \ManaPHP\Cache\Exception
+         * @throws \ManaPHP\Store\Exception
          */
-        public function delete($key)
+        public function delete($id)
         {
             if ($this->_redis === null) {
                 $this->_connect();
             }
 
-            $this->_redis->delete($this->_prefix . $key);
+            $this->_redis->hDel($this->key, $id);
         }
 
         /**
-         * Check if key exists
+         * Check if id exists
          *
-         * @param string $key
+         * @param string $id
          * @return bool
-         * @throws \ManaPHP\Cache\Exception
+         * @throws \ManaPHP\Store\Exception
          */
-        public function exists($key)
+        public function exists($id)
         {
             if ($this->_redis === null) {
                 $this->_connect();
             }
 
-            return $this->_redis->exists($this->_prefix . $key);
-        }
-
-        public function setPrefix($prefix)
-        {
-            $this->_prefix = $prefix;
-
-            return $this;
+            return $this->_redis->hExists($this->key, $id);
         }
     }
 }

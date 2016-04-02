@@ -58,7 +58,7 @@ namespace ManaPHP\Mvc {
          * @param \ManaPHP\DiInterface $dependencyInjector
          * @throws \ManaPHP\Di\Exception
          */
-        final public function __construct($data = null,$dependencyInjector = null)
+        final public function __construct($data = null, $dependencyInjector = null)
         {
             $this->_dependencyInjector = $dependencyInjector ?: Di::getDefault();
             $this->_modelsManager = $this->_dependencyInjector->getShared('modelsManager');
@@ -224,14 +224,14 @@ namespace ManaPHP\Mvc {
         public function assign($data, $whiteList = null)
         {
             foreach ($this->_getModelsMetaData()->getAttributes($this) as $attribute) {
-                if(!isset($data[$attribute])){
+                if (!isset($data[$attribute])) {
                     continue;
                 }
 
                 if ($whiteList !== null && !in_array($attribute, $whiteList, true)) {
                     continue;
                 }
-                
+
                 $this->{$attribute} = $data[$attribute];
             }
 

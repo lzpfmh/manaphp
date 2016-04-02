@@ -84,13 +84,13 @@ namespace ManaPHP\Mvc\Model {
         {
             if (isset($this->_initialized[$modelName])) {
                 if ($newInstance) {
-                    return new $modelName(null,$this->_dependencyInjector);
+                    return new $modelName(null, $this->_dependencyInjector);
                 }
 
                 return $this->_initialized[$modelName];
             } else {
                 if (class_exists($modelName)) {
-                    return new $modelName(null,$this->_dependencyInjector);
+                    return new $modelName(null, $this->_dependencyInjector);
                 }
 
                 throw new Exception("Model '" . $modelName . "' could not be loaded");

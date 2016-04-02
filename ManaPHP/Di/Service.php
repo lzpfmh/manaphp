@@ -111,7 +111,8 @@ namespace ManaPHP\Di {
          *
          * @return bool
          */
-        public function isResolved(){
+        public function isResolved()
+        {
             return $this->_resolved;
         }
 

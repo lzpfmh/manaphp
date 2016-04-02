@@ -86,11 +86,11 @@ namespace ManaPHP\Mvc {
          */
         public function __construct($rootDirectory, $rootNamespace = null, $dependencyInjector = null)
         {
-            $this->_dependencyInjector=$dependencyInjector?:new FactoryDefault();
+            $this->_dependencyInjector = $dependencyInjector ?: new FactoryDefault();
             $this->_dependencyInjector->setShared('application', $this);
 
             $rootDirectory = str_replace('\\', '/', rtrim($rootDirectory, '\\/'));
-            $rootNamespace=$rootNamespace?:ucfirst(basename($rootDirectory));
+            $rootNamespace = $rootNamespace ?: ucfirst(basename($rootDirectory));
 
             $this->_rootDirectory = $rootDirectory;
             $this->_rootNamespace = $rootNamespace;
@@ -169,16 +169,16 @@ namespace ManaPHP\Mvc {
 
             $router = $this->_dependencyInjector->getShared('router');
 
-            if($router->handle($uri)){
+            if ($router->handle($uri)) {
                 $moduleName = $router->getModuleName();
                 $controllerName = $router->getControllerName();
                 $actionName = $router->getActionName();
                 $params = $router->getParams();
-            }else{
-                $moduleName=null;
-                $controllerName=null;
-                $actionName=null;
-                $params=null;
+            } else {
+                $moduleName = null;
+                $controllerName = null;
+                $actionName = null;
+                $params = null;
             }
 
             if ($moduleName === null) {
