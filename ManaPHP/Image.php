@@ -2,12 +2,44 @@
 
 namespace ManaPHP {
 
+    use ManaPHP\Image\Exception;
+
     class Image implements ImageInterface
     {
         /**
          * @var \ManaPHP\Image\AdapterInterface
          */
         protected $_adapter;
+
+        /**
+         * @var string
+         */
+        static protected $_defaultAdapter;
+
+        /**
+         * ImageInterface constructor.
+         * @param string $file
+         * @param string $adapter
+         * @throws \ManaPHP\Image\Exception
+         */
+        public function __construct($file, $adapter = null)
+        {
+            if ($adapter === null) {
+                if (self::$_defaultAdapter === null) {
+                    if (extension_loaded('imagick')) {
+                        self::$_defaultAdapter = 'ManaPHP\Image\Adapter\Imagick';
+                    } elseif (extension_loaded('gd')) {
+                        self::$_defaultAdapter = 'ManaPHP\Image\Adapter\Gd';
+                    } else {
+                        throw new Exception('No valid Image Adapter exists.');
+                    }
+                }
+                $adapter = self::$_defaultAdapter;
+            }
+
+            $this->_adapter = new $adapter($file);
+        }
+
 
         /**
          * Image width
@@ -40,6 +72,23 @@ namespace ManaPHP {
         }
 
         /**
+         * @param string $adapter
+         * @return string
+         */
+        public static function setDefaultAdapter($adapter)
+        {
+            self::$_defaultAdapter = $adapter;
+        }
+
+        /**
+         * @return string
+         */
+        public static function getDefaultAdapter()
+        {
+            return self::$_defaultAdapter;
+        }
+
+        /**
          * @param int $width
          * @param int $height
          * @param int $offsetX
@@ -48,7 +97,9 @@ namespace ManaPHP {
          */
         public function crop($width, $height, $offsetX = 0, $offsetY = 0)
         {
-            return $this->_adapter->crop($width, $height, $offsetX, $offsetY);
+            $this->_adapter->crop($width, $height, $offsetX, $offsetY);
+
+            return $this;
         }
 
         /**
@@ -58,7 +109,9 @@ namespace ManaPHP {
          */
         public function resize($width, $height)
         {
-            return $this->_adapter->resize($width, $height);
+            $this->_adapter->resize($width, $height);
+
+            return $this;
         }
 
         /**
@@ -85,7 +138,10 @@ namespace ManaPHP {
                 $offsetX = 0;
             }
 
-            return $this->crop($crop_width, $crop_height, $offsetX, $offsetY)->scale($width / $crop_width);
+            $this->crop($crop_width, $crop_height, $offsetX, $offsetY);
+            $this->scale($width / $crop_width);
+
+            return $this;
         }
 
         /**
@@ -105,7 +161,9 @@ namespace ManaPHP {
             $width = (int) ($_width * $ratio);
             $height = (int) ($_height * $ratio);
 
-            return $this->{'_resize'}($width, $height);
+            $this->_adapter->resize($width, $height);
+
+            return $this;
         }
 
         /**
@@ -119,7 +177,9 @@ namespace ManaPHP {
             $_height = $this->_adapter->getHeight();
 
             $height = (int) ($_height * $width / $_width);
-            return $this->{'_resize'}($width, $height);
+            $this->_adapter->resize($width, $height);
+
+            return $this;
         }
 
         /**
@@ -133,7 +193,9 @@ namespace ManaPHP {
             $_height = $this->_adapter->getHeight();
 
             $width = (int) ($_width * $height / $_height);
-            return $this->{'_resize'}($width, $height);
+            $this->_adapter->resize($width, $height);
+
+            return $this;
         }
 
         /**
@@ -146,7 +208,9 @@ namespace ManaPHP {
          */
         public function rotate($degrees, $background = 0xffffff, $alpha = 1.0)
         {
-            return $this->_adapter->rotate($degrees, $background, $alpha);
+            $this->_adapter->rotate($degrees, $background, $alpha);
+
+            return $this;
         }
 
         /**
@@ -163,12 +227,14 @@ namespace ManaPHP {
           $text,
           $offsetX = 0,
           $offsetY = 0,
-          $color = 0x000000,
           $opacity = 1.0,
+          $color = 0x000000,
           $size = 12,
           $font_file = null
         ) {
-            return $this->_adapter->text($text, $offsetX, $offsetY, $opacity, $color, $size, $font_file);
+            $this->_adapter->text($text, $offsetX, $offsetY, $opacity, $color, $size, $font_file);
+
+            return $this;
         }
 
         /**
@@ -181,12 +247,16 @@ namespace ManaPHP {
          */
         public function watermark($file, $offsetX = 0, $offsetY = 0, $opacity = 1.0)
         {
-            return $this->_adapter->watermark($file, $offsetX, $offsetY, $opacity);
+            $this->_adapter->watermark($file, $offsetX, $offsetY, $opacity);
+
+            return $this;
         }
 
-        public function save($file = null, $quality = 100)
+        public function save($file = null, $quality = 80)
         {
-            return $this->_adapter->save($file, $quality);
+            $this->_adapter->save($file, $quality);
+
+            return $this;
         }
     }
 }

@@ -14,14 +14,12 @@ namespace ManaPHP\Image\Adapter {
         protected $_height;
 
         /**
-         * @param string $file
-         * @param int $width
-         * @param int $height
+         * @param string|array $file
          * @throws \ManaPHP\Image\Exception
          */
-        public function __construct($file, $width = null, $height = null)
+        public function __construct($file)
         {
-            if (!class_exists('imagick')) {
+            if (!extension_loaded('imagick')) {
                 throw new Exception('Imagick is not installed, or the extension is not loaded');
             }
 
@@ -41,12 +39,8 @@ namespace ManaPHP\Image\Adapter {
                 if (!$this->_image->getImageAlphaChannel()) {
                     $this->_image->setImageAlphaChannel(\Imagick::ALPHACHANNEL_SET);
                 }
-            } else {
-                if (!$width || !$height) {
-                    throw new Exception('Failed to create image from file: invalid width or height.' . $this->_file);
-                }
-                $this->_image->newImage($width, $height, new \ImagickPixel('transparent'));
-                $this->_real_path = $this->_file;
+            }else {
+                throw new Exception('the file is not exist: '.$file);
             }
 
             $this->_width = $this->_image->getImageWidth();
@@ -139,8 +133,8 @@ namespace ManaPHP\Image\Adapter {
          * @param string $text
          * @param int $offsetX
          * @param int $offsetY
-         * @param int $color
          * @param float $opacity
+         * @param int $color
          * @param int $size
          * @param string $font_file
          * @return static
@@ -149,8 +143,8 @@ namespace ManaPHP\Image\Adapter {
           $text,
           $offsetX = 0,
           $offsetY = 0,
-          $color = 0x000000,
           $opacity = 1.0,
+          $color = 0x000000,
           $size = 12,
           $font_file = null
         ) {
@@ -180,9 +174,11 @@ namespace ManaPHP\Image\Adapter {
          */
         public function watermark($file, $offsetX = 0, $offsetY = 0, $opacity = 1.0)
         {
-            $watermark = new \Imagick();
-            $watermark->readImage($file);
-            $watermark->setImageOpacity($opacity);
+            $watermark = new \Imagick($file);
+
+            if($watermark->getImageAlphaChannel()===\Imagick::ALPHACHANNEL_UNDEFINED){
+                $watermark->setImageOpacity($opacity);
+            }
 
             if ($watermark->getNumberImages() !== 1) {
                 throw new Exception('Not support multiple iterations: ' . $file);
@@ -194,7 +190,6 @@ namespace ManaPHP\Image\Adapter {
 
             $watermark->clear();
             $watermark->destroy();
-
             return $this;
         }
 
@@ -203,7 +198,7 @@ namespace ManaPHP\Image\Adapter {
          * @param int $quality
          * @throws \ManaPHP\Image\Exception
          */
-        public function save($file = null, $quality = 100)
+        public function save($file = null, $quality = 80)
         {
             $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
@@ -220,9 +215,9 @@ namespace ManaPHP\Image\Adapter {
 
             if ($file === null) {
                 $file = $this->_file;
-
+            }else{
                 $dir = dirname($file);
-                if (@mkdir($dir, 0755, true) && !is_dir($dir)) {
+                if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
                     throw new Exception('Create directory "' . $dir . '" failed: ' . error_get_last()['message']);
                 }
             }

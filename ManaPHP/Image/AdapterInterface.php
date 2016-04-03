@@ -60,8 +60,8 @@ namespace ManaPHP\Image {
           $text,
           $offsetX = 0,
           $offsetY = 0,
-          $color = 0x000000,
           $opacity = 1.0,
+          $color = 0x000000,
           $size = 12,
           $font_file = null
         );
@@ -81,7 +81,7 @@ namespace ManaPHP\Image {
          * @param int $quality
          * @throws \ManaPHP\Image\Exception
          */
-        public function save($file = null, $quality = 100);
+        public function save($file = null, $quality = 80);
     }
 }
 

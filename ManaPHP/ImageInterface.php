@@ -2,13 +2,39 @@
 
 namespace ManaPHP {
 
+    /**
+     * Interface ImageInterface
+     * @package ManaPHP
+     */
     interface ImageInterface
     {
+        /**
+         * ImageInterface constructor.
+         * @param string $file
+         * @param string $adapter
+         * @throws \ManaPHP\Image\Exception
+         */
+        public function __construct($file, $adapter = null);
+
 
         /**
          * @return \ManaPHP\Image\AdapterInterface
          */
         public function getAdapter();
+
+
+        /**
+         * @param string $adapter
+         * @return string
+         */
+        public static function setDefaultAdapter($adapter);
+
+
+        /**
+         * @return string
+         */
+        public static function getDefaultAdapter();
+
 
         /**
          * Image width
@@ -106,12 +132,20 @@ namespace ManaPHP {
          * @param string $font_file
          * @return static
          */
-        public function text($text, $offsetX = 0, $offsetY = 0,  $color = 0x000000,$opacity = 1.0, $size = 12, $font_file = null);
+        public function text(
+          $text,
+          $offsetX = 0,
+          $offsetY = 0,
+          $opacity = 1.0,
+          $color = 0x000000,
+          $size = 12,
+          $font_file = null
+        );
 
         /**
          * @param string $file
          * @param int $quality
          */
-        public function save($file = null, $quality = 100);
+        public function save($file = null, $quality = 80);
     }
 }
