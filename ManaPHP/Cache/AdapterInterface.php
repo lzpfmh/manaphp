@@ -37,12 +37,5 @@ namespace ManaPHP\Cache {
          * @void
          */
         public function delete($key);
-
-
-        /** Set the key prefix
-         * @param string $prefix
-         * @return void
-         */
-        public function setPrefix($prefix);
     }
 }

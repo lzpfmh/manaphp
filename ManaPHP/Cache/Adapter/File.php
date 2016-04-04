@@ -20,11 +20,6 @@ namespace ManaPHP\Cache\Adapter {
         /**
          * @var string
          */
-        protected $_prefix;
-
-        /**
-         * @var string
-         */
         protected $_extension = '.cache';
 
         /**
@@ -49,7 +44,7 @@ namespace ManaPHP\Cache\Adapter {
          */
         protected function _getFileName($key)
         {
-            return $this->_cacheDir . '/' . $this->_prefix . $key . $this->_extension;
+            return $this->_cacheDir . '/' . $key . $this->_extension;
         }
 
         public function exists($key)
@@ -91,11 +86,6 @@ namespace ManaPHP\Cache\Adapter {
             $cacheFile = $this->_getFileName($key);
 
             @unlink($cacheFile);
-        }
-
-        public function setPrefix($prefix)
-        {
-            $this->_prefix = $prefix;
         }
     }
 }

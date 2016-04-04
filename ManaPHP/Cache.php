@@ -1,5 +1,6 @@
 <?php
 namespace ManaPHP {
+
     use ManaPHP\Cache\Exception;
 
     class Cache implements CacheInterface
@@ -19,19 +20,82 @@ namespace ManaPHP {
          */
         protected $_ttl;
 
+        /**
+         * @var Serializer\AdapterInterface;
+         */
+        protected $_serializer;
+
+        /**
+         * @var string
+         */
+        protected static $_defaultSerializer = 'ManaPHP\Serializer\Adapter\Serialize';
+
+
+        /**
+         * @var \ManaPHP\Cache\AdapterInterface
+         */
+        protected static $_defaultAdapter;
 
         /**
          * Cache constructor.
-         * @param \ManaPHP\Cache\AdapterInterface $adapter
          * @param string $prefix
          * @param int $ttl
+         * @param \ManaPHP\Cache\AdapterInterface $adapter
+         * @param \ManaPHP\Serializer\AdapterInterface $serializer
+         * @throws \ManaPHP\Cache\Exception|\ManaPHP\Di\Exception
          */
-        public function __construct($adapter, $prefix = '', $ttl = 3600)
+        public function __construct($prefix = '', $ttl = 3600, $adapter=null, $serializer = null)
         {
-            $this->_adapter = $adapter;
-            $this->_adapter->setPrefix($prefix);
             $this->_prefix = $prefix;
             $this->_ttl = $ttl;
+
+            if($adapter===null){
+                if(self::$_defaultAdapter===null){
+                    throw new Exception('please provide a valid adapter.');
+                }elseif(is_object(self::$_defaultAdapter)){
+                    $this->_adapter=self::$_defaultAdapter;
+                }else{
+                    self::$_defaultAdapter=Di::getDefault()->getShared(self::$_defaultAdapter);
+                    $this->_adapter=self::$_defaultAdapter;
+                }
+            }else{
+                $this->_adapter = $adapter;
+            }
+            if ($serializer === null) {
+                $this->_serializer = new self::$_defaultSerializer();
+            } else {
+                $this->_serializer = $serializer;
+            }
+        }
+
+        /**
+         * @param string $serializer
+         */
+        public static function setDefaultSerializer($serializer)
+        {
+            self::$_defaultSerializer = $serializer;
+        }
+
+        /**
+         * @return string
+         */
+        public static function getDefaultSerializer()
+        {
+            return self::$_defaultSerializer;
+        }
+
+        /**
+         * @param \ManaPHP\Store\AdapterInterface $adapter
+         */
+        public static function setDefaultAdapter($adapter){
+            self::$_defaultAdapter=$adapter;
+        }
+
+        /**
+         * @return \ManaPHP\Store\AdapterInterface
+         */
+        public static function getDefaultAdapter(){
+            return self::$_defaultAdapter;
         }
 
         /**
@@ -43,46 +107,14 @@ namespace ManaPHP {
          */
         public function get($key)
         {
-            $content = $this->_adapter->get($key);
-            if ($content === false) {
+            $data = $this->_adapter->get($this->_prefix . $key);
+            if ($data === false) {
                 return false;
-            }
-
-            if ($content[0] === '{') {
-                $value = json_decode($content, true);
-                if($value===null){
-                    throw new Exception('Cache json_decode failed: '.json_last_error_msg());
-                }
             } else {
-                $value = unserialize($content);
-                if($value ===false){
-                    throw new Exception('Cache unserialize failed: '.error_get_last()['message']);
-                }
+                return $this->_serializer->deserialize($data);
             }
-
-            return $value['data'];
         }
 
-        /**
-         * @param mixed $value
-         * @return bool
-         */
-        protected function _canJsonSafely($value)
-        {
-            if (is_scalar($value) || $value === null) {
-                return true;
-            } elseif (is_array($value)) {
-                foreach ($value as $v) {
-                    if (!$this->_canJsonSafely($v)) {
-                        return false;
-                    }
-                }
-            } else {
-                return false;
-            }
-
-            return true;
-        }
 
         /**
          * Caches content
@@ -94,14 +126,7 @@ namespace ManaPHP {
          */
         public function set($key, $value, $ttl = null)
         {
-            $packedValue = ['ttl' => $ttl ?: $this->_ttl, 'data' => $value];
-            if ($this->_canJsonSafely($value)) {
-                $content = json_encode($packedValue, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            } else {
-                $content = serialize($packedValue);
-            }
-
-            $this->_adapter->set($key, $content, $ttl);
+            $this->_adapter->set($this->_prefix . $key, $this->_serializer->serialize($value), $ttl);
         }
 
 
@@ -113,7 +138,7 @@ namespace ManaPHP {
          */
         public function delete($key)
         {
-            $this->_adapter->delete($key);
+            $this->_adapter->delete($this->_prefix . $key);
         }
 
 
@@ -125,7 +150,7 @@ namespace ManaPHP {
          */
         public function exists($key)
         {
-            return $this->_adapter->exists($key);
+            return $this->_adapter->exists($this->_prefix . $key);
         }
 
         /**

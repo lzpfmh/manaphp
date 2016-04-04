@@ -96,7 +96,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var array
          */
-        protected $_initializedControllers=[];
+        protected $_initializedControllers = [];
 
         /**
          * Sets the namespace where the controller class is
@@ -299,7 +299,7 @@ namespace ManaPHP\Mvc {
 
                 if (!in_array($controllerClassName,$this->_initializedControllers,true) && method_exists($controllerInstance, 'initialize')) {
                     $controllerInstance->initialize();
-                    $this->_initializedControllers[]=$controllerClassName;
+                    $this->_initializedControllers[] = $controllerClassName;
                 }
 
                 $this->_returnedValue = call_user_func_array([$controllerInstance, $actionMethod], $this->_params);
@@ -386,7 +386,7 @@ namespace ManaPHP\Mvc {
             if (strpos($str, '_') !== false) {
                 $parts = explode('_', $str);
                 foreach ($parts as &$v) {
-                    $v=ucfirst($v);
+                    $v = ucfirst($v);
                 }
 
                 return implode('', $parts);

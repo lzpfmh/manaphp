@@ -7,14 +7,29 @@ namespace ManaPHP\Image\Adapter {
 
     class Imagick implements AdapterInterface
     {
+        /**
+         * @var string
+         */
         protected $_file;
+        /**
+         * @var string
+         */
         protected $_real_path;
+        /**
+         * @var \Imagick
+         */
         protected $_image;
+        /**
+         * @var int
+         */
         protected $_width;
+        /**
+         * @var int
+         */
         protected $_height;
 
         /**
-         * @param string|array $file
+         * @param string $file
          * @throws \ManaPHP\Image\Exception
          */
         public function __construct($file)
@@ -39,8 +54,8 @@ namespace ManaPHP\Image\Adapter {
                 if (!$this->_image->getImageAlphaChannel()) {
                     $this->_image->setImageAlphaChannel(\Imagick::ALPHACHANNEL_SET);
                 }
-            }else {
-                throw new Exception('the file is not exist: '.$file);
+            } else {
+                throw new Exception('the file is not exist: ' . $file);
             }
 
             $this->_width = $this->_image->getImageWidth();
@@ -176,7 +191,7 @@ namespace ManaPHP\Image\Adapter {
         {
             $watermark = new \Imagick($file);
 
-            if($watermark->getImageAlphaChannel()===\Imagick::ALPHACHANNEL_UNDEFINED){
+            if ($watermark->getImageAlphaChannel() === \Imagick::ALPHACHANNEL_UNDEFINED) {
                 $watermark->setImageOpacity($opacity);
             }
 
@@ -215,7 +230,7 @@ namespace ManaPHP\Image\Adapter {
 
             if ($file === null) {
                 $file = $this->_file;
-            }else{
+            } else {
                 $dir = dirname($file);
                 if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
                     throw new Exception('Create directory "' . $dir . '" failed: ' . error_get_last()['message']);

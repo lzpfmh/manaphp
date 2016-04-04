@@ -5,7 +5,7 @@ class CacheTest extends TestCase
 {
     public function test_exists()
     {
-        $cache = new ManaPHP\Cache(new \ManaPHP\Cache\Adapter\Memory());
+        $cache = new ManaPHP\Cache('',1000,new \ManaPHP\Cache\Adapter\Memory());
 
         $this->assertFalse($cache->exists('country'));
 
@@ -15,7 +15,7 @@ class CacheTest extends TestCase
 
     public function test_get()
     {
-        $cache = new ManaPHP\Cache(new \ManaPHP\Cache\Adapter\Memory());
+        $cache = new ManaPHP\Cache('',1000,new \ManaPHP\Cache\Adapter\Memory());
         $this->assertFalse($cache->get('country'));
 
         $cache->set('country', 'china');
@@ -24,7 +24,7 @@ class CacheTest extends TestCase
 
     public function test_set()
     {
-        $cache = new ManaPHP\Cache(new \ManaPHP\Cache\Adapter\Memory());
+        $cache = new ManaPHP\Cache('',1000,new \ManaPHP\Cache\Adapter\Memory());
         $this->assertFalse($cache->get('var'));
 
         // false
@@ -64,7 +64,7 @@ class CacheTest extends TestCase
 
     public function test_delete()
     {
-        $cache = new ManaPHP\Cache(new \ManaPHP\Cache\Adapter\Memory());
+        $cache = new ManaPHP\Cache('',1000,new \ManaPHP\Cache\Adapter\Memory());
 
         // delete a not existed
         $this->assertFalse($cache->exists('val'));

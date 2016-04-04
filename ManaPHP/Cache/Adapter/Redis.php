@@ -18,11 +18,6 @@ namespace ManaPHP\Cache\Adapter {
         protected $_redis = null;
 
         /**
-         * @var string
-         */
-        protected $_prefix = '';
-
-        /**
          * Redis constructor.
          * @param array|\ManaPHP\Cache\Adapter\Redis\ConstructOptionsStub $options
          * @throws \ManaPHP\Cache\Exception
@@ -107,7 +102,7 @@ namespace ManaPHP\Cache\Adapter {
                 $this->_connect();
             }
 
-            return $this->_redis->get($this->_prefix . $key);
+            return $this->_redis->get($key);
         }
 
         /**
@@ -124,7 +119,7 @@ namespace ManaPHP\Cache\Adapter {
                 $this->_connect();
             }
 
-            $this->_redis->set($this->_prefix . $key, $value, $ttl);
+            $this->_redis->set($key, $value, $ttl);
         }
 
         /**
@@ -140,7 +135,7 @@ namespace ManaPHP\Cache\Adapter {
                 $this->_connect();
             }
 
-            $this->_redis->delete($this->_prefix . $key);
+            $this->_redis->delete($key);
         }
 
         /**
@@ -156,14 +151,7 @@ namespace ManaPHP\Cache\Adapter {
                 $this->_connect();
             }
 
-            return $this->_redis->exists($this->_prefix . $key);
-        }
-
-        public function setPrefix($prefix)
-        {
-            $this->_prefix = $prefix;
-
-            return $this;
+            return $this->_redis->exists($key);
         }
     }
 }

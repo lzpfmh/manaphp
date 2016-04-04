@@ -5,7 +5,7 @@ class StoreTest extends TestCase
 {
     public function test_exists()
     {
-        $cache = new ManaPHP\Store(new \ManaPHP\Store\Adapter\Memory());
+        $cache = new ManaPHP\Store('',new \ManaPHP\Store\Adapter\Memory());
 
         $this->assertFalse($cache->exists('country'));
 
@@ -15,7 +15,7 @@ class StoreTest extends TestCase
 
     public function test_get()
     {
-        $cache = new ManaPHP\Store(new \ManaPHP\Store\Adapter\Memory());
+        $cache = new ManaPHP\Store('',new \ManaPHP\Store\Adapter\Memory());
         $this->assertFalse($cache->get('country'));
 
         $cache->set('country', 'china');
@@ -24,7 +24,7 @@ class StoreTest extends TestCase
 
     public function test_set()
     {
-        $cache = new ManaPHP\Store(new \ManaPHP\Store\Adapter\Memory());
+        $cache = new ManaPHP\Store('',new \ManaPHP\Store\Adapter\Memory());
         $this->assertFalse($cache->get('var'));
 
         // false
@@ -63,7 +63,7 @@ class StoreTest extends TestCase
     }
 
     public function test_mGet(){
-        $cache = new ManaPHP\Store(new \ManaPHP\Store\Adapter\Memory());
+        $cache = new ManaPHP\Store('',new \ManaPHP\Store\Adapter\Memory());
 
         $cache->set('1','1');
         $idValues=$cache->mGet(['1','2']);
@@ -73,7 +73,7 @@ class StoreTest extends TestCase
     }
 
     public function test_mSet(){
-        $cache = new ManaPHP\Store(new \ManaPHP\Store\Adapter\Memory());
+        $cache = new ManaPHP\Store('',new \ManaPHP\Store\Adapter\Memory());
 
         $cache->mSet([]);
 
@@ -85,7 +85,7 @@ class StoreTest extends TestCase
 
     public function test_delete()
     {
-        $cache = new ManaPHP\Store(new \ManaPHP\Store\Adapter\Memory());
+        $cache = new ManaPHP\Store('',new \ManaPHP\Store\Adapter\Memory());
 
         // delete a not existed
         $this->assertFalse($cache->exists('val'));

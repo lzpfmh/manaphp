@@ -11,13 +11,85 @@ namespace ManaPHP {
         protected $_adapter;
 
         /**
+         * @var string
+         */
+        protected $_prefix;
+
+        /**
+         * @var \ManaPHP\Serializer\AdapterInterface $_serializer
+         */
+        protected $_serializer;
+
+        /**
+         * @var string
+         */
+        protected static $_defaultSerializer = 'ManaPHP\Serializer\Adapter\Serialize';
+
+        /**
+         * @var \ManaPHP\Store\AdapterInterface
+         */
+        protected static $_defaultAdapter;
+
+        /**
          * Store constructor.
          * @param \ManaPHP\Store\AdapterInterface $adapter
+         * @param string $prefix
+         * @param \ManaPHP\Serializer\AdapterInterface $serializer
+         * @throws \ManaPHP\Store\Exception|\ManaPHP\Di\Exception
          */
-        public function __construct($adapter)
+        public function __construct($prefix = '',$adapter=null, $serializer = null)
         {
-            $this->_adapter = $adapter;
+            $this->_prefix=$prefix;
+
+            if($adapter===null){
+                if(self::$_defaultAdapter===null){
+                    throw new Exception('please provide a valid adapter.');
+                }elseif(is_object(self::$_defaultAdapter)){
+                    $this->_adapter=self::$_defaultAdapter;
+                }else{
+                    self::$_defaultAdapter=Di::getDefault()->getShared(self::$_defaultAdapter);
+                    $this->_adapter=self::$_defaultAdapter;
+                }
+            }else{
+	            $this->_adapter = $adapter;
+			}
+
+            if ($serializer === null) {
+                $this->_serializer = new self::$_defaultSerializer();
+            } else {
+                $this->_serializer = $serializer;
+            }
         }
+
+
+        /**
+         * @param string $serializer
+         */
+        public static function setDefaultSerializer($serializer)
+        {
+            self::$_defaultSerializer = $serializer;
+        }
+
+        public static function getDefaultSerializer()
+        {
+            return self::$_defaultSerializer;
+        }
+
+
+        /**
+         * @param \ManaPHP\Store\AdapterInterface $adapter
+         */
+        public static function setDefaultAdapter($adapter){
+            self::$_defaultAdapter=$adapter;
+        }
+
+        /**
+         * @return \ManaPHP\Store\AdapterInterface
+         */
+        public static function getDefaultAdapter(){
+            return self::$_defaultAdapter;
+        }
+
 
         /**
          * Fetch content
@@ -28,24 +100,12 @@ namespace ManaPHP {
          */
         public function get($id)
         {
-            $content = $this->_adapter->get($id);
+            $content = $this->_adapter->get($this->_prefix . $id);
             if ($content === false) {
                 return false;
             }
 
-            if ($content[0] === '{') {
-                $value = json_decode($content, true);
-                if($value===null){
-                    throw new Exception('Store json_decode failed: '.json_last_error_msg());
-                }
-            } else {
-                $value = @unserialize($content);
-                if($value ===false){
-                    throw new Exception('Store unserialize failed: '.error_get_last()['message']);
-                }
-            }
-
-            return $value['data'];
+            return $this->_serializer->deserialize($content);
         }
 
         /**
@@ -53,46 +113,27 @@ namespace ManaPHP {
          *
          * @param array $ids
          * @return array
+         * @throws \ManaPHP\Store\Exception
          */
         public function mGet($ids)
         {
-            $idValues = $this->_adapter->mGet($ids);
-            foreach ($idValues as $id => $value) {
-                if($value===false){
-                    $idValues[$id]=$value;
-                }else{
-                    if ($value[0] === '{') {
-                        $content = json_decode($value, true);
-                    } else {
-                        $content= unserialize($value);
-                    }
+            $completeIds = [];
+            foreach ($ids as $id) {
+                $completeIds[] = $this->_prefix . $id;
+            }
 
-                    $idValues[$id]=$content['data'];
+            $completeIdValues = $this->_adapter->mGet($completeIds);
+            $idValues = [];
+            foreach ($completeIdValues as $completeId => $value) {
+                $id = substr($completeId, strlen($this->_prefix));
+                if ($value === false) {
+                    $idValues[$id] = $value;
+                } else {
+                    $idValues[$id] = $this->_serializer->deserialize($value);
                 }
             }
 
             return $idValues;
-        }
-
-        /**
-         * @param mixed $value
-         * @return bool
-         */
-        protected function _canJsonSafely($value)
-        {
-            if (is_scalar($value) || $value === null) {
-                return true;
-            } elseif (is_array($value)) {
-                foreach ($value as $v) {
-                    if (!$this->_canJsonSafely($v)) {
-                        return false;
-                    }
-                }
-            } else {
-                return false;
-            }
-
-            return true;
         }
 
         /**
@@ -104,15 +145,7 @@ namespace ManaPHP {
          */
         public function set($id, $value)
         {
-            $packedValue=['data'=>$value];
-
-            if ($this->_canJsonSafely($value)) {
-                $content = json_encode($packedValue, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            } else {
-                $content = serialize($packedValue);
-            }
-
-            $this->_adapter->set($id, $content);
+            $this->_adapter->set($this->_prefix . $id, $this->_serializer->serialize($value));
         }
 
 
@@ -124,19 +157,13 @@ namespace ManaPHP {
          */
         public function mSet($idValues)
         {
+            $completeIdValues = [];
             foreach ($idValues as $id => $value) {
-                $packedValue=['data'=>$value];
-
-                if ($this->_canJsonSafely($value)) {
-                    $idValues[$id] = json_encode($packedValue, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-                } else {
-                    $idValues[$id] = serialize($packedValue);
-                }
+                $completeIdValues[$this->_prefix . $id] = $this->_serializer->serialize($value);
             }
 
-            $this->_adapter->mSet($idValues);
+            $this->_adapter->mSet($completeIdValues);
         }
-
 
         /**
          * Delete content
@@ -146,7 +173,7 @@ namespace ManaPHP {
          */
         public function delete($id)
         {
-            $this->_adapter->delete($id);
+            $this->_adapter->delete($this->_prefix . $id);
         }
 
 
@@ -158,7 +185,7 @@ namespace ManaPHP {
          */
         public function exists($id)
         {
-            return $this->_adapter->exists($id);
+            return $this->_adapter->exists($this->_prefix . $id);
         }
 
         /**
