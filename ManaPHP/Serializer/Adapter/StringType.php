@@ -4,7 +4,7 @@ namespace ManaPHP\Serializer\Adapter {
     use ManaPHP\Serializer\AdapterInterface;
     use ManaPHP\Serializer\Exception;
 
-    class LiteralString implements AdapterInterface
+    class StringType implements AdapterInterface
     {
         public function serialize($data, $context = null)
         {
@@ -13,7 +13,7 @@ namespace ManaPHP\Serializer\Adapter {
             } elseif ($data === false || $data === null) {
                 return '';
             } else {
-                throw new Exception('is not string');
+                throw new Exception('data is not string: '.gettype($data));
             }
         }
 

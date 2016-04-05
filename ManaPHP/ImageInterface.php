@@ -24,19 +24,6 @@ namespace ManaPHP {
 
 
         /**
-         * @param string $adapter
-         * @return string
-         */
-        public static function setDefaultAdapter($adapter);
-
-
-        /**
-         * @return string
-         */
-        public static function getDefaultAdapter();
-
-
-        /**
          * Image width
          *
          * @return int

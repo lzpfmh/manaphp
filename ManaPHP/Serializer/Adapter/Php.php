@@ -4,7 +4,7 @@ namespace ManaPHP\Serializer\Adapter {
     use ManaPHP\Serializer\AdapterInterface;
     use ManaPHP\Serializer\Exception;
 
-    class Serialize implements AdapterInterface
+    class Php implements AdapterInterface
     {
         public function serialize($data, $context = null)
         {

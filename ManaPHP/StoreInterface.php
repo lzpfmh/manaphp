@@ -63,5 +63,11 @@ namespace ManaPHP {
          * @return \ManaPHP\Store\AdapterInterface
          */
         public function getAdapter();
+
+
+        /**
+         * @return \ManaPHP\Serializer\AdapterInterface
+         */
+        public function getSerializer();
     }
 }

@@ -21,33 +21,6 @@ class ImageTest extends TestCase
         $this->assertInstanceOf('\ManaPHP\Image\Adapter\Imagick', $image->getAdapter());
     }
 
-    public function test_setDefaultAdapter()
-    {
-        $this->assertContains('gd',get_loaded_extensions());
-        $this->assertContains('imagick',get_loaded_extensions());
-
-        $image = new ManaPHP\Image($this->_originalImage);
-        $this->assertInstanceOf('\ManaPHP\Image\Adapter\Imagick', $image->getAdapter());
-
-        ManaPHP\Image::setDefaultAdapter('ManaPHP\Image\Adapter\Gd');
-        $image = new ManaPHP\Image($this->_originalImage);
-        $this->assertInstanceOf('\ManaPHP\Image\Adapter\Gd', $image->getAdapter());
-        $this->assertEquals('ManaPHP\Image\Adapter\Gd', ManaPHP\Image::getDefaultAdapter());
-    }
-
-    public function test_getDefaultAdapter(){
-        $this->assertContains('gd',get_loaded_extensions());
-        $this->assertContains('imagick',get_loaded_extensions());
-
-        ManaPHP\Image::setDefaultAdapter(null);
-
-        $image = new ManaPHP\Image($this->_originalImage);
-        $this->assertInstanceOf('\ManaPHP\Image\Adapter\Imagick', $image->getAdapter());
-
-        ManaPHP\Image::setDefaultAdapter('ManaPHP\Image\Adapter\Gd');
-        $this->assertEquals('ManaPHP\Image\Adapter\Gd', ManaPHP\Image::getDefaultAdapter());
-    }
-
     public function test_getWidth()
     {
         $image = new ManaPHP\Image($this->_originalImage, '\ManaPHP\Image\Adapter\Imagick');

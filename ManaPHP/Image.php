@@ -12,32 +12,28 @@ namespace ManaPHP {
         protected $_adapter;
 
         /**
-         * @var string
-         */
-        static protected $_defaultAdapter;
-
-        /**
          * ImageInterface constructor.
          * @param string $file
          * @param string $adapter
-         * @throws \ManaPHP\Image\Exception
+         * @throws \ManaPHP\Image\Exception|\ManaPHP\Di\Exception
          */
         public function __construct($file, $adapter = null)
         {
             if ($adapter === null) {
-                if (self::$_defaultAdapter === null) {
-                    if (extension_loaded('imagick')) {
-                        self::$_defaultAdapter = 'ManaPHP\Image\Adapter\Imagick';
-                    } elseif (extension_loaded('gd')) {
-                        self::$_defaultAdapter = 'ManaPHP\Image\Adapter\Gd';
-                    } else {
-                        throw new Exception('No valid Image Adapter exists.');
-                    }
+                if (extension_loaded('imagick')) {
+                    $adapter='ManaPHP\Image\Adapter\Imagick';
+                } elseif (extension_loaded('gd')) {
+                    $adapter='ManaPHP\Image\Adapter\Gd';
+                } else {
+                    throw new Exception('No valid Image Adapter exists.');
                 }
-                $adapter = self::$_defaultAdapter;
             }
 
-            $this->_adapter = new $adapter($file);
+            if(is_string($adapter)){
+                $this->_adapter=new $adapter($file);
+            }else{
+                $this->_adapter=$adapter;
+            }
         }
 
 
@@ -69,23 +65,6 @@ namespace ManaPHP {
         public function getAdapter()
         {
             return $this->_adapter;
-        }
-
-        /**
-         * @param string $adapter
-         * @return string
-         */
-        public static function setDefaultAdapter($adapter)
-        {
-            self::$_defaultAdapter = $adapter;
-        }
-
-        /**
-         * @return string
-         */
-        public static function getDefaultAdapter()
-        {
-            return self::$_defaultAdapter;
         }
 
         /**

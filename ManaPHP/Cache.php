@@ -1,7 +1,6 @@
 <?php
 namespace ManaPHP {
-
-    use ManaPHP\Cache\Exception;
+    use ManaPHP\Serializer\Adapter\JsonPhp;
 
     class Cache implements CacheInterface
     {
@@ -26,77 +25,33 @@ namespace ManaPHP {
         protected $_serializer;
 
         /**
-         * @var string
-         */
-        protected static $_defaultSerializer = 'ManaPHP\Serializer\Adapter\Serialize';
-
-
-        /**
-         * @var \ManaPHP\Cache\AdapterInterface
-         */
-        protected static $_defaultAdapter;
-
-        /**
          * Cache constructor.
          * @param string $prefix
          * @param int $ttl
-         * @param \ManaPHP\Cache\AdapterInterface $adapter
+         * @param string|\ManaPHP\Cache\AdapterInterface $adapter
          * @param \ManaPHP\Serializer\AdapterInterface $serializer
          * @throws \ManaPHP\Cache\Exception|\ManaPHP\Di\Exception
          */
-        public function __construct($prefix = '', $ttl = 3600, $adapter=null, $serializer = null)
+        public function __construct($prefix = '', $ttl = 3600, $adapter=null,$serializer = null)
         {
             $this->_prefix = $prefix;
             $this->_ttl = $ttl;
 
             if($adapter===null){
-                if(self::$_defaultAdapter===null){
-                    throw new Exception('please provide a valid adapter.');
-                }elseif(is_object(self::$_defaultAdapter)){
-                    $this->_adapter=self::$_defaultAdapter;
-                }else{
-                    self::$_defaultAdapter=Di::getDefault()->getShared(self::$_defaultAdapter);
-                    $this->_adapter=self::$_defaultAdapter;
-                }
-            }else{
+                $this->_adapter=Di::getDefault()->getShared('defaultCacheAdapter');
+            }elseif(is_string($adapter)){
+                $this->_adapter=Di::getDefault()->getShared($adapter);
+            } else{
                 $this->_adapter = $adapter;
             }
+
             if ($serializer === null) {
-                $this->_serializer = new self::$_defaultSerializer();
+                $this->_serializer = new JsonPhp();
             } else {
                 $this->_serializer = $serializer;
             }
         }
 
-        /**
-         * @param string $serializer
-         */
-        public static function setDefaultSerializer($serializer)
-        {
-            self::$_defaultSerializer = $serializer;
-        }
-
-        /**
-         * @return string
-         */
-        public static function getDefaultSerializer()
-        {
-            return self::$_defaultSerializer;
-        }
-
-        /**
-         * @param \ManaPHP\Store\AdapterInterface $adapter
-         */
-        public static function setDefaultAdapter($adapter){
-            self::$_defaultAdapter=$adapter;
-        }
-
-        /**
-         * @return \ManaPHP\Store\AdapterInterface
-         */
-        public static function getDefaultAdapter(){
-            return self::$_defaultAdapter;
-        }
 
         /**
          * Fetch content
@@ -159,6 +114,14 @@ namespace ManaPHP {
         public function getAdapter()
         {
             return $this->_adapter;
+        }
+
+        /**
+         * @return \ManaPHP\Serializer\AdapterInterface
+         */
+        public function getSerializer()
+        {
+            return $this->_serializer;
         }
 
         /**

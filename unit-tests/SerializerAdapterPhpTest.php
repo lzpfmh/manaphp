@@ -2,9 +2,9 @@
 defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
 
 
-class SerializerAdapterSerializeTest extends TestCase{
+class SerializerAdapterPhpTest extends TestCase{
     public function test_serialize(){
-        $serializer=new \ManaPHP\Serializer\Adapter\Serialize();
+        $serializer=new \ManaPHP\Serializer\Adapter\Php();
 
         $data=true;
         $this->assertSame($data,$serializer->deserialize($serializer->serialize($data)));
