@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="true"
+         backupStaticAttributes="false"
+         bootstrap="./unit-tests/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="true"
+         debug="true">
+    <testsuites>
+        <testsuite name="all">
+            <directory suffix="Test.php">./unit-tests</directory>
+        </testsuite>
+        <testsuite name="cache">
+            <file>./unit-tests/CacheTest.php</file>
+            <file>./unit-tests/CacheAdapterFileTest.php</file>
+            <file>./unit-tests/CacheAdapterFileTest.php</file>
+            <file>./unit-tests/CacheAdapterRedisTest.php</file>
+        </testsuite>
+        <testsuite name="store">
+            <file>./unit-tests/StoreTest.php</file>
+            <file>./unit-tests/StoreAdapterFileTest.php</file>
+            <file>./unit-tests/StoreAdapterFileTest.php</file>
+            <file>./unit-tests/StoreAdapterRedisTest.php</file>
+        </testsuite>
+        <testsuite name="serializer">
+            <file>./unit-tests/SerializerAdapterJsonPhpTest.php</file>
+            <file>./unit-tests/SerializerAdapterJsonTest.php</file>
+            <file>./unit-tests/SerializerAdapterPhpTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -5,7 +5,7 @@
  * Date: 2015/12/27
  * Time: 20:13
  */
-defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
 use Models\Address;
 use Models\City;
 use Models\Country;
@@ -36,7 +36,7 @@ class MvcModelQueryBuilderTest extends TestCase
             $config = require 'config.database.php';
             $db = new ManaPHP\Db\Adapter\Mysql($config['mysql']);
             $db->attachEvent('db:beforeQuery', function ($event, ManaPHP\DbInterface $source) {
-                var_dump($source->getSQLStatement());
+        //        var_dump($source->getSQLStatement());
                 //      var_dump($source->getEmulatePrepareSQLStatement());
             });
             return $db;

@@ -5,7 +5,7 @@
  * Date: 2015/12/27
  * Time: 16:14
  */
-defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
 
 class DbConditionParserTest extends TestCase
 {

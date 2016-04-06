@@ -1,5 +1,5 @@
 <?php
-defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
 
 class StoreTest extends TestCase
 {

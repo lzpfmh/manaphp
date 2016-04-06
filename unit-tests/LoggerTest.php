@@ -1,6 +1,6 @@
 <?php
 
-defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
 
 class LoggerTest extends TestCase{
     public function test_setLevel(){

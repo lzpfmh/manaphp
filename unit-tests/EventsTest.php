@@ -5,7 +5,7 @@
  * Date: 2015/12/19
  * Time: 23:20
  */
-defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
 
 class DummyComponent extends \ManaPHP\Component
 {

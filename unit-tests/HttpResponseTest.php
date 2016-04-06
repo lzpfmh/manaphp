@@ -5,7 +5,7 @@
  * Date: 2015/12/17
  * Time: 21:42
  */
-defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
 
 class tResponse extends \ManaPHP\Http\Response
 {

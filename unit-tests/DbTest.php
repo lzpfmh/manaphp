@@ -5,7 +5,7 @@
  * Date: 2015/12/23
  * Time: 21:36
  */
-defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
 
 class DbTest extends TestCase
 {
@@ -20,7 +20,7 @@ class DbTest extends TestCase
         $this->db = new ManaPHP\Db\Adapter\Mysql($config['mysql']);
         $this->db->attachEvent('db:beforeQuery', function ($event, \ManaPHP\DbInterface $source, $data) {
             //var_dump(['sql'=>$source->getSQLStatement(),'bind'=>$source->getSQLBindParams(),'bindTypes'=>$source->getSQLBindTypes()]);
-            var_dump($source->getSQLStatement(), $source->getEmulatePrepareSQLStatement(2));
+      //      var_dump($source->getSQLStatement(), $source->getEmulatePrepareSQLStatement(2));
 
         });
         $this->db->query('SET GLOBAL innodb_flush_log_at_trx_commit=2');

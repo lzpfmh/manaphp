@@ -5,7 +5,7 @@
  * Date: 2015/12/15
  * Time: 22:15
  */
-defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
 
 class MvcRouterTest extends TestCase
 {

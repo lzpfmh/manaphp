@@ -6,7 +6,7 @@
  * Date: 2015/12/12
  * Time: 17:07
  */
-defined('UNIT_TESTS_ROOT') || require 'bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
 use Models\Actor;
 use Models\City;
 use Models\Payment;
@@ -39,7 +39,7 @@ class MvcModelTest extends TestCase
         $this->di->getShared('db')
           ->attachEvent('db:beforeQuery', function ($event, \ManaPHP\DbInterface $source, $data) {
               //var_dump(['sql'=>$source->getSQLStatement(),'bind'=>$source->getSQLBindParams(),'bindTypes'=>$source->getSQLBindTypes()]);
-              var_dump($source->getSQLStatement());
+        //      var_dump($source->getSQLStatement());
           });
     }
 
