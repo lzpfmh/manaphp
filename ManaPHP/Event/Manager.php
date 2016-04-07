@@ -22,7 +22,7 @@ namespace ManaPHP\Event {
          * Attach a listener to the events manager
          *
          * @param string $event
-         * @param object|callable $handler
+         * @param callable|\ManaPHP\Event\ListenerInterface $handler
          * @return static
          * @throws \ManaPHP\Event\Exception
          */
@@ -60,7 +60,7 @@ namespace ManaPHP\Event {
          *</code>
          *
          * @param string $event
-         * @param object $source
+         * @param \ManaPHP\ComponentInterface $source
          * @param mixed $data
          * @return boolean|null
          * @throws \ManaPHP\Event\Exception

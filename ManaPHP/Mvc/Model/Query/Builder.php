@@ -70,6 +70,9 @@ namespace ManaPHP\Mvc\Model\Query {
          */
         protected $_binds = [];
 
+        /**
+         * @var bool
+         */
         protected $_distinct;
 
         protected $_hiddenParamNumber;
@@ -126,6 +129,7 @@ namespace ManaPHP\Mvc\Model\Query {
                 $this->_conditions = $params['conditions'];
             } else {
                 $this->_conditions = $params;
+                $params = [];
             }
 
             if (isset($params['bind'])) {
@@ -607,10 +611,13 @@ namespace ManaPHP\Mvc\Model\Query {
             /**
              * Generate SQL for SELECT
              */
-            if ($this->_distinct === true) {
-                $sql = 'SELECT DISTINCT ';
-            } else {
-                $sql = 'SELECT ';
+            $sql = 'SELECT ';
+
+            /**
+             * Generate SQL for DISTINCT
+             */
+            if ($this->_distinct) {
+                $sql .= 'DISTINCT ';
             }
 
             /**

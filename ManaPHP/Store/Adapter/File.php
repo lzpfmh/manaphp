@@ -2,7 +2,6 @@
 namespace ManaPHP\Store\Adapter {
 
     use ManaPHP\Store\AdapterInterface;
-    use ManaPHP\Store\Exception;
 
     class File implements AdapterInterface
     {
@@ -29,7 +28,6 @@ namespace ManaPHP\Store\Adapter {
          * File constructor.
          * @param string $storeDir
          * @param string $shardMode
-         * @throws \ManaPHP\Cache\Exception
          */
         public function __construct($storeDir, $shardMode = null)
         {

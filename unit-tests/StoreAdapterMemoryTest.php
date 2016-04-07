@@ -52,7 +52,7 @@ class StoreAdapterMemoryTest extends TestCase
 
 
     public function test_mSet(){
-        $cache = new ManaPHP\Store(new \ManaPHP\Store\Adapter\Memory());
+        $cache = new \ManaPHP\Store\Adapter\Memory();
 
         $cache->mSet([]);
 

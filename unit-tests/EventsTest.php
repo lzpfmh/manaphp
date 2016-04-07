@@ -11,7 +11,7 @@ class DummyComponent extends \ManaPHP\Component
 {
     public function doAction()
     {
-        $this->fireEvent('dummy:doAction', $this, 'extra data');
+        $this->fireEvent('dummy:doAction', 'extra data');
     }
 }
 

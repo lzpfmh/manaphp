@@ -202,7 +202,7 @@ namespace ManaPHP {
          */
         public function __debugInfo()
         {
-            return get_object_vars($this);
+            return get_object_vars($this) ?: [];
         }
     }
 }

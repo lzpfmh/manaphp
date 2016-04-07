@@ -1,3 +1,4 @@
+mana
 manaphp
 phtml
 escaper
@@ -6,3 +7,10 @@ camelize
 unserialize
 unserializes
 unregister
+autoloader
+autoloaders
+Paginator
+referer
+addr
+resultset
+dbname

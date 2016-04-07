@@ -259,7 +259,7 @@ namespace ManaPHP\Mvc {
 
                     $engine = $this->_resolvedEngines[$extension];
 
-                    $this->fireEvent('view:beforeRenderView', $this, $file);
+                    $this->fireEvent('view:beforeRenderView', $file);
                     if ($mustClean) {
                         ob_clean();
                     }
@@ -268,7 +268,7 @@ namespace ManaPHP\Mvc {
                         $this->setContent(ob_get_contents());
                     }
                     $notExists = false;
-                    $this->fireEvent('view:afterRenderView', $this, $file);
+                    $this->fireEvent('view:afterRenderView', $file);
                     break;
                 }
             }
@@ -334,7 +334,7 @@ namespace ManaPHP\Mvc {
                 $this->_actionName = $actionName;
             }
 
-            $this->fireEvent('view:beforeRender', $this);
+            $this->fireEvent('view:beforeRender');
 
             $mustClean = true;
 
@@ -351,7 +351,7 @@ namespace ManaPHP\Mvc {
                 $this->_engineRender($this->_viewsDir, $this->_layoutsDir . '/' . ucfirst($layout), $mustClean);
             }
 
-            $this->fireEvent('view:afterRender', $this);
+            $this->fireEvent('view:afterRender');
 
             return $this;
         }

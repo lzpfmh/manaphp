@@ -402,15 +402,13 @@ namespace ManaPHP\Http {
          */
         public function setFileToSend($filePath, $attachmentName = null)
         {
-            if (is_string($attachmentName)) {
-                $basePath = basename($filePath);
-            } else {
-                $basePath = $attachmentName;
+            if ($attachmentName === null) {
+                $attachmentName = basename($filePath);
             }
 
             $this->_headers->setRaw('Content-Description: File Transfer');
             $this->_headers->setRaw('Content-Type: application/octet-stream');
-            $this->_headers->setRaw('Content-Disposition: attachment; filename=' . $basePath);
+            $this->_headers->setRaw('Content-Disposition: attachment; filename=' . $attachmentName);
             $this->_headers->setRaw('Content-Transfer-Encoding: binary');
             $this->_file = $filePath;
 

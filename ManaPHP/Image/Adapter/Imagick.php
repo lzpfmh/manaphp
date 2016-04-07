@@ -3,7 +3,6 @@
 namespace ManaPHP\Image\Adapter {
 
     use ManaPHP\Image\AdapterInterface;
-    use ManaPHP\Image\Exception;
 
     class Imagick implements AdapterInterface
     {
@@ -30,7 +29,7 @@ namespace ManaPHP\Image\Adapter {
 
         /**
          * @param string $file
-         * @throws \ManaPHP\Image\Exception
+         * @throws \ManaPHP\Image\Adapter\Exception
          */
         public function __construct($file)
         {
@@ -185,7 +184,7 @@ namespace ManaPHP\Image\Adapter {
          * @param int $offsetY
          * @param float $opacity
          * @return static
-         * @throws \ManaPHP\Image\Exception
+         * @throws \ManaPHP\Image\Adapter\Exception
          */
         public function watermark($file, $offsetX = 0, $offsetY = 0, $opacity = 1.0)
         {
@@ -211,7 +210,7 @@ namespace ManaPHP\Image\Adapter {
         /**
          * @param string $file
          * @param int $quality
-         * @throws \ManaPHP\Image\Exception
+         * @throws \ManaPHP\Image\Adapter\Exception
          */
         public function save($file = null, $quality = 80)
         {

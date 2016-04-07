@@ -5,6 +5,8 @@ namespace ManaPHP\Mvc {
     use ManaPHP\Component;
     use ManaPHP\DiInterface;
     use ManaPHP\Mvc\Dispatcher\Exception;
+    use ManaPHP\Mvc\Dispatcher\NotFoundActionException;
+    use ManaPHP\Mvc\Dispatcher\NotFoundControllerException;
 
     /**
      * ManaPHP\Mvc\Dispatcher
@@ -27,12 +29,6 @@ namespace ManaPHP\Mvc {
      */
     class Dispatcher extends Component implements DispatcherInterface
     {
-        const EXCEPTION_CONTROLLER_NOT_FOUND = 2;
-
-        const EXCEPTION_INVALID_CONTROLLER = 3;
-
-        const EXCEPTION_ACTION_NOT_FOUND = 5;
-
         /**
          * @var boolean
          */
@@ -224,7 +220,7 @@ namespace ManaPHP\Mvc {
                 throw new Exception('A dependency injection container is required to access related dispatching services');
             }
 
-            if ($this->fireEvent('dispatcher:beforeDispatchLoop', $this) === false) {
+            if ($this->fireEvent('dispatcher:beforeDispatchLoop') === false) {
                 return false;
             }
 
@@ -240,7 +236,7 @@ namespace ManaPHP\Mvc {
                     throw new Exception('Dispatcher has detected a cyclic routing causing stability problems');
                 }
 
-                $this->fireEvent('dispatcher:beforeDispatch', $this);
+                $this->fireEvent('dispatcher:beforeDispatch');
 
                 if ($this->_finished === false) {
                     continue;
@@ -256,7 +252,7 @@ namespace ManaPHP\Mvc {
                 $controllerClassName .= $this->_controllerName . $this->_controllerSuffix;
 
                 if (!$this->_dependencyInjector->has($controllerClassName) && !class_exists($controllerClassName)) {
-                    if ($this->fireEvent('dispatcher:beforeNotFoundController', $this) === false) {
+                    if ($this->fireEvent('dispatcher:beforeNotFoundController') === false) {
                         return false;
                     }
 
@@ -264,7 +260,7 @@ namespace ManaPHP\Mvc {
                         continue;
                     }
 
-                    throw new Exception($controllerClassName . ' handler class cannot be loaded');
+                    throw new NotFoundControllerException($controllerClassName . ' handler class cannot be loaded');
                 }
 
                 $controllerInstance = $this->_dependencyInjector->getShared($controllerClassName);
@@ -275,7 +271,7 @@ namespace ManaPHP\Mvc {
 
                 $actionMethod = $this->_actionName . $this->_actionSuffix;
                 if (!method_exists($controllerInstance, $actionMethod)) {
-                    if ($this->fireEvent('dispatcher:beforeNotFoundAction', $this) === false) {
+                    if ($this->fireEvent('dispatcher:beforeNotFoundAction') === false) {
                         continue;
                     }
 
@@ -283,7 +279,7 @@ namespace ManaPHP\Mvc {
                         continue;
                     }
 
-                    throw new Exception('Action \'' . $this->_actionName . '\' was not found on handler \'' . $controllerClassName . '\'');
+                    throw new NotFoundActionException('Action \'' . $this->_actionName . '\' was not found on handler \'' . $controllerClassName . '\'');
                 }
 
                 // Calling beforeExecuteRoute as callback
@@ -297,7 +293,9 @@ namespace ManaPHP\Mvc {
                     }
                 }
 
-                if (!in_array($controllerClassName,$this->_initializedControllers,true) && method_exists($controllerInstance, 'initialize')) {
+                if (!in_array($controllerClassName, $this->_initializedControllers,
+                    true) && method_exists($controllerInstance, 'initialize')
+                ) {
                     $controllerInstance->initialize();
                     $this->_initializedControllers[] = $controllerClassName;
                 }
@@ -307,7 +305,7 @@ namespace ManaPHP\Mvc {
                 $value = null;
 
                 // Call afterDispatch
-                $this->fireEvent('dispatcher:afterDispatch', $this);
+                $this->fireEvent('dispatcher:afterDispatch');
 
                 if (method_exists($controllerInstance, 'afterExecuteRoute')) {
                     if ($controllerInstance->afterExecuteRoute($this, $value) === false) {
@@ -320,7 +318,7 @@ namespace ManaPHP\Mvc {
                 }
             }
 
-            $this->fireEvent('dispatcher:afterDispatchLoop', $this);
+            $this->fireEvent('dispatcher:afterDispatchLoop');
 
             return $controllerInstance;
         }
@@ -395,18 +393,6 @@ namespace ManaPHP\Mvc {
             }
         }
 
-
-        /**
-         * Sets the controller name to be dispatched
-         *
-         * @param string $controllerName
-         */
-        public function setControllerName($controllerName)
-        {
-            $this->_controllerName = $this->_camelize($controllerName);
-        }
-
-
         /**
          * Gets last dispatched controller name
          *
@@ -436,26 +422,6 @@ namespace ManaPHP\Mvc {
         public function getPreviousActionName()
         {
             return $this->_previousActionName;
-        }
-
-        /**
-         * Throws an internal exception
-         *
-         * @param string $message
-         * @param int $exceptionCode
-         * @return boolean
-         * @throws \ManaPHP\Mvc\Dispatcher\Exception
-         */
-        protected function _throwDispatchException($message, $exceptionCode = 0)
-        {
-            if (!is_object($this->_dependencyInjector)) {
-                throw new Exception("A dependency injection container is required to access the 'response' service");
-            }
-
-            $response = $this->_dependencyInjector->getShared('response');
-            $response->setStatusCode(404, 'Not Found');
-
-            throw new Exception($message, $exceptionCode);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace ManaPHP {
          * Attach a listener to the events manager
          *
          * @param string $event
-         * @param object|callable $handler
+         * @param callable|\ManaPHP\Event\ListenerInterface $handler
          * @return static
          * @throws \ManaPHP\Event\Exception
          */
@@ -50,10 +50,9 @@ namespace ManaPHP {
          * Fires an event in the events manager causing that the active listeners will be notified about it
          *
          * @param string $event
-         * @param object $source
          * @param mixed $data
          * @return mixed
          */
-        public function fireEvent($event, $source, $data = null);
+        public function fireEvent($event, $data = null);
     }
 }

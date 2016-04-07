@@ -2,20 +2,20 @@
 namespace ManaPHP\Serializer\Adapter {
 
     use ManaPHP\Serializer\AdapterInterface;
-    use ManaPHP\Serializer\Exception;
 
     class JsonPhp implements AdapterInterface
     {
-        public function _isCanJsonSafely($data){
-            if(is_scalar($data) ||$data===null){
+        public function _isCanJsonSafely($data)
+        {
+            if (is_scalar($data) || $data === null) {
                 return true;
-            }elseif(is_array($data)){
-                foreach($data as $v){
-                    if(!$this->_isCanJsonSafely($v)){
+            } elseif (is_array($data)) {
+                foreach ($data as $v) {
+                    if (!$this->_isCanJsonSafely($v)) {
                         return false;
                     }
                 }
-            }else{
+            } else {
                 return false;
             }
 
@@ -24,15 +24,15 @@ namespace ManaPHP\Serializer\Adapter {
 
         public function serialize($data, $context = null)
         {
-            if(is_scalar($data) ||$data===null){
-                $serialized=json_encode(['__wrapper__'=>$data],JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            }elseif($this->_isCanJsonSafely($data)){
-                $serialized=json_encode($data,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
+            if (is_scalar($data) || $data === null) {
+                $serialized = json_encode(['__wrapper__' => $data], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            } elseif ($this->_isCanJsonSafely($data)) {
+                $serialized = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                 if ($serialized === false) {
                     throw new Exception('json_encode failed: ' . json_last_error_msg());
                 }
-            }else{
-                $serialized=serialize($data);
+            } else {
+                $serialized = serialize($data);
             }
 
             return $serialized;
@@ -40,7 +40,7 @@ namespace ManaPHP\Serializer\Adapter {
 
         public function deserialize($serialized, $content = null)
         {
-            if($serialized[0]==='{'||$serialized[0]==='['){
+            if ($serialized[0] === '{' || $serialized[0] === '[') {
                 $data = json_decode($serialized, true);
                 if ($data === null) {
                     throw new Exception('json_encode failed: ' . json_last_error_msg());
@@ -54,11 +54,11 @@ namespace ManaPHP\Serializer\Adapter {
                 } else {
                     return $data;
                 }
-            }else{
-                $data=unserialize($serialized);
+            } else {
+                $data = unserialize($serialized);
                 if ($data === false) {
                     throw new Exception('unserialize failed: ' . error_get_last()['message']);
-                }else{
+                } else {
                     return $data;
                 }
             }

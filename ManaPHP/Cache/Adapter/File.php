@@ -2,7 +2,6 @@
 namespace ManaPHP\Cache\Adapter {
 
     use ManaPHP\Cache\AdapterInterface;
-    use ManaPHP\Cache\Exception;
 
     class File implements AdapterInterface
     {

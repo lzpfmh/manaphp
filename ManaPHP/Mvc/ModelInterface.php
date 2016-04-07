@@ -115,7 +115,7 @@ namespace ManaPHP\Mvc {
          *  $city=City::findFirst(['conditions'=>['city_id'=>10]]);
          *  $city=City::findFirst(['conditions'=>'city_id =:city_id','bind'=>['city_id'=>10]]);
          * </code>
-         * @param array $parameters
+         * @param string|array $parameters
          * @param array $cacheOptions
          * @return static|false
          */

@@ -10,6 +10,7 @@ namespace Application\Home\Controllers;
 use Application\Home\Models\Address;
 use Application\Home\Models\City;
 use ManaPHP\Http\Session;
+use ManaPHP\Mvc\Controller;
 use ManaPHP\Mvc\PhpUnitController;
 
 class SomeComponent
@@ -22,7 +23,7 @@ class SomeComponent
     }
 }
 
-class IndexController extends PhpUnitController
+class IndexController extends Controller
 {
     public function indexAction()
     {

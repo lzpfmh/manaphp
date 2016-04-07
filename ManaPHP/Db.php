@@ -80,12 +80,12 @@ namespace ManaPHP {
         }
 
         /**
-         * This method is automatically called in Phalcon\Db\Adapter\Pdo constructor.
+         * This method is automatically called in ManaPHP\Db\Adapter\Pdo constructor.
          * Call it when you need to restore a database connection
          *
          *<code>
          * //Make a connection
-         * $connection = new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+         * $connection = new \ManaPHP\Db\Adapter\Pdo\Mysql(array(
          *  'host' => '192.168.0.11',
          *  'username' => 'sigma',
          *  'password' => 'secret',
@@ -237,7 +237,7 @@ namespace ManaPHP {
             $this->_sqlBindParams = $bindParams;
             $this->_sqlBindTypes = $bindTypes;
 
-            if ($this->fireEvent('db:beforeQuery', $this) === false) {
+            if ($this->fireEvent('db:beforeQuery') === false) {
                 return false;
             }
 
@@ -254,7 +254,7 @@ namespace ManaPHP {
                 throw new Exception($e->getMessage());
             }
 
-            $this->fireEvent('db:afterQuery', $this);
+            $this->fireEvent('db:afterQuery');
 
             return $statement;
         }
@@ -283,7 +283,7 @@ namespace ManaPHP {
 
             $this->_affectedRows = 0;
 
-            $this->fireEvent('db:beforeQuery', $this);
+            $this->fireEvent('db:beforeQuery');
 
             try {
                 if ($bindParams !== null) {
@@ -298,7 +298,7 @@ namespace ManaPHP {
             }
 
             if (is_int($this->_affectedRows)) {
-                $this->fireEvent('db:afterQuery', $this);
+                $this->fireEvent('db:afterQuery');
             }
 
             return $this->_affectedRows;
@@ -620,7 +620,7 @@ namespace ManaPHP {
                 throw new Exception('There is in a active transaction already.');
             }
 
-            $this->fireEvent('db:beginTransaction', $this);
+            $this->fireEvent('db:beginTransaction');
 
             $this->_transactionLevel++;
             return $this->_pdo->beginTransaction();
@@ -652,7 +652,7 @@ namespace ManaPHP {
                 throw new Exception('There is no active transaction');
             }
 
-            $this->fireEvent('db:rollbackTransaction', $this);
+            $this->fireEvent('db:rollbackTransaction');
 
             $this->_transactionLevel--;
             return $this->_pdo->rollBack();
@@ -671,7 +671,7 @@ namespace ManaPHP {
                 throw new Exception('There is no active transaction');
             }
 
-            $this->fireEvent('db:commitTransaction', $this);
+            $this->fireEvent('db:commitTransaction');
 
 
             $this->_transactionLevel--;

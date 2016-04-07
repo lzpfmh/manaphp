@@ -4,6 +4,7 @@ namespace ManaPHP\Mvc {
 
     use ManaPHP\Component;
     use ManaPHP\Mvc\Router\Exception;
+    use ManaPHP\Mvc\Router\NotFoundRouteException;
 
     /**
      * ManaPHP\Mvc\Router
@@ -168,10 +169,11 @@ namespace ManaPHP\Mvc {
          *
          * @param string $uri
          * @param string $host
+         * @param bool $silent
          * @return boolean
          * @throws \ManaPHP\Mvc\Router\Exception
          */
-        public function handle($uri = null, $host = null)
+        public function handle($uri = null, $host = null, $silent = true)
         {
             if ($uri === null) {
                 $uri = $this->getRewriteUri();
@@ -182,7 +184,7 @@ namespace ManaPHP\Mvc {
             }
             $refined_uri = $uri === '' ? '/' : $uri;
 
-            $this->fireEvent('router:beforeCheckRoutes', $this);
+            $this->fireEvent('router:beforeCheckRoutes');
 
             $module = null;
             $route_found = false;
@@ -263,7 +265,11 @@ namespace ManaPHP\Mvc {
                 $this->_params = array_merge($params, $parts);
             }
 
-            $this->fireEvent('router:afterCheckRoutes', $this);
+            $this->fireEvent('router:afterCheckRoutes');
+
+            if (!$route_found && !$silent) {
+                throw new NotFoundRouteException('not found matched route: ' . $uri);
+            }
 
             return $route_found;
         }

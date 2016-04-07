@@ -21,19 +21,15 @@ namespace ManaPHP {
         {
             if ($adapter === null) {
                 if (extension_loaded('imagick')) {
-                    $adapter='ManaPHP\Image\Adapter\Imagick';
+                    $adapter = 'ManaPHP\Image\Adapter\Imagick';
                 } elseif (extension_loaded('gd')) {
-                    $adapter='ManaPHP\Image\Adapter\Gd';
+                    $adapter = 'ManaPHP\Image\Adapter\Gd';
                 } else {
                     throw new Exception('No valid Image Adapter exists.');
                 }
             }
 
-            if(is_string($adapter)){
-                $this->_adapter=new $adapter($file);
-            }else{
-                $this->_adapter=$adapter;
-            }
+            $this->_adapter = is_string($adapter) ? new $adapter($file) : $adapter;
         }
 
 

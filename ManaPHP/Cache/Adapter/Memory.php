@@ -1,7 +1,6 @@
 <?php
 namespace ManaPHP\Cache\Adapter {
 
-    use ManaPHP\Cache;
     use ManaPHP\Cache\AdapterInterface;
 
     class Memory implements AdapterInterface
@@ -18,6 +17,7 @@ namespace ManaPHP\Cache\Adapter {
                     return $this->_data[$key]['data'];
                 } else {
                     unset($this->_data[$key]);
+                    return false;
                 }
             } else {
                 return false;

@@ -25,11 +25,7 @@ namespace ManaPHP\Flash {
          */
         public function _message($type, $message)
         {
-            if (isset($this->_cssClasses[$type])) {
-                $cssClasses = $this->_cssClasses[$type];
-            } else {
-                $cssClasses = '';
-            }
+            $cssClasses = isset($this->_cssClasses[$type]) ? $this->_cssClasses[$type] : '';
 
             $this->_messages[] = '<div class="' . $cssClasses . '">' . $message . '</div>' . PHP_EOL;
         }

@@ -8,9 +8,9 @@
 namespace ManaPHP\Http {
 
     /**
-     * Phalcon\Http\CookieInterface
+     * ManaPHP\Http\CookieInterface
      *
-     * Interface for Phalcon\Http\Cookie
+     * Interface for ManaPHP\Http\Cookie
      */
     interface CookieInterface
     {

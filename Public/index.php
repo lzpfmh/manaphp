@@ -21,7 +21,13 @@ $application = new \ManaPHP\Mvc\Application(APP_ROOT);
 $application->useImplicitView(false);
 $application->registerModules(['Home']);
 $application->router->mount(new \ManaPHP\Mvc\Router\Group(),'Home','/');
-
+class Authentication implements ManaPHP\AuthorizationInterface{
+    public function authorize($dispatcher)
+    {
+        return true;
+    }
+}
+$application->di->setShared('authorization',new Authentication());
 echo $application->handle()->getContent();
 //var_dump($application->__debugInfo());
 //}catch (\Exception $e){
@@ -29,14 +35,3 @@ echo $application->handle()->getContent();
 //    var_dump($_GET);
 //    var_dump($_SERVER);
 //}
-class ddd extends \ManaPHP\Mvc\Dispatcher\Listener
-{
-    public function afterDispatch(
-        /* @noinspection PhpUnusedParameterInspection */
-      $event,
-      /* @noinspection PhpUnusedParameterInspection */
-      $dispatcher
-    ) {
-        parent::afterDispatch($event, $dispatcher);
-    }
-}

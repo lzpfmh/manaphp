@@ -2,19 +2,16 @@
 namespace ManaPHP\Serializer\Adapter {
 
     use ManaPHP\Serializer\AdapterInterface;
-    use ManaPHP\Serializer\Exception;
 
     class Php implements AdapterInterface
     {
         public function serialize($data, $context = null)
         {
-            if (is_array($data)) {
-                $packedData = $data;
-            } else {
-                $packedData = ['__wrapper__' => $data];
+            if (!is_array($data)) {
+                $data = ['__wrapper__' => $data];
             }
 
-            return serialize($packedData);
+            return serialize($data);
         }
 
         public function deserialize($serialized, $content = null)

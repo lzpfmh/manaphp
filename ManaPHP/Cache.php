@@ -1,5 +1,6 @@
 <?php
 namespace ManaPHP {
+
     use ManaPHP\Serializer\Adapter\JsonPhp;
 
     class Cache implements CacheInterface
@@ -32,24 +33,17 @@ namespace ManaPHP {
          * @param \ManaPHP\Serializer\AdapterInterface $serializer
          * @throws \ManaPHP\Cache\Exception|\ManaPHP\Di\Exception
          */
-        public function __construct($prefix = '', $ttl = 3600, $adapter=null,$serializer = null)
+        public function __construct($prefix = '', $ttl = 3600, $adapter = null, $serializer = null)
         {
             $this->_prefix = $prefix;
             $this->_ttl = $ttl;
 
-            if($adapter===null){
-                $this->_adapter=Di::getDefault()->getShared('defaultCacheAdapter');
-            }elseif(is_string($adapter)){
-                $this->_adapter=Di::getDefault()->getShared($adapter);
-            } else{
-                $this->_adapter = $adapter;
+            if ($adapter === null) {
+                $adapter = 'defaultCacheAdapter';
             }
 
-            if ($serializer === null) {
-                $this->_serializer = new JsonPhp();
-            } else {
-                $this->_serializer = $serializer;
-            }
+            $this->_adapter = is_string($adapter) ? Di::getDefault()->getShared($adapter) : $adapter;
+            $this->_serializer = $serializer ?: new JsonPhp();
         }
 
 
@@ -129,7 +123,7 @@ namespace ManaPHP {
          */
         public function __debugInfo()
         {
-            return get_object_vars($this);
+            return get_object_vars($this) ?: [];
         }
     }
 }

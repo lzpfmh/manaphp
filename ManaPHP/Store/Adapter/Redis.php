@@ -3,7 +3,6 @@
 namespace ManaPHP\Store\Adapter {
 
     use ManaPHP\Store\AdapterInterface;
-    use ManaPHP\Store\Exception;
 
     class Redis implements AdapterInterface
     {

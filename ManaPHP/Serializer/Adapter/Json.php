@@ -2,19 +2,16 @@
 namespace ManaPHP\Serializer\Adapter {
 
     use ManaPHP\Serializer\AdapterInterface;
-    use ManaPHP\Serializer\Exception;
 
     class Json implements AdapterInterface
     {
         public function serialize($data, $context = null)
         {
-            if (is_array($data)) {
-                $packedData = $data;
-            } else {
-                $packedData = ['__wrapper__' => $data];
+            if (!is_array($data)) {
+                $data = ['__wrapper__' => $data];
             }
 
-            $serialized = json_encode($packedData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $serialized = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             if ($serialized === false) {
                 throw new Exception('json_encode failed: ' . json_last_error_msg());
             }

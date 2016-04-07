@@ -10,7 +10,7 @@ namespace ManaPHP\Di {
     interface ServiceInterface
     {
         /**
-         * Phalcon\Di\ServiceInterface
+         * \ManaPHP\Di\ServiceInterface
          *
          * @param string $name
          * @param string|callable|object $definition
@@ -23,7 +23,7 @@ namespace ManaPHP\Di {
          *
          * @param array $parameters
          * @param \ManaPHP\DiInterface $dependencyInjector
-         * @return object
+         * @return mixed
          */
         public function resolve($parameters = null, $dependencyInjector = null);
 

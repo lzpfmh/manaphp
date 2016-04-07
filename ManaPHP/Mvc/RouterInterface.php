@@ -22,9 +22,10 @@ namespace ManaPHP\Mvc {
          * </code>
          * @param string $uri
          * @param string $host
+         * @param bool $silent
          * @return boolean
          */
-        public function handle($uri = null, $host = null);
+        public function handle($uri = null, $host = null, $silent = true);
 
 
         /**

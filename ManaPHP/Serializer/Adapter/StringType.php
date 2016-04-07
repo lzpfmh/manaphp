@@ -2,7 +2,6 @@
 namespace ManaPHP\Serializer\Adapter {
 
     use ManaPHP\Serializer\AdapterInterface;
-    use ManaPHP\Serializer\Exception;
 
     class StringType implements AdapterInterface
     {
@@ -13,7 +12,7 @@ namespace ManaPHP\Serializer\Adapter {
             } elseif ($data === false || $data === null) {
                 return '';
             } else {
-                throw new Exception('data is not string: '.gettype($data));
+                throw new Exception('data is not string: ' . gettype($data));
             }
         }
 

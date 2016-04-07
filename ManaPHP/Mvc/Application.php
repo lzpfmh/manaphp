@@ -6,6 +6,10 @@ namespace ManaPHP\Mvc {
     use ManaPHP\Di\FactoryDefault;
     use ManaPHP\Http\ResponseInterface;
     use ManaPHP\Mvc\Application\Exception;
+    use ManaPHP\Mvc\Application\NotFoundModuleException;
+    use ManaPHP\Mvc\Dispatcher\NotFoundActionException;
+    use ManaPHP\Mvc\Dispatcher\NotFoundControllerException;
+    use ManaPHP\Mvc\Router\NotFoundRouteException;
 
     /**
      * ManaPHP\Mvc\Application
@@ -118,8 +122,7 @@ namespace ManaPHP\Mvc {
          *
          *<code>
          *    $this->registerModules(array(
-         *        'frontend' => 'Multiple\Frontend\Module',
-         *        'backend' => 'Multiple\Backend\Module'));
+         *        'frontend','backend'));
          *</code>
          *
          * @param array $modules
@@ -132,14 +135,10 @@ namespace ManaPHP\Mvc {
             assert(is_array($modules));
             //endregion
 
-            foreach ($modules as $module => $definition) {
-                if (is_string($module)) {
-                    $moduleName = ucfirst($module);
-                    $this->_modules[$moduleName] = $definition;
-                } else {
-                    $moduleName = ucfirst($definition);
-                    $this->_modules[$moduleName] = $this->_rootNamespace . "\\$moduleName\\Module";
-                }
+            foreach ($modules as $module) {
+                $moduleName = ucfirst($module);
+
+                $this->_modules[$moduleName] = $this->_rootNamespace . "\\$moduleName\\Module";
 
                 if ($this->_defaultModule === null) {
                     $this->_defaultModule = $moduleName;
@@ -154,55 +153,81 @@ namespace ManaPHP\Mvc {
          * Handles a MVC request
          *
          * @param string $uri
+         * @param \ManaPHP\Mvc\Application\NotFoundHandlerInterface $notFoundHandler
          * @return \ManaPHP\Http\ResponseInterface|boolean
-         * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Event\Exception|\ManaPHP\Di\Exception
+         * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Event\Exception|\ManaPHP\Di\Exception|\ManaPHP\Mvc\Application\NotFoundModuleException|\ManaPHP\Mvc\Dispatcher\Exception
          */
-        public function handle($uri = null)
+        public function handle($uri = null, $notFoundHandler = null)
         {
             if ($this->_modules === null) {
                 throw new Exception('modules is empty. please register it first.');
             }
 
-            if ($this->fireEvent('application:boot', $this) === false) {
+            if ($this->fireEvent('application:boot') === false) {
                 return false;
             }
 
             $router = $this->_dependencyInjector->getShared('router');
 
-            if ($router->handle($uri)) {
-                $moduleName = $router->getModuleName();
-                $controllerName = $router->getControllerName();
-                $actionName = $router->getActionName();
-                $params = $router->getParams();
+            if ($notFoundHandler === null) {
+                $router->handle($uri, null, false);
             } else {
-                $moduleName = null;
-                $controllerName = null;
-                $actionName = null;
-                $params = null;
+                try {
+                    $router->handle($uri, null, false);
+                } catch (NotFoundRouteException $e) {
+                    return $notFoundHandler->notFoundRoute($e);
+                }
             }
+
+            $moduleName = $router->getModuleName();
+            $controllerName = $router->getControllerName();
+            $actionName = $router->getActionName();
+            $params = $router->getParams();
 
             if ($moduleName === null) {
                 $moduleName = $this->_defaultModule;
             }
 
             if (!isset($this->_modules[$moduleName])) {
-                throw new Exception('Module does not exists: \'' . $moduleName . '\'');
+                $notFoundModuleException = new NotFoundModuleException('Module does not exists: \'' . $moduleName . '\'');
+
+                if ($notFoundHandler === null) {
+                    throw $notFoundModuleException;
+                } else {
+                    return $notFoundHandler->notFoundModule($notFoundModuleException);
+                }
             }
 
             $moduleObject = null;
 
-            $this->fireEvent('application:beforeStartModule', $this, $moduleName);
+            $this->fireEvent('application:beforeStartModule', $moduleName);
             $moduleObject = $this->_dependencyInjector->getShared($this->_modules[$moduleName]);
             $moduleObject->registerAutoloaders($this->_dependencyInjector);
             $moduleObject->registerServices($this->_dependencyInjector);
-            $this->fireEvent('application:afterStartModule', $this, $moduleObject);
+            $this->fireEvent('application:afterStartModule', $moduleObject);
 
             $dispatcher = $this->_dependencyInjector->getShared('dispatcher');
             if ($dispatcher->getRootNamespace() === null) {
                 $dispatcher->setRootNamespace($this->_rootNamespace);
             }
+            if ($this->_dependencyInjector->has('authorization')) {
+                $dispatcher->attachEvent('dispatcher:beforeDispatch', function () use ($dispatcher) {
+                    $dispatcher->getDependencyInjector()->getShared('authorization')->authorize($dispatcher);
+                });
+            }
 
-            $controller = $dispatcher->dispatch($moduleName, $controllerName, $actionName, $params);
+            if ($notFoundHandler === null) {
+                $controller = $dispatcher->dispatch($moduleName, $controllerName, $actionName, $params);
+            } else {
+                try {
+                    $controller = $dispatcher->dispatch($moduleName, $controllerName, $actionName, $params);
+                } catch (NotFoundControllerException $e) {
+                    return $notFoundHandler->notFoundController($e);
+                } catch (NotFoundActionException $e) {
+                    return $notFoundHandler->notFoundAction($e);
+                }
+            }
+
             if ($controller === false) {
                 return false;
             }
@@ -210,7 +235,7 @@ namespace ManaPHP\Mvc {
             $response = $this->_getResponse($dispatcher->getReturnedValue(), $moduleName,
               $dispatcher->getControllerName(), $dispatcher->getActionName());
 
-            $this->fireEvent('application:beforeSendResponse', $this, $response);
+            $this->fireEvent('application:beforeSendResponse', $response);
 
             $response->sendHeaders();
             $response->sendCookies();

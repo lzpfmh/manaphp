@@ -9,14 +9,14 @@
 namespace ManaPHP\Mvc\Router {
 
     /**
-     * Phalcon\Mvc\Router\GroupInterface
+     * ManaPHP\Mvc\Router\GroupInterface
      *
      * PHP_NOTE:
      *      String paths(:: separated) formatted has been removed.
      *      for example "App::Blog::Add"
      *
      *<code>
-     * $router = new \Phalcon\Mvc\Router();
+     * $router = new \ManaPHP\Mvc\Router();
      *
      * //Create a group with a common module and controller
      * $blog = new Group(array(
