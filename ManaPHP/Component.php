@@ -144,12 +144,12 @@ namespace ManaPHP {
             return null;
         }
 
+        /**
+         * @param \Closure $peek
+         * @throws Exception
+         */
         public static function peekEvents($peek)
         {
-            if (!$peek instanceof \Closure) {
-                throw new Exception('Peek is invalid: not Closure.');
-            }
-
             if (self::$_eventPeeks === null) {
                 self::$_eventPeeks = [$peek];
             } else {
@@ -159,9 +159,13 @@ namespace ManaPHP {
 
         public function __debugInfo()
         {
+            $defaultDi=Di::getDefault();
+			
             $data = [];
             foreach (get_object_vars($this) as $k => $v) {
-                if ($k === '_eventsManager' || $k === '_dependencyInjector') {
+                
+
+                if($v===$defaultDi){
                     continue;
                 }
 

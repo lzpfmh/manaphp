@@ -2,7 +2,6 @@
 namespace ManaPHP\Logger\Adapter {
 
     use ManaPHP\Logger\AdapterInterface;
-    use ManaPHP\Logger\Exception;
 
     class File implements AdapterInterface
     {
@@ -13,43 +12,67 @@ namespace ManaPHP\Logger\Adapter {
         protected $_file;
 
         /**
-         * @var resource
+         * @var array
          */
-        protected $_fileHandle;
+        protected $_options=[];
+
+        /**
+         * @var bool
+         */
+        protected $_firstLog=true;
 
         /**
          * \ManaPHP\Logger\Adapter\File constructor.
          *
          * @param string $file
+         * @param array $options
          */
-        public function __construct($file)
+        public function __construct($file,$options=[])
         {
             $this->_file = $file;
+
+            if(!isset($options['dateFormat'])){
+                $options['dateFormat']='D, d M y H:i:s O';
+            }
+
+            if(!isset($options['format'])){
+                $options['format']='[%date%][%level%] %message%';
+            }
+
+            $this->_options=$options;
+
         }
 
         /**
          * @param string $level
          * @param string $message
          * @param array $context
-         * @throws \ManaPHP\Logger\Exception
          */
-        public function log($level, $message, $context = null)
+        public function log($level, $message, $context = [])
         {
-            if ($this->_fileHandle === null) {
+            if($this->_firstLog){
                 $dir = dirname($this->_file);
 
                 if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
-                    throw new Exception('Unable to create \'' . $dir . '\' directory: ' . error_get_last()['message']);
+                    error_log('Unable to create \'' . $dir . '\' directory: ' . error_get_last()['message']);
                 }
 
-                $this->_fileHandle = fopen($this->_file, 'a');
-                if ($this->_fileHandle === false) {
-                    throw new Exception('Can\'t open log file: ' . $this->_file);
-                }
+                $this->_firstLog=false;
             }
 
-            if ($this->_fileHandle !== false && fwrite($this->_fileHandle, $message) === false) {
-                throw new Exception('Write the log to file failed: ' . $this->_fileHandle);
+            $context['date']=date($this->_options['dateFormat'],isset($context['date'])?:time());
+
+            $replaced=[];
+            foreach ($context as $k=>$v){
+                $replaced["%$k%"]=$v;
+            }
+
+            $replaced['%message%']=$message.PHP_EOL;
+
+            $log=strtr($this->_options['format'],$replaced);
+
+            if(file_put_contents($this->_file,$log,FILE_APPEND|LOCK_EX)===false){
+                error_log('Write log to file failed: ' . $this->_file);
             }
         }
     }

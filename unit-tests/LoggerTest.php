@@ -18,7 +18,7 @@ class LoggerTest extends TestCase{
         $log=$memory->getLogs()[0];
         $this->assertEquals(ManaPHP\Logger::LEVEL_DEBUG,$log['level']);
         $this->assertContains('**debug**',$log['message']);
-        $this->assertEquals(null,$log['context']);
+        $this->assertTrue(isset($log['context']));
 
         // To confirm the level can set correctly
         $logger=new ManaPHP\Logger();
@@ -51,7 +51,7 @@ class LoggerTest extends TestCase{
         $log=$memory->getLogs()[0];
         $this->assertEquals(ManaPHP\Logger::LEVEL_DEBUG,$log['level']);
         $this->assertContains('**debug**',$log['message']);
-        $this->assertEquals(null,$log['context']);
+        $this->assertTrue(isset($log['context']));
     }
 
     public function test_info(){
@@ -66,7 +66,7 @@ class LoggerTest extends TestCase{
         $log=$memory->getLogs()[0];
         $this->assertEquals(ManaPHP\Logger::LEVEL_INFO,$log['level']);
         $this->assertContains('**info**',$log['message']);
-        $this->assertEquals(null,$log['context']);
+        $this->assertTrue(isset($log['context']));
     }
 
     public function test_warning(){
@@ -81,7 +81,7 @@ class LoggerTest extends TestCase{
         $log=$memory->getLogs()[0];
         $this->assertEquals(ManaPHP\Logger::LEVEL_WARNING,$log['level']);
         $this->assertContains('**warning**',$log['message']);
-        $this->assertEquals(null,$log['context']);
+        $this->assertTrue(isset($log['context']));
     }
 
     public function test_error(){
@@ -96,7 +96,7 @@ class LoggerTest extends TestCase{
         $log=$memory->getLogs()[0];
         $this->assertEquals(ManaPHP\Logger::LEVEL_ERROR,$log['level']);
         $this->assertContains('**error**',$log['message']);
-        $this->assertEquals(null,$log['context']);
+        $this->assertTrue(isset($log['context']));
     }
 
     public function test_fatal(){
@@ -111,6 +111,6 @@ class LoggerTest extends TestCase{
         $log=$memory->getLogs()[0];
         $this->assertEquals(ManaPHP\Logger::LEVEL_FATAL,$log['level']);
         $this->assertContains('**fatal**',$log['message']);
-        $this->assertEquals(null,$log['context']);
+        $this->assertTrue(isset($log['context']));
     }
 }

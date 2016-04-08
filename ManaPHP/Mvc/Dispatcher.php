@@ -3,7 +3,6 @@
 namespace ManaPHP\Mvc {
 
     use ManaPHP\Component;
-    use ManaPHP\DiInterface;
     use ManaPHP\Mvc\Dispatcher\Exception;
     use ManaPHP\Mvc\Dispatcher\NotFoundActionException;
     use ManaPHP\Mvc\Dispatcher\NotFoundControllerException;
@@ -213,12 +212,9 @@ namespace ManaPHP\Mvc {
         {
             $this->_moduleName = $this->_camelize($module);
             $this->_controllerName = $this->_camelize($controller);
-            $this->_actionName = lcfirst($action);
-            $this->_params = $params === null ? [] : $params;
+            $this->_actionName = lcfirst($this->_camelize($action));
 
-            if (!$this->_dependencyInjector instanceof DiInterface) {
-                throw new Exception('A dependency injection container is required to access related dispatching services');
-            }
+            $this->_params = $params === null ? [] : $params;
 
             if ($this->fireEvent('dispatcher:beforeDispatchLoop') === false) {
                 return false;
@@ -352,7 +348,7 @@ namespace ManaPHP\Mvc {
 
             if (isset($forward['action'])) {
                 $this->_previousActionName = $this->_actionName;
-                $this->_actionName = lcfirst($forward['action']);
+                $this->_actionName = lcfirst($this->_camelize($forward['action']));
             }
 
             if (isset($forward['params'])) {

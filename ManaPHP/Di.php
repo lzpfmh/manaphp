@@ -43,12 +43,12 @@ namespace ManaPHP {
         /**
          * @var \ManaPHP\Di\ServiceInterface[]
          */
-        protected $_services;
+        protected $_services=[];
 
         /**
          * @var array
          */
-        protected $_sharedInstances;
+        protected $_sharedInstances=[];
 
         /**
          * Latest DI build
@@ -132,7 +132,7 @@ namespace ManaPHP {
                 }
             }
 
-            if (is_object($instance) && $instance instanceof ComponentInterface) {
+            if ($instance instanceof ComponentInterface) {
                 $instance->setDependencyInjector($this);
             }
 

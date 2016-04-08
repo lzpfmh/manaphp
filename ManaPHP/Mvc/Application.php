@@ -36,16 +36,7 @@ namespace ManaPHP\Mvc {
      *         *\/
      *        public function main()
      *        {
-     *            $this->registerModules(array(
-     *                'frontend' => array(
-     *                    'className' => 'Multiple\Frontend\Module',
-     *                    'path' => '../apps/frontend/Module.php'
-     *                ),
-     *                'backend' => array(
-     *                    'className' => 'Multiple\Backend\Module',
-     *                    'path' => '../apps/backend/Module.php'
-     *                )
-     *            ));
+     *            $this->registerModules(['frontend' ,'backend']);
      *        }
      *    }
      *

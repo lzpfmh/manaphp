@@ -24,20 +24,6 @@ class Module implements ModuleInterface
 
     public function registerServices($di)
     {
-        $di->set('db', function () {
-            $mysql = new Mysql([
-              'host' => 'localhost',
-              'username' => 'root',
-              'password' => '',
-              'dbname' => 'manaphp_unit_test',
-              'port' => 3306
-            ]);
-
-            $mysql->attachEvent('db:beforeQuery', function ($event, DbInterface $source, $data) {
-                var_dump($source->getSQLStatement());
-            });
-
-            return $mysql;
-        });
+        
     }
 }

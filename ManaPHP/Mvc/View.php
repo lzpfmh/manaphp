@@ -42,7 +42,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_viewsDir;
+        protected $_viewsDir=null;
 
         /**
          * @var string
@@ -159,13 +159,15 @@ namespace ManaPHP\Mvc {
          */
         public function getVar($name)
         {
-            if (isset($this->_viewVars[$name])) {
-                return $this->_viewVars[$name];
-            }
-
-            return null;
+            return isset($this->_viewVars[$name])?$this->_viewVars[$name]:null;
         }
 
+        /**
+         * @return array
+         */
+        public function getVars(){
+            return $this->_viewVars;
+        }
 
         /**
          * Gets the name of the controller rendered
@@ -211,18 +213,14 @@ namespace ManaPHP\Mvc {
         protected function _loadEngine($extension)
         {
             $arguments = [$this, $this->_dependencyInjector];
-            $engineService = $this->_registeredEngines[$extension];
-            if ($engineService instanceof \Closure) {
-                $engine = call_user_func_array($engineService, $arguments);
-            } elseif (is_object($engineService)) {
-                $engine = $engineService;
-            } elseif (is_string($engineService)) {
-                $engine = $this->_dependencyInjector->getShared($engineService, $arguments);
-            } else {
-                throw new Exception('Invalid template engine registration for extension: ' . $extension);
+            $engine = $this->_registeredEngines[$extension];
+            if ($engine instanceof \Closure) {
+                $engine = call_user_func_array($engine, $arguments);
+            } elseif(is_string($engine)) {
+                $engine = $this->_dependencyInjector->getShared($engine, $arguments);
             }
 
-            if (!($engine instanceof EngineInterface)) {
+            if (!$engine instanceof EngineInterface) {
                 throw new Exception('Invalid template engine: it is not implements \ManaPHP\Mvc\ViewInterface');
             }
 

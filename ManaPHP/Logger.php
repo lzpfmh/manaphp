@@ -119,16 +119,9 @@ namespace ManaPHP {
                 return $this;
             }
 
-            if (is_array($context)) {
-                $replaces = [];
-
-                foreach ($context as $k => $v) {
-                    $replaces["{$k}"] = $v;
-                }
-
-                $message = strtr($message, $replaces);
-            }
-
+            $context['level']=$this->_level_i2s[$level];
+            $context['date']=time();
+            
             foreach ($this->_adapters as $adapter) {
                 try {
                     $adapter->log($level, $message, $context);
@@ -148,7 +141,7 @@ namespace ManaPHP {
          * @param array $context
          * @return static
          */
-        public function debug($message, $context = null)
+        public function debug($message, $context = [])
         {
             return $this->_log(self::LEVEL_DEBUG, $message, $context);
         }
@@ -161,7 +154,7 @@ namespace ManaPHP {
          * @param array $context
          * @return static
          */
-        public function info($message, $context = null)
+        public function info($message, $context = [])
         {
             return $this->_log(self::LEVEL_INFO, $message, $context);
         }
@@ -174,7 +167,7 @@ namespace ManaPHP {
          * @param array $context
          * @return static
          */
-        public function warning($message, $context = null)
+        public function warning($message, $context = [])
         {
             return $this->_log(self::LEVEL_WARNING, $message, $context);
         }
@@ -187,7 +180,7 @@ namespace ManaPHP {
          * @param array $context
          * @return static
          */
-        public function error($message, $context = null)
+        public function error($message, $context = [])
         {
             return $this->_log(self::LEVEL_ERROR, $message, $context);
         }
@@ -200,7 +193,7 @@ namespace ManaPHP {
          * @param array $context
          * @return static
          */
-        public function fatal($message, $context = null)
+        public function fatal($message, $context = [])
         {
             return $this->_log(self::LEVEL_FATAL, $message, $context);
         }

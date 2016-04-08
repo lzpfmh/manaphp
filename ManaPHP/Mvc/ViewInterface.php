@@ -63,6 +63,11 @@ namespace ManaPHP\Mvc {
 
 
         /**
+         * @return array
+         */
+        public function getVars();
+        
+        /**
          * Gets the name of the controller rendered
          *
          * @return string
