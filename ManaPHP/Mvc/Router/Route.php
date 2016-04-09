@@ -63,11 +63,11 @@ namespace ManaPHP\Mvc\Router {
             // If a pattern contains ':', maybe there are placeholders to replace
             if (strpos($pattern, ':') !== false) {
                 $pattern = strtr($pattern, [
-                  '/:module' => '/{module:[a-z\d_-]+}',
-                  '/:controller' => '/{controller:[a-z\d_-]+}',
-                  '/:action' => '/{action:[a-z\d_-]+}',
-                  '/:params' => '/{params:.+}',
-                  '/:int' => '/(\d+)'
+                    '/:module' => '/{module:[a-z\d_-]+}',
+                    '/:controller' => '/{controller:[a-z\d_-]+}',
+                    '/:action' => '/{action:[a-z\d_-]+}',
+                    '/:params' => '/{params:.+}',
+                    '/:int' => '/(\d+)'
                 ]);
             }
 
@@ -98,10 +98,11 @@ namespace ManaPHP\Mvc\Router {
             $need_restore_token = false;
 
             if (preg_match('#{\d#', $pattern) === 1
-                &&strpos($pattern, $left_token) === false
-                && strpos($pattern, $right_token) === false) {
-                    $need_restore_token = true;
-                    $pattern = preg_replace('#{(\d+,?\d*)}#', $left_token . '\1' . $right_token, $pattern);
+                && strpos($pattern, $left_token) === false
+                && strpos($pattern, $right_token) === false
+            ) {
+                $need_restore_token = true;
+                $pattern = preg_replace('#{(\d+,?\d*)}#', $left_token . '\1' . $right_token, $pattern);
             }
 
             if (preg_match_all('#{([A-Z].*)}#Ui', $pattern, $matches, PREG_SET_ORDER) > 0) {
@@ -133,6 +134,7 @@ namespace ManaPHP\Mvc\Router {
             if ($paths !== null) {
                 if (is_string($paths)) {
                     $parts = explode('::', $paths);
+
                     if (count($parts) === 3) {
                         list($moduleName, $controllerName, $actionName) = $parts;
                     } elseif (count($parts) === 2) {

@@ -1,9 +1,9 @@
 <?php
 
-namespace ManaPHP\Mvc\View\Engine {
+namespace ManaPHP\Mvc\View\Renderer\Engine {
 
     use ManaPHP\Component;
-    use ManaPHP\Mvc\View\EngineInterface;
+    use ManaPHP\Mvc\View\Renderer\EngineInterface;
 
     /**
      * ManaPHP\Mvc\View\Engine\Php
@@ -12,16 +12,12 @@ namespace ManaPHP\Mvc\View\Engine {
      */
     class Php extends Component implements EngineInterface
     {
-        protected $_view;
-
         /**
          * Php constructor.
-         * @param \ManaPHP\Mvc\ViewInterface $view
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function __construct($view=null,$dependencyInjector = null)
+        public function __construct($dependencyInjector = null)
         {
-            $this->_view=$view;
             $this->_dependencyInjector = $dependencyInjector;
         }
 
@@ -30,17 +26,22 @@ namespace ManaPHP\Mvc\View\Engine {
          *
          * @param string $file
          * @param array $vars
-         * @throws \ManaPHP\Mvc\View\Engine\Exception
+         * @throws \ManaPHP\Mvc\View\Renderer\Engine\Exception
          */
         public function render($file, $vars = null)
         {
-            if(isset($vars['view'])){
+            if (isset($vars['view'])) {
                 throw new Exception('variable \'view\' is reserved for PHP view engine.');
             }
+            $view=$this->_dependencyInjector->has('view')?$this->_dependencyInjector->get('view'):null;
+            true || $view;
 
-            $view=$this->_view;
+            if(isset($vars['renderer'])){
+                throw new Exception('variable \'render\' is reserved for PHP view engine.');
+            }
+            $renderer=$this;
 
-            true||$view;
+            true || $renderer;
 
             if (is_array($vars)) {
                 extract($vars, EXTR_SKIP);

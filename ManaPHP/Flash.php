@@ -24,10 +24,10 @@ namespace ManaPHP {
         public function __construct($cssClasses = null)
         {
             $this->_cssClasses = $cssClasses ?: [
-              'error' => 'flash_error_message',
-              'notice' => 'flash_notice_message',
-              'success' => 'flash_success_message',
-              'warning' => 'flash_warning_message'
+                'error' => 'flash_error_message',
+                'notice' => 'flash_notice_message',
+                'success' => 'flash_success_message',
+                'warning' => 'flash_warning_message'
             ];
         }
 

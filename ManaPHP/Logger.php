@@ -38,13 +38,13 @@ namespace ManaPHP {
         public function __construct()
         {
             $this->_level_i2s = [
-              self::LEVEL_OFF => 'OFF',
-              self::LEVEL_FATAL => 'FATAL',
-              self::LEVEL_ERROR => 'ERROR',
-              self::LEVEL_WARNING => 'WARNING',
-              self::LEVEL_INFO => 'INFO',
-              self::LEVEL_DEBUG => 'DEBUG',
-              self::LEVEL_ALL => 'ALL',
+                self::LEVEL_OFF => 'OFF',
+                self::LEVEL_FATAL => 'FATAL',
+                self::LEVEL_ERROR => 'ERROR',
+                self::LEVEL_WARNING => 'WARNING',
+                self::LEVEL_INFO => 'INFO',
+                self::LEVEL_DEBUG => 'DEBUG',
+                self::LEVEL_ALL => 'ALL',
             ];
         }
 
@@ -119,9 +119,9 @@ namespace ManaPHP {
                 return $this;
             }
 
-            $context['level']=$this->_level_i2s[$level];
-            $context['date']=time();
-            
+            $context['level'] = $this->_level_i2s[$level];
+            $context['date'] = time();
+
             foreach ($this->_adapters as $adapter) {
                 try {
                     $adapter->log($level, $message, $context);

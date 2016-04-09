@@ -75,10 +75,10 @@ namespace ManaPHP\Mvc\Model {
             }
 
             return [
-              self::MODELS_ATTRIBUTES => $attributes,
-              self::MODELS_PRIMARY_KEY => $primaryKeys,
-              self::MODELS_NON_PRIMARY_KEY => $nonPrimaryKeys,
-              self::MODELS_IDENTITY_COLUMN => $autoIncrementAttribute
+                self::MODELS_ATTRIBUTES => $attributes,
+                self::MODELS_PRIMARY_KEY => $primaryKeys,
+                self::MODELS_NON_PRIMARY_KEY => $nonPrimaryKeys,
+                self::MODELS_IDENTITY_COLUMN => $autoIncrementAttribute
             ];
         }
 

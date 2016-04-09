@@ -224,7 +224,7 @@ namespace ManaPHP\Mvc {
             }
 
             $response = $this->_getResponse($dispatcher->getReturnedValue(), $moduleName,
-              $dispatcher->getControllerName(), $dispatcher->getActionName());
+                $dispatcher->getControllerName(), $dispatcher->getActionName());
 
             $this->fireEvent('application:beforeSendResponse', $response);
 
@@ -237,13 +237,13 @@ namespace ManaPHP\Mvc {
 
         /**
          * @param mixed $actionReturnValue
-         * @param $moduleName
+         * @param $module
          * @param string $controller
          * @param string $action
          * @return \ManaPHP\Http\ResponseInterface
          * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Di\Exception
          */
-        protected function _getResponse($actionReturnValue, $moduleName, $controller, $action)
+        protected function _getResponse($actionReturnValue, $module, $controller, $action)
         {
             if ($actionReturnValue === false) {
                 return $this->_dependencyInjector->getShared('response');
@@ -262,18 +262,10 @@ namespace ManaPHP\Mvc {
 
                 if ($this->_implicitView === true) {
                     $view = $this->_dependencyInjector->getShared('view');
-                    if ($view->getViewsDir() === null) {
-                        if ($moduleName === '') {
-                            $view->setViewsDir($this->_rootDirectory . '/Views');
-                        } else {
-                            $view->setViewsDir($this->_rootDirectory . "/$moduleName/Views");
-                        }
-                    }
+                    $view->setAppDir($this->_rootDirectory);
 
-                    $view->start();
                     $view->setContent($content);
-                    $view->renderView($controller, $action);
-                    $view->finish();
+                    $view->renderView($module,$controller, $action);
                     $response->setContent($view->getContent());
                 } else {
                     $response->setContent($content);

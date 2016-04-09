@@ -36,7 +36,7 @@ namespace ManaPHP\Db {
             } elseif ($type === \PDO::PARAM_NULL) {
                 return 'NULL';
             } elseif ($type === \PDO::PARAM_BOOL) {
-                return (int) $value;
+                return (int)$value;
             } else {
                 return $value;
             }
@@ -78,10 +78,10 @@ namespace ManaPHP\Db {
                 $pos = 0;
 
                 $preparedStatement = preg_replace_callback('/(\?)/',
-                  function () use ($bindParams, $bindTypes, &$pos, $preservedStrLength) {
-                      $type = isset($bindTypes[$pos]) ? $bindTypes[$pos] : $this->_inferType($bindParams[$pos]);
-                      return $this->_parseValue($bindParams[$pos++], $type, $preservedStrLength);
-                  }, $sqlStatement);
+                    function () use ($bindParams, $bindTypes, &$pos, $preservedStrLength) {
+                        $type = isset($bindTypes[$pos]) ? $bindTypes[$pos] : $this->_inferType($bindParams[$pos]);
+                        return $this->_parseValue($bindParams[$pos++], $type, $preservedStrLength);
+                    }, $sqlStatement);
 
                 if ($pos !== count($bindParams)) {
                     return 'infer failed:' . $sqlStatement;

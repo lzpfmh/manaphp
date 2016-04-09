@@ -112,7 +112,7 @@ namespace ManaPHP\Image\Adapter {
         public function rotate($degrees, $background = 0xffffff, $alpha = 1.0)
         {
             $backgroundColor = sprintf('rgba(%u,%u,%u,%f)', ($background >> 16) & 0xFF, ($background >> 8) & 0xFF,
-              $background & 0xFF, $alpha);
+                $background & 0xFF, $alpha);
             $this->_image->rotateImage(new \ImagickPixel($backgroundColor), $degrees);
             $this->_image->setImagePage($this->_width, $this->_height, 0, 0);
 
@@ -154,13 +154,13 @@ namespace ManaPHP\Image\Adapter {
          * @return static
          */
         public function text(
-          $text,
-          $offsetX = 0,
-          $offsetY = 0,
-          $opacity = 1.0,
-          $color = 0x000000,
-          $size = 12,
-          $font_file = null
+            $text,
+            $offsetX = 0,
+            $offsetY = 0,
+            $opacity = 1.0,
+            $color = 0x000000,
+            $size = 12,
+            $font_file = null
         ) {
             $draw = new \ImagickDraw();
             $textColor = sprintf('rgb(%u,%u,%u)', ($color >> 16) & 0xFF, ($color >> 8) & 0xFF, $color & 0xFF);

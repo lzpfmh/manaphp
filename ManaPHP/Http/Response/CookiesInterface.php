@@ -38,13 +38,13 @@ namespace ManaPHP\Http\Response {
          * @return static
          */
         public function set(
-          $name,
-          $value = null,
-          $expire = null,
-          $path = null,
-          $secure = null,
-          $domain = null,
-          $httpOnly = null
+            $name,
+            $value = null,
+            $expire = null,
+            $path = null,
+            $secure = null,
+            $domain = null,
+            $httpOnly = null
         );
 
 

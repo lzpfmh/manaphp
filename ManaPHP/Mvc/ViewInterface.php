@@ -7,23 +7,20 @@ namespace ManaPHP\Mvc {
      */
     interface ViewInterface
     {
-
         /**
-         * Sets views directory. Depending of your platform
+         * Sets app directory
          *
-         * @param string $viewsDir
+         * @param string $appDir
          * @return static
          */
-        public function setViewsDir($viewsDir);
-
+        public function setAppDir($appDir);
 
         /**
-         * Gets views directory
+         * Gets app directory
          *
          * @return string
          */
-        public function getViewsDir();
-
+        public function getAppDir();
 
         /**
          * @param false|string $layout
@@ -66,7 +63,7 @@ namespace ManaPHP\Mvc {
          * @return array
          */
         public function getVars();
-        
+
         /**
          * Gets the name of the controller rendered
          *
@@ -84,35 +81,19 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * Starts rendering process enabling the output buffering
-         *
-         * @return static
-         */
-        public function start();
-
-
-        /**
-         * Register template engines
-         *
-         * @param array $engines
-         * @return static
-         */
-        public function registerEngines($engines);
-
-
-        /**
          * Executes render process from dispatching data
          *
-         * @param string $controllerName
-         * @param string $actionName
+         * @param string $module
+         * @param string $controller
+         * @param string $action
          */
-        public function renderView($controllerName, $actionName);
+        public function renderView($module, $controller, $action);
 
 
         /**
          * Choose a view different to render than last-controller/last-action
          *
-         * @param $view
+         * @param string $view
          * @return static
          */
         public function pickView($view);
@@ -125,15 +106,14 @@ namespace ManaPHP\Mvc {
          * @param array $vars
          * @return static
          */
-        public function renderPartial($partialPath, $vars = null);
-
+        public function renderPartial($partialPath, $vars = []);
 
         /**
-         * Finishes the render process by stopping the output buffering
-         *
+         * @param string $widget
+         * @param array $vars
          * @return static
          */
-        public function finish();
+        public function renderWidget($widget, $vars = []);
 
 
         /**

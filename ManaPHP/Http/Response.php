@@ -232,7 +232,7 @@ namespace ManaPHP\Http {
         public function redirect($location, $externalRedirect = false, $statusCode = 302)
         {
             if (is_string($statusCode)) {
-                $statusCode = (int) $statusCode;
+                $statusCode = (int)$statusCode;
             }
 
             /**

@@ -133,8 +133,8 @@ namespace ManaPHP {
                 return $this;
             }
 
-            $width = (int) ($_width * $ratio);
-            $height = (int) ($_height * $ratio);
+            $width = (int)($_width * $ratio);
+            $height = (int)($_height * $ratio);
 
             $this->_adapter->resize($width, $height);
 
@@ -151,7 +151,7 @@ namespace ManaPHP {
             $_width = $this->_adapter->getWidth();
             $_height = $this->_adapter->getHeight();
 
-            $height = (int) ($_height * $width / $_width);
+            $height = (int)($_height * $width / $_width);
             $this->_adapter->resize($width, $height);
 
             return $this;
@@ -167,7 +167,7 @@ namespace ManaPHP {
             $_width = $this->_adapter->getWidth();
             $_height = $this->_adapter->getHeight();
 
-            $width = (int) ($_width * $height / $_height);
+            $width = (int)($_width * $height / $_height);
             $this->_adapter->resize($width, $height);
 
             return $this;
@@ -199,13 +199,13 @@ namespace ManaPHP {
          * @return static
          */
         public function text(
-          $text,
-          $offsetX = 0,
-          $offsetY = 0,
-          $opacity = 1.0,
-          $color = 0x000000,
-          $size = 12,
-          $font_file = null
+            $text,
+            $offsetX = 0,
+            $offsetY = 0,
+            $opacity = 1.0,
+            $color = 0x000000,
+            $size = 12,
+            $font_file = null
         ) {
             $this->_adapter->text($text, $offsetX, $offsetY, $opacity, $color, $size, $font_file);
 

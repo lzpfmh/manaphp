@@ -61,18 +61,18 @@ namespace ManaPHP\Http\Response {
          * @throws \ManaPHP\Http\Response\Exception
          */
         public function set(
-          $name,
-          $value = null,
-          $expire = null,
-          $path = null,
-          $secure = null,
-          $domain = null,
-          $httpOnly = null
+            $name,
+            $value = null,
+            $expire = null,
+            $path = null,
+            $secure = null,
+            $domain = null,
+            $httpOnly = null
         ) {
             if (!isset($this->_cookies[$name])) {
 
                 $cookie = $this->_dependencyInjector->get('ManaPHP\Http\Cookie',
-                  [$name, $value, $expire, $path, $secure, $domain, $httpOnly]);
+                    [$name, $value, $expire, $path, $secure, $domain, $httpOnly]);
 
                 $cookie->setDependencyInjector($this->_dependencyInjector);
                 $cookie->useEncryption($this->_useEncryption);

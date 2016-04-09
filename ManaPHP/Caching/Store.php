@@ -31,6 +31,11 @@ namespace ManaPHP\Caching {
         public function __construct($prefix = '', $adapter = null, $serializer = null)
         {
             $this->_prefix = $prefix;
+
+            if ($adapter === null) {
+                $adapter = 'defaultStoreCache';
+            }
+
             $this->_adapter = is_string($adapter) ? Di::getDefault()->getShared($adapter) : $adapter;
             $this->_serializer = $serializer ?: new JsonPhp();
         }

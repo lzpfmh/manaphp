@@ -421,7 +421,7 @@ namespace ManaPHP\Mvc {
             }
 
             $sql = 'SELECT COUNT(*) as row_count' . ' FROM `' . $this->getSource() . '` WHERE ' . implode(' AND ',
-                $conditions);
+                    $conditions);
             $num = $connection->fetchOne($sql, $binds, \PDO::FETCH_ASSOC);
 
             return $num['row_count'] > 0;
@@ -494,7 +494,7 @@ namespace ManaPHP\Mvc {
         {
             $result = self::_groupResult('COUNT', 'row_count', $column, $parameters, $cacheOptions);
             if (is_string($result)) {
-                return (int) $result;
+                return (int)$result;
             } else {
                 return $result;
             }
@@ -605,7 +605,7 @@ namespace ManaPHP\Mvc {
          */
         public static function average($column, $parameters = null, $cacheOptions = null)
         {
-            return (double) self::_groupResult('AVG', 'average', $column, $parameters, $cacheOptions);
+            return (double)self::_groupResult('AVG', 'average', $column, $parameters, $cacheOptions);
         }
 
 

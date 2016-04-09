@@ -446,14 +446,14 @@ namespace ManaPHP {
                 $insertedValues = rtrim(str_repeat('?,', count($columnValues)), ',');
 
                 $sql = /** @lang Text */
-                  "INSERT INTO $escapedTable VALUES ($insertedValues)";
+                    "INSERT INTO $escapedTable VALUES ($insertedValues)";
             } else {
                 $columns = array_keys($columnValues);
                 $insertedValues = ':' . implode(',:', $columns);
                 $insertedColumns = '`' . implode('`,`', $columns) . '`';
 
                 $sql = /** @lang Text */
-                  "INSERT INTO $escapedTable ($insertedColumns) VALUES ($insertedValues)";
+                    "INSERT INTO $escapedTable ($insertedColumns) VALUES ($insertedValues)";
             }
 
             return $this->execute($sql, $columnValues) === 1;
@@ -502,7 +502,7 @@ namespace ManaPHP {
 
             $updateColumns = implode(',', $setColumns);
             $updateSql = /** @lang Text */
-              "UPDATE $escapedTable SET $updateColumns WHERE  $where";
+                "UPDATE $escapedTable SET $updateColumns WHERE  $where";
 
             return $this->execute($updateSql, $binds);
         }
@@ -533,7 +533,7 @@ namespace ManaPHP {
             $where = (new ConditionParser())->parse($conditions, $conditionBinds);
 
             $sql = /**@lang Text */
-              "DELETE FROM `$table` WHERE " . $where;
+                "DELETE FROM `$table` WHERE " . $where;
 
             if ($binds === null) {
                 $binds = $conditionBinds;
@@ -583,7 +583,7 @@ namespace ManaPHP {
         public function getEmulatePrepareSQLStatement($preservedStrLength = -1)
         {
             return (new PrepareEmulation($this->_pdo))->emulate($this->_sqlStatement, $this->_sqlBindParams,
-              $this->_sqlBindTypes, $preservedStrLength);
+                $this->_sqlBindTypes, $preservedStrLength);
         }
 
         /**
@@ -685,7 +685,7 @@ namespace ManaPHP {
          */
         public function lastInsertId()
         {
-            return (int) $this->_pdo->lastInsertId();
+            return (int)$this->_pdo->lastInsertId();
         }
 
 

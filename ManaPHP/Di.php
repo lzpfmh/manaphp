@@ -43,12 +43,12 @@ namespace ManaPHP {
         /**
          * @var \ManaPHP\Di\ServiceInterface[]
          */
-        protected $_services=[];
+        protected $_services = [];
 
         /**
          * @var array
          */
-        protected $_sharedInstances=[];
+        protected $_sharedInstances = [];
 
         /**
          * Latest DI build

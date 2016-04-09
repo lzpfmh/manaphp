@@ -29,7 +29,7 @@ namespace ManaPHP\Caching\Store\Adapter {
         public function __construct($options)
         {
             if (is_object($options)) {
-                $options = (array) $options;
+                $options = (array)$options;
             }
 
             if (!extension_loaded('redis')) {

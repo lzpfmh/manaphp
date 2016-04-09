@@ -120,13 +120,13 @@ namespace ManaPHP {
          * @return static
          */
         public function text(
-          $text,
-          $offsetX = 0,
-          $offsetY = 0,
-          $opacity = 1.0,
-          $color = 0x000000,
-          $size = 12,
-          $font_file = null
+            $text,
+            $offsetX = 0,
+            $offsetY = 0,
+            $opacity = 1.0,
+            $color = 0x000000,
+            $size = 12,
+            $font_file = null
         );
 
         /**

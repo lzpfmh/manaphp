@@ -121,7 +121,7 @@ namespace ManaPHP\Image\Adapter {
         public function rotate($degrees, $background = 0xffffff, $alpha = 1.0)
         {
             $transparent = imagecolorallocatealpha($this->_image, ($background >> 16) & 0xFF, ($background >> 8) & 0xFF,
-              $background & 0xFF, $alpha * 127);
+                $background & 0xFF, $alpha * 127);
             $image = imagerotate($this->_image, 360 - $degrees, $transparent, true);
             imagealphablending($image, false);
             imagesavealpha($image, true);
@@ -150,7 +150,7 @@ namespace ManaPHP\Image\Adapter {
                 imagecopy($image, $this->_image, 0, 0, $offsetX, $offsetY, $width, $height);
             } else {
                 $image = imagecrop($this->_image,
-                  ['x' => $offsetX, 'y' => $offsetY, 'width' => $width, 'height' => $height]);
+                    ['x' => $offsetX, 'y' => $offsetY, 'width' => $width, 'height' => $height]);
             }
 
             imagedestroy($this->_image);
@@ -174,16 +174,16 @@ namespace ManaPHP\Image\Adapter {
          * @return static
          */
         public function text(
-          $text,
-          $offsetX = 0,
-          $offsetY = 0,
-          $opacity = 1.0,
-          $color = 0x000000,
-          $size = 12,
-          $font_file = null
+            $text,
+            $offsetX = 0,
+            $offsetY = 0,
+            $opacity = 1.0,
+            $color = 0x000000,
+            $size = 12,
+            $font_file = null
         ) {
             $textColor = imagecolorallocatealpha($this->_image, ($color >> 16) & 0xFF, ($color >> 8) & 0xFF,
-              $color & 0xFF, abs(1 - $opacity) * 127);
+                $color & 0xFF, abs(1 - $opacity) * 127);
             if ($font_file !== null) {
                 imagettftext($this->_image, $size, 0, $offsetX, $offsetY, $textColor, $font_file, $text);
             } else {

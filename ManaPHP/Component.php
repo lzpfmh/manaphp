@@ -35,6 +35,7 @@ namespace ManaPHP {
      * @property \ManaPHP\Mvc\View\Tag $tag
      * @property \ManaPHP\Loader $loader
      * @property \ManaPHP\Logger $logger
+     * @property \ManaPHP\Mvc\View\Renderer $renderer
      */
     class Component implements ComponentInterface
     {
@@ -159,13 +160,13 @@ namespace ManaPHP {
 
         public function __debugInfo()
         {
-            $defaultDi=Di::getDefault();
-			
+            $defaultDi = Di::getDefault();
+
             $data = [];
             foreach (get_object_vars($this) as $k => $v) {
-                
 
-                if($v===$defaultDi){
+
+                if ($v === $defaultDi) {
                     continue;
                 }
 

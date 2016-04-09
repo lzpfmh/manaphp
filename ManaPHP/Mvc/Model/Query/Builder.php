@@ -728,7 +728,7 @@ namespace ManaPHP\Mvc\Model\Query {
              */
             if ($this->_limit !== null) {
                 $limit = $this->_limit;
-                if (is_int($limit) || (is_string($limit) && ((string) ((int) $limit))) === $limit) {
+                if (is_int($limit) || (is_string($limit) && ((string)((int)$limit))) === $limit) {
                     $sql .= ' LIMIT ' . $limit;
                 } else {
                     throw new Exception('limit is invalid: ' . $limit);
@@ -737,7 +737,7 @@ namespace ManaPHP\Mvc\Model\Query {
 
             if ($this->_offset !== null) {
                 $offset = $this->_offset;
-                if (is_int($offset) || (is_string($offset) && ((string) ((int) $offset))) === $offset) {
+                if (is_int($offset) || (is_string($offset) && ((string)((int)$offset))) === $offset) {
                     $sql .= ' OFFSET ' . $offset;
                 } else {
                     throw new Exception('offset is invalid: ' . $offset);
@@ -759,7 +759,7 @@ namespace ManaPHP\Mvc\Model\Query {
             $this->_lastSQL = $this->getSql();
 
             $query = $this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query',
-              [$this->_lastSQL, $this->_models, $this->_dependencyInjector]);
+                [$this->_lastSQL, $this->_models, $this->_dependencyInjector]);
             $query->setBinds($this->_binds);
 
             return $query;

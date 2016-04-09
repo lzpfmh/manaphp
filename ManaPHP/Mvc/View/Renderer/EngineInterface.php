@@ -1,6 +1,6 @@
 <?php
 
-namespace ManaPHP\Mvc\View {
+namespace ManaPHP\Mvc\View\Renderer {
 
     /**
      * ManaPHP\Mvc\View\EngineInterface initializer
@@ -10,10 +10,9 @@ namespace ManaPHP\Mvc\View {
 
         /**
          * Php constructor.
-         * @param \ManaPHP\Mvc\ViewInterface $view
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function __construct($view=null,$dependencyInjector = null);
+        public function __construct($dependencyInjector = null);
 
         /**
          * Renders a view using the template engine

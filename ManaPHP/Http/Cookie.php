@@ -48,13 +48,13 @@ namespace ManaPHP\Http {
          * @param boolean $httpOnly
          */
         public function __construct(
-          $name,
-          $value = null,
-          $expire = null,
-          $path = null,
-          $secure = null,
-          $domain = null,
-          $httpOnly = null
+            $name,
+            $value = null,
+            $expire = null,
+            $path = null,
+            $secure = null,
+            $domain = null,
+            $httpOnly = null
         ) {
             $this->_name = $name;
             $this->_value = $value;

@@ -316,7 +316,7 @@ namespace ManaPHP\Http {
                 } else {
                     $client_address = $_SERVER['REMOTE_ADDR'];
                     if (strpos($client_address, '127.0.') === 0 || strpos($client_address,
-                        '192.168.') === 0 || strpos($client_address, '10.') === 0
+                            '192.168.') === 0 || strpos($client_address, '10.') === 0
                     ) {
                         $this->_client_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
                     } else {
@@ -473,11 +473,11 @@ namespace ManaPHP\Http {
                 if (is_int($file['error'])) {
                     if (!$onlySuccessful || $file['error'] === UPLOAD_ERR_OK) {
                         $files[] = new File($key, [
-                          'name' => $file['name'],
-                          'type' => $file['type'],
-                          'tmp_name' => $file['tmp_name'],
-                          'error' => $file['error'],
-                          'size' => $file['size']
+                            'name' => $file['name'],
+                            'type' => $file['type'],
+                            'tmp_name' => $file['tmp_name'],
+                            'error' => $file['error'],
+                            'size' => $file['size']
                         ]);
                     }
                 } else {
@@ -486,11 +486,11 @@ namespace ManaPHP\Http {
                     for ($i = 0; $i < $countFiles; $i++) {
                         if (!$onlySuccessful || $file['error'][$i] === UPLOAD_ERR_OK) {
                             $files[] = new File($key, [
-                              'name' => $file['name'][$i],
-                              'type' => $file['type'][$i],
-                              'tmp_name' => $file['tmp_name'][$i],
-                              'error' => $file['error'][$i],
-                              'size' => $file['size'][$i]
+                                'name' => $file['name'][$i],
+                                'type' => $file['type'][$i],
+                                'tmp_name' => $file['tmp_name'][$i],
+                                'error' => $file['error'][$i],
+                                'size' => $file['size'][$i]
                             ]);
                         }
                     }

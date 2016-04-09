@@ -242,7 +242,7 @@ namespace ManaPHP\Mvc\Model {
         public function createBuilder($params = null)
         {
             $this->_builder = $this->_dependencyInjector->get('ManaPHP\Mvc\Model\Query\Builder',
-              [$params, $this->_dependencyInjector]);
+                [$params, $this->_dependencyInjector]);
             return $this->_builder;
         }
 

@@ -290,7 +290,7 @@ namespace ManaPHP\Mvc {
                 }
 
                 if (!in_array($controllerClassName, $this->_initializedControllers,
-                    true) && method_exists($controllerInstance, 'initialize')
+                        true) && method_exists($controllerInstance, 'initialize')
                 ) {
                     $controllerInstance->initialize();
                     $this->_initializedControllers[] = $controllerClassName;
