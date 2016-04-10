@@ -16,6 +16,7 @@ namespace ManaPHP {
          * @param int $total_items
          * @param int $limit
          * @param int $current
+         *
          * @return static
          */
         public function calc($total_items, $limit, $current)

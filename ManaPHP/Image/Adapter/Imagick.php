@@ -29,6 +29,7 @@ namespace ManaPHP\Image\Adapter {
 
         /**
          * @param string $file
+         *
          * @throws \ManaPHP\Image\Adapter\Exception
          */
         public function __construct($file)
@@ -89,6 +90,7 @@ namespace ManaPHP\Image\Adapter {
         /**
          * @param int $width
          * @param int $height
+         *
          * @return static
          */
         public function resize($width, $height)
@@ -104,9 +106,10 @@ namespace ManaPHP\Image\Adapter {
         /**
          * Rotate the image by a given degrees
          *
-         * @param int $degrees
-         * @param int $background
+         * @param int   $degrees
+         * @param int   $background
          * @param float $alpha
+         *
          * @return static
          */
         public function rotate($degrees, $background = 0xffffff, $alpha = 1.0)
@@ -128,6 +131,7 @@ namespace ManaPHP\Image\Adapter {
          * @param int $height
          * @param int $offsetX
          * @param int $offsetY
+         *
          * @return static
          */
         public function crop($width, $height, $offsetX = 0, $offsetY = 0)
@@ -145,12 +149,13 @@ namespace ManaPHP\Image\Adapter {
          * Execute a text
          *
          * @param string $text
-         * @param int $offsetX
-         * @param int $offsetY
-         * @param float $opacity
-         * @param int $color
-         * @param int $size
+         * @param int    $offsetX
+         * @param int    $offsetY
+         * @param float  $opacity
+         * @param int    $color
+         * @param int    $size
          * @param string $font_file
+         *
          * @return static
          */
         public function text(
@@ -180,9 +185,10 @@ namespace ManaPHP\Image\Adapter {
 
         /**
          * @param string $file
-         * @param int $offsetX
-         * @param int $offsetY
-         * @param float $opacity
+         * @param int    $offsetX
+         * @param int    $offsetY
+         * @param float  $opacity
+         *
          * @return static
          * @throws \ManaPHP\Image\Adapter\Exception
          */
@@ -204,12 +210,14 @@ namespace ManaPHP\Image\Adapter {
 
             $watermark->clear();
             $watermark->destroy();
+
             return $this;
         }
 
         /**
          * @param string $file
-         * @param int $quality
+         * @param int    $quality
+         *
          * @throws \ManaPHP\Image\Adapter\Exception
          */
         public function save($file = null, $quality = 80)

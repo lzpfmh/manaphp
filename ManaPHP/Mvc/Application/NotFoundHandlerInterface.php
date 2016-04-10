@@ -6,6 +6,7 @@ namespace ManaPHP\Mvc\Application {
 
         /**
          * @param \ManaPHP\Mvc\Router\NotFoundRouteException $e
+         *
          * @return mixed
          */
         public function notFoundRoute($e);
@@ -13,6 +14,7 @@ namespace ManaPHP\Mvc\Application {
 
         /**
          * @param \ManaPHP\Mvc\Application\NotFoundModuleException $e
+         *
          * @return mixed
          */
         public function notFoundModule($e);
@@ -20,6 +22,7 @@ namespace ManaPHP\Mvc\Application {
 
         /**
          * @param \ManaPHP\Mvc\Dispatcher\NotFoundControllerException $e
+         *
          * @return mixed
          */
         public function notFoundController($e);
@@ -27,6 +30,7 @@ namespace ManaPHP\Mvc\Application {
 
         /**
          * @param \ManaPHP\Mvc\Dispatcher\NotFoundActionException $e
+         *
          * @return mixed
          */
         public function notFoundAction($e);

@@ -12,17 +12,18 @@ namespace ManaPHP\Di {
         /**
          * \ManaPHP\Di\ServiceInterface
          *
-         * @param string $name
+         * @param string                 $name
          * @param string|callable|object $definition
-         * @param boolean $shared
+         * @param boolean                $shared
          */
         public function __construct($name, $definition, $shared);
 
         /**
          * Resolves the service
          *
-         * @param array $parameters
+         * @param array                $parameters
          * @param \ManaPHP\DiInterface $dependencyInjector
+         *
          * @return mixed
          */
         public function resolve($parameters = null, $dependencyInjector = null);

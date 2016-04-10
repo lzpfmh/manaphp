@@ -11,6 +11,7 @@ namespace ManaPHP\Mvc {
          * Sets the root namespace
          *
          * @param string $namespace
+         *
          * @return static
          */
         public function setRootNamespace($namespace);
@@ -48,9 +49,10 @@ namespace ManaPHP\Mvc {
         /**
          * Gets a param by its name or numeric index
          *
-         * @param  string|int $param
+         * @param  string|int   $param
          * @param  string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed         $defaultValue
+         *
          * @return mixed
          */
         public function getParam($param, $filters = null, $defaultValue = null);
@@ -70,7 +72,8 @@ namespace ManaPHP\Mvc {
          * @param string $module
          * @param string $controller
          * @param string $action
-         * @param array $params
+         * @param array  $params
+         *
          * @return false|\ManaPHP\Mvc\ControllerInterface
          */
         public function dispatch($module, $controller, $action, $params = null);

@@ -18,7 +18,9 @@ namespace ManaPHP\Caching\Cache\Adapter {
 
         /**
          * Redis constructor.
-         * @param array|\ManaPHP\Cache\Adapter\Redis\ConstructOptionsStub $options
+         *
+         * @param array $options
+         *
          * @throws \ManaPHP\Caching\Cache\Exception
          */
         public function __construct($options)
@@ -92,6 +94,7 @@ namespace ManaPHP\Caching\Cache\Adapter {
          * Fetch content
          *
          * @param string $key
+         *
          * @return string|false
          * @throws \ManaPHP\Caching\Cache\Exception
          */
@@ -106,9 +109,11 @@ namespace ManaPHP\Caching\Cache\Adapter {
 
         /**
          * Caches content
+         *
          * @param string $key
          * @param string $value
-         * @param int $ttl
+         * @param int    $ttl
+         *
          * @return void
          * @throws \ManaPHP\Caching\Cache\Exception
          */
@@ -125,6 +130,7 @@ namespace ManaPHP\Caching\Cache\Adapter {
          * Delete content
          *
          * @param string $key
+         *
          * @void
          * @throws \ManaPHP\Caching\Cache\Exception
          */
@@ -141,6 +147,7 @@ namespace ManaPHP\Caching\Cache\Adapter {
          * Check if key exists
          *
          * @param string $key
+         *
          * @return bool
          * @throws \ManaPHP\Caching\Cache\Exception
          */

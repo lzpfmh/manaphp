@@ -97,11 +97,13 @@ namespace ManaPHP\Mvc {
          * Sets the namespace where the controller class is
          *
          * @param string $namespaceName
+         *
          * @return static
          */
         public function setRootNamespace($namespaceName)
         {
             $this->_rootNamespace = $namespaceName;
+
             return $this;
         }
 
@@ -150,9 +152,10 @@ namespace ManaPHP\Mvc {
         /**
          * Gets a param by its name or numeric index
          *
-         * @param  string|int $param
+         * @param  string|int   $param
          * @param  string|array $filters
-         * @param  mixed $defaultValue
+         * @param  mixed        $defaultValue
+         *
          * @return mixed
          * @throws \ManaPHP\Mvc\Dispatcher\Exception
          */
@@ -178,11 +181,13 @@ namespace ManaPHP\Mvc {
          * Sets the latest returned value by an action manually
          *
          * @param mixed $value
+         *
          * @return static
          */
         public function setReturnedValue($value)
         {
             $this->_returnedValue = $value;
+
             return $this;
         }
 
@@ -204,7 +209,8 @@ namespace ManaPHP\Mvc {
          * @param string $module
          * @param string $controller
          * @param string $action
-         * @param array $params
+         * @param array  $params
+         *
          * @return false|\ManaPHP\Mvc\ControllerInterface
          * @throws \ManaPHP\Mvc\Dispatcher\Exception
          */
@@ -329,6 +335,7 @@ namespace ManaPHP\Mvc {
          *</code>
          *
          * @param array $forward
+         *
          * @throws \ManaPHP\Mvc\Dispatcher\Exception
          */
         public function forward($forward)
@@ -373,6 +380,7 @@ namespace ManaPHP\Mvc {
 
         /**
          * @param string $str
+         *
          * @return string
          */
         protected function _camelize($str)

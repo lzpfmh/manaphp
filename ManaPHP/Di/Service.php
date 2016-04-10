@@ -45,9 +45,9 @@ namespace ManaPHP\Di {
         /**
          * \ManaPHP\Di\Service
          *
-         * @param string $name
+         * @param string                 $name
          * @param string|callable|object $definition
-         * @param boolean $shared
+         * @param boolean                $shared
          */
         public function __construct($name, $definition, $shared)
         {
@@ -59,8 +59,9 @@ namespace ManaPHP\Di {
         /**
          * Resolves the service
          *
-         * @param array $parameters
+         * @param array                $parameters
          * @param \ManaPHP\DiInterface $dependencyInjector
+         *
          * @return object
          * @throws \ManaPHP\Exception
          */

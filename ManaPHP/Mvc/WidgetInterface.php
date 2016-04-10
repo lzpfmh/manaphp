@@ -5,6 +5,7 @@ namespace ManaPHP\Mvc {
     {
         /**
          * @param $vars
+         *
          * @return string|array
          */
         public function run($vars);

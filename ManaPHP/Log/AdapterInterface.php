@@ -1,5 +1,5 @@
 <?php
-namespace ManaPHP\Logger {
+namespace ManaPHP\Log {
 
     interface AdapterInterface
     {
@@ -7,7 +7,8 @@ namespace ManaPHP\Logger {
         /**
          * @param string $level
          * @param string $message
-         * @param array $context
+         * @param array  $context
+         *
          * @return void
          */
         public function log($level, $message, $context = null);

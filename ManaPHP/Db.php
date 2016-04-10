@@ -45,6 +45,7 @@ namespace ManaPHP {
 
         /**
          * Current transaction level
+         *
          * @var int
          */
         protected $_transactionLevel = 0;
@@ -56,6 +57,7 @@ namespace ManaPHP {
 
         /**
          * Last affected rows
+         *
          * @var int
          */
         protected $_affectedRows;
@@ -129,8 +131,9 @@ namespace ManaPHP {
          *</code>
          *
          * @param \PDOStatement statement
-         * @param array $bindParams
-         * @param array $bindTypes
+         * @param array         $bindParams
+         * @param array         $bindTypes
+         *
          * @return \PDOStatement
          * @throws \ManaPHP\Db\Exception
          */
@@ -153,6 +156,7 @@ namespace ManaPHP {
          * @param $binds
          * @param $bindParams
          * @param $bindTypes
+         *
          * @throws \ManaPHP\Db\Exception
          */
         protected function _parseBinds($binds, &$bindParams, &$bindTypes)
@@ -224,8 +228,9 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $sql
-         * @param array $binds
-         * @param int $fetchMode
+         * @param array  $binds
+         * @param int    $fetchMode
+         *
          * @return \PdoStatement
          * @throws \ManaPHP\Db\Exception
          */
@@ -268,8 +273,10 @@ namespace ManaPHP {
          *    $success = $connection->execute("INSERT INTO robots VALUES (1, 'Boy')");
          *    $success = $connection->execute("INSERT INTO robots VALUES (?, ?)", array(1, 'Boy'));
          *</code>
+         *
          * @param string $sql
-         * @param array $binds
+         * @param array  $binds
+         *
          * @return int
          * @throws \ManaPHP\Db\Exception
          */
@@ -313,6 +320,7 @@ namespace ManaPHP {
          * <code>
          *
          * @param string|array identifier
+         *
          * @return string
          */
         public function escapeIdentifier($identifier)
@@ -333,6 +341,7 @@ namespace ManaPHP {
          * <code>
          *
          * @param array $identifiers
+         *
          * @return string
          */
         public function _escapeIdentifiers($identifiers)
@@ -370,14 +379,16 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $sql
-         * @param array $binds
-         * @param int $fetchMode
+         * @param array  $binds
+         * @param int    $fetchMode
+         *
          * @throws \ManaPHP\Db\Exception
          * @return array|false
          */
         public function fetchOne($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC)
         {
             $result = $this->query($sql, $binds, $fetchMode);
+
             return $result->fetch();
         }
 
@@ -403,14 +414,16 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $sql
-         * @param array $binds
-         * @param int $fetchMode
+         * @param array  $binds
+         * @param int    $fetchMode
+         *
          * @throws \ManaPHP\Db\Exception
          * @return array
          */
         public function fetchAll($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC)
         {
             $result = $this->query($sql, $binds, $fetchMode);
+
             return $result->fetchAll();
         }
 
@@ -431,7 +444,8 @@ namespace ManaPHP {
          * </code>
          *
          * @param    string $table
-         * @param    array $columnValues
+         * @param    array  $columnValues
+         *
          * @return    boolean
          * @throws \ManaPHP\Db\Exception
          */
@@ -476,10 +490,11 @@ namespace ManaPHP {
          * UPDATE `robots` SET `name` = "boy" WHERE id = 101
          * </code>
          *
-         * @param    string $table
-         * @param    array $columnValues
+         * @param    string       $table
+         * @param    array        $columnValues
          * @param    string|array $conditions
-         * @param    array $binds
+         * @param    array        $binds
+         *
          * @return    int|false
          * @throws \ManaPHP\Db\Exception
          */
@@ -522,9 +537,10 @@ namespace ManaPHP {
          * DELETE FROM `robots` WHERE `id` = 101
          * </code>
          *
-         * @param  string $table
+         * @param  string       $table
          * @param  string|array $conditions
-         * @param  array $binds
+         * @param  array        $binds
+         *
          * @return boolean
          * @throws \ManaPHP\Db\Exception
          */
@@ -553,8 +569,9 @@ namespace ManaPHP {
          * </code>
          *
          * @param    string $sql
-         * @param    int $number
-         * @param   int $offset
+         * @param    int    $number
+         * @param   int     $offset
+         *
          * @return    string
          */
         public function limit($sql, $number, $offset = null)
@@ -577,6 +594,7 @@ namespace ManaPHP {
          * Active SQL statement in the object with replace the bind with value
          *
          * @param int $preservedStrLength
+         *
          * @return string
          * @throws \ManaPHP\Db\Exception
          */
@@ -623,6 +641,7 @@ namespace ManaPHP {
             $this->fireEvent('db:beginTransaction');
 
             $this->_transactionLevel++;
+
             return $this->_pdo->beginTransaction();
         }
 
@@ -633,6 +652,7 @@ namespace ManaPHP {
          *    $connection->begin();
          *    var_dump($connection->isUnderTransaction()); //true
          *</code>
+         *
          * @return bool
          */
         public function isUnderTransaction()
@@ -655,6 +675,7 @@ namespace ManaPHP {
             $this->fireEvent('db:rollbackTransaction');
 
             $this->_transactionLevel--;
+
             return $this->_pdo->rollBack();
         }
 
@@ -675,6 +696,7 @@ namespace ManaPHP {
 
 
             $this->_transactionLevel--;
+
             return $this->_pdo->commit();
         }
 

@@ -40,6 +40,7 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $message
+         *
          * @return void
          */
         public function error($message)
@@ -56,6 +57,7 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $message
+         *
          * @return void
          */
         public function notice($message)
@@ -72,6 +74,7 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $message
+         *
          * @return void
          */
         public function success($message)
@@ -88,6 +91,7 @@ namespace ManaPHP {
          *</code>
          *
          * @param string $message
+         *
          * @return void
          */
         public function warning($message)
@@ -98,6 +102,7 @@ namespace ManaPHP {
         /**
          * @param string $type
          * @param string $message
+         *
          * @return string
          */
         abstract protected function _message($type, $message);

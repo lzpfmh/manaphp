@@ -16,9 +16,11 @@ namespace ManaPHP {
          *  $db->fetchOne('SELECT * FROM city WHERE city_id =:city_id',['city_id'=>5]);
          *  $db->fetchOne('SELECT * FROM city WHERE city_id =:city_id',['city_id'=>[5,\PDO::PARAM_INT]]);
          * </code>
+         *
          * @param string $sql
-         * @param array $binds
-         * @param int $fetchMode
+         * @param array  $binds
+         * @param int    $fetchMode
+         *
          * @return array|false
          */
         public function fetchOne($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC);
@@ -32,9 +34,11 @@ namespace ManaPHP {
          *  $db->fetchAll('SELECT * FROM city WHERE city_id <:city_id',['city_id'=>5]);
          *  $db->fetchAll('SELECT * FROM city WHERE city_id <:city_id',['city_id'=>[5,\PDO::PARAM_INT]]);
          * </code>
+         *
          * @param string $sql
-         * @param array $binds
-         * @param int $fetchMode
+         * @param array  $binds
+         * @param int    $fetchMode
+         *
          * @return array
          */
         public function fetchAll($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC);
@@ -47,8 +51,10 @@ namespace ManaPHP {
          *  $db->insert('_student',['age'=>30,'name'=>'Mark']);
          *  $db->insert('_student',[null,30,'Mark']);
          * </code>
+         *
          * @param    string $table
-         * @param    array $columnValues
+         * @param    array  $columnValues
+         *
          * @return    boolean
          */
         public function insert($table, $columnValues);
@@ -63,10 +69,12 @@ namespace ManaPHP {
          *  $db->update('_student',['name'=>'mark'],'id=:id',['id'=>2]);
          *  $db->update('_student',['name'=>['mark',\PDO::PARAM_STR]],'id=:id',['id'=>2]);
          * </code>
-         * @param    string $table
-         * @param    array $columnValues
+         *
+         * @param    string       $table
+         * @param    array        $columnValues
          * @param    string|array $conditions
-         * @param   array $binds
+         * @param   array         $binds
+         *
          * @return    int|false
          */
         public function update($table, $columnValues, $conditions, $binds = null);
@@ -80,9 +88,11 @@ namespace ManaPHP {
          *  $db->delete('_student',['id'=>1]);
          *  $db->delete('_student','id=:id',['id'=>1]);
          * </code>
-         * @param  string $table
+         *
+         * @param  string       $table
          * @param  string|array $conditions
-         * @param  array $binds
+         * @param  array        $binds
+         *
          * @return boolean
          */
         public function delete($table, $conditions, $binds = null);
@@ -95,9 +105,11 @@ namespace ManaPHP {
          *  $db->limit('',10);  //LIMIT 10
          *  $db->limit('',10,100);   //LIMIT 10 OFFSET 100
          * </code>
+         *
          * @param    string $sql
-         * @param    int $number
-         * @param   int $offset
+         * @param    int    $number
+         * @param   int     $offset
+         *
          * @return    string
          */
         public function limit($sql, $number, $offset = null);
@@ -114,6 +126,7 @@ namespace ManaPHP {
          * Active SQL statement in the object with replace the bind with value
          *
          * @param int $preservedStrLength
+         *
          * @return string
          * @throws \ManaPHP\Db\Exception
          */
@@ -133,8 +146,9 @@ namespace ManaPHP {
          * Use this method only when the SQL statement sent to the server return rows
          *
          * @param  string $sql
-         * @param  array $binds
-         * @param int $fetchMode
+         * @param  array  $binds
+         * @param int     $fetchMode
+         *
          * @return \PDOStatement
          */
         public function query($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC);
@@ -145,7 +159,8 @@ namespace ManaPHP {
          * Use this method only when the SQL statement sent to the server don't return any row
          *
          * @param  string $sql
-         * @param  array $binds
+         * @param  array  $binds
+         *
          * @return int
          */
         public function execute($sql, $binds = null);
@@ -163,6 +178,7 @@ namespace ManaPHP {
          * Escapes a column/table/schema name
          *
          * @param string $identifier
+         *
          * @return string
          */
         public function escapeIdentifier($identifier);

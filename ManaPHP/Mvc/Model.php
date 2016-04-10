@@ -54,8 +54,9 @@ namespace ManaPHP\Mvc {
         /**
          * \ManaPHP\Mvc\Model constructor
          *
-         * @param array $data
+         * @param array                $data
          * @param \ManaPHP\DiInterface $dependencyInjector
+         *
          * @throws \ManaPHP\Di\Exception
          */
         final public function __construct($data = null, $dependencyInjector = null)
@@ -103,11 +104,13 @@ namespace ManaPHP\Mvc {
          * Sets table name which model should be mapped
          *
          * @param $source
+         *
          * @return static
          */
         protected function setSource($source)
         {
             $this->_modelsManager->setModelSource($this, $source);
+
             return $this;
         }
 
@@ -126,11 +129,13 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service name
          *
          * @param string $connectionService
+         *
          * @return static
          */
         public function setConnectionService($connectionService)
         {
             $this->_modelsManager->setConnectionService($this, $connectionService);
+
             return $this;
         }
 
@@ -139,11 +144,13 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service name used to read data
          *
          * @param string $connectionService
+         *
          * @return static
          */
         public function setReadConnectionService($connectionService)
         {
             $this->_modelsManager->setReadConnectionService($this, $connectionService);
+
             return $this;
         }
 
@@ -152,11 +159,13 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service name used to write data
          *
          * @param string $connectionService
+         *
          * @return static
          */
         public function setWriteConnectionService($connectionService)
         {
             $this->_modelsManager->setWriteConnectionService($this, $connectionService);
+
             return $this;
         }
 
@@ -218,6 +227,7 @@ namespace ManaPHP\Mvc {
          *
          * @param array $data
          * @param array $whiteList
+         *
          * @return static
          * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
@@ -266,7 +276,8 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param    array $parameters
-         * @param  array $cacheOptions
+         * @param  array   $cacheOptions
+         *
          * @return  static[]|false
          * @throws \ManaPHP\Di\Exception
          */
@@ -293,6 +304,7 @@ namespace ManaPHP\Mvc {
                 foreach ($resultset as $result) {
                     $modelInstances[] = new static($result, $dependencyInjector);
                 }
+
                 return $modelInstances;
             } else {
                 return false;
@@ -320,7 +332,8 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string|array $parameters
-         * @param $cacheOptions
+         * @param              $cacheOptions
+         *
          * @return static
          * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
@@ -367,6 +380,7 @@ namespace ManaPHP\Mvc {
          * Create a criteria for a specific model
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
+         *
          * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
          * @throws \ManaPHP\Di\Exception
          */
@@ -382,7 +396,8 @@ namespace ManaPHP\Mvc {
          * Checks if the current record already exists or not
          *
          * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
-         * @param \ManaPHP\DbInterface $connection
+         * @param \ManaPHP\DbInterface                 $connection
+         *
          * @return boolean
          * @throws \ManaPHP\Mvc\Model\Exception
          */
@@ -431,11 +446,12 @@ namespace ManaPHP\Mvc {
         /**
          * Generate a SQL SELECT statement for an aggregate
          *
-         * @param string $function
-         * @param string $alias
-         * @param string $column
+         * @param string       $function
+         * @param string       $alias
+         * @param string       $column
          * @param string|array $parameters
-         * @param array $cacheOptions
+         * @param array        $cacheOptions
+         *
          * @return mixed
          * @throws \ManaPHP\Di\Exception
          */
@@ -484,9 +500,10 @@ namespace ManaPHP\Mvc {
          *
          * </code>
          *
-         * @param array $parameters
+         * @param array  $parameters
          * @param string $column
-         * @param array $cacheOptions
+         * @param array  $cacheOptions
+         *
          * @return int
          * @throws \ManaPHP\Di\Exception
          */
@@ -517,8 +534,9 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string $column
-         * @param array $parameters
-         * @param array $cacheOptions
+         * @param array  $parameters
+         * @param array  $cacheOptions
+         *
          * @return mixed
          * @throws \ManaPHP\Di\Exception|\ManaPHP\Mvc\Model\Exception
          */
@@ -544,8 +562,9 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string $column
-         * @param array $parameters
-         * @param array $cacheOptions
+         * @param array  $parameters
+         * @param array  $cacheOptions
+         *
          * @return mixed
          * @throws \ManaPHP\Di\Exception
          */
@@ -571,8 +590,9 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string $column
-         * @param array $parameters
-         * @param array $cacheOptions
+         * @param array  $parameters
+         * @param array  $cacheOptions
+         *
          * @return mixed
          * @throws \ManaPHP\Di\Exception
          */
@@ -598,8 +618,9 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string $column
-         * @param array $parameters
-         * @param $cacheOptions
+         * @param array  $parameters
+         * @param        $cacheOptions
+         *
          * @return double
          * @throws \ManaPHP\Di\Exception
          */
@@ -613,6 +634,7 @@ namespace ManaPHP\Mvc {
          * Fires an event, implicitly calls behaviors and listeners in the events manager are notified
          *
          * @param string $eventName
+         *
          * @return boolean
          */
         protected function _fireEvent($eventName)
@@ -627,6 +649,7 @@ namespace ManaPHP\Mvc {
          * Fires an internal event that cancels the operation
          *
          * @param string $eventName
+         *
          * @return bool
          */
         protected function _fireEventCancel($eventName)
@@ -642,6 +665,7 @@ namespace ManaPHP\Mvc {
          * Executes internal hooks before save a record
          *
          * @param boolean $exists
+         *
          * @return boolean
          */
         protected function _preSave($exists)
@@ -684,7 +708,8 @@ namespace ManaPHP\Mvc {
          * Sends a pre-build INSERT SQL statement to the relational database system
          *
          * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
-         * @param \ManaPHP\DbInterface $connection
+         * @param \ManaPHP\DbInterface                 $connection
+         *
          * @return boolean
          * @throws \ManaPHP\Mvc\Model\Exception
          */
@@ -717,7 +742,8 @@ namespace ManaPHP\Mvc {
          * Sends a pre-build UPDATE SQL statement to the relational database system
          *
          * @param \ManaPHP\Mvc\Model\MetadataInterface $metaData
-         * @param \ManaPHP\DbInterface $connection
+         * @param \ManaPHP\DbInterface                 $connection
+         *
          * @return boolean
          * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
@@ -775,6 +801,7 @@ namespace ManaPHP\Mvc {
          *
          * @param array $data
          * @param array $whiteList
+         *
          * @return boolean
          * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
@@ -829,6 +856,7 @@ namespace ManaPHP\Mvc {
          *
          * @param array $data
          * @param array $whiteList
+         *
          * @return boolean
          * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */
@@ -855,6 +883,7 @@ namespace ManaPHP\Mvc {
          *
          * @param array $data
          * @param array $whiteList
+         *
          * @return boolean
          * @throws \ManaPHP\Mvc\Model\Exception|\ManaPHP\Di\Exception
          */

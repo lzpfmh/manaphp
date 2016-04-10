@@ -13,7 +13,8 @@ namespace ManaPHP\Db {
     {
         /**
          * @param array|string $conditions
-         * @param array|null $binds
+         * @param array|null   $binds
+         *
          * @return string
          * @throws \ManaPHP\Db\ConditionParser\Exception
          */

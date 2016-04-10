@@ -26,11 +26,13 @@ namespace ManaPHP\Http\Response {
          * Set if cookies in the bag must be automatically encrypted/decrypted
          *
          * @param boolean $useEncryption
+         *
          * @return static
          */
         public function useEncryption($useEncryption)
         {
             $this->_useEncryption = $useEncryption;
+
             return $this;
         }
 
@@ -50,13 +52,14 @@ namespace ManaPHP\Http\Response {
          * Sets a cookie to be sent at the end of the request
          * This method overrides any cookie set before with the same name
          *
-         * @param string $name
-         * @param mixed $value
-         * @param int $expire
-         * @param string $path
+         * @param string  $name
+         * @param mixed   $value
+         * @param int     $expire
+         * @param string  $path
          * @param boolean $secure
-         * @param string $domain
+         * @param string  $domain
          * @param boolean $httpOnly
+         *
          * @return static
          * @throws \ManaPHP\Http\Response\Exception
          */
@@ -105,6 +108,7 @@ namespace ManaPHP\Http\Response {
          * Gets a cookie from the bag
          *
          * @param string $name
+         *
          * @return \ManaPHP\Http\Cookie
          */
         public function get($name)
@@ -129,6 +133,7 @@ namespace ManaPHP\Http\Response {
          * Check if a cookie is defined in the bag or exists in the $_COOKIE
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function has($name)
@@ -150,12 +155,14 @@ namespace ManaPHP\Http\Response {
          * This method does not removes cookies from the $_COOKIE
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function delete($name)
         {
             if (isset($this->_cookies[$name])) {
                 $this->_cookies[$name]->delete();
+
                 return true;
             } else {
                 return false;
@@ -191,6 +198,7 @@ namespace ManaPHP\Http\Response {
         public function reset()
         {
             $this->_cookies = [];
+
             return $this;
         }
     }

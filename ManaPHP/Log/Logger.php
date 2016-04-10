@@ -4,9 +4,7 @@
  * User: Mark
  * Date: 2016/3/20
  */
-namespace ManaPHP {
-
-    use ManaPHP\Logger\Exception;
+namespace ManaPHP\Log {
 
     class Logger
     {
@@ -31,20 +29,20 @@ namespace ManaPHP {
         protected $_level_i2s;
 
         /**
-         * @var \ManaPHP\Logger\AdapterInterface[]
+         * @var \ManaPHP\Log\AdapterInterface[]
          */
         protected $_adapters = [];
 
         public function __construct()
         {
             $this->_level_i2s = [
-                self::LEVEL_OFF => 'OFF',
-                self::LEVEL_FATAL => 'FATAL',
-                self::LEVEL_ERROR => 'ERROR',
+                self::LEVEL_OFF     => 'OFF',
+                self::LEVEL_FATAL   => 'FATAL',
+                self::LEVEL_ERROR   => 'ERROR',
                 self::LEVEL_WARNING => 'WARNING',
-                self::LEVEL_INFO => 'INFO',
-                self::LEVEL_DEBUG => 'DEBUG',
-                self::LEVEL_ALL => 'ALL',
+                self::LEVEL_INFO    => 'INFO',
+                self::LEVEL_DEBUG   => 'DEBUG',
+                self::LEVEL_ALL     => 'ALL',
             ];
         }
 
@@ -52,8 +50,9 @@ namespace ManaPHP {
          * Filters the logs sent to the handlers to be greater or equals than a specific level
          *
          * @param int|string $level
+         *
          * @return static
-         * @throws \ManaPHP\Logger\Exception
+         * @throws \ManaPHP\Log\Exception
          */
         public function setLevel($level)
         {
@@ -84,6 +83,7 @@ namespace ManaPHP {
 
         /**
          * @param int $level
+         *
          * @return string
          */
         public function mapLevelToString($level)
@@ -96,7 +96,8 @@ namespace ManaPHP {
         }
 
         /**
-         * @param \ManaPHP\Logger\AdapterInterface $adapter
+         * @param \ManaPHP\Log\AdapterInterface $adapter
+         *
          * @return static
          */
         public function addAdapter($adapter)
@@ -107,9 +108,10 @@ namespace ManaPHP {
         }
 
         /**
-         * @param int $level
+         * @param int    $level
          * @param string $message
-         * @param array $context
+         * @param array  $context
+         *
          * @return static
          */
         protected function _log($level, $message, $context)
@@ -126,7 +128,7 @@ namespace ManaPHP {
                 try {
                     $adapter->log($level, $message, $context);
                 } catch (\Exception $e) {
-                    error_log('Logger Failed: ' . $e->getMessage(), 0);
+                    error_log('Log Failed: ' . $e->getMessage(), 0);
                 }
             }
 
@@ -138,7 +140,8 @@ namespace ManaPHP {
          * Sends/Writes a debug message to the log
          *
          * @param string $message
-         * @param array $context
+         * @param array  $context
+         *
          * @return static
          */
         public function debug($message, $context = [])
@@ -151,7 +154,8 @@ namespace ManaPHP {
          * Sends/Writes an info message to the log
          *
          * @param string $message
-         * @param array $context
+         * @param array  $context
+         *
          * @return static
          */
         public function info($message, $context = [])
@@ -164,7 +168,8 @@ namespace ManaPHP {
          * Sends/Writes a warning message to the log
          *
          * @param string $message
-         * @param array $context
+         * @param array  $context
+         *
          * @return static
          */
         public function warning($message, $context = [])
@@ -177,7 +182,8 @@ namespace ManaPHP {
          * Sends/Writes an error message to the log
          *
          * @param string $message
-         * @param array $context
+         * @param array  $context
+         *
          * @return static
          */
         public function error($message, $context = [])
@@ -190,7 +196,8 @@ namespace ManaPHP {
          * Sends/Writes a critical message to the log
          *
          * @param string $message
-         * @param array $context
+         * @param array  $context
+         *
          * @return static
          */
         public function fatal($message, $context = [])

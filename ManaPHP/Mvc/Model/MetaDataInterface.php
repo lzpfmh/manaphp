@@ -12,6 +12,7 @@ namespace ManaPHP\Mvc\Model {
          * Returns table attributes names (fields)
          *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return    array
          */
         public function getAttributes($model);
@@ -21,6 +22,7 @@ namespace ManaPHP\Mvc\Model {
          * Returns an array of fields which are part of the primary key
          *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return array
          */
         public function getPrimaryKeyAttributes($model);
@@ -30,13 +32,16 @@ namespace ManaPHP\Mvc\Model {
          * Returns an array of fields which are not part of the primary key
          *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return    array
          */
         public function getNonPrimaryKeyAttributes($model);
 
         /**
          * Returns attribute which is auto increment or null
+         *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return string |null
          */
         public function getAutoIncrementAttribute($model);
@@ -46,7 +51,8 @@ namespace ManaPHP\Mvc\Model {
          * Check if a model has certain attribute
          *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
-         * @param string $attribute
+         * @param string                             $attribute
+         *
          * @return boolean
          */
         public function hasAttribute($model, $attribute);
@@ -56,6 +62,7 @@ namespace ManaPHP\Mvc\Model {
          * Reads meta-data from the adapter
          *
          * @param string $key
+         *
          * @return array
          */
         public function read($key);
@@ -65,7 +72,7 @@ namespace ManaPHP\Mvc\Model {
          * Writes meta-data to the adapter
          *
          * @param string $key
-         * @param array $data
+         * @param array  $data
          */
         public function write($key, $data);
 

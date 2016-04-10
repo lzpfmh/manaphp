@@ -57,6 +57,7 @@ namespace ManaPHP {
 
         /**
          * \ManaPHP\Di constructor
+         *
          * @var self
          */
         public function __construct()
@@ -79,9 +80,10 @@ namespace ManaPHP {
         /**
          * Registers a service in the services container
          *
-         * @param string $name
-         * @param mixed $definition
+         * @param string  $name
+         * @param mixed   $definition
          * @param boolean $shared
+         *
          * @return \ManaPHP\Di\ServiceInterface
          */
         public function set($name, $definition, $shared = false)
@@ -94,11 +96,13 @@ namespace ManaPHP {
          * Removes a service in the services container
          *
          * @param string $name
+         *
          * @return static
          */
         public function remove($name)
         {
             unset($this->_services[$name], $this->_sharedInstances[$name]);
+
             return $this;
         }
 
@@ -107,7 +111,8 @@ namespace ManaPHP {
          * Resolves the service based on its configuration
          *
          * @param string $name
-         * @param array $parameters
+         * @param array  $parameters
+         *
          * @return mixed
          * @throws \ManaPHP\Di\Exception
          */
@@ -144,7 +149,8 @@ namespace ManaPHP {
          * Resolves a service, the resolved service is stored in the DI, subsequent requests for this service will return the same instance
          *
          * @param string $name
-         * @param array $parameters
+         * @param array  $parameters
+         *
          * @return mixed
          * @throws \ManaPHP\Di\Exception
          */
@@ -162,6 +168,7 @@ namespace ManaPHP {
          * Check whether the DI contains a service by a name
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function has($name)
@@ -174,7 +181,8 @@ namespace ManaPHP {
          * Registers an "always shared" service in the services container
          *
          * @param string $name
-         * @param mixed $definition
+         * @param mixed  $definition
+         *
          * @return \ManaPHP\Di\ServiceInterface
          */
         public function setShared($name, $definition)
@@ -187,7 +195,8 @@ namespace ManaPHP {
          * Magic method to get or set services using setters/getters
          *
          * @param string $method
-         * @param array $arguments
+         * @param array  $arguments
+         *
          * @return void
          * @throws \ManaPHP\Di\Exception
          */

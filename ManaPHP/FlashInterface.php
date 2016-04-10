@@ -12,6 +12,7 @@ namespace ManaPHP {
          * Shows a HTML error message
          *
          * @param string $message
+         *
          * @return void
          */
         public function error($message);
@@ -21,6 +22,7 @@ namespace ManaPHP {
          * Shows a HTML notice/information message
          *
          * @param string $message
+         *
          * @return void
          */
         public function notice($message);
@@ -30,6 +32,7 @@ namespace ManaPHP {
          * Shows a HTML success message
          *
          * @param string $message
+         *
          * @return void
          */
         public function success($message);
@@ -39,6 +42,7 @@ namespace ManaPHP {
          * Shows a HTML warning message
          *
          * @param string $message
+         *
          * @return void
          */
         public function warning($message);

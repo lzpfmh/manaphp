@@ -16,10 +16,6 @@ class Module implements ModuleInterface
 {
     public function registerAutoloaders($di)
     {
-        $loader = new Loader();
-        $loader->registerNamespaces([
-          'Application\Home' => realpath(__DIR__) . ''
-        ])->register();
     }
 
     public function registerServices($di)

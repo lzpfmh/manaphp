@@ -38,7 +38,8 @@ namespace ManaPHP\Http {
          * Gets a session variable from an application context
          *
          * @param string $name
-         * @param mixed $defaultValue
+         * @param mixed  $defaultValue
+         *
          * @return mixed
          */
         public function get($name, $defaultValue = null)
@@ -67,6 +68,7 @@ namespace ManaPHP\Http {
          * Check whether a session variable is set in an application context
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function has($name)

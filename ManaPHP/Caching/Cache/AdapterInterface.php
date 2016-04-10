@@ -8,6 +8,7 @@ namespace ManaPHP\Caching\Cache {
          * Checks whether a specified key exists in the cache.
          *
          * @param string $key
+         *
          * @return bool
          */
         public function exists($key);
@@ -16,6 +17,7 @@ namespace ManaPHP\Caching\Cache {
          * Retrieves a value from cache with a specified key.
          *
          * @param string $key
+         *
          * @return string|false
          */
         public function get($key);
@@ -25,7 +27,8 @@ namespace ManaPHP\Caching\Cache {
          *
          * @param string $key
          * @param string $value
-         * @param int $ttl
+         * @param int    $ttl
+         *
          * @return void
          */
         public function set($key, $value, $ttl);
@@ -34,6 +37,7 @@ namespace ManaPHP\Caching\Cache {
          * Deletes a value with the specified key from cache
          *
          * @param string $key
+         *
          * @void
          */
         public function delete($key);

@@ -15,7 +15,7 @@ namespace ManaPHP\Event {
         /**
          * Attach a listener to the events manager
          *
-         * @param string $event
+         * @param string                                    $event
          * @param callable|\ManaPHP\Event\ListenerInterface $handler
          */
         public function attachEvent($event, $handler);
@@ -24,9 +24,9 @@ namespace ManaPHP\Event {
         /**
          * Fires an event in the events manager causing that the active listeners will be notified about it
          *
-         * @param string $event
+         * @param string                      $event
          * @param \ManaPHP\ComponentInterface $source
-         * @param mixed $data
+         * @param mixed                       $data
          */
         public function fireEvent($event, $source, $data = null);
     }

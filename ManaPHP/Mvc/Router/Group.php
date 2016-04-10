@@ -75,9 +75,10 @@ namespace ManaPHP\Mvc\Router {
         /**
          * Adds a route applying the common attributes
          *
-         * @param string $pattern
+         * @param string       $pattern
          * @param string|array $paths
          * @param string|array $httpMethods
+         *
          * @return \ManaPHP\Mvc\Router\RouteInterface
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -97,9 +98,10 @@ namespace ManaPHP\Mvc\Router {
          * $router->add('/about', 'About::index');
          *</code>
          *
-         * @param string $pattern
+         * @param string       $pattern
          * @param string|array $paths
          * @param string|array $httpMethods
+         *
          * @return \ManaPHP\Mvc\Router\RouteInterface
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -112,8 +114,9 @@ namespace ManaPHP\Mvc\Router {
         /**
          * Adds a route to the router that only match if the HTTP method is GET
          *
-         * @param string $pattern
+         * @param string       $pattern
          * @param string|array $paths
+         *
          * @return \ManaPHP\Mvc\Router\RouteInterface
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -126,8 +129,9 @@ namespace ManaPHP\Mvc\Router {
         /**
          * Adds a route to the router that only match if the HTTP method is POST
          *
-         * @param string $pattern
+         * @param string       $pattern
          * @param string|array $paths
+         *
          * @return \ManaPHP\Mvc\Router\RouteInterface
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -140,8 +144,9 @@ namespace ManaPHP\Mvc\Router {
         /**
          * Adds a route to the router that only match if the HTTP method is PUT
          *
-         * @param string $pattern
+         * @param string       $pattern
          * @param string|array $paths
+         *
          * @return \ManaPHP\Mvc\Router\RouteInterface
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -154,8 +159,9 @@ namespace ManaPHP\Mvc\Router {
         /**
          * Adds a route to the router that only match if the HTTP method is PATCH
          *
-         * @param string $pattern
+         * @param string       $pattern
          * @param string|array $paths
+         *
          * @return \ManaPHP\Mvc\Router\RouteInterface
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -168,8 +174,9 @@ namespace ManaPHP\Mvc\Router {
         /**
          * Adds a route to the router that only match if the HTTP method is DELETE
          *
-         * @param string $pattern
+         * @param string       $pattern
          * @param string|array $paths
+         *
          * @return \ManaPHP\Mvc\Router\RouteInterface
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -182,8 +189,9 @@ namespace ManaPHP\Mvc\Router {
         /**
          * Add a route to the router that only match if the HTTP method is OPTIONS
          *
-         * @param string $pattern
+         * @param string       $pattern
          * @param string|array $paths
+         *
          * @return \ManaPHP\Mvc\Router\RouteInterface
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -196,8 +204,9 @@ namespace ManaPHP\Mvc\Router {
         /**
          * Adds a route to the router that only match if the HTTP method is HEAD
          *
-         * @param string $pattern
+         * @param string       $pattern
          * @param string|array $paths
+         *
          * @return \ManaPHP\Mvc\Router\RouteInterface
          * @throws \ManaPHP\Mvc\Router\Exception
          */

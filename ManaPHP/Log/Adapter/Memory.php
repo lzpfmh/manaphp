@@ -1,7 +1,7 @@
 <?php
-namespace ManaPHP\Logger\Adapter {
+namespace ManaPHP\Log\Adapter {
 
-    use ManaPHP\Logger\AdapterInterface;
+    use ManaPHP\Log\AdapterInterface;
 
     class Memory implements AdapterInterface
     {
@@ -10,7 +10,8 @@ namespace ManaPHP\Logger\Adapter {
         /**
          * @param string $level
          * @param string $message
-         * @param array $context
+         * @param array  $context
+         *
          * @return void
          */
         public function log($level, $message, $context = null)

@@ -31,7 +31,7 @@ namespace ManaPHP\Mvc {
         /**
          * @var string
          */
-        protected $_content=null;
+        protected $_content = null;
 
         /**
          * @var array
@@ -42,6 +42,11 @@ namespace ManaPHP\Mvc {
          * @var string
          */
         protected $_AppDir = null;
+
+        /**
+         * @var string
+         */
+        protected $_rootNamespace = null;
 
         /**
          * @var false|string|null
@@ -68,11 +73,13 @@ namespace ManaPHP\Mvc {
         /**
          *
          * @param string $appDir
+         *
          * @return static
          */
         public function setAppDir($appDir)
         {
             $this->_AppDir = str_replace('\\', '/', rtrim($appDir, '\\/'));
+            $this->_rootNamespace = basename($this->_AppDir);
 
             return $this;
         }
@@ -91,6 +98,7 @@ namespace ManaPHP\Mvc {
 
         /**
          * @param false|string $layout
+         *
          * @return static
          */
         public function setLayout($layout = 'Default')
@@ -109,7 +117,8 @@ namespace ManaPHP\Mvc {
          *</code>
          *
          * @param string $name
-         * @param mixed $value
+         * @param mixed  $value
+         *
          * @return static
          */
         public function setVar($name, $value)
@@ -124,6 +133,7 @@ namespace ManaPHP\Mvc {
          * Adds parameters to view
          *
          * @param $vars
+         *
          * @return static
          */
         public function setVars($vars)
@@ -138,6 +148,7 @@ namespace ManaPHP\Mvc {
          * Returns a parameter previously set in the view
          *
          * @param string $name
+         *
          * @return mixed
          */
         public function getVar($name)
@@ -196,13 +207,14 @@ namespace ManaPHP\Mvc {
          * @param string $module
          * @param string $controller
          * @param string $action
+         *
          * @return static
          * @throws \ManaPHP\Mvc\View\Exception
          */
-        public function renderView($module,$controller, $action)
+        public function renderView($module, $controller, $action)
         {
-            if($this->_moduleName ===null){
-                $this->_moduleName=$module;
+            if ($this->_moduleName === null) {
+                $this->_moduleName = $module;
             }
 
             if ($this->_controllerName === null) {
@@ -215,9 +227,9 @@ namespace ManaPHP\Mvc {
 
             $this->fireEvent('view:beforeRender');
 
-            $view ="/{$this->_moduleName}/Views/{$this->_controllerName}/" . ucfirst($this->_actionName);
+            $view = "/{$this->_moduleName}/Views/{$this->_controllerName}/" . ucfirst($this->_actionName);
 
-           $this->_content= $this->renderer->render($this->_AppDir.$view, $this->_viewVars, false);
+            $this->_content = $this->renderer->render($this->_AppDir . $view, $this->_viewVars, false);
 
             if ($this->_layout !== false) {
                 if (is_string($this->_layout)) {
@@ -226,8 +238,8 @@ namespace ManaPHP\Mvc {
                     $layout = $this->_controllerName;
                 }
 
-                $view="/$this->_moduleName/Views/Layouts/" . ucfirst($layout);
-                $this->_content=$this->renderer->render($this->_AppDir.$view, $this->_viewVars, false);
+                $view = "/$this->_moduleName/Views/Layouts/" . ucfirst($layout);
+                $this->_content = $this->renderer->render($this->_AppDir . $view, $this->_viewVars, false);
             }
 
             $this->fireEvent('view:afterRender');
@@ -255,6 +267,7 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string $view
+         *
          * @return static
          */
         public function pickView($view)
@@ -279,7 +292,8 @@ namespace ManaPHP\Mvc {
          * </code>
          *
          * @param string $partialPath
-         * @param array $vars
+         * @param array  $vars
+         *
          * @return static
          * @throws \ManaPHP\Mvc\View\Exception
          */
@@ -289,14 +303,15 @@ namespace ManaPHP\Mvc {
                 $partialPath = $this->_controllerName . '/' . $partialPath;
             }
 
-            $view="/$this->_moduleName/Views/$partialPath";
+            $view = "/$this->_moduleName/Views/$partialPath";
 
-            $this->renderer->render($this->_AppDir.$view, array_merge($this->_viewVars, $vars), true);
+            $this->renderer->render($this->_AppDir . $view, array_merge($this->_viewVars, $vars), true);
         }
 
-        public function renderWidget($widget, $vars = [])
+        public function renderWidget($widget, $options = [])
         {
-            $widgetClassName = $this->_moduleName . "\\Widgets\\{$widget}Widget";
+            $widgetClassName = "{$this->_rootNamespace}\\{$this->_moduleName}\\Widgets\\{$widget}Widget";
+
             if (!class_exists($widgetClassName)) {
                 throw new Exception("widget '$widget' is not exist: " . $widgetClassName);
             }
@@ -305,12 +320,12 @@ namespace ManaPHP\Mvc {
              * @var \ManaPHP\Mvc\WidgetInterface $widgetInstance
              */
             $widgetInstance = $this->_dependencyInjector->get($widgetClassName);
-            $ret = $widgetInstance->run($vars);
-            if (is_string($ret)) {
-                echo $ret;
+            $vars = $widgetInstance->run($options);
+            if (is_string($vars)) {
+                echo $vars;
             } else {
-                $view="/$this->_moduleName/Views/Widgets/".$widget;
-                $this->renderer->render($this->_AppDir.$view, $vars, true);
+                $view = "/$this->_moduleName/Views/Widgets/" . $widget;
+                $this->renderer->render($this->_AppDir . $view, $vars, true);
             }
         }
 
@@ -323,6 +338,7 @@ namespace ManaPHP\Mvc {
          *</code>
          *
          * @param string $content
+         *
          * @return static
          */
         public function setContent($content)

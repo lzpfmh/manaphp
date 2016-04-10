@@ -26,6 +26,7 @@ namespace ManaPHP\Caching\Store\Adapter {
 
         /**
          * File constructor.
+         *
          * @param string $storeDir
          * @param string $shardMode
          */
@@ -37,6 +38,7 @@ namespace ManaPHP\Caching\Store\Adapter {
 
         /**
          * @param string $id
+         *
          * @return string
          */
         protected function _getFileName($id)

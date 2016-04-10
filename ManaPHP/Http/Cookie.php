@@ -39,12 +39,12 @@ namespace ManaPHP\Http {
         /**
          * \ManaPHP\Http\Cookie constructor
          *
-         * @param string $name
-         * @param mixed $value
-         * @param int $expire
-         * @param string $path
+         * @param string  $name
+         * @param mixed   $value
+         * @param int     $expire
+         * @param string  $path
          * @param boolean $secure
-         * @param string $domain
+         * @param string  $domain
          * @param boolean $httpOnly
          */
         public function __construct(
@@ -70,6 +70,7 @@ namespace ManaPHP\Http {
          * Sets the cookie's value
          *
          * @param string $value
+         *
          * @return \ManaPHP\Http\Cookie
          */
         public function setValue($value)
@@ -82,7 +83,8 @@ namespace ManaPHP\Http {
          * Returns the cookie's value
          *
          * @param string|array $filters
-         * @param string $defaultValue
+         * @param string       $defaultValue
+         *
          * @return mixed
          */
         public function getValue($filters = null, $defaultValue = null)
@@ -126,6 +128,7 @@ namespace ManaPHP\Http {
          * Sets if the cookie must be encrypted/decrypted automatically
          *
          * @param boolean $useEncryption
+         *
          * @return static
          */
         public function useEncryption($useEncryption)
@@ -147,6 +150,7 @@ namespace ManaPHP\Http {
          * Sets the cookie's expiration time
          *
          * @param int $expire
+         *
          * @return static
          */
         public function setExpiration($expire)
@@ -168,6 +172,7 @@ namespace ManaPHP\Http {
          * Sets the cookie's expiration time
          *
          * @param string $path
+         *
          * @return static
          */
         public function setPath($path)
@@ -189,6 +194,7 @@ namespace ManaPHP\Http {
          * Sets the domain that the cookie is available to
          *
          * @param string $domain
+         *
          * @return static
          */
         public function setDomain($domain)
@@ -210,6 +216,7 @@ namespace ManaPHP\Http {
          * Sets if the cookie must only be sent when the connection is secure (HTTPS)
          *
          * @param boolean $secure
+         *
          * @return static
          */
         public function setSecure($secure)
@@ -231,6 +238,7 @@ namespace ManaPHP\Http {
          * Sets if the cookie is accessible only through the HTTP protocol
          *
          * @param boolean $httpOnly
+         *
          * @return static
          */
         public function setHttpOnly($httpOnly)

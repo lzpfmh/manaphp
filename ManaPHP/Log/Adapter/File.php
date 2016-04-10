@@ -1,7 +1,7 @@
 <?php
-namespace ManaPHP\Logger\Adapter {
+namespace ManaPHP\Log\Adapter {
 
-    use ManaPHP\Logger\AdapterInterface;
+    use ManaPHP\Log\AdapterInterface;
 
     class File implements AdapterInterface
     {
@@ -22,10 +22,10 @@ namespace ManaPHP\Logger\Adapter {
         protected $_firstLog = true;
 
         /**
-         * \ManaPHP\Logger\Adapter\File constructor.
+         * \ManaPHP\Log\Adapter\File constructor.
          *
          * @param string $file
-         * @param array $options
+         * @param array  $options
          */
         public function __construct($file, $options = [])
         {
@@ -46,7 +46,7 @@ namespace ManaPHP\Logger\Adapter {
         /**
          * @param string $level
          * @param string $message
-         * @param array $context
+         * @param array  $context
          */
         public function log($level, $message, $context = [])
         {

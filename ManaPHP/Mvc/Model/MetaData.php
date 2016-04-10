@@ -35,6 +35,7 @@ namespace ManaPHP\Mvc\Model {
 
         /**
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return array
          * @throws \ManaPHP\Mvc\Model\Exception
          */
@@ -75,10 +76,10 @@ namespace ManaPHP\Mvc\Model {
             }
 
             return [
-                self::MODELS_ATTRIBUTES => $attributes,
-                self::MODELS_PRIMARY_KEY => $primaryKeys,
+                self::MODELS_ATTRIBUTES      => $attributes,
+                self::MODELS_PRIMARY_KEY     => $primaryKeys,
                 self::MODELS_NON_PRIMARY_KEY => $nonPrimaryKeys,
-                self::MODELS_IDENTITY_COLUMN => $autoIncrementAttribute
+                self::MODELS_IDENTITY_COLUMN => $autoIncrementAttribute,
             ];
         }
 
@@ -90,6 +91,7 @@ namespace ManaPHP\Mvc\Model {
          *</code>
          *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return array
          * @throws \ManaPHP\Mvc\Model\Exception
          */
@@ -118,6 +120,7 @@ namespace ManaPHP\Mvc\Model {
          *</code>
          *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return array
          * @throws \ManaPHP\Mvc\Model\Exception
          */
@@ -135,6 +138,7 @@ namespace ManaPHP\Mvc\Model {
          *</code>
          *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return array
          * @throws \ManaPHP\Mvc\Model\Exception
          */
@@ -145,7 +149,9 @@ namespace ManaPHP\Mvc\Model {
 
         /**
          * Returns attribute which is auto increment or null
+         *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return string |null
          * @throws \ManaPHP\Mvc\Model\Exception
          */
@@ -158,6 +164,7 @@ namespace ManaPHP\Mvc\Model {
          * Returns an array of fields which are not part of the primary key
          *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
+         *
          * @return    array
          * @throws \ManaPHP\Mvc\Model\Exception
          */
@@ -175,7 +182,8 @@ namespace ManaPHP\Mvc\Model {
          *</code>
          *
          * @param string|\ManaPHP\Mvc\ModelInterface $model
-         * @param string $attribute
+         * @param string                             $attribute
+         *
          * @return boolean
          * @throws \ManaPHP\Mvc\Model\Exception
          */

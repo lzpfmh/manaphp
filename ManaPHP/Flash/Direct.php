@@ -21,6 +21,7 @@ namespace ManaPHP\Flash {
          *
          * @param  string $type
          * @param  string $message
+         *
          * @return void
          */
         public function _message($type, $message)

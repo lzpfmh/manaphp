@@ -1,11 +1,14 @@
 <?php
-namespace ManaPHP\Mvc\View{
-    interface RendererInterface{
+namespace ManaPHP\Mvc\View {
+
+    interface RendererInterface
+    {
 
         /**
          * Register template engines
          *
          * @param array $engines
+         *
          * @return static
          */
         public function registerEngines($engines);
@@ -20,12 +23,13 @@ namespace ManaPHP\Mvc\View{
         /**
          * Checks whether view exists on registered extensions and render it
          *
-         * @param string $template
+         * @param string  $template
          * @param boolean $directOutput
-         * @param array $vars
+         * @param array   $vars
+         *
          * @return static
          * @throws \ManaPHP\Mvc\View\Exception
          */
-        public function render($template, $vars, $directOutput=true);
+        public function render($template, $vars, $directOutput = true);
     }
 }

@@ -22,21 +22,25 @@ namespace ManaPHP\Mvc\View {
          *</code>
          *
          * @param string $title
+         *
          * @return static
          */
         public function setTitle($title)
         {
             $this->_documentTitle = $title;
+
             return $this;
         }
 
         /**
          * @param $title
+         *
          * @return static
          */
         public function appendTitle($title)
         {
             $this->_documentTitle .= $title;
+
             return $this;
         }
 
@@ -51,6 +55,7 @@ namespace ManaPHP\Mvc\View {
 
         /**
          * @param string $description
+         *
          * @return static
          */
         public function setDescription($description)
@@ -67,7 +72,6 @@ namespace ManaPHP\Mvc\View {
         {
             return $this->_documentDescription;
         }
-
 
     }
 }

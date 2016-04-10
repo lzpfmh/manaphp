@@ -40,8 +40,8 @@ namespace ManaPHP\Mvc\Model {
         /**
          * \ManaPHP\Mvc\Model\Query constructor
          *
-         * @param string $sql
-         * @param array $models
+         * @param string               $sql
+         * @param array                $models
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
         public function __construct($sql, $models = null, $dependencyInjector = null)
@@ -61,6 +61,7 @@ namespace ManaPHP\Mvc\Model {
          * Sets the cache parameters of the query
          *
          * @param array $options
+         *
          * @return static
          */
         public function cache($options)
@@ -72,6 +73,7 @@ namespace ManaPHP\Mvc\Model {
          * Executes a parsed SQL statement
          *
          * @param array $binds
+         *
          * @return array
          * @throws \ManaPHP\Mvc\Model\Exception
          */
@@ -121,8 +123,9 @@ namespace ManaPHP\Mvc\Model {
         /**
          * Set default bind parameters
          *
-         * @param array $binds
+         * @param array   $binds
          * @param boolean $merge
+         *
          * @return static
          */
         public function setBinds($binds, $merge = false)

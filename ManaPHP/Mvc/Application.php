@@ -75,8 +75,8 @@ namespace ManaPHP\Mvc {
         /**
          * \ManaPHP\Mvc\Application
          *
-         * @param string $rootDirectory
-         * @param string $rootNamespace
+         * @param string               $rootDirectory
+         * @param string               $rootNamespace
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
         public function __construct($rootDirectory, $rootNamespace = null, $dependencyInjector = null)
@@ -99,11 +99,13 @@ namespace ManaPHP\Mvc {
          * You can full disable the view component using this method
          *
          * @param boolean $implicitView
+         *
          * @return static
          */
         public function useImplicitView($implicitView)
         {
             $this->_implicitView = $implicitView;
+
             return $this;
         }
 
@@ -117,6 +119,7 @@ namespace ManaPHP\Mvc {
          *</code>
          *
          * @param array $modules
+         *
          * @return static
          * @throws \ManaPHP\Mvc\Application\Exception
          */
@@ -143,8 +146,9 @@ namespace ManaPHP\Mvc {
         /**
          * Handles a MVC request
          *
-         * @param string $uri
+         * @param string                                            $uri
          * @param \ManaPHP\Mvc\Application\NotFoundHandlerInterface $notFoundHandler
+         *
          * @return \ManaPHP\Http\ResponseInterface|boolean
          * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Event\Exception|\ManaPHP\Di\Exception|\ManaPHP\Mvc\Application\NotFoundModuleException|\ManaPHP\Mvc\Dispatcher\Exception
          */
@@ -236,10 +240,11 @@ namespace ManaPHP\Mvc {
 
 
         /**
-         * @param mixed $actionReturnValue
-         * @param $module
+         * @param mixed  $actionReturnValue
+         * @param        $module
          * @param string $controller
          * @param string $action
+         *
          * @return \ManaPHP\Http\ResponseInterface
          * @throws \ManaPHP\Mvc\Application\Exception|\ManaPHP\Di\Exception
          */
@@ -265,7 +270,7 @@ namespace ManaPHP\Mvc {
                     $view->setAppDir($this->_rootDirectory);
 
                     $view->setContent($content);
-                    $view->renderView($module,$controller, $action);
+                    $view->renderView($module, $controller, $action);
                     $response->setContent($view->getContent());
                 } else {
                     $response->setContent($content);

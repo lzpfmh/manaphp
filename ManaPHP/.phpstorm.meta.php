@@ -17,7 +17,7 @@ namespace PHPSTORM_META {                                // we want to avoid the
         'modelsMetadata' instanceof \ManaPHP\Mvc\Model\MetadataInterface,
         'di' instanceof \ManaPHP\Di | \ManaPHP\DiInterface,
         'view' instanceof \ManaPHP\Mvc\ViewInterface,
-        'authorization' instanceof \ManaPHP\AuthorizationInterface,
+        'authorization' instanceof \ManaPHP\Auth\AuthorizationInterface,
       ],
       \ManaPHP\DiInterface::get('') => [           // STATIC call key to make static (1) & dynamic (2) calls work
         '' == '@',
@@ -32,3 +32,15 @@ namespace PHPSTORM_META {                                // we want to avoid the
       ],                                               // if key is not found its used as type name in all cases
     ];
 }
+
+/**
+ * @xglobal $view ManaPHP\Mvc\ViewInterface
+ */
+/**
+ * @var \ManaPHP\Mvc\View $view
+ * @var \ManaPHP\Mvc\View\Renderer $renderer
+ */
+$view=null;
+$renderer=null;
+unset($view,$renderer);
+

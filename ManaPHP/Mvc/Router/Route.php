@@ -38,9 +38,10 @@ namespace ManaPHP\Mvc\Router {
         /**
          * \ManaPHP\Mvc\Router\Route constructor
          *
-         * @param string $pattern
-         * @param array $paths
+         * @param string       $pattern
+         * @param array        $paths
          * @param array|string $httpMethods
+         *
          * @throws \ManaPHP\Mvc\Router\Exception
          */
         public function __construct($pattern, $paths = null, $httpMethods = null)
@@ -56,6 +57,7 @@ namespace ManaPHP\Mvc\Router {
          * Replaces placeholders from pattern returning a valid PCRE regular expression
          *
          * @param string $pattern
+         *
          * @return string
          */
         protected function _compilePattern($pattern)
@@ -63,11 +65,11 @@ namespace ManaPHP\Mvc\Router {
             // If a pattern contains ':', maybe there are placeholders to replace
             if (strpos($pattern, ':') !== false) {
                 $pattern = strtr($pattern, [
-                    '/:module' => '/{module:[a-z\d_-]+}',
+                    '/:module'     => '/{module:[a-z\d_-]+}',
                     '/:controller' => '/{controller:[a-z\d_-]+}',
-                    '/:action' => '/{action:[a-z\d_-]+}',
-                    '/:params' => '/{params:.+}',
-                    '/:int' => '/(\d+)'
+                    '/:action'     => '/{action:[a-z\d_-]+}',
+                    '/:params'     => '/{params:.+}',
+                    '/:int'        => '/(\d+)',
                 ]);
             }
 
@@ -84,7 +86,9 @@ namespace ManaPHP\Mvc\Router {
 
         /**
          * Extracts parameters from a string
+         *
          * @param string $pattern
+         *
          * @return string
          */
         protected function _extractNamedParams($pattern)
@@ -120,12 +124,15 @@ namespace ManaPHP\Mvc\Router {
             if ($need_restore_token) {
                 $pattern = str_replace([$left_token, $right_token], ['{', '}'], $pattern);
             }
+
             return $pattern;
         }
 
         /**
          * Returns routePaths
+         *
          * @param string|array $paths
+         *
          * @return array
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -180,8 +187,9 @@ namespace ManaPHP\Mvc\Router {
 
 
         /**
-         * @param string $handle_uri
+         * @param string     $handle_uri
          * @param array|null $matches
+         *
          * @return bool
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -211,6 +219,7 @@ namespace ManaPHP\Mvc\Router {
             } else {
                 if ($this->_compiledPattern === $handle_uri) {
                     $matches = [];
+
                     return true;
                 } else {
                     return false;

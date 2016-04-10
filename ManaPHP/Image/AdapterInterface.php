@@ -25,6 +25,7 @@ namespace ManaPHP\Image {
          * @param int $height
          * @param int $offsetX
          * @param int $offsetY
+         *
          * @return static
          */
         public function crop($width, $height, $offsetX = 0, $offsetY = 0);
@@ -32,6 +33,7 @@ namespace ManaPHP\Image {
         /**
          * @param int $width
          * @param int $height
+         *
          * @return static
          */
         public function resize($width, $height);
@@ -39,21 +41,23 @@ namespace ManaPHP\Image {
         /**
          * Rotate the image by a given degrees
          *
-         * @param int $degrees
-         * @param int $background
+         * @param int   $degrees
+         * @param int   $background
          * @param float $alpha
+         *
          * @return static
          */
         public function rotate($degrees, $background = 0xffffff, $alpha = 1.0);
 
         /**
          * @param string $text
-         * @param int $offsetX
-         * @param int $offsetY
-         * @param float $opacity
-         * @param int $color
-         * @param int $size
+         * @param int    $offsetX
+         * @param int    $offsetY
+         * @param float  $opacity
+         * @param int    $color
+         * @param int    $size
          * @param string $font_file
+         *
          * @return static
          */
         public function text(
@@ -68,9 +72,10 @@ namespace ManaPHP\Image {
 
         /**
          * @param string $file
-         * @param int $offsetX
-         * @param int $offsetY
-         * @param float $opacity
+         * @param int    $offsetX
+         * @param int    $offsetY
+         * @param float  $opacity
+         *
          * @return static
          * @throws \ManaPHP\Image\Exception
          */
@@ -78,7 +83,8 @@ namespace ManaPHP\Image {
 
         /**
          * @param string $file
-         * @param int $quality
+         * @param int    $quality
+         *
          * @throws \ManaPHP\Image\Exception
          */
         public function save($file = null, $quality = 80);

@@ -23,7 +23,9 @@ namespace ManaPHP\Caching\Store\Adapter {
 
         /**
          * Redis constructor.
+         *
          * @param array
+         *
          * @throws \ManaPHP\Caching\Store\Exception
          */
         public function __construct($options)
@@ -97,6 +99,7 @@ namespace ManaPHP\Caching\Store\Adapter {
          * Fetch content
          *
          * @param string $id
+         *
          * @return string|false
          * @throws \ManaPHP\Caching\Store\Exception
          */
@@ -120,8 +123,10 @@ namespace ManaPHP\Caching\Store\Adapter {
 
         /**
          * Caches content
+         *
          * @param string $id
          * @param string $value
+         *
          * @return void
          * @throws \ManaPHP\Caching\Store\Exception
          */
@@ -147,6 +152,7 @@ namespace ManaPHP\Caching\Store\Adapter {
          * Delete content
          *
          * @param string $id
+         *
          * @void
          * @throws \ManaPHP\Caching\Store\Exception
          */
@@ -163,6 +169,7 @@ namespace ManaPHP\Caching\Store\Adapter {
          * Check if id exists
          *
          * @param string $id
+         *
          * @return bool
          * @throws \ManaPHP\Caching\Store\Exception
          */

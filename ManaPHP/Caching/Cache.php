@@ -28,10 +28,12 @@ namespace ManaPHP\Caching {
 
         /**
          * Cache constructor.
-         * @param string $prefix
-         * @param int $ttl
+         *
+         * @param string                                         $prefix
+         * @param int                                            $ttl
          * @param string|\ManaPHP\Caching\Cache\AdapterInterface $adapter
-         * @param \ManaPHP\Caching\Serializer\AdapterInterface $serializer
+         * @param \ManaPHP\Caching\Serializer\AdapterInterface   $serializer
+         *
          * @throws \ManaPHP\Caching\Cache\Exception|\ManaPHP\Di\Exception
          */
         public function __construct($prefix = '', $ttl = 3600, $adapter = null, $serializer = null)
@@ -52,6 +54,7 @@ namespace ManaPHP\Caching {
          * Fetch content
          *
          * @param string $key
+         *
          * @return mixed
          * @throws \ManaPHP\Caching\Cache\Exception
          */
@@ -68,9 +71,11 @@ namespace ManaPHP\Caching {
 
         /**
          * Caches content
+         *
          * @param string $key
-         * @param mixed $value
-         * @param int $ttl
+         * @param mixed  $value
+         * @param int    $ttl
+         *
          * @return void
          * @throws \ManaPHP\Caching\Cache\Exception
          */
@@ -84,6 +89,7 @@ namespace ManaPHP\Caching {
          * Delete content
          *
          * @param string $key
+         *
          * @void
          */
         public function delete($key)
@@ -96,6 +102,7 @@ namespace ManaPHP\Caching {
          * Check if key exists
          *
          * @param string $key
+         *
          * @return bool
          */
         public function exists($key)

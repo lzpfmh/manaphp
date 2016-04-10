@@ -10,6 +10,7 @@ namespace ManaPHP\Mvc\View\Renderer {
 
         /**
          * Php constructor.
+         *
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
         public function __construct($dependencyInjector = null);
@@ -18,7 +19,7 @@ namespace ManaPHP\Mvc\View\Renderer {
          * Renders a view using the template engine
          *
          * @param string $file
-         * @param array $vars
+         * @param array  $vars
          */
         public function render($file, $vars = null);
     }

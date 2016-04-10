@@ -64,6 +64,7 @@ namespace ManaPHP\Http\Response {
                         header($header, true);
                     }
                 }
+
                 return true;
             } else {
                 return false;

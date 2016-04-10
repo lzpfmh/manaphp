@@ -11,6 +11,7 @@ namespace ManaPHP\Mvc {
          * Sets app directory
          *
          * @param string $appDir
+         *
          * @return static
          */
         public function setAppDir($appDir);
@@ -35,7 +36,8 @@ namespace ManaPHP\Mvc {
          * Adds parameter to view
          *
          * @param string $name
-         * @param mixed $value
+         * @param mixed  $value
+         *
          * @return static
          */
         public function setVar($name, $value);
@@ -45,6 +47,7 @@ namespace ManaPHP\Mvc {
          * Adds parameters to view
          *
          * @param $vars
+         *
          * @return static
          */
         public function setVars($vars);
@@ -54,6 +57,7 @@ namespace ManaPHP\Mvc {
          * Returns a parameter previously set in the view
          *
          * @param string $name
+         *
          * @return mixed
          */
         public function getVar($name);
@@ -94,6 +98,7 @@ namespace ManaPHP\Mvc {
          * Choose a view different to render than last-controller/last-action
          *
          * @param string $view
+         *
          * @return static
          */
         public function pickView($view);
@@ -103,14 +108,16 @@ namespace ManaPHP\Mvc {
          * Renders a partial view
          *
          * @param string $partialPath
-         * @param array $vars
+         * @param array  $vars
+         *
          * @return static
          */
         public function renderPartial($partialPath, $vars = []);
 
         /**
          * @param string $widget
-         * @param array $vars
+         * @param array  $vars
+         *
          * @return static
          */
         public function renderWidget($widget, $vars = []);
@@ -120,6 +127,7 @@ namespace ManaPHP\Mvc {
          * Externally sets the view content
          *
          * @param string $content
+         *
          * @return static
          */
         public function setContent($content);

@@ -12,6 +12,7 @@ namespace ManaPHP\Mvc {
          * <code>
          *  $city->getSource();
          * </code>
+         *
          * @return string
          */
         public function getSource();
@@ -21,6 +22,7 @@ namespace ManaPHP\Mvc {
          * Sets both read/write connection services
          *
          * @param string $connectionService
+         *
          * @return static
          */
         public function setConnectionService($connectionService);
@@ -30,6 +32,7 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service used to write data
          *
          * @param string $connectionService
+         *
          * @return static
          */
         public function setWriteConnectionService($connectionService);
@@ -39,6 +42,7 @@ namespace ManaPHP\Mvc {
          * Sets the DependencyInjection connection service used to read data
          *
          * @param string $connectionService
+         *
          * @return static
          */
         public function setReadConnectionService($connectionService);
@@ -82,8 +86,10 @@ namespace ManaPHP\Mvc {
          *  $city->assign(['city_id'=>1,'city_name'=>'beijing']);
          *  $city->assign(['city_id'=>1,'city_name'=>'beijing'],['city_name']);
          * </code>
+         *
          * @param array $data
          * @param array $whiteList
+         *
          * @return static
          */
         public function assign($data, $whiteList = null);
@@ -100,7 +106,8 @@ namespace ManaPHP\Mvc {
          *
          * </code>
          * @param    array $parameters
-         * @param   array $cacheOptions
+         * @param   array  $cacheOptions
+         *
          * @return  static[]|false
          */
         public static function find($parameters = null, $cacheOptions = null);
@@ -115,8 +122,10 @@ namespace ManaPHP\Mvc {
          *  $city=City::findFirst(['conditions'=>['city_id'=>10]]);
          *  $city=City::findFirst(['conditions'=>'city_id =:city_id','bind'=>['city_id'=>10]]);
          * </code>
+         *
          * @param string|array $parameters
-         * @param array $cacheOptions
+         * @param array        $cacheOptions
+         *
          * @return static|false
          */
         public static function findFirst($parameters = null, $cacheOptions = null);
@@ -126,6 +135,7 @@ namespace ManaPHP\Mvc {
          * Create a criteria for a special model
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
+         *
          * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
          */
         public static function query($dependencyInjector = null);
@@ -137,9 +147,11 @@ namespace ManaPHP\Mvc {
          * <code>
          * City::count(['country_id'=>2]);
          * </code>
-         * @param array $parameters
+         *
+         * @param array  $parameters
          * @param string $column
-         * @param array $cacheOptions
+         * @param array  $cacheOptions
+         *
          * @return int
          */
         public static function count($parameters = null, $column = '*', $cacheOptions = null);
@@ -149,8 +161,9 @@ namespace ManaPHP\Mvc {
          * Allows to calculate a summary on a column that match the specified conditions
          *
          * @param string $column
-         * @param array $parameters
-         * @param array $cacheOptions
+         * @param array  $parameters
+         * @param array  $cacheOptions
+         *
          * @return mixed
          */
         public static function sum($column, $parameters = null, $cacheOptions = null);
@@ -160,8 +173,9 @@ namespace ManaPHP\Mvc {
          * Allows to get the max value of a column that match the specified conditions
          *
          * @param string $column
-         * @param array $parameters
-         * @param array $cacheOptions
+         * @param array  $parameters
+         * @param array  $cacheOptions
+         *
          * @return mixed
          */
         public static function max($column, $parameters = null, $cacheOptions = null);
@@ -171,8 +185,9 @@ namespace ManaPHP\Mvc {
          * Allows to get the min value of a column that match the specified conditions
          *
          * @param string $column
-         * @param array $parameters
-         * @param array $cacheOptions =null
+         * @param array  $parameters
+         * @param array  $cacheOptions =null
+         *
          * @return mixed
          */
         public static function min($column, $parameters = null, $cacheOptions = null);
@@ -182,8 +197,9 @@ namespace ManaPHP\Mvc {
          * Allows to calculate the average value on a column matching the specified conditions
          *
          * @param string $column
-         * @param array $parameters
-         * @param array $cacheOptions
+         * @param array  $parameters
+         * @param array  $cacheOptions
+         *
          * @return double
          */
         public static function average($column, $parameters = null, $cacheOptions = null);
@@ -194,6 +210,7 @@ namespace ManaPHP\Mvc {
          *
          * @param  array $data
          * @param  array $whiteList
+         *
          * @return boolean
          */
         public function save($data = null, $whiteList = null);
@@ -205,6 +222,7 @@ namespace ManaPHP\Mvc {
          *
          * @param  array $data
          * @param  array $whiteList
+         *
          * @return boolean
          */
         public function create($data = null, $whiteList = null);
@@ -216,6 +234,7 @@ namespace ManaPHP\Mvc {
          *
          * @param  array $data
          * @param  array $whiteList
+         *
          * @return boolean
          */
         public function update($data = null, $whiteList = null);

@@ -27,8 +27,10 @@ namespace ManaPHP\Caching\Cache\Adapter {
 
         /**
          * File constructor.
+         *
          * @param string $cacheDir
          * @param string $shardMode
+         *
          * @throws \ManaPHP\Caching\Cache\Exception
          */
         public function __construct($cacheDir, $shardMode = null)
@@ -39,6 +41,7 @@ namespace ManaPHP\Caching\Cache\Adapter {
 
         /**
          * @param string $key
+         *
          * @return string
          */
         protected function _getFileName($key)
@@ -49,6 +52,7 @@ namespace ManaPHP\Caching\Cache\Adapter {
         public function exists($key)
         {
             $cacheFile = $this->_getFileName($key);
+
             return (@filemtime($cacheFile) >= time());
         }
 

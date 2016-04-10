@@ -21,8 +21,9 @@ namespace ManaPHP\Event {
         /**
          * Attach a listener to the events manager
          *
-         * @param string $event
+         * @param string                                    $event
          * @param callable|\ManaPHP\Event\ListenerInterface $handler
+         *
          * @return static
          * @throws \ManaPHP\Event\Exception
          */
@@ -44,9 +45,9 @@ namespace ManaPHP\Event {
             }
 
             $this->_events[$type][] = [
-                'event' => $event,
-                'name' => $name,
-                'handler' => $handler
+                'event'   => $event,
+                'name'    => $name,
+                'handler' => $handler,
             ];
 
             return $this;
@@ -59,9 +60,10 @@ namespace ManaPHP\Event {
          *    $eventsManager->fire('db', $connection);
          *</code>
          *
-         * @param string $event
+         * @param string                      $event
          * @param \ManaPHP\ComponentInterface $source
-         * @param mixed $data
+         * @param mixed                       $data
+         *
          * @return boolean|null
          * @throws \ManaPHP\Event\Exception
          */

@@ -19,7 +19,8 @@ namespace ManaPHP\Mvc\Model {
          * Sets the mapped source for a model
          *
          * @param \ManaPHP\Mvc\ModelInterface|string $model
-         * @param string $source
+         * @param string                             $source
+         *
          * @return static
          */
         public function setModelSource($model, $source);
@@ -29,6 +30,7 @@ namespace ManaPHP\Mvc\Model {
          * Returns the mapped source for a model
          *
          * @param \ManaPHP\Mvc\ModelInterface|string $model
+         *
          * @return string
          */
         public function getModelSource($model);
@@ -36,8 +38,9 @@ namespace ManaPHP\Mvc\Model {
         /**
          * Loads a model throwing an exception if it does't exist
          *
-         * @param string $modelName
+         * @param string  $modelName
          * @param boolean $newInstance
+         *
          * @return \ManaPHP\Mvc\ModelInterface
          */
         public function getModelInstance($modelName, $newInstance);
@@ -46,7 +49,7 @@ namespace ManaPHP\Mvc\Model {
          * Sets both write and read connection service for a model
          *
          * @param \ManaPHP\Mvc\ModelInterface|string $model
-         * @param string $connectionService
+         * @param string                             $connectionService
          */
         public function setConnectionService($model, $connectionService);
 
@@ -55,7 +58,7 @@ namespace ManaPHP\Mvc\Model {
          * Sets write connection service for a model
          *
          * @param \ManaPHP\Mvc\ModelInterface|string $model
-         * @param string $connectionService
+         * @param string                             $connectionService
          */
         public function setWriteConnectionService($model, $connectionService);
 
@@ -64,7 +67,7 @@ namespace ManaPHP\Mvc\Model {
          * Sets read connection service for a model
          *
          * @param \ManaPHP\Mvc\ModelInterface|string $model
-         * @param string $connectionService
+         * @param string                             $connectionService
          */
         public function setReadConnectionService($model, $connectionService);
 
@@ -73,6 +76,7 @@ namespace ManaPHP\Mvc\Model {
          * Returns the connection to write data related to a model
          *
          * @param \ManaPHP\Mvc\ModelInterface|string $model
+         *
          * @return \ManaPHP\DbInterface
          */
         public function getWriteConnection($model);
@@ -82,6 +86,7 @@ namespace ManaPHP\Mvc\Model {
          * Returns the connection to read data related to a model
          *
          * @param \ManaPHP\Mvc\ModelInterface|string $model
+         *
          * @return \ManaPHP\DbInterface
          */
         public function getReadConnection($model);
@@ -91,6 +96,7 @@ namespace ManaPHP\Mvc\Model {
          * Returns the connection service name used to read data related to a model
          *
          * @param \ManaPHP\Mvc\ModelInterface|string $model
+         *
          * @return string
          */
         public function getReadConnectionService($model);
@@ -100,6 +106,7 @@ namespace ManaPHP\Mvc\Model {
          * Returns the connection service name used to write data related to a model
          *
          * @param \ManaPHP\Mvc\ModelInterface|string $model
+         *
          * @return string
          */
         public function getWriteConnectionService($model);
@@ -109,6 +116,7 @@ namespace ManaPHP\Mvc\Model {
          * Creates a \ManaPHP\Mvc\Model\Query\Builder
          *
          * @param string $params
+         *
          * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
          */
         public function createBuilder($params = null);

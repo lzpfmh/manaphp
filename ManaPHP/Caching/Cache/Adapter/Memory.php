@@ -17,6 +17,7 @@ namespace ManaPHP\Caching\Cache\Adapter {
                     return $this->_data[$key]['data'];
                 } else {
                     unset($this->_data[$key]);
+
                     return false;
                 }
             } else {

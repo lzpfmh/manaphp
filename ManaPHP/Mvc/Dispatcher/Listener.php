@@ -13,8 +13,9 @@ namespace ManaPHP\Mvc\Dispatcher {
     class Listener extends Component implements ListenerInterface
     {
         /**
-         * @param \ManaPHP\Event\Event $event
+         * @param \ManaPHP\Event\Event    $event
          * @param \ManaPHP\Mvc\Dispatcher $dispatcher
+         *
          * @return bool
          */
         public function beforeDispatchLoop($event, $dispatcher)
@@ -26,8 +27,9 @@ namespace ManaPHP\Mvc\Dispatcher {
         }
 
         /**
-         * @param \ManaPHP\Event\Event $event
+         * @param \ManaPHP\Event\Event    $event
          * @param \ManaPHP\Mvc\Dispatcher $dispatcher
+         *
          * @return bool
          */
         public function beforeDispatch($event, $dispatcher)
@@ -39,8 +41,9 @@ namespace ManaPHP\Mvc\Dispatcher {
         }
 
         /**
-         * @param \ManaPHP\Event\Event $event
+         * @param \ManaPHP\Event\Event    $event
          * @param \ManaPHP\Mvc\Dispatcher $dispatcher
+         *
          * @return void
          */
         public function afterDispatch($event, $dispatcher)

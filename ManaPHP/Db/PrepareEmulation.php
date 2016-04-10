@@ -19,8 +19,9 @@ namespace ManaPHP\Db {
 
         /**
          * @param mixed $value
-         * @param int $type
-         * @param int $preservedStrLength
+         * @param int   $type
+         * @param int   $preservedStrLength
+         *
          * @return int|string
          */
         protected function _parseValue($value, $type, $preservedStrLength)
@@ -44,6 +45,7 @@ namespace ManaPHP\Db {
 
         /**
          * @param mixed $data
+         *
          * @return int
          */
         protected function _inferType($data)
@@ -63,9 +65,10 @@ namespace ManaPHP\Db {
 
         /**
          * @param string $sqlStatement
-         * @param array $bindParams
-         * @param array $bindTypes
-         * @param int $preservedStrLength
+         * @param array  $bindParams
+         * @param array  $bindTypes
+         * @param int    $preservedStrLength
+         *
          * @return mixed
          */
         public function emulate($sqlStatement, $bindParams = null, $bindTypes = null, $preservedStrLength = -1)
@@ -80,6 +83,7 @@ namespace ManaPHP\Db {
                 $preparedStatement = preg_replace_callback('/(\?)/',
                     function () use ($bindParams, $bindTypes, &$pos, $preservedStrLength) {
                         $type = isset($bindTypes[$pos]) ? $bindTypes[$pos] : $this->_inferType($bindParams[$pos]);
+
                         return $this->_parseValue($bindParams[$pos++], $type, $preservedStrLength);
                     }, $sqlStatement);
 

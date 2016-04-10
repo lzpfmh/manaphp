@@ -109,19 +109,22 @@ namespace ManaPHP\Mvc {
          * Set whether router must remove the extra slashes in the handled routes
          *
          * @param boolean $remove
+         *
          * @return static
          */
         public function removeExtraSlashes($remove)
         {
             $this->_removeExtraSlashes = $remove;
+
             return $this;
         }
 
 
         /**
-         * @param string $uri
+         * @param string                               $uri
          * @param \ManaPHP\Mvc\Router\RouteInterface[] $routes
-         * @param array $parts
+         * @param array                                $parts
+         *
          * @return bool
          */
         protected function _findMatchedRoute($uri, $routes, &$parts)
@@ -169,7 +172,8 @@ namespace ManaPHP\Mvc {
          *
          * @param string $uri
          * @param string $host
-         * @param bool $silent
+         * @param bool   $silent
+         *
          * @return boolean
          * @throws \ManaPHP\Mvc\Router\Exception
          */
@@ -279,8 +283,9 @@ namespace ManaPHP\Mvc {
          * Mounts a group of routes in the router
          *
          * @param \ManaPHP\Mvc\Router\GroupInterface $group
-         * @param string $module
-         * @param string $path
+         * @param string                             $module
+         * @param string                             $path
+         *
          * @return static
          */
         public function mount($group, $module, $path = null)

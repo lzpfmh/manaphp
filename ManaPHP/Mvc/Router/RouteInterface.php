@@ -16,7 +16,8 @@ namespace ManaPHP\Mvc\Router {
 
         /**
          * @param string $handle_uri
-         * @param array $matches
+         * @param array  $matches
+         *
          * @return bool
          */
         public function isMatched($handle_uri, &$matches);

@@ -23,9 +23,11 @@ namespace ManaPHP\Caching {
 
         /**
          * Store constructor.
-         * @param string $prefix
+         *
+         * @param string                                         $prefix
          * @param string|\ManaPHP\Caching\Store\AdapterInterface $adapter
-         * @param \ManaPHP\Caching\Serializer\AdapterInterface $serializer
+         * @param \ManaPHP\Caching\Serializer\AdapterInterface   $serializer
+         *
          * @throws \ManaPHP\Di\Exception
          */
         public function __construct($prefix = '', $adapter = null, $serializer = null)
@@ -45,6 +47,7 @@ namespace ManaPHP\Caching {
          * Fetch content
          *
          * @param string $id
+         *
          * @return mixed
          * @throws \ManaPHP\Caching\Store\Exception
          */
@@ -62,6 +65,7 @@ namespace ManaPHP\Caching {
          * Retrieves a value from store with a specified id.
          *
          * @param array $ids
+         *
          * @return array
          * @throws \ManaPHP\Caching\Store\Exception
          */
@@ -88,8 +92,10 @@ namespace ManaPHP\Caching {
 
         /**
          * Stores content
+         *
          * @param string $id
-         * @param mixed $value
+         * @param mixed  $value
+         *
          * @return void
          * @throws \ManaPHP\Caching\Cache\Exception
          */
@@ -103,6 +109,7 @@ namespace ManaPHP\Caching {
          * Stores a value identified by a id into store.
          *
          * @param array $idValues
+         *
          * @return void
          */
         public function mSet($idValues)
@@ -119,6 +126,7 @@ namespace ManaPHP\Caching {
          * Delete content
          *
          * @param string $id
+         *
          * @void
          */
         public function delete($id)
@@ -131,6 +139,7 @@ namespace ManaPHP\Caching {
          * Check if id exists
          *
          * @param string $id
+         *
          * @return bool
          */
         public function exists($id)

@@ -43,7 +43,7 @@ namespace ManaPHP\Http\Request {
          * \ManaPHP\Http\Request\File constructor
          *
          * @param string $key
-         * @param array $file
+         * @param array  $file
          */
         public function __construct($key, $file)
         {
@@ -153,6 +153,7 @@ namespace ManaPHP\Http\Request {
          * Moves the temporary file to a destination within the application
          *
          * @param string $destination
+         *
          * @throws \ManaPHP\Http\Request\File\Exception
          */
         public function moveTo($destination)

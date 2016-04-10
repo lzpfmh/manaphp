@@ -11,31 +11,32 @@ namespace ManaPHP {
     /**
      * ManaPHP\Component
      *
-     * @property \ManaPHP\Mvc\DispatcherInterface $dispatcher;
-     * @property \ManaPHP\Mvc\RouterInterface $router
+     * @property \ManaPHP\Mvc\DispatcherInterface        $dispatcher;
+     * @property \ManaPHP\Mvc\RouterInterface            $router
     //* @property \ManaPHP\Mvc\UrlInterface $url
-     * @property \ManaPHP\Http\RequestInterface $request
-     * @property \ManaPHP\Http\ResponseInterface $response
+     * @property \ManaPHP\Http\RequestInterface          $request
+     * @property \ManaPHP\Http\ResponseInterface         $response
      * @property \ManaPHP\Http\Response\CookiesInterface $cookies
     //* @property \ManaPHP\FilterInterface $filter
-     * @property \ManaPHP\Flash\Direct $flash
+     * @property \ManaPHP\Flash\Direct                   $flash
     //* @property \ManaPHP\Flash\Session $flashSession
-     * @property \ManaPHP\Http\SessionInterface $session
-     * @property \ManaPHP\Event\ManagerInterface $eventsManager
-     * @property \ManaPHP\DbInterface $db
+     * @property \ManaPHP\Http\SessionInterface          $session
+     * @property \ManaPHP\Event\ManagerInterface         $eventsManager
+     * @property \ManaPHP\DbInterface                    $db
     //* @property \ManaPHP\Security $security
      * //* @property \ManaPHP\CryptInterface $crypt
      * // * @property \ManaPHP\EscaperInterface $escaper
-     * @property \ManaPHP\Mvc\Model\ManagerInterface $modelsManager
-     * @property \ManaPHP\Mvc\Model\MetadataInterface $modelsMetadata
+     * @property \ManaPHP\Mvc\Model\ManagerInterface     $modelsManager
+     * @property \ManaPHP\Mvc\Model\MetadataInterface    $modelsMetadata
     //     * @property \ManaPHP\Assets\Manager $assets
-     * @property \ManaPHP\Di|\ManaPHP\DiInterface $di
+     * @property \ManaPHP\Di|\ManaPHP\DiInterface        $di
     //     * @property \ManaPHP\Session\BagInterface $persistent
-     * @property \ManaPHP\Mvc\ViewInterface $view
-     * @property \ManaPHP\Mvc\View\Tag $tag
-     * @property \ManaPHP\Loader $loader
-     * @property \ManaPHP\Logger $logger
-     * @property \ManaPHP\Mvc\View\Renderer $renderer
+     * @property \ManaPHP\Mvc\ViewInterface              $view
+     * @property \ManaPHP\Mvc\View\Tag                   $tag
+     * @property \ManaPHP\Loader                         $loader
+     * @property \ManaPHP\Log\Logger                     $logger
+     * @property \ManaPHP\Mvc\View\Renderer              $renderer
+     * @property \Application\Configure                  $configure
      */
     class Component implements ComponentInterface
     {
@@ -56,11 +57,13 @@ namespace ManaPHP {
          * Sets the dependency injector
          *
          * @param \ManaPHP\DiInterface $dependencyInjector
+         *
          * @return static
          */
         public function setDependencyInjector($dependencyInjector)
         {
             $this->_dependencyInjector = $dependencyInjector;
+
             return $this;
         }
 
@@ -82,6 +85,7 @@ namespace ManaPHP {
          * Magic method __get
          *
          * @param string $propertyName
+         *
          * @return object
          */
         public function __get($propertyName)
@@ -106,8 +110,9 @@ namespace ManaPHP {
         /**
          * Attach a listener to the events manager
          *
-         * @param string $event
+         * @param string                                    $event
          * @param callable|\ManaPHP\Event\ListenerInterface $handler
+         *
          * @return static
          * @throws \ManaPHP\Event\Exception
          */
@@ -118,6 +123,7 @@ namespace ManaPHP {
             }
 
             $this->_eventsManager->attachEvent($event, $handler);
+
             return $this;
         }
 
@@ -126,7 +132,8 @@ namespace ManaPHP {
          * Fires an event in the events manager causing that the active listeners will be notified about it
          *
          * @param string $event
-         * @param mixed $data
+         * @param mixed  $data
+         *
          * @return mixed
          */
         public function fireEvent($event, $data = null)
@@ -147,6 +154,7 @@ namespace ManaPHP {
 
         /**
          * @param \Closure $peek
+         *
          * @throws Exception
          */
         public static function peekEvents($peek)

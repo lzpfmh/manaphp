@@ -44,10 +44,11 @@ namespace ManaPHP\Http {
 
         /**
          *
-         * @param array $source
+         * @param array  $source
          * @param string $name
-         * @param mixed $filters
-         * @param mixed $defaultValue
+         * @param mixed  $filters
+         * @param mixed  $defaultValue
+         *
          * @return string
          * @throws \ManaPHP\Http\Request\Exception
          */
@@ -80,9 +81,10 @@ namespace ManaPHP\Http {
          *    $userEmail = $request->get("user_email", "email");
          *</code>
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
@@ -106,9 +108,10 @@ namespace ManaPHP\Http {
          *    $id = $request->getGet("id", null, 150);
          *</code>
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
@@ -130,9 +133,10 @@ namespace ManaPHP\Http {
          *    $userEmail = $request->getPost("user_email", "email");
          *</code>
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
@@ -151,9 +155,10 @@ namespace ManaPHP\Http {
          *    $userEmail = $request->getPut("user_email", "email");
          *</code>
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
@@ -182,9 +187,10 @@ namespace ManaPHP\Http {
          *    $id = $request->getQuery("id", null, 150);
          *</code>
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          * @throws \ManaPHP\Http\Request\Exception
          */
@@ -198,6 +204,7 @@ namespace ManaPHP\Http {
          * Checks whether $_REQUEST has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function has($name)
@@ -210,6 +217,7 @@ namespace ManaPHP\Http {
          * Checks whether $_GET has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function hasGet($name)
@@ -221,6 +229,7 @@ namespace ManaPHP\Http {
          * Checks whether $_POST has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function hasPost($name)
@@ -233,6 +242,7 @@ namespace ManaPHP\Http {
          * Checks whether put has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function hasPut($name)
@@ -249,6 +259,7 @@ namespace ManaPHP\Http {
          * Checks whether $_GET has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function hasQuery($name)
@@ -330,6 +341,7 @@ namespace ManaPHP\Http {
 
 
         /**set the client address for getClientAddress method
+         *
          * @param string|callable
          */
         public function setClientAddress($address)
@@ -433,6 +445,7 @@ namespace ManaPHP\Http {
          * http://php.net/manual/en/features.file-upload.multiple.php
          *
          * @param boolean $onlySuccessful
+         *
          * @return boolean
          */
         public function hasFiles($onlySuccessful = false)
@@ -463,6 +476,7 @@ namespace ManaPHP\Http {
          * Gets attached files as \ManaPHP\Http\Request\File instances
          *
          * @param boolean $onlySuccessful
+         *
          * @return \ManaPHP\Http\Request\File[]
          */
         public function getFiles($onlySuccessful = false)
@@ -473,11 +487,11 @@ namespace ManaPHP\Http {
                 if (is_int($file['error'])) {
                     if (!$onlySuccessful || $file['error'] === UPLOAD_ERR_OK) {
                         $files[] = new File($key, [
-                            'name' => $file['name'],
-                            'type' => $file['type'],
+                            'name'     => $file['name'],
+                            'type'     => $file['type'],
                             'tmp_name' => $file['tmp_name'],
-                            'error' => $file['error'],
-                            'size' => $file['size']
+                            'error'    => $file['error'],
+                            'size'     => $file['size'],
                         ]);
                     }
                 } else {
@@ -486,11 +500,11 @@ namespace ManaPHP\Http {
                     for ($i = 0; $i < $countFiles; $i++) {
                         if (!$onlySuccessful || $file['error'][$i] === UPLOAD_ERR_OK) {
                             $files[] = new File($key, [
-                                'name' => $file['name'][$i],
-                                'type' => $file['type'][$i],
+                                'name'     => $file['name'][$i],
+                                'type'     => $file['type'][$i],
                                 'tmp_name' => $file['tmp_name'][$i],
-                                'error' => $file['error'][$i],
-                                'size' => $file['size'][$i]
+                                'error'    => $file['error'][$i],
+                                'size'     => $file['size'][$i],
                             ]);
                         }
                     }
@@ -504,6 +518,7 @@ namespace ManaPHP\Http {
          * Gets attached files as \ManaPHP\Http\Request\File instances
          *
          * @param boolean $onlySuccessful
+         *
          * @return \ManaPHP\Http\Request\File[]
          * @deprecated
          */

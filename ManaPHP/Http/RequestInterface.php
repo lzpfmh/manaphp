@@ -11,9 +11,10 @@ namespace ManaPHP\Http {
         /**
          * Gets a variable from the $_REQUEST applying filters if needed
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          */
         public function get($name = null, $filters = null, $defaultValue = null);
@@ -21,9 +22,10 @@ namespace ManaPHP\Http {
         /**
          * Gets variable from $_GET applying filters if needed
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          */
         public function getGet($name = null, $filters = null, $defaultValue = null);
@@ -32,9 +34,10 @@ namespace ManaPHP\Http {
         /**
          * Gets a variable from the $_POST applying filters if needed
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          */
         public function getPost($name = null, $filters = null, $defaultValue = null);
@@ -49,9 +52,10 @@ namespace ManaPHP\Http {
          *    $userEmail = $request->getPut("user_email", "email");
          *</code>
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          */
         public function getPut($name = null, $filters = null, $defaultValue = null);
@@ -60,9 +64,10 @@ namespace ManaPHP\Http {
         /**
          * Gets variable from $_GET applying filters if needed
          *
-         * @param string $name
+         * @param string       $name
          * @param string|array $filters
-         * @param mixed $defaultValue
+         * @param mixed        $defaultValue
+         *
          * @return mixed
          */
         public function getQuery($name = null, $filters = null, $defaultValue = null);
@@ -71,6 +76,7 @@ namespace ManaPHP\Http {
          * Checks whether $_SERVER has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function has($name);
@@ -80,6 +86,7 @@ namespace ManaPHP\Http {
          * Checks whether $_GET has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function hasGet($name);
@@ -89,6 +96,7 @@ namespace ManaPHP\Http {
          * Checks whether $_POST has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function hasPost($name);
@@ -98,6 +106,7 @@ namespace ManaPHP\Http {
          * Checks whether has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function hasPut($name);
@@ -107,6 +116,7 @@ namespace ManaPHP\Http {
          * Checks whether $_GET has certain index
          *
          * @param string $name
+         *
          * @return boolean
          */
         public function hasQuery($name);
@@ -145,6 +155,7 @@ namespace ManaPHP\Http {
 
 
         /**set the client address for getClientAddress method
+         *
          * @param string|callable
          */
         public function setClientAddress($address);
@@ -216,6 +227,7 @@ namespace ManaPHP\Http {
          * Checks whether request include attached files
          *
          * @param boolean $onlySuccessful
+         *
          * @return boolean
          */
         public function hasFiles($onlySuccessful = false);
@@ -225,6 +237,7 @@ namespace ManaPHP\Http {
          * Gets attached files as \ManaPHP\Http\Request\FileInterface compatible instances
          *
          * @param boolean $onlySuccessful
+         *
          * @return \ManaPHP\Http\Request\FileInterface[]
          */
         public function getFiles($onlySuccessful = false);

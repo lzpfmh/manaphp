@@ -1,11 +1,12 @@
 <?php
-namespace ManaPHP\Mvc\View{
+namespace ManaPHP\Mvc\View {
 
     use ManaPHP\Component;
     use ManaPHP\Mvc\View\Renderer\EngineInterface;
     use ManaPHP\Mvc\View\Renderer\Exception;
 
-    class Renderer extends Component implements RendererInterface{
+    class Renderer extends Component implements RendererInterface
+    {
         /**
          * @var \ManaPHP\Mvc\View\Renderer\EngineInterface[]
          */
@@ -24,6 +25,7 @@ namespace ManaPHP\Mvc\View{
 
         /**
          * @param string $extension
+         *
          * @return \ManaPHP\Mvc\View\Renderer\EngineInterface
          * @throws \ManaPHP\Mvc\View\Renderer\Exception
          */
@@ -47,17 +49,20 @@ namespace ManaPHP\Mvc\View{
         /** @noinspection PhpDocMissingThrowsInspection */
         /**
          * Checks whether $template exists on registered extensions and render it
-         *@noinspection PhpDocMissingThrowsInspection
-         * @param string $template
+         *
+         * @noinspection PhpDocMissingThrowsInspection
+         *
+         * @param string  $template
          * @param boolean $directOutput
-         * @param array $vars
+         * @param array   $vars
+         *
          * @return static
          * @throws \ManaPHP\Mvc\View\Renderer\Exception
          */
-        public function render($template, $vars, $directOutput=true)
+        public function render($template, $vars, $directOutput = true)
         {
             $notExists = true;
-            $content=null;
+            $content = null;
 
             foreach ($this->_registeredEngines as $extension => $engine) {
                 $file = $template . $extension;
@@ -81,19 +86,19 @@ namespace ManaPHP\Mvc\View{
 
                     if ($directOutput) {
                         $engine->render($file, $vars);
-                        $content=null;
-                    }else{
+                        $content = null;
+                    } else {
                         ob_start();
 
-                        try{
+                        try {
                             $engine->render($file, $vars);
-                        }catch(\Exception $e){
+                        } catch (\Exception $e) {
                             ob_end_clean();
 
                             throw $e;
                         }
 
-                        $content=ob_get_clean();
+                        $content = ob_get_clean();
                     }
 
                     $notExists = false;
@@ -121,6 +126,7 @@ namespace ManaPHP\Mvc\View{
          *</code>
          *
          * @param array $engines
+         *
          * @return static
          */
         public function registerEngines($engines)

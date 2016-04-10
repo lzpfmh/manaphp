@@ -57,8 +57,10 @@ namespace ManaPHP {
          *        ’Example’ => ’vendor/example/’
          *        ));
          * </code>
-         * @param array $namespaces
+         *
+         * @param array   $namespaces
          * @param boolean $merge
+         *
          * @return static
          */
         public function registerNamespaces($namespaces, $merge = false)
@@ -98,8 +100,10 @@ namespace ManaPHP {
          *                __DIR__ . ’/models/’,
          *                ));
          * </code>
-         * @param array $directories
+         *
+         * @param array   $directories
          * @param boolean $merge
+         *
          * @return static
          */
         public function registerDirs($directories, $merge = false)
@@ -133,8 +137,9 @@ namespace ManaPHP {
         /**
          * Register classes and their locations
          *
-         * @param array $classes
+         * @param array   $classes
          * @param boolean $merge
+         *
          * @return static
          */
         public function registerClasses($classes, $merge = false)
@@ -219,12 +224,14 @@ namespace ManaPHP {
          * Makes the work of autoload registered classes
          *
          * @param string $className
+         *
          * @return bool
          */
         protected function ___autoload($className)
         {
             if (is_array($this->_classes) && isset($this->_classes[$className])) {
                 $this->___requireFile($this->_classes[$className]);
+
                 return true;
             }
 
@@ -237,6 +244,7 @@ namespace ManaPHP {
                     $len = strlen($namespace);
                     $file = $directory . str_replace('\\', '/', substr($className, $len)) . '.php';
                     $this->___requireFile($file);
+
                     return true;
                 }
             }
@@ -247,6 +255,7 @@ namespace ManaPHP {
                     $file = str_replace('\\', '/', $file);
                     if (file_exists($file)) {
                         $this->___requireFile($file);
+
                         return true;
                     }
                 }

@@ -58,14 +58,16 @@ namespace ManaPHP\Http {
          *    $response->setStatusCode(404, "Not Found");
          *</code>
          *
-         * @param int $code
+         * @param int    $code
          * @param string $message
+         *
          * @return static
          * @throws
          */
         public function setStatusCode($code, $message)
         {
             $this->setHeader('Status', $code . ' ' . $message);
+
             return $this;
         }
 
@@ -74,11 +76,13 @@ namespace ManaPHP\Http {
          * Sets a cookies bag for the response externally
          *
          * @param \ManaPHP\Http\Response\CookiesInterface $cookies
+         *
          * @return static
          */
         public function setCookies($cookies)
         {
             $this->_cookies = $cookies;
+
             return $this;
         }
 
@@ -103,11 +107,13 @@ namespace ManaPHP\Http {
          *
          * @param string $name
          * @param string $value
+         *
          * @return static
          */
         public function setHeader($name, $value)
         {
             $this->_headers->set($name, $value);
+
             return $this;
         }
 
@@ -120,11 +126,13 @@ namespace ManaPHP\Http {
          *</code>
          *
          * @param string $header
+         *
          * @return static
          */
         public function setRawHeader($header)
         {
             $this->_headers->setRaw($header);
+
             return $this;
         }
 
@@ -137,6 +145,7 @@ namespace ManaPHP\Http {
          *</code>
          *
          * @param int|\DateTime $datetime
+         *
          * @return static
          */
         public function setExpires($datetime)
@@ -150,6 +159,7 @@ namespace ManaPHP\Http {
 
             $date->setTimezone(new \DateTimeZone('UTC'));
             $this->setHeader('Expires', $date->format('D, d M Y H:i:s') . ' GMT');
+
             return $this;
         }
 
@@ -162,6 +172,7 @@ namespace ManaPHP\Http {
         public function setNotModified()
         {
             $this->setStatusCode(304, 'Not modified');
+
             return $this;
         }
 
@@ -176,6 +187,7 @@ namespace ManaPHP\Http {
          *
          * @param string $contentType
          * @param string $charset
+         *
          * @return static
          */
         public function setContentType($contentType, $charset = null)
@@ -185,6 +197,7 @@ namespace ManaPHP\Http {
             } else {
                 $this->_headers->set('Content-Type', $contentType . '; charset=' . $charset);
             }
+
             return $this;
         }
 
@@ -197,11 +210,13 @@ namespace ManaPHP\Http {
          *</code>
          *
          * @param string $etag
+         *
          * @return static
          */
         public function setEtag($etag)
         {
             $this->_headers->set('Etag', $etag);
+
             return $this;
         }
 
@@ -224,8 +239,9 @@ namespace ManaPHP\Http {
          *</code>
          *
          * @param string|array $location
-         * @param boolean $externalRedirect
-         * @param int|string $statusCode
+         * @param boolean      $externalRedirect
+         * @param int|string   $statusCode
+         *
          * @return static
          * @throws \ManaPHP\Http\Response\Exception
          */
@@ -252,6 +268,7 @@ namespace ManaPHP\Http {
              * Change the current location using 'Location'
              */
             $this->setHeader('Location', $location);
+
             return $this;
         }
 
@@ -264,11 +281,13 @@ namespace ManaPHP\Http {
          *</code>
          *
          * @param string $content
+         *
          * @return static
          */
         public function setContent($content)
         {
             $this->_content = $content;
+
             return $this;
         }
 
@@ -282,7 +301,8 @@ namespace ManaPHP\Http {
          *</code>
          *
          * @param string $content
-         * @param int $jsonOptions consisting on http://www.php.net/manual/en/json.constants.php
+         * @param int    $jsonOptions consisting on http://www.php.net/manual/en/json.constants.php
+         *
          * @return static
          */
         public function setJsonContent($content, $jsonOptions = null)
@@ -292,6 +312,7 @@ namespace ManaPHP\Http {
             }
 
             $this->_content = json_encode($content, $jsonOptions, 512);
+
             return $this;
         }
 
@@ -300,11 +321,13 @@ namespace ManaPHP\Http {
          * Appends a string to the HTTP response body
          *
          * @param string $content
+         *
          * @return static
          */
         public function appendContent($content)
         {
             $this->_content .= $content;
+
             return $this;
         }
 
@@ -341,6 +364,7 @@ namespace ManaPHP\Http {
             if (is_object($this->_headers)) {
                 $this->_headers->send();
             }
+
             return $this;
         }
 
@@ -355,6 +379,7 @@ namespace ManaPHP\Http {
             if (is_object($this->_cookies)) {
                 $this->_cookies->send();
             }
+
             return $this;
         }
 
@@ -398,6 +423,7 @@ namespace ManaPHP\Http {
          *
          * @param string $filePath
          * @param string $attachmentName
+         *
          * @return static
          */
         public function setFileToSend($filePath, $attachmentName = null)

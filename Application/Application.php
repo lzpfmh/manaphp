@@ -3,34 +3,28 @@ namespace Application{
 
     use ManaPHP\Db\Adapter\Mysql;
     use ManaPHP\DbInterface;
-    use ManaPHP\Logger\Adapter\File;
+    use ManaPHP\Loader;
+    use ManaPHP\Log\Adapter\File;
+    use ManaPHP\Log\Logger;
+    use ManaPHP\Mvc\Router;
     use ManaPHP\Mvc\Router\Group;
-    use ManaPHP\AuthorizationInterface;
-
-    class Authentication implements AuthorizationInterface{
-        public function authorize($dispatcher)
-        {
-            return true;
-        }
-    }
 
     class Application extends \ManaPHP\Mvc\Application
     {
-        protected $_appDataDirectory;
-
         protected function registerServices(){
-            $this->router->mount(new Group(),'Home','/');
-            $this->logger->addAdapter(new File($this->_appDataDirectory.'/Logs/'.date('Ymd').'.log'));
-            $this->_dependencyInjector->set('db', function () {
-                $mysql = new Mysql([
-                    'host' => 'localhost',
-                    'username' => 'root',
-                    'password' => '',
-                    'dbname' => 'manaphp_unit_test',
-                    'port' => 3306
-                ]);
-                $self=$this;
-                $mysql->attachEvent('db:beforeQuery', function ($event, DbInterface $source, $data)use($self) {
+            $self=$this;
+
+            $this->_dependencyInjector->setShared('router',function(){
+                return (new Router())->mount(new Group(),'Home','/');
+            });
+
+            $this->_dependencyInjector->setShared('logger',function()use($self){
+                return (new Logger())->addAdapter(new File($self->configure->log->file));
+            });
+
+            $this->_dependencyInjector->set('db', function () use($self) {
+                $mysql = new Mysql((array)$this->configure->database);
+                $mysql->attachEvent('db:beforeQuery', function ($event, DbInterface $source, $data) use($self) {
                     $self->logger->debug('SQL: '.$source->getSQLStatement());
                 });
 
@@ -41,15 +35,21 @@ namespace Application{
         public function main(){
             date_default_timezone_set('PRC');
 
-            $this->_appDataDirectory=dirname(__DIR__).'/AppData';
-			
+            $this->_dependencyInjector->setShared('configure',new Configure());
+
+            $loader=(new Loader())->registerNamespaces([
+                'Application' => __DIR__
+            ])->register();
+            $this->_dependencyInjector->setShared('loader',$loader);
+
             $this->registerServices();
+
             $this->logger->debug('start');
 
          //   $this->useImplicitView(false);
 
             $this->registerModules(['Home']);
-            $this->_dependencyInjector->setShared('authorization',new Authentication());
+            $this->_dependencyInjector->setShared('authorization',new Authorization());
             return $this->handle()->getContent();
         }
     }

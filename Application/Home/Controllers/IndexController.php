@@ -2,6 +2,7 @@
 namespace Application\Home\Controllers;
 
 use Application\Home\Models\City;
+use ManaPHP\Configure;
 use ManaPHP\Mvc\Controller;
 use ManaPHP\Version;
 
@@ -20,4 +21,6 @@ class IndexController extends Controller
         $this->view->setVar('current_time',date('Y-m-d H:i:s'));
      //   $this->view->setVar('view','abc');
     }
+
+
 }

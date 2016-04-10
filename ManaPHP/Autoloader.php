@@ -34,7 +34,8 @@ namespace ManaPHP {
                 $namespaceName = str_replace('/', '\\', dirname(str_replace('\\', DIRECTORY_SEPARATOR, $className)));
                 $interfaceName = basename(str_replace('\\', DIRECTORY_SEPARATOR, $className));
 
-                eval('namespace ' . $namespaceName . '{interface ' . $interfaceName . ' {}}');
+                eval("namespace $namespaceName {interface $interfaceName  {}}");
+
                 return true;
             }
 
@@ -46,6 +47,7 @@ namespace ManaPHP {
 
                 /** @noinspection PhpIncludeInspection */
                 require $file;
+
                 return true;
             }
 
@@ -54,6 +56,7 @@ namespace ManaPHP {
 
         /**
          * @param bool $optimizeMode
+         *
          * @return bool
          */
         public static function register($optimizeMode = true)
