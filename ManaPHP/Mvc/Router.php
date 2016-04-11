@@ -84,7 +84,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_removeExtraSlashes = false;
 
-
         /**
          * Get rewrite info. This info is read from $_GET['_url'] or _SERVER["REQUEST_URI"].
          *
@@ -104,7 +103,6 @@ namespace ManaPHP\Mvc {
             return $url;
         }
 
-
         /**
          * Set whether router must remove the extra slashes in the handled routes
          *
@@ -118,7 +116,6 @@ namespace ManaPHP\Mvc {
 
             return $this;
         }
-
 
         /**
          * @param string                               $uri
@@ -157,7 +154,6 @@ namespace ManaPHP\Mvc {
 
             return false;
         }
-
 
         /**
          * Handles routing information received from the rewrite engine
@@ -278,7 +274,6 @@ namespace ManaPHP\Mvc {
             return $route_found;
         }
 
-
         /**
          * Mounts a group of routes in the router
          *
@@ -301,7 +296,6 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
         /**
          * Returns the processed module name
          *
@@ -311,7 +305,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_module;
         }
-
 
         /**
          * Returns the processed controller name
@@ -333,7 +326,6 @@ namespace ManaPHP\Mvc {
             return $this->_action;
         }
 
-
         /**
          * Returns the processed parameters
          *
@@ -343,7 +335,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_params;
         }
-
 
         /**
          * Checks if the router matches any of the defined routes

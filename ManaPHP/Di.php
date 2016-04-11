@@ -91,7 +91,6 @@ namespace ManaPHP {
             return $this->_services[$name] = new Service($name, $definition, $shared);
         }
 
-
         /**
          * Removes a service in the services container
          *
@@ -105,7 +104,6 @@ namespace ManaPHP {
 
             return $this;
         }
-
 
         /**
          * Resolves the service based on its configuration
@@ -144,7 +142,6 @@ namespace ManaPHP {
             return $instance;
         }
 
-
         /**
          * Resolves a service, the resolved service is stored in the DI, subsequent requests for this service will return the same instance
          *
@@ -163,7 +160,6 @@ namespace ManaPHP {
             return $this->_sharedInstances[$name];
         }
 
-
         /**
          * Check whether the DI contains a service by a name
          *
@@ -175,7 +171,6 @@ namespace ManaPHP {
         {
             return isset($this->_services[$name]);
         }
-
 
         /**
          * Registers an "always shared" service in the services container
@@ -190,7 +185,6 @@ namespace ManaPHP {
             return $this->_services[$name] = new Service($name, $definition, true);
         }
 
-
         /**
          * Magic method to get or set services using setters/getters
          *
@@ -204,7 +198,6 @@ namespace ManaPHP {
         {
             throw new Exception("Call to undefined method or service '$method'");
         }
-
 
         /**
          * @return array

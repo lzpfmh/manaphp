@@ -50,7 +50,6 @@ namespace ManaPHP\Http {
             $this->_headers = new Headers();
         }
 
-
         /**
          * Sets the HTTP response code
          *
@@ -71,7 +70,6 @@ namespace ManaPHP\Http {
             return $this;
         }
 
-
         /**
          * Sets a cookies bag for the response externally
          *
@@ -86,7 +84,6 @@ namespace ManaPHP\Http {
             return $this;
         }
 
-
         /**
          * Returns cookies set by the user
          *
@@ -96,7 +93,6 @@ namespace ManaPHP\Http {
         {
             return $this->_cookies;
         }
-
 
         /**
          * Overwrites a header in the response
@@ -117,7 +113,6 @@ namespace ManaPHP\Http {
             return $this;
         }
 
-
         /**
          * Send a raw header to the response
          *
@@ -135,7 +130,6 @@ namespace ManaPHP\Http {
 
             return $this;
         }
-
 
         /**
          * Sets a Expires header to use HTTP cache
@@ -163,7 +157,6 @@ namespace ManaPHP\Http {
             return $this;
         }
 
-
         /**
          * Sets a Not-Modified response
          *
@@ -175,7 +168,6 @@ namespace ManaPHP\Http {
 
             return $this;
         }
-
 
         /**
          * Sets the response content-type mime, optionally the charset
@@ -201,7 +193,6 @@ namespace ManaPHP\Http {
             return $this;
         }
 
-
         /**
          * Set a custom ETag
          *
@@ -219,7 +210,6 @@ namespace ManaPHP\Http {
 
             return $this;
         }
-
 
         /**
          * Redirect by HTTP to another action or URL
@@ -272,7 +262,6 @@ namespace ManaPHP\Http {
             return $this;
         }
 
-
         /**
          * Sets HTTP response body
          *
@@ -290,7 +279,6 @@ namespace ManaPHP\Http {
 
             return $this;
         }
-
 
         /**
          * Sets HTTP response body. The parameter is automatically converted to JSON
@@ -316,7 +304,6 @@ namespace ManaPHP\Http {
             return $this;
         }
 
-
         /**
          * Appends a string to the HTTP response body
          *
@@ -331,7 +318,6 @@ namespace ManaPHP\Http {
             return $this;
         }
 
-
         /**
          * Gets the HTTP response body
          *
@@ -342,7 +328,6 @@ namespace ManaPHP\Http {
             return $this->_content;
         }
 
-
         /**
          * Check if the response is already sent
          *
@@ -352,7 +337,6 @@ namespace ManaPHP\Http {
         {
             return $this->_sent;
         }
-
 
         /**
          * Sends headers to the client
@@ -368,7 +352,6 @@ namespace ManaPHP\Http {
             return $this;
         }
 
-
         /**
          * Sends cookies to the client
          *
@@ -382,7 +365,6 @@ namespace ManaPHP\Http {
 
             return $this;
         }
-
 
         /**
          * Prints out HTTP response to the client
@@ -416,7 +398,6 @@ namespace ManaPHP\Http {
 
             return $this;
         }
-
 
         /**
          * Sets an attached file to be sent at the end of the request

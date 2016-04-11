@@ -5,7 +5,7 @@
  * Date: 2015/12/17
  * Time: 21:42
  */
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class tResponse extends \ManaPHP\Http\Response
 {
@@ -42,8 +42,8 @@ class HttpResponseTest extends TestCase
 
         $response->setHeader('Content-Length', '1234');
         $this->assertEquals([
-          'Content-Type' => 'text/html',
-          'Content-Length' => '1234'
+            'Content-Type' => 'text/html',
+            'Content-Length' => '1234'
         ], $response->getHeaders()->toArray());
     }
 
@@ -99,8 +99,8 @@ class HttpResponseTest extends TestCase
 
         $response->redirect('some/local/url');
         $this->assertEquals([
-          'Status' => '302 Temporarily Moved',
-          'Location' => 'some/local/url'
+            'Status' => '302 Temporarily Moved',
+            'Location' => 'some/local/url'
         ], $response->getHeaders()->toArray());
 
         $response = new tResponse();
@@ -108,8 +108,8 @@ class HttpResponseTest extends TestCase
 
         $response->redirect('http://www.manaphp.com', true);
         $this->assertEquals([
-          'Status' => '302 Temporarily Moved',
-          'Location' => 'http://www.manaphp.com'
+            'Status' => '302 Temporarily Moved',
+            'Location' => 'http://www.manaphp.com'
         ], $response->getHeaders()->toArray());
 
         $response = new tResponse();
@@ -117,18 +117,17 @@ class HttpResponseTest extends TestCase
 
         $response->redirect('http://www.manaphp.com', true, 301);
         $this->assertEquals([
-          'Status' => '301 Permanently Moved',
-          'Location' => 'http://www.manaphp.com'
+            'Status' => '301 Permanently Moved',
+            'Location' => 'http://www.manaphp.com'
         ], $response->getHeaders()->toArray());
-
 
         $response = new tResponse();
         $response->setDependencyInjector(new ManaPHP\Di());
 
         $response->redirect('http://www.manaphp.com', false, 301);
         $this->assertEquals([
-          'Status' => '301 Permanently Moved',
-          'Location' => 'http://www.manaphp.com'
+            'Status' => '301 Permanently Moved',
+            'Location' => 'http://www.manaphp.com'
         ], $response->getHeaders()->toArray());
     }
 
@@ -151,9 +150,9 @@ class HttpResponseTest extends TestCase
         $this->assertEquals(['code' => 0, 'message' => 'OK'], json_decode($response->getContent(), true));
 
         $response->setJsonContent(['code' => 0, 'message' => 'OK', 'data' => 'http://www.manaphp.com/tags/中国'],
-          JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $this->assertEquals(['code' => 0, 'message' => 'OK', 'data' => 'http://www.manaphp.com/tags/中国'],
-          json_decode($response->getContent(), true));
+            json_decode($response->getContent(), true));
     }
 
     public function test_appendContent()

@@ -10,17 +10,14 @@ class IndexController extends Controller
 {
     public function indexAction()
     {
-        $city=City::findFirst(1);
-        var_dump($city);
-        var_dump(memory_get_peak_usage());
+        //$city = City::findFirst(1);
+        $this->dispatcher->forward('about');
     }
 
     public function aboutAction()
     {
-        $this->view->setVar('version',Version::get());
-        $this->view->setVar('current_time',date('Y-m-d H:i:s'));
-     //   $this->view->setVar('view','abc');
+        $this->view->setVar('version', Version::get());
+        $this->view->setVar('current_time', date('Y-m-d H:i:s'));
     }
-
 
 }

@@ -5,7 +5,7 @@
  * Date: 2015/12/13
  * Time: 21:57
  */
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class Test1Controller extends \ManaPHP\Mvc\Controller
 {
@@ -38,7 +38,7 @@ class Test2Controller extends \ManaPHP\Mvc\Controller
         return $this->dispatcher->forward(array(
             'controller' => 'test2',
             'action' => 'another4'
-          ));
+        ));
     }
 
     public function another4Action()
@@ -84,10 +84,8 @@ class Test5Controller extends ManaPHP\Mvc\Controller
 
 }
 
-
 class Test6Controller extends ManaPHP\Mvc\Controller
 {
-
 
 }
 
@@ -129,7 +127,6 @@ class tDispatcher extends \ManaPHP\Mvc\Dispatcher
     }
 }
 
-
 class MvcDispatcherTest extends TestCase
 {
 
@@ -167,7 +164,7 @@ class MvcDispatcherTest extends TestCase
 
         //camelize the handler class:not require
         try {
-            $dispatcher->dispatch('app','Index','index');
+            $dispatcher->dispatch('app', 'Index', 'index');
             $this->fail('why not?');
         } catch (\Manaphp\Exception $e) {
             $this->assertEquals('IndexController handler class cannot be loaded', $e->getMessage());
@@ -176,7 +173,7 @@ class MvcDispatcherTest extends TestCase
 
         //camelize the handler class: require,only one word
         try {
-            $dispatcher->dispatch(null,'missing','index');
+            $dispatcher->dispatch(null, 'missing', 'index');
             $this->fail('why not?');
         } catch (\Manaphp\Exception $e) {
             $this->assertEquals('MissingController handler class cannot be loaded', $e->getMessage());
@@ -185,7 +182,7 @@ class MvcDispatcherTest extends TestCase
 
         //camelize the handler class: require,multiple words
         try {
-            $dispatcher->dispatch(null,'test_home','index');
+            $dispatcher->dispatch(null, 'test_home', 'index');
             $this->fail('why not?');
         } catch (\Manaphp\Exception $e) {
             $this->assertEquals('TestHomeController handler class cannot be loaded', $e->getMessage());
@@ -195,38 +192,38 @@ class MvcDispatcherTest extends TestCase
         //action determination
 
         try {
-            $dispatcher->dispatch(null,'test1','index');
+            $dispatcher->dispatch(null, 'test1', 'index');
             $this->fail('why not?');
         } catch (\Manaphp\Exception $e) {
             $this->assertEquals("Action 'index' was not found on handler 'Test1Controller'", $e->getMessage());
         }
 
         //normal usage without return value
-        $controller = $dispatcher->dispatch(null,'test2','other');
+        $controller = $dispatcher->dispatch(null, 'test2', 'other');
         $this->assertInstanceOf('Test2Controller', $controller);
         $this->assertEquals('other', $dispatcher->getActionName());
         $this->assertNull($dispatcher->getReturnedValue());
 
         //normal usage with return value
-        $dispatcher->dispatch(null,'test2','another');
+        $dispatcher->dispatch(null, 'test2', 'another');
         $this->assertEquals(100, $dispatcher->getReturnedValue());
 
         //bind param to method parameter
-        $dispatcher->dispatch(null,'test2','another2',[2, '3']);
+        $dispatcher->dispatch(null, 'test2', 'another2', [2, '3']);
         $this->assertEquals(5, $dispatcher->getReturnedValue());
 
         //forward
-        $dispatcher->dispatch(null,'test2','another3');
+        $dispatcher->dispatch(null, 'test2', 'another3');
         $this->assertEquals('another4', $dispatcher->getActionName());
         $this->assertEquals(120, $dispatcher->getReturnedValue());
         $this->assertTrue($dispatcher->wasForwarded());
 
         //fetch param from dispatcher
-        $dispatcher->dispatch(null,'test2','another5',['param1' => 2, 'param2' => 3]);
+        $dispatcher->dispatch(null, 'test2', 'another5', ['param1' => 2, 'param2' => 3]);
         $this->assertEquals(5, $dispatcher->getReturnedValue());
 
         //inherit class
-        $dispatcher->dispatch(null,'test7','service');
+        $dispatcher->dispatch(null, 'test7', 'service');
         $this->assertEquals('hello', $dispatcher->getReturnedValue());
 
         $this->assertEquals(strtolower('test7'), strtolower($dispatcher->getControllerName()));
@@ -242,7 +239,7 @@ class MvcDispatcherTest extends TestCase
         $this->assertInstanceOf('\ManaPHP\Di', $dispatcher->getDependencyInjector());
         $di->set('dispatcher', $dispatcher);
 
-        $dispatcher->dispatch(null,'test2','another5',['param1' => 2, 'param2' => 3]);
+        $dispatcher->dispatch(null, 'test2', 'another5', ['param1' => 2, 'param2' => 3]);
         $this->assertEquals(5, $dispatcher->getReturnedValue());
     }
 
@@ -256,13 +253,13 @@ class MvcDispatcherTest extends TestCase
         $this->assertInstanceOf('\ManaPHP\Di', $dispatcher->getDependencyInjector());
         $di->set('dispatcher', $dispatcher);
 
-        $dispatcher->dispatch(null,'test2','another3');
+        $dispatcher->dispatch(null, 'test2', 'another3');
         $this->assertEquals(strtolower('test2'), strtolower($dispatcher->getPreviousControllerName()));
         $this->assertEquals('another3', $dispatcher->getPreviousActionName());
         $this->assertEquals(strtolower('test2'), strtolower($dispatcher->getControllerName()));
         $this->assertEquals('another4', $dispatcher->getActionName());
 
-        $dispatcher->dispatch(null,'test2','index');
+        $dispatcher->dispatch(null, 'test2', 'index');
         $dispatcher->forward(['controller' => 'test3', 'action' => 'other']);
         $this->assertEquals(strtolower('test3'), strtolower($dispatcher->getControllerName()));
         $this->assertEquals('other', $dispatcher->getActionName());
@@ -281,7 +278,7 @@ class MvcDispatcherTest extends TestCase
         $this->assertInstanceOf('\ManaPHP\Di', $dispatcher->getDependencyInjector());
         $di->set('dispatcher', $dispatcher);
 
-        $dispatcher->dispatch(null,'test2','another3');
+        $dispatcher->dispatch(null, 'test2', 'another3');
         $this->assertTrue($dispatcher->wasForwarded());
     }
 

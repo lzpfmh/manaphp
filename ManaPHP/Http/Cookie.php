@@ -65,7 +65,6 @@ namespace ManaPHP\Http {
             $this->_httpOnly = $httpOnly;
         }
 
-
         /**
          * Sets the cookie's value
          *
@@ -77,7 +76,6 @@ namespace ManaPHP\Http {
         {
             $this->_value = $value;
         }
-
 
         /**
          * Returns the cookie's value
@@ -92,7 +90,6 @@ namespace ManaPHP\Http {
 
         }
 
-
         /**
          * Sends the cookie to the HTTP client
          * Stores the cookie definition in session
@@ -102,7 +99,6 @@ namespace ManaPHP\Http {
         public function send()
         {
         }
-
 
         /**
          * Reads the cookie-related info from the SESSION to restore the cookie as it was set
@@ -114,7 +110,6 @@ namespace ManaPHP\Http {
         {
         }
 
-
         /**
          * Deletes the cookie by setting an expire time in the past
          *
@@ -122,7 +117,6 @@ namespace ManaPHP\Http {
         public function delete()
         {
         }
-
 
         /**
          * Sets if the cookie must be encrypted/decrypted automatically
@@ -135,7 +129,6 @@ namespace ManaPHP\Http {
         {
         }
 
-
         /**
          * Check if the cookie is using implicit encryption
          *
@@ -144,7 +137,6 @@ namespace ManaPHP\Http {
         public function isUsingEncryption()
         {
         }
-
 
         /**
          * Sets the cookie's expiration time
@@ -157,7 +149,6 @@ namespace ManaPHP\Http {
         {
         }
 
-
         /**
          * Returns the current expiration time
          *
@@ -166,7 +157,6 @@ namespace ManaPHP\Http {
         public function getExpiration()
         {
         }
-
 
         /**
          * Sets the cookie's expiration time
@@ -179,7 +169,6 @@ namespace ManaPHP\Http {
         {
         }
 
-
         /**
          * Returns the current cookie's path
          *
@@ -188,7 +177,6 @@ namespace ManaPHP\Http {
         public function getPath()
         {
         }
-
 
         /**
          * Sets the domain that the cookie is available to
@@ -201,7 +189,6 @@ namespace ManaPHP\Http {
         {
         }
 
-
         /**
          * Returns the domain that the cookie is available to
          *
@@ -210,7 +197,6 @@ namespace ManaPHP\Http {
         public function getDomain()
         {
         }
-
 
         /**
          * Sets if the cookie must only be sent when the connection is secure (HTTPS)
@@ -223,7 +209,6 @@ namespace ManaPHP\Http {
         {
         }
 
-
         /**
          * Returns whether the cookie must only be sent when the connection is secure (HTTPS)
          *
@@ -232,7 +217,6 @@ namespace ManaPHP\Http {
         public function getSecure()
         {
         }
-
 
         /**
          * Sets if the cookie is accessible only through the HTTP protocol
@@ -245,7 +229,6 @@ namespace ManaPHP\Http {
         {
         }
 
-
         /**
          * Returns if the cookie is accessible only through the HTTP protocol
          *
@@ -254,7 +237,6 @@ namespace ManaPHP\Http {
         public function getHttpOnly()
         {
         }
-
 
         /**
          * Magic __toString method converts the cookie's value to string

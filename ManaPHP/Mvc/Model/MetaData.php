@@ -76,8 +76,8 @@ namespace ManaPHP\Mvc\Model {
             }
 
             return [
-                self::MODELS_ATTRIBUTES      => $attributes,
-                self::MODELS_PRIMARY_KEY     => $primaryKeys,
+                self::MODELS_ATTRIBUTES => $attributes,
+                self::MODELS_PRIMARY_KEY => $primaryKeys,
                 self::MODELS_NON_PRIMARY_KEY => $nonPrimaryKeys,
                 self::MODELS_IDENTITY_COLUMN => $autoIncrementAttribute,
             ];
@@ -129,7 +129,6 @@ namespace ManaPHP\Mvc\Model {
             return $this->_readMetaData($model)[self::MODELS_ATTRIBUTES];
         }
 
-
         /**
          * Returns an array of fields which are part of the primary key
          *
@@ -172,7 +171,6 @@ namespace ManaPHP\Mvc\Model {
         {
             return $this->_readMetaData($model)[self::MODELS_NON_PRIMARY_KEY];
         }
-
 
         /**
          * Check if a model has certain attribute

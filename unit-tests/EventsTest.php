@@ -5,7 +5,7 @@
  * Date: 2015/12/19
  * Time: 23:20
  */
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class DummyComponent extends \ManaPHP\Component
 {
@@ -35,7 +35,6 @@ class DummyListener
         $this->_testCase->assertEquals($data, 'extra data');
     }
 }
-
 
 class EventsTest extends TestCase
 {

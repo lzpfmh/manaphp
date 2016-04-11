@@ -47,6 +47,11 @@ namespace ManaPHP {
          */
         protected $_registered = false;
 
+        public function __construct()
+        {
+            $this->register();
+        }
+
         /**
          * Register namespaces and their related directories
          *
@@ -79,7 +84,6 @@ namespace ManaPHP {
             return $this;
         }
 
-
         /**
          * Return current namespaces registered in the autoloader
          *
@@ -89,7 +93,6 @@ namespace ManaPHP {
         {
             return $this->_namespaces;
         }
-
 
         /**
          * Register directories on which "not found" classes could be found
@@ -122,7 +125,6 @@ namespace ManaPHP {
             return $this;
         }
 
-
         /**
          * Return current directories registered in the autoloader
          *
@@ -132,7 +134,6 @@ namespace ManaPHP {
         {
             return $this->_directories;
         }
-
 
         /**
          * Register classes and their locations
@@ -157,7 +158,6 @@ namespace ManaPHP {
             return $this;
         }
 
-
         /**
          * Return the current class-map registered in the autoloader
          *
@@ -167,7 +167,6 @@ namespace ManaPHP {
         {
             return $this->_classes;
         }
-
 
         /**
          * Register the autoload method
@@ -184,7 +183,6 @@ namespace ManaPHP {
             return $this;
         }
 
-
         /**
          * Unregister the autoload method
          *
@@ -199,7 +197,6 @@ namespace ManaPHP {
 
             return $this;
         }
-
 
         /**
          * If a file exists, require it from the file system.

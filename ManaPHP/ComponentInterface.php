@@ -28,14 +28,12 @@ namespace ManaPHP {
          */
         public function setDependencyInjector($dependencyInjector);
 
-
         /**
          * Returns the internal dependency injector
          *
          * @return \ManaPHP\DiInterface
          */
         public function getDependencyInjector();
-
 
         /**
          * Attach a listener to the events manager
@@ -47,7 +45,6 @@ namespace ManaPHP {
          * @throws \ManaPHP\Event\Exception
          */
         public function attachEvent($event, $handler);
-
 
         /**
          * Fires an event in the events manager causing that the active listeners will be notified about it

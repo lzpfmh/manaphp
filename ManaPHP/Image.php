@@ -34,7 +34,6 @@ namespace ManaPHP {
             $this->_adapter = is_string($adapter) ? new $adapter($file) : $adapter;
         }
 
-
         /**
          * Image width
          *

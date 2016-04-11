@@ -27,7 +27,6 @@ namespace ManaPHP\Event {
             $this->_type = $type;
         }
 
-
         /**
          * Returns the event's type
          *

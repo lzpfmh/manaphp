@@ -25,7 +25,6 @@ namespace ManaPHP {
          */
         public function fetchOne($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC);
 
-
         /**
          * Dumps the complete result of a query into an array
          *
@@ -43,7 +42,6 @@ namespace ManaPHP {
          */
         public function fetchAll($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC);
 
-
         /**
          * Inserts data into a table using custom SQL syntax
          *
@@ -58,7 +56,6 @@ namespace ManaPHP {
          * @return    boolean
          */
         public function insert($table, $columnValues);
-
 
         /**
          * Updates data on a table using custom SQL syntax
@@ -97,7 +94,6 @@ namespace ManaPHP {
          */
         public function delete($table, $conditions, $binds = null);
 
-
         /**
          * Appends a LIMIT clause to $sql argument
          *
@@ -121,7 +117,6 @@ namespace ManaPHP {
          */
         public function getSQLStatement();
 
-
         /**
          * Active SQL statement in the object with replace the bind with value
          *
@@ -132,14 +127,12 @@ namespace ManaPHP {
          */
         public function getEmulatePrepareSQLStatement($preservedStrLength = -1);
 
-
         /**
          * Active SQL statement in the object
          *
          * @return array
          */
         public function getSQLBindParams();
-
 
         /**
          * Sends SQL statements to the database server returning the success state.
@@ -153,7 +146,6 @@ namespace ManaPHP {
          */
         public function query($sql, $binds = null, $fetchMode = \PDO::FETCH_ASSOC);
 
-
         /**
          * Sends SQL statements to the database server returning the success state.
          * Use this method only when the SQL statement sent to the server don't return any row
@@ -165,14 +157,12 @@ namespace ManaPHP {
          */
         public function execute($sql, $binds = null);
 
-
         /**
          * Returns the number of affected rows by the last INSERT/UPDATE/DELETE reported by the database system
          *
          * @return int
          */
         public function affectedRows();
-
 
         /**
          * Escapes a column/table/schema name
@@ -183,7 +173,6 @@ namespace ManaPHP {
          */
         public function escapeIdentifier($identifier);
 
-
         /**
          * Returns insert id for the auto_increment column inserted in the last SQL statement
          *
@@ -191,14 +180,12 @@ namespace ManaPHP {
          */
         public function lastInsertId();
 
-
         /**
          * Starts a transaction in the connection
          *
          * @return boolean
          */
         public function begin();
-
 
         /**
          * Checks whether the connection is under a transaction
@@ -217,14 +204,12 @@ namespace ManaPHP {
          */
         public function rollback();
 
-
         /**
          * Commits the active transaction in the connection
          *
          * @return boolean
          */
         public function commit();
-
 
         /**
          * Return internal PDO handler

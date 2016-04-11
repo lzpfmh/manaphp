@@ -31,7 +31,6 @@ namespace ManaPHP\Mvc {
 
         public function setLayout($layout = 'Default');
 
-
         /**
          * Adds parameter to view
          *
@@ -42,7 +41,6 @@ namespace ManaPHP\Mvc {
          */
         public function setVar($name, $value);
 
-
         /**
          * Adds parameters to view
          *
@@ -52,7 +50,6 @@ namespace ManaPHP\Mvc {
          */
         public function setVars($vars);
 
-
         /**
          * Returns a parameter previously set in the view
          *
@@ -61,7 +58,6 @@ namespace ManaPHP\Mvc {
          * @return mixed
          */
         public function getVar($name);
-
 
         /**
          * @return array
@@ -75,14 +71,12 @@ namespace ManaPHP\Mvc {
          */
         public function getControllerName();
 
-
         /**
          * Gets the name of the action rendered
          *
          * @return string
          */
         public function getActionName();
-
 
         /**
          * Executes render process from dispatching data
@@ -91,8 +85,7 @@ namespace ManaPHP\Mvc {
          * @param string $controller
          * @param string $action
          */
-        public function renderView($module, $controller, $action);
-
+        public function render($module, $controller, $action);
 
         /**
          * Choose a view different to render than last-controller/last-action
@@ -101,27 +94,23 @@ namespace ManaPHP\Mvc {
          *
          * @return static
          */
-        public function pickView($view);
-
+        public function pick($view);
 
         /**
          * Renders a partial view
          *
-         * @param string $partialPath
+         * @param string $path
          * @param array  $vars
-         *
-         * @return static
          */
-        public function renderPartial($partialPath, $vars = []);
+        public function partial($path, $vars = []);
 
         /**
+         * Renders a widget
+         *
          * @param string $widget
          * @param array  $vars
-         *
-         * @return static
          */
-        public function renderWidget($widget, $vars = []);
-
+        public function widget($widget, $vars = []);
 
         /**
          * Externally sets the view content
@@ -131,7 +120,6 @@ namespace ManaPHP\Mvc {
          * @return static
          */
         public function setContent($content);
-
 
         /**
          * Returns cached output from another view stage

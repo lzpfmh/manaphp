@@ -16,7 +16,6 @@ namespace ManaPHP\Http\Response {
          */
         public function set($name, $value);
 
-
         /**
          * Sets a raw header to be sent at the end of the request
          *
@@ -37,7 +36,6 @@ namespace ManaPHP\Http\Response {
          * @return boolean
          */
         public function send();
-
 
         /**
          * Returns the current headers as an array

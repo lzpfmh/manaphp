@@ -125,7 +125,6 @@ namespace ManaPHP\Image\Adapter {
             return $this;
         }
 
-
         /**
          * @param int $width
          * @param int $height
@@ -181,7 +180,6 @@ namespace ManaPHP\Image\Adapter {
 
             return $this;
         }
-
 
         /**
          * @param string $file

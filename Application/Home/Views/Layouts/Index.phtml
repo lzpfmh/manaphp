@@ -3,6 +3,6 @@
  * @var $view \ManaPHP\Mvc\ViewInterface
  */
 ?>
-<?php $view->renderPartial('Shared/Header');?>
-<?=$view->getContent()?>
-<?php $view->renderPartial('Shared/Footer');?>
+<?php $view->partial('Shared/Header'); ?>
+<?= $view->getContent() ?>
+<?php $view->partial('Shared/Footer'); ?>

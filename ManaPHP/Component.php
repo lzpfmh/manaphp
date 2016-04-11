@@ -37,6 +37,7 @@ namespace ManaPHP {
      * @property \ManaPHP\Log\Logger                     $logger
      * @property \ManaPHP\Mvc\View\Renderer              $renderer
      * @property \Application\Configure                  $configure
+     * @property \ManaPHP\ApplicationInterface           $application
      */
     class Component implements ComponentInterface
     {
@@ -127,7 +128,6 @@ namespace ManaPHP {
             return $this;
         }
 
-
         /**
          * Fires an event in the events manager causing that the active listeners will be notified about it
          *
@@ -172,7 +172,6 @@ namespace ManaPHP {
 
             $data = [];
             foreach (get_object_vars($this) as $k => $v) {
-
 
                 if ($v === $defaultDi) {
                     continue;

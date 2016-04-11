@@ -83,7 +83,6 @@ namespace ManaPHP\Mvc\View {
                     $eventArguments = ['file' => $file, 'vars' => $vars];
                     $this->fireEvent('renderer:beforeRenderView', $eventArguments);
 
-
                     if ($directOutput) {
                         $engine->render($file, $vars);
                         $content = null;
@@ -95,6 +94,7 @@ namespace ManaPHP\Mvc\View {
                         } catch (\Exception $e) {
                             ob_end_clean();
 
+                            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                             throw $e;
                         }
 
@@ -114,6 +114,21 @@ namespace ManaPHP\Mvc\View {
             return $content;
         }
 
+        /**
+         * @param string $template
+         *
+         * @return bool
+         */
+        public function exists($template)
+        {
+            foreach ($this->_registeredEngines as $extension => $engine) {
+                if (is_file($template . $extension)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         /**
          * Register template engines
@@ -135,7 +150,6 @@ namespace ManaPHP\Mvc\View {
 
             return $this;
         }
-
 
         /**
          * Returns the registered template engines

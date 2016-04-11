@@ -21,7 +21,6 @@ namespace ManaPHP\Caching {
          */
         public function get($key);
 
-
         /**
          * Stores a value identified by a key into cache.
          *
@@ -33,7 +32,6 @@ namespace ManaPHP\Caching {
          */
         public function set($key, $value, $ttl = null);
 
-
         /**
          * Deletes a value with the specified key from cache
          *
@@ -42,7 +40,6 @@ namespace ManaPHP\Caching {
          * @void
          */
         public function delete($key);
-
 
         /** Retrieves the internal adapter instance
          *

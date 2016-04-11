@@ -17,14 +17,12 @@ namespace ManaPHP\Http\Response {
          */
         public function useEncryption($useEncryption);
 
-
         /**
          * Returns if the bag is automatically encrypting/decrypting cookies
          *
          * @return boolean
          */
         public function isUsingEncryption();
-
 
         /**
          * Sets a cookie to be sent at the end of the request
@@ -49,7 +47,6 @@ namespace ManaPHP\Http\Response {
             $httpOnly = null
         );
 
-
         /**
          * Gets a cookie from the bag
          *
@@ -59,7 +56,6 @@ namespace ManaPHP\Http\Response {
          */
         public function get($name);
 
-
         /**
          * Check if a cookie is defined in the bag or exists in the $_COOKIE
          *
@@ -68,7 +64,6 @@ namespace ManaPHP\Http\Response {
          * @return boolean
          */
         public function has($name);
-
 
         /**
          * Deletes a cookie by its name
@@ -80,14 +75,12 @@ namespace ManaPHP\Http\Response {
          */
         public function delete($name);
 
-
         /**
          * Sends the cookies to the client
          *
          * @return boolean
          */
         public function send();
-
 
         /**
          * Reset set cookies

@@ -1,6 +1,6 @@
 <?php
 
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class CachingCacheAdapterFileTest extends TestCase
 {
@@ -37,7 +37,7 @@ class CachingCacheAdapterFileTest extends TestCase
         $this->assertSame('{}', $cache->get('var'));
 
         // ttl
-        $cache->set('var','value',1);
+        $cache->set('var', 'value', 1);
         $this->assertTrue($cache->exists('var'));
         sleep(2);
         $this->assertFalse($cache->exists('var'));

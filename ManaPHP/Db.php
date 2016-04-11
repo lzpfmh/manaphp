@@ -364,7 +364,6 @@ namespace ManaPHP {
             return $this->_affectedRows;
         }
 
-
         /**
          * Returns the first row in a SQL query result
          *
@@ -391,7 +390,6 @@ namespace ManaPHP {
 
             return $result->fetch();
         }
-
 
         /**
          * Dumps the complete result of a query into an array
@@ -426,7 +424,6 @@ namespace ManaPHP {
 
             return $result->fetchAll();
         }
-
 
         /**
          * Inserts data into a table using custom SQL syntax
@@ -472,7 +469,6 @@ namespace ManaPHP {
 
             return $this->execute($sql, $columnValues) === 1;
         }
-
 
         /**
          * Updates data on a table using custom SQL syntax
@@ -522,7 +518,6 @@ namespace ManaPHP {
             return $this->execute($updateSql, $binds);
         }
 
-
         /**
          * Deletes data from a table using custom SQL syntax
          *
@@ -560,7 +555,6 @@ namespace ManaPHP {
             return $this->execute($sql, $binds);
         }
 
-
         /**
          * Appends a LIMIT clause to $sqlQuery argument
          *
@@ -589,7 +583,6 @@ namespace ManaPHP {
             return $this->_sqlStatement;
         }
 
-
         /**
          * Active SQL statement in the object with replace the bind with value
          *
@@ -614,7 +607,6 @@ namespace ManaPHP {
             return $this->_sqlBindParams;
         }
 
-
         /**
          * Active SQL statement in the object
          *
@@ -624,7 +616,6 @@ namespace ManaPHP {
         {
             return $this->_sqlBindTypes;
         }
-
 
         /**
          * Starts a transaction in the connection
@@ -679,7 +670,6 @@ namespace ManaPHP {
             return $this->_pdo->rollBack();
         }
 
-
         /**
          * Commits the active transaction in the connection
          *
@@ -693,7 +683,6 @@ namespace ManaPHP {
             }
 
             $this->fireEvent('db:commitTransaction');
-
 
             $this->_transactionLevel--;
 
@@ -709,7 +698,6 @@ namespace ManaPHP {
         {
             return (int)$this->_pdo->lastInsertId();
         }
-
 
         /**
          * Return internal PDO handler

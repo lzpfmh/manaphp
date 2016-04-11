@@ -51,7 +51,6 @@ namespace ManaPHP\Http\Request {
             $this->_file = $file;
         }
 
-
         /**
          * Returns the file size of the uploaded file
          *
@@ -61,7 +60,6 @@ namespace ManaPHP\Http\Request {
         {
             return $this->_file['size'];
         }
-
 
         /**
          * Returns the real name of the uploaded file
@@ -73,7 +71,6 @@ namespace ManaPHP\Http\Request {
             return $this->_file['name'];
         }
 
-
         /**
          * Returns the temporary name of the uploaded file
          *
@@ -83,7 +80,6 @@ namespace ManaPHP\Http\Request {
         {
             return $this->_file['tmp_name'];
         }
-
 
         /**
          * Returns the mime type reported by the browser
@@ -95,7 +91,6 @@ namespace ManaPHP\Http\Request {
         {
             return $this->_file['type'];
         }
-
 
         /**
          * Gets the real mime type of the upload file
@@ -115,7 +110,6 @@ namespace ManaPHP\Http\Request {
             return $mime;
         }
 
-
         /**
          * Returns the error code
          *
@@ -125,7 +119,6 @@ namespace ManaPHP\Http\Request {
         {
             return $this->_file['error'];
         }
-
 
         /**
          * Returns the file key
@@ -137,7 +130,6 @@ namespace ManaPHP\Http\Request {
             return $this->_key;
         }
 
-
         /**
          * Checks whether the file has been uploaded via Post.
          *
@@ -147,7 +139,6 @@ namespace ManaPHP\Http\Request {
         {
             return is_uploaded_file($this->_file['tmp_name']);
         }
-
 
         /**
          * Moves the temporary file to a destination within the application
@@ -177,7 +168,6 @@ namespace ManaPHP\Http\Request {
                 throw new FileException(error_get_last()['message']);
             }
         }
-
 
         /**
          * Returns the file extension

@@ -49,7 +49,6 @@ namespace ManaPHP\Caching {
             $this->_serializer = $serializer ?: new JsonPhp();
         }
 
-
         /**
          * Fetch content
          *
@@ -68,7 +67,6 @@ namespace ManaPHP\Caching {
             }
         }
 
-
         /**
          * Caches content
          *
@@ -84,7 +82,6 @@ namespace ManaPHP\Caching {
             $this->_adapter->set($this->_prefix . $key, $this->_serializer->serialize($value), $ttl);
         }
 
-
         /**
          * Delete content
          *
@@ -96,7 +93,6 @@ namespace ManaPHP\Caching {
         {
             $this->_adapter->delete($this->_prefix . $key);
         }
-
 
         /**
          * Check if key exists

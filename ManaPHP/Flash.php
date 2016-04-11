@@ -31,7 +31,6 @@ namespace ManaPHP {
             ];
         }
 
-
         /**
          * Shows a HTML error message
          *
@@ -47,7 +46,6 @@ namespace ManaPHP {
         {
             $this->_message('error', $message);
         }
-
 
         /**
          * Shows a HTML notice/information message
@@ -65,7 +63,6 @@ namespace ManaPHP {
             $this->_message('notice', $message);
         }
 
-
         /**
          * Shows a HTML success message
          *
@@ -81,7 +78,6 @@ namespace ManaPHP {
         {
             $this->_message('notice', $message);
         }
-
 
         /**
          * Shows a HTML warning message

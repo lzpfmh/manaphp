@@ -15,14 +15,12 @@ namespace ManaPHP\Db {
          */
         public function getSchemaName();
 
-
         /**
          * Returns column name
          *
          * @return string
          */
         public function getName();
-
 
         /**
          * Returns column type
@@ -31,14 +29,12 @@ namespace ManaPHP\Db {
          */
         public function getType();
 
-
         /**
          * Returns column size
          *
          * @return int
          */
         public function getSize();
-
 
         /**
          * Returns column scale
@@ -47,14 +43,12 @@ namespace ManaPHP\Db {
          */
         public function getScale();
 
-
         /**
          * Returns true if number column is unsigned
          *
          * @return boolean
          */
         public function isUnsigned();
-
 
         /**
          * Not null
@@ -63,14 +57,12 @@ namespace ManaPHP\Db {
          */
         public function isNotNull();
 
-
         /**
          * Column is part of the primary key?
          *
          * @return boolean
          */
         public function isPrimary();
-
 
         /**
          * Auto-Increment
@@ -79,14 +71,12 @@ namespace ManaPHP\Db {
          */
         public function isAutoIncrement();
 
-
         /**
          * Check whether column have an numeric type
          *
          * @return boolean
          */
         public function isNumeric();
-
 
         /**
          * Check whether column have first position in table
@@ -95,14 +85,12 @@ namespace ManaPHP\Db {
          */
         public function isFirst();
 
-
         /**
          * Check whether field absolute to position in table
          *
          * @return string
          */
         public function getAfterPosition();
-
 
         /**
          * Returns the type of bind handling

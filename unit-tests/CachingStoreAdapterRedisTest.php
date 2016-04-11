@@ -1,7 +1,6 @@
 <?php
 
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
-
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class CachingStoreAdapterRedisTest extends TestCase
 {
@@ -10,7 +9,7 @@ class CachingStoreAdapterRedisTest extends TestCase
         /**
          * @var \ManaPHP\Caching\Store\Adapter\Redis\ConstructOptionsStub $options
          */
-        $options=[];
+        $options = [];
 
         $cache = new \ManaPHP\Caching\Store\Adapter\Redis([]);
 
@@ -32,16 +31,17 @@ class CachingStoreAdapterRedisTest extends TestCase
         $this->assertSame('value', $cache->get('var'));
     }
 
-    public function test_mGet(){
+    public function test_mGet()
+    {
         $cache = new \ManaPHP\Caching\Store\Adapter\Redis([]);
 
         $cache->delete('1');
         $cache->delete('2');
 
-        $cache->set('1','1');
+        $cache->set('1', '1');
 
-        $idValues=$cache->mGet(['1','2']);
-        $this->assertEquals('1',$idValues['1']);
+        $idValues = $cache->mGet(['1', '2']);
+        $this->assertEquals('1', $idValues['1']);
         $this->assertFalse($idValues[2]);
     }
 
@@ -59,8 +59,8 @@ class CachingStoreAdapterRedisTest extends TestCase
         $this->assertSame('{}', $cache->get('var'));
     }
 
-
-    public function test_mSet(){
+    public function test_mSet()
+    {
         $cache = new \ManaPHP\Caching\Store\Adapter\Redis([]);
         $cache->delete(1);
         $cache->delete(2);
@@ -68,12 +68,11 @@ class CachingStoreAdapterRedisTest extends TestCase
 
         $cache->mSet([]);
 
-        $cache->mSet(['1'=>'1','2'=>'2']);
-        $this->assertSame('1',$cache->get(1));
-        $this->assertSame('2',$cache->get(2));
+        $cache->mSet(['1' => '1', '2' => '2']);
+        $this->assertSame('1', $cache->get(1));
+        $this->assertSame('2', $cache->get(2));
         $this->assertFalse($cache->get(3));
     }
-
 
     public function test_delete()
     {

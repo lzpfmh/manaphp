@@ -5,7 +5,7 @@
  * Date: 2015/12/13
  * Time: 21:45
  */
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class VersionTest extends TestCase
 {

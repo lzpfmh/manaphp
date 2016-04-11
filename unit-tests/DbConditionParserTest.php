@@ -5,7 +5,7 @@
  * Date: 2015/12/27
  * Time: 16:14
  */
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class DbConditionParserTest extends TestCase
 {
@@ -16,7 +16,7 @@ class DbConditionParserTest extends TestCase
 
     public function setUp()
     {
-        $config = require 'config.database.php';
+        $config = require __DIR__ . '/config.database.php';
         $this->db = new ManaPHP\Db\Adapter\Mysql($config['mysql']);
     }
 
@@ -28,9 +28,9 @@ class DbConditionParserTest extends TestCase
         $this->assertEquals('id=1', $conditions);
         $this->assertEquals([], $binds);
 
-        $conditions = $conditionParser->parse(['id=1','city_id'=>2], $binds);
+        $conditions = $conditionParser->parse(['id=1', 'city_id' => 2], $binds);
         $this->assertEquals('id=1 AND `city_id`=:city_id', $conditions);
-        $this->assertEquals(['city_id'=>2], $binds);
+        $this->assertEquals(['city_id' => 2], $binds);
 
         $conditions = $conditionParser->parse(['id' => 2], $binds);
         $this->assertEquals('`id`=:id', $conditions);

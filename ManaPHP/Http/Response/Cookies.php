@@ -21,7 +21,6 @@ namespace ManaPHP\Http\Response {
          */
         protected $_cookies;
 
-
         /**
          * Set if cookies in the bag must be automatically encrypted/decrypted
          *
@@ -36,7 +35,6 @@ namespace ManaPHP\Http\Response {
             return $this;
         }
 
-
         /**
          * Returns if the bag is automatically encrypting/decrypting cookies
          *
@@ -46,7 +44,6 @@ namespace ManaPHP\Http\Response {
         {
             return $this->_useEncryption;
         }
-
 
         /**
          * Sets a cookie to be sent at the end of the request
@@ -103,7 +100,6 @@ namespace ManaPHP\Http\Response {
             return $this;
         }
 
-
         /**
          * Gets a cookie from the bag
          *
@@ -117,7 +113,6 @@ namespace ManaPHP\Http\Response {
                 return $this->_cookies[$name];
             }
 
-
             $cookie = $this->_dependencyInjector->get('ManaPHP\Http\Cookie', [$name]);
             if (is_object($this->_dependencyInjector)) {
                 $cookie->setDependencyInjector($this->_dependencyInjector);
@@ -127,7 +122,6 @@ namespace ManaPHP\Http\Response {
 
             return $cookie;
         }
-
 
         /**
          * Check if a cookie is defined in the bag or exists in the $_COOKIE
@@ -149,7 +143,6 @@ namespace ManaPHP\Http\Response {
             return false;
         }
 
-
         /**
          * Deletes a cookie by its name
          * This method does not removes cookies from the $_COOKIE
@@ -169,7 +162,6 @@ namespace ManaPHP\Http\Response {
             }
         }
 
-
         /**
          * Sends the cookies to the client
          * Cookies are not sent if headers are sent in the current request
@@ -188,7 +180,6 @@ namespace ManaPHP\Http\Response {
                 return false;
             }
         }
-
 
         /**
          * Reset set cookies

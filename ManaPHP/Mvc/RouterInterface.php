@@ -28,7 +28,6 @@ namespace ManaPHP\Mvc {
          */
         public function handle($uri = null, $host = null, $silent = true);
 
-
         /**
          * Mounts a group of routes in the router
          *
@@ -66,14 +65,12 @@ namespace ManaPHP\Mvc {
          */
         public function getRewriteUri();
 
-
         /**
          * Returns processed module name
          *
          * @return string
          */
         public function getModuleName();
-
 
         /**
          * Returns processed controller name
@@ -82,7 +79,6 @@ namespace ManaPHP\Mvc {
          */
         public function getControllerName();
 
-
         /**
          * Returns processed action name
          *
@@ -90,14 +86,12 @@ namespace ManaPHP\Mvc {
          */
         public function getActionName();
 
-
         /**
          * Returns processed extra params
          *
          * @return array
          */
         public function getParams();
-
 
         /**
          * Check if the router matches any of the defined routes

@@ -36,13 +36,13 @@ namespace ManaPHP\Log {
         public function __construct()
         {
             $this->_level_i2s = [
-                self::LEVEL_OFF     => 'OFF',
-                self::LEVEL_FATAL   => 'FATAL',
-                self::LEVEL_ERROR   => 'ERROR',
+                self::LEVEL_OFF => 'OFF',
+                self::LEVEL_FATAL => 'FATAL',
+                self::LEVEL_ERROR => 'ERROR',
                 self::LEVEL_WARNING => 'WARNING',
-                self::LEVEL_INFO    => 'INFO',
-                self::LEVEL_DEBUG   => 'DEBUG',
-                self::LEVEL_ALL     => 'ALL',
+                self::LEVEL_INFO => 'INFO',
+                self::LEVEL_DEBUG => 'DEBUG',
+                self::LEVEL_ALL => 'ALL',
             ];
         }
 
@@ -69,7 +69,6 @@ namespace ManaPHP\Log {
 
             return $this;
         }
-
 
         /**
          * Returns the current log level
@@ -135,7 +134,6 @@ namespace ManaPHP\Log {
             return $this;
         }
 
-
         /**
          * Sends/Writes a debug message to the log
          *
@@ -148,7 +146,6 @@ namespace ManaPHP\Log {
         {
             return $this->_log(self::LEVEL_DEBUG, $message, $context);
         }
-
 
         /**
          * Sends/Writes an info message to the log
@@ -163,7 +160,6 @@ namespace ManaPHP\Log {
             return $this->_log(self::LEVEL_INFO, $message, $context);
         }
 
-
         /**
          * Sends/Writes a warning message to the log
          *
@@ -177,7 +173,6 @@ namespace ManaPHP\Log {
             return $this->_log(self::LEVEL_WARNING, $message, $context);
         }
 
-
         /**
          * Sends/Writes an error message to the log
          *
@@ -190,7 +185,6 @@ namespace ManaPHP\Log {
         {
             return $this->_log(self::LEVEL_ERROR, $message, $context);
         }
-
 
         /**
          * Sends/Writes a critical message to the log

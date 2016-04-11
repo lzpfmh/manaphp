@@ -186,7 +186,6 @@ namespace ManaPHP\Mvc\Model\Query {
             }
         }
 
-
         /**
          * Sets SELECT DISTINCT / SELECT ALL flag
          *
@@ -200,7 +199,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
             return $this;
         }
-
 
         /**
          * Sets the columns to be queried
@@ -220,7 +218,6 @@ namespace ManaPHP\Mvc\Model\Query {
             return $this;
         }
 
-
         /**
          * Sets the models who makes part of the query
          *
@@ -239,7 +236,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
             return $this;
         }
-
 
         /**
          * Add a model to take part of the query
@@ -288,7 +284,6 @@ namespace ManaPHP\Mvc\Model\Query {
             return $this;
         }
 
-
         /**
          * Adds a INNER join to the query
          *
@@ -311,7 +306,6 @@ namespace ManaPHP\Mvc\Model\Query {
             return $this;
         }
 
-
         /**
          * Adds a LEFT join to the query
          *
@@ -332,7 +326,6 @@ namespace ManaPHP\Mvc\Model\Query {
             return $this;
         }
 
-
         /**
          * Adds a RIGHT join to the query
          *
@@ -352,7 +345,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
             return $this;
         }
-
 
         /**
          * Sets the query conditions
@@ -377,7 +369,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
             return $this;
         }
-
 
         /**
          * Appends a condition to the current conditions using a AND operator
@@ -426,7 +417,6 @@ namespace ManaPHP\Mvc\Model\Query {
             return $this;
         }
 
-
         /**
          * Appends a NOT BETWEEN condition to the current conditions
          *
@@ -449,7 +439,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
             return $this;
         }
-
 
         /**
          * Appends an IN condition to the current conditions
@@ -485,7 +474,6 @@ namespace ManaPHP\Mvc\Model\Query {
             return $this;
         }
 
-
         /**
          * Appends a NOT IN condition to the current conditions
          *
@@ -517,7 +505,6 @@ namespace ManaPHP\Mvc\Model\Query {
             return $this;
         }
 
-
         /**
          * Sets a ORDER BY condition clause
          *
@@ -536,7 +523,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
             return $this;
         }
-
 
         /**
          * Sets a HAVING condition clause. You need to escape SQL reserved words using [ and ] delimiters
@@ -564,7 +550,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
             return $this;
         }
-
 
         /**
          * Sets a LIMIT clause, optionally a offset clause
@@ -607,7 +592,6 @@ namespace ManaPHP\Mvc\Model\Query {
             return $this;
         }
 
-
         /**
          * Sets a GROUP BY clause
          *
@@ -625,7 +609,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
             return $this;
         }
-
 
         /**
          * Returns a SQL statement built based on the builder parameters
@@ -676,7 +659,6 @@ namespace ManaPHP\Mvc\Model\Query {
                 }
             }
 
-
             /**
              *  generate for FROM
              */
@@ -689,7 +671,6 @@ namespace ManaPHP\Mvc\Model\Query {
                 }
             }
             $sql .= ' FROM ' . implode(', ', $selectedModels);
-
 
             /**
              *  Join multiple models
@@ -777,7 +758,6 @@ namespace ManaPHP\Mvc\Model\Query {
 
             return $sql;
         }
-
 
         /**
          * Returns the query built

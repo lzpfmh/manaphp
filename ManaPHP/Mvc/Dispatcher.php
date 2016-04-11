@@ -137,7 +137,6 @@ namespace ManaPHP\Mvc {
             return $this->_actionName;
         }
 
-
         /**
          * Gets action params
          *
@@ -147,7 +146,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_params;
         }
-
 
         /**
          * Gets a param by its name or numeric index
@@ -176,7 +174,6 @@ namespace ManaPHP\Mvc {
             return null;
         }
 
-
         /**
          * Sets the latest returned value by an action manually
          *
@@ -191,7 +188,6 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
         /**
          * Returns value returned by the latest dispatched action
          *
@@ -201,7 +197,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_returnedValue;
         }
-
 
         /**
          * Dispatches a handle action taking into account the routing parameters
@@ -325,7 +320,6 @@ namespace ManaPHP\Mvc {
             return $controllerInstance;
         }
 
-
         /**
          * Forwards the execution flow to another controller/action
          * Dispatchers are unique per module. Forwarding between modules is not allowed
@@ -334,14 +328,20 @@ namespace ManaPHP\Mvc {
          *  $this->dispatcher->forward(array('controller' => 'posts', 'action' => 'index'));
          *</code>
          *
-         * @param array $forward
+         * @param string|array $forward
          *
          * @throws \ManaPHP\Mvc\Dispatcher\Exception
          */
         public function forward($forward)
         {
-            if (!is_array($forward)) {
-                throw new Exception('Forward parameter must be an Array');
+            if (is_string($forward)) {
+                if ($forward[0] === '/') {
+                    throw new Exception('Forward path starts with / character is confused, please remove it');
+                }
+
+                $_forward = [];
+                list($_forward['module'], $_forward['controller'], $_forward['action']) = array_pad(explode('/', $forward), -3, null);
+                $forward = $_forward;
             }
 
             if (isset($forward['module'])) {
@@ -366,7 +366,6 @@ namespace ManaPHP\Mvc {
             $this->_forwarded = true;
         }
 
-
         /**
          * Check if the current executed action was forwarded by another one
          *
@@ -376,7 +375,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_forwarded;
         }
-
 
         /**
          * @param string $str
@@ -406,7 +404,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_controllerName;
         }
-
 
         /**
          * Returns the previous controller in the dispatcher

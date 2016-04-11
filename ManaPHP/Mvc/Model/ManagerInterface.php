@@ -14,7 +14,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function initModel($model);
 
-
         /**
          * Sets the mapped source for a model
          *
@@ -24,7 +23,6 @@ namespace ManaPHP\Mvc\Model {
          * @return static
          */
         public function setModelSource($model, $source);
-
 
         /**
          * Returns the mapped source for a model
@@ -53,7 +51,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function setConnectionService($model, $connectionService);
 
-
         /**
          * Sets write connection service for a model
          *
@@ -62,7 +59,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function setWriteConnectionService($model, $connectionService);
 
-
         /**
          * Sets read connection service for a model
          *
@@ -70,7 +66,6 @@ namespace ManaPHP\Mvc\Model {
          * @param string                             $connectionService
          */
         public function setReadConnectionService($model, $connectionService);
-
 
         /**
          * Returns the connection to write data related to a model
@@ -81,7 +76,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function getWriteConnection($model);
 
-
         /**
          * Returns the connection to read data related to a model
          *
@@ -90,7 +84,6 @@ namespace ManaPHP\Mvc\Model {
          * @return \ManaPHP\DbInterface
          */
         public function getReadConnection($model);
-
 
         /**
          * Returns the connection service name used to read data related to a model
@@ -101,7 +94,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function getReadConnectionService($model);
 
-
         /**
          * Returns the connection service name used to write data related to a model
          *
@@ -111,7 +103,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function getWriteConnectionService($model);
 
-
         /**
          * Creates a \ManaPHP\Mvc\Model\Query\Builder
          *
@@ -120,7 +111,6 @@ namespace ManaPHP\Mvc\Model {
          * @return \ManaPHP\Mvc\Model\Query\BuilderInterface
          */
         public function createBuilder($params = null);
-
 
         /**
          * Returns the last query created or executed in the

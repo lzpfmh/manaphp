@@ -72,7 +72,6 @@ namespace ManaPHP\Http {
          */
         public function setExpiration($expire);
 
-
         /**
          * Sets the cookie's expiration time
          *
@@ -88,7 +87,6 @@ namespace ManaPHP\Http {
          * @return string
          */
         public function getName();
-
 
         /**
          * Sets the domain that the cookie is available to

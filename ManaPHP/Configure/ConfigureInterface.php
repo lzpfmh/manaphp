@@ -1,6 +1,8 @@
 <?php
-namespace ManaPHP\Configure{
-    interface ConfigureInterface{
+namespace ManaPHP\Configure {
+
+    interface ConfigureInterface
+    {
 
         /**
          * @param string $name
@@ -11,13 +13,19 @@ namespace ManaPHP\Configure{
          */
         public function setAlias($name, $path);
 
-
         /**
          * @param string $name
          *
          * @return string|null
          */
         public function getAlias($name);
+
+        /**
+         * @param string $name
+         *
+         * @return bool
+         */
+        public function hasAlias($name);
 
         /**
          * @param string $path

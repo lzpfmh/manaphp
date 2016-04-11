@@ -1,6 +1,6 @@
 <?php
 
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class ImageTest extends TestCase
 {
@@ -83,7 +83,6 @@ class ImageTest extends TestCase
         $resultImageFile = $this->_resultDirectory . '/scale_1.5.jpg';
         $image->scale(1.5)->save($resultImageFile);
     }
-
 
     public function test_scaleFixedWidth()
     {

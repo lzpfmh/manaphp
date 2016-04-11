@@ -30,7 +30,6 @@ namespace ManaPHP\Http {
          */
         public function getGet($name = null, $filters = null, $defaultValue = null);
 
-
         /**
          * Gets a variable from the $_POST applying filters if needed
          *
@@ -41,7 +40,6 @@ namespace ManaPHP\Http {
          * @return mixed
          */
         public function getPost($name = null, $filters = null, $defaultValue = null);
-
 
         /**
          * Gets a variable from put request
@@ -59,7 +57,6 @@ namespace ManaPHP\Http {
          * @return mixed
          */
         public function getPut($name = null, $filters = null, $defaultValue = null);
-
 
         /**
          * Gets variable from $_GET applying filters if needed
@@ -81,7 +78,6 @@ namespace ManaPHP\Http {
          */
         public function has($name);
 
-
         /**
          * Checks whether $_GET has certain index
          *
@@ -90,7 +86,6 @@ namespace ManaPHP\Http {
          * @return boolean
          */
         public function hasGet($name);
-
 
         /**
          * Checks whether $_POST has certain index
@@ -101,7 +96,6 @@ namespace ManaPHP\Http {
          */
         public function hasPost($name);
 
-
         /**
          * Checks whether has certain index
          *
@@ -110,7 +104,6 @@ namespace ManaPHP\Http {
          * @return boolean
          */
         public function hasPut($name);
-
 
         /**
          * Checks whether $_GET has certain index
@@ -121,14 +114,12 @@ namespace ManaPHP\Http {
          */
         public function hasQuery($name);
 
-
         /**
          * Gets HTTP schema (http/https)
          *
          * @return string
          */
         public function getScheme();
-
 
         /**
          * Checks whether request has been made using ajax. Checks if $_SERVER['HTTP_X_REQUESTED_WITH']=='XMLHttpRequest'
@@ -137,7 +128,6 @@ namespace ManaPHP\Http {
          */
         public function isAjax();
 
-
         /**
          * Gets HTTP raw request body
          *
@@ -145,14 +135,12 @@ namespace ManaPHP\Http {
          */
         public function getRawBody();
 
-
         /**
          * Gets most possibly client IPv4 Address. This methods search in $_SERVER['REMOTE_ADDR'] and optionally in $_SERVER['HTTP_X_FORWARDED_FOR']
          *
          * @return string
          */
         public function getClientAddress();
-
 
         /**set the client address for getClientAddress method
          *
@@ -167,14 +155,12 @@ namespace ManaPHP\Http {
          */
         public function getUserAgent();
 
-
         /**
          * Checks whether HTTP method is POST. if $_SERVER['REQUEST_METHOD']=='POST'
          *
          * @return boolean
          */
         public function isPost();
-
 
         /**
          *
@@ -184,14 +170,12 @@ namespace ManaPHP\Http {
          */
         public function isGet();
 
-
         /**
          * Checks whether HTTP method is PUT. if $_SERVER['REQUEST_METHOD']=='PUT'
          *
          * @return boolean
          */
         public function isPut();
-
 
         /**
          * Checks whether HTTP method is HEAD. if $_SERVER['REQUEST_METHOD']=='HEAD'
@@ -200,14 +184,12 @@ namespace ManaPHP\Http {
          */
         public function isHead();
 
-
         /**
          * Checks whether HTTP method is DELETE. if $_SERVER['REQUEST_METHOD']=='DELETE'
          *
          * @return boolean
          */
         public function isDelete();
-
 
         /**
          * Checks whether HTTP method is OPTIONS. if $_SERVER['REQUEST_METHOD']=='OPTIONS'
@@ -232,7 +214,6 @@ namespace ManaPHP\Http {
          */
         public function hasFiles($onlySuccessful = false);
 
-
         /**
          * Gets attached files as \ManaPHP\Http\Request\FileInterface compatible instances
          *
@@ -241,7 +222,6 @@ namespace ManaPHP\Http {
          * @return \ManaPHP\Http\Request\FileInterface[]
          */
         public function getFiles($onlySuccessful = false);
-
 
         /**
          * Gets web page that refers active request. ie: http://www.google.com

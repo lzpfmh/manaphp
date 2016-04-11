@@ -6,8 +6,7 @@
  * Time: 22:07
  */
 
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
-
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class HttpRequestTest extends TestCase
 {
@@ -233,7 +232,6 @@ class HttpRequestTest extends TestCase
         $this->assertTrue($request->isPut());
     }
 
-
     public function test_isHead()
     {
         $request = new \ManaPHP\Http\Request();
@@ -293,121 +291,121 @@ class HttpRequestTest extends TestCase
         $request = new \ManaPHP\Http\Request();
 
         $_FILES = array(
-          'test' => array(
-            'name' => 'name',
-            'type' => 'text/plain',
-            'size' => 1,
-            'tmp_name' => 'tmp_name',
-            'error' => 0,
-          )
+            'test' => array(
+                'name' => 'name',
+                'type' => 'text/plain',
+                'size' => 1,
+                'tmp_name' => 'tmp_name',
+                'error' => 0,
+            )
         );
 
         $this->assertEquals($request->hasFiles(false), 1);
         $this->assertEquals($request->hasFiles(true), 1);
 
         $_FILES = array(
-          'test' => array(
-            'name' => array('name1', 'name2'),
-            'type' => array('text/plain', 'text/plain'),
-            'size' => array(1, 1),
-            'tmp_name' => array('tmp_name1', 'tmp_name2'),
-            'error' => array(0, 0),
-          )
+            'test' => array(
+                'name' => array('name1', 'name2'),
+                'type' => array('text/plain', 'text/plain'),
+                'size' => array(1, 1),
+                'tmp_name' => array('tmp_name1', 'tmp_name2'),
+                'error' => array(0, 0),
+            )
         );
 
         $this->assertEquals($request->hasFiles(false), 2);
         $this->assertEquals($request->hasFiles(true), 2);
 
         $_FILES = array(
-          'photo' => array(
-            'name' => array(
-              0 => '',
-              1 => '',
-              2 => array(0 => '', 1 => '', 2 => ''),
-              3 => array(0 => ''),
-              4 => array(
-                0 => array(0 => ''),
-              ),
-              5 => array(
-                0 => array(
-                  0 => array(
-                    0 => array(0 => ''),
-                  ),
+            'photo' => array(
+                'name' => array(
+                    0 => '',
+                    1 => '',
+                    2 => array(0 => '', 1 => '', 2 => ''),
+                    3 => array(0 => ''),
+                    4 => array(
+                        0 => array(0 => ''),
+                    ),
+                    5 => array(
+                        0 => array(
+                            0 => array(
+                                0 => array(0 => ''),
+                            ),
+                        ),
+                    ),
                 ),
-              ),
-            ),
-            'type' => array(
-              0 => '',
-              1 => '',
-              2 => array(0 => '', 1 => '', 2 => ''),
-              3 => array(0 => ''),
-              4 => array(
-                0 => array(0 => ''),
-              ),
-              5 => array(
-                0 => array(
-                  0 => array(
-                    0 => array(0 => ''),
-                  ),
+                'type' => array(
+                    0 => '',
+                    1 => '',
+                    2 => array(0 => '', 1 => '', 2 => ''),
+                    3 => array(0 => ''),
+                    4 => array(
+                        0 => array(0 => ''),
+                    ),
+                    5 => array(
+                        0 => array(
+                            0 => array(
+                                0 => array(0 => ''),
+                            ),
+                        ),
+                    ),
                 ),
-              ),
-            ),
-            'tmp_name' => array(
-              0 => '',
-              1 => '',
-              2 => array(0 => '', 1 => '', 2 => ''),
-              3 => array(0 => ''),
-              4 => array(
-                0 => array(0 => ''),
-              ),
-              5 => array(
-                0 => array(
-                  0 => array(
-                    0 => array(0 => ''),
-                  ),
+                'tmp_name' => array(
+                    0 => '',
+                    1 => '',
+                    2 => array(0 => '', 1 => '', 2 => ''),
+                    3 => array(0 => ''),
+                    4 => array(
+                        0 => array(0 => ''),
+                    ),
+                    5 => array(
+                        0 => array(
+                            0 => array(
+                                0 => array(0 => ''),
+                            ),
+                        ),
+                    ),
                 ),
-              ),
-            ),
-            'error' => array(
-              0 => 4,
-              1 => 4,
-              2 => array(0 => 4, 1 => 4, 2 => 4),
-              3 => array(0 => 4),
-              4 => array(
-                0 => array(0 => 4),
-              ),
-              5 => array(
-                0 => array(
-                  0 => array(
-                    0 => array(0 => 4),
-                  ),
+                'error' => array(
+                    0 => 4,
+                    1 => 4,
+                    2 => array(0 => 4, 1 => 4, 2 => 4),
+                    3 => array(0 => 4),
+                    4 => array(
+                        0 => array(0 => 4),
+                    ),
+                    5 => array(
+                        0 => array(
+                            0 => array(
+                                0 => array(0 => 4),
+                            ),
+                        ),
+                    ),
                 ),
-              ),
-            ),
-            'size' => array(
-              0 => 0,
-              1 => 0,
-              2 => array(0 => 0, 1 => 0, 2 => 0),
-              3 => array(0 => 0),
-              4 => array(
-                0 => array(0 => 0),
-              ),
-              5 => array(
-                0 => array(
-                  0 => array(
-                    0 => array(0 => 0),
-                  ),
+                'size' => array(
+                    0 => 0,
+                    1 => 0,
+                    2 => array(0 => 0, 1 => 0, 2 => 0),
+                    3 => array(0 => 0),
+                    4 => array(
+                        0 => array(0 => 0),
+                    ),
+                    5 => array(
+                        0 => array(
+                            0 => array(
+                                0 => array(0 => 0),
+                            ),
+                        ),
+                    ),
                 ),
-              ),
             ),
-          ),
-          'test' => array(
-            'name' => '',
-            'type' => '',
-            'tmp_name' => '',
-            'error' => 4,
-            'size' => 0,
-          ),
+            'test' => array(
+                'name' => '',
+                'type' => '',
+                'tmp_name' => '',
+                'error' => 4,
+                'size' => 0,
+            ),
         );
 
         $this->assertEquals($request->hasFiles(false), 9);
@@ -420,13 +418,13 @@ class HttpRequestTest extends TestCase
         $request = new \ManaPHP\Http\Request();
 
         $_FILES = array(
-          'fieldNameHere' => array(
-            'name' => 'favicon.ico',
-            'type' => 'image/x-icon',
-            'tmp_name' => '/tmp/php7F4.tmp',
-            'error' => 0,
-            'size' => 202575,
-          ),
+            'fieldNameHere' => array(
+                'name' => 'favicon.ico',
+                'type' => 'image/x-icon',
+                'tmp_name' => '/tmp/php7F4.tmp',
+                'error' => 0,
+                'size' => 202575,
+            ),
         );
 
         $files = $request->getFiles();
@@ -442,13 +440,13 @@ class HttpRequestTest extends TestCase
         $this->assertEquals('ico', $file->getExtension());
 
         $_FILES = [
-          'photo' => array(
-            'name' => [0 => 'f0', 1 => 'f1'],
-            'type' => [0 => 'text/plain', 1 => 'text/csv'],
-            'tmp_name' => [0 => 't0', 1 => 't1'],
-            'error' => [0 => 0, 1 => UPLOAD_ERR_NO_FILE],
-            'size' => [0 => 10, 1 => 20],
-          ),
+            'photo' => array(
+                'name' => [0 => 'f0', 1 => 'f1'],
+                'type' => [0 => 'text/plain', 1 => 'text/csv'],
+                'tmp_name' => [0 => 't0', 1 => 't1'],
+                'error' => [0 => 0, 1 => UPLOAD_ERR_NO_FILE],
+                'size' => [0 => 10, 1 => 20],
+            ),
         ];
 
         $all = $request->getFiles(false);

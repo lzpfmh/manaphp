@@ -17,7 +17,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function getAttributes($model);
 
-
         /**
          * Returns an array of fields which are part of the primary key
          *
@@ -26,7 +25,6 @@ namespace ManaPHP\Mvc\Model {
          * @return array
          */
         public function getPrimaryKeyAttributes($model);
-
 
         /**
          * Returns an array of fields which are not part of the primary key
@@ -46,7 +44,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function getAutoIncrementAttribute($model);
 
-
         /**
          * Check if a model has certain attribute
          *
@@ -57,7 +54,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function hasAttribute($model, $attribute);
 
-
         /**
          * Reads meta-data from the adapter
          *
@@ -66,7 +62,6 @@ namespace ManaPHP\Mvc\Model {
          * @return array
          */
         public function read($key);
-
 
         /**
          * Writes meta-data to the adapter

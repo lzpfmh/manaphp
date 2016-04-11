@@ -11,7 +11,6 @@ namespace ManaPHP\Mvc\Application {
          */
         public function notFoundRoute($e);
 
-
         /**
          * @param \ManaPHP\Mvc\Application\NotFoundModuleException $e
          *
@@ -19,14 +18,12 @@ namespace ManaPHP\Mvc\Application {
          */
         public function notFoundModule($e);
 
-
         /**
          * @param \ManaPHP\Mvc\Dispatcher\NotFoundControllerException $e
          *
          * @return mixed
          */
         public function notFoundController($e);
-
 
         /**
          * @param \ManaPHP\Mvc\Dispatcher\NotFoundActionException $e

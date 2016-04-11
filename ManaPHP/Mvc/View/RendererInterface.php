@@ -31,5 +31,12 @@ namespace ManaPHP\Mvc\View {
          * @throws \ManaPHP\Mvc\View\Exception
          */
         public function render($template, $vars, $directOutput = true);
+
+        /**
+         * @param string $template
+         *
+         * @return bool
+         */
+        public function exists($template);
     }
 }

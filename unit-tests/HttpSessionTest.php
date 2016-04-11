@@ -5,7 +5,7 @@
  * Date: 2015/12/19
  * Time: 16:12
  */
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class HttpSessionTest extends TestCase
 {

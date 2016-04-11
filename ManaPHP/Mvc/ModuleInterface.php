@@ -15,7 +15,6 @@ namespace ManaPHP\Mvc {
          */
         public function registerAutoloaders($dependencyInjector);
 
-
         /**
          * Registers services related to the module
          *

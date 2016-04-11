@@ -50,7 +50,6 @@ namespace ManaPHP\Mvc\Model\MetaData {
         {
         }
 
-
         /**
          * Reads the meta-data from temporal memory
          *
@@ -61,7 +60,6 @@ namespace ManaPHP\Mvc\Model\MetaData {
         public function read($key)
         {
         }
-
 
         /**
          * Writes the meta-data to temporal memory

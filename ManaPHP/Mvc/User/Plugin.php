@@ -8,7 +8,6 @@ namespace ManaPHP\Mvc\User;
 
 use ManaPHP\Component;
 
-
 /**
  * ManaPHP\Mvc\User\Plugin
  *

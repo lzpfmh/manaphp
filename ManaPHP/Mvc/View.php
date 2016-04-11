@@ -53,7 +53,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_layout = null;
 
-
         /**
          * @var string
          */
@@ -69,7 +68,6 @@ namespace ManaPHP\Mvc {
          */
         protected $_actionName;
 
-
         /**
          *
          * @param string $appDir
@@ -84,7 +82,6 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
         /**
          * Gets views directory
          *
@@ -94,7 +91,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_AppDir;
         }
-
 
         /**
          * @param false|string $layout
@@ -107,7 +103,6 @@ namespace ManaPHP\Mvc {
 
             return $this;
         }
-
 
         /**
          * Set a single view parameter
@@ -128,7 +123,6 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
         /**
          * Adds parameters to view
          *
@@ -142,7 +136,6 @@ namespace ManaPHP\Mvc {
 
             return $this;
         }
-
 
         /**
          * Returns a parameter previously set in the view
@@ -184,7 +177,6 @@ namespace ManaPHP\Mvc {
             return $this->_controllerName;
         }
 
-
         /**
          * Gets the name of the action rendered
          *
@@ -194,7 +186,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_actionName;
         }
-
 
         /**
          * Executes render process from dispatching data
@@ -211,7 +202,7 @@ namespace ManaPHP\Mvc {
          * @return static
          * @throws \ManaPHP\Mvc\View\Exception
          */
-        public function renderView($module, $controller, $action)
+        public function render($module, $controller, $action)
         {
             if ($this->_moduleName === null) {
                 $this->_moduleName = $module;
@@ -247,7 +238,6 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
         /**
          * Choose a different view to render instead of last-controller/last-action
          *
@@ -270,13 +260,12 @@ namespace ManaPHP\Mvc {
          *
          * @return static
          */
-        public function pickView($view)
+        public function pick($view)
         {
-            list($this->_moduleName,$this->_controllerName,$this->_actionName)=array_pad(explode('/', $view),-3,null);
+            list($this->_moduleName, $this->_controllerName, $this->_actionName) = array_pad(explode('/', $view), -3, null);
 
             return $this;
         }
-
 
         /**
          * Renders a partial view
@@ -291,24 +280,23 @@ namespace ManaPHP\Mvc {
          *    $this->partial('shared/footer', array('content' => $html));
          * </code>
          *
-         * @param string $partialPath
+         * @param string $path
          * @param array  $vars
          *
-         * @return static
          * @throws \ManaPHP\Mvc\View\Exception
          */
-        public function renderPartial($partialPath, $vars = [])
+        public function partial($path, $vars = [])
         {
-            if (strpos($partialPath, '/') === false) {
-                $partialPath = $this->_controllerName . '/' . $partialPath;
+            if (strpos($path, '/') === false) {
+                $path = $this->_controllerName . '/' . $path;
             }
 
-            $view = "/$this->_moduleName/Views/$partialPath";
+            $view = "/$this->_moduleName/Views/$path";
 
             $this->renderer->render($this->_AppDir . $view, array_merge($this->_viewVars, $vars), true);
         }
 
-        public function renderWidget($widget, $options = [])
+        public function widget($widget, $options = [])
         {
             $widgetClassName = "{$this->_rootNamespace}\\{$this->_moduleName}\\Widgets\\{$widget}Widget";
 
@@ -329,7 +317,6 @@ namespace ManaPHP\Mvc {
             }
         }
 
-
         /**
          * Externally sets the view content
          *
@@ -347,7 +334,6 @@ namespace ManaPHP\Mvc {
 
             return $this;
         }
-
 
         /**
          * Returns cached output from another view stage

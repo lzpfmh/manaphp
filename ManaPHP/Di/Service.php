@@ -41,7 +41,6 @@ namespace ManaPHP\Di {
          */
         protected $_sharedInstance;
 
-
         /**
          * \ManaPHP\Di\Service
          *

@@ -18,7 +18,6 @@ namespace ManaPHP\Http {
          */
         public function setStatusCode($code, $message);
 
-
         /**
          * Overwrites a header in the response
          *
@@ -29,7 +28,6 @@ namespace ManaPHP\Http {
          */
         public function setHeader($name, $value);
 
-
         /**
          * Send a raw header to the response
          *
@@ -38,7 +36,6 @@ namespace ManaPHP\Http {
          * @return static
          */
         public function setRawHeader($header);
-
 
         /**
          * Sets output expire time header
@@ -49,14 +46,12 @@ namespace ManaPHP\Http {
          */
         public function setExpires($datetime);
 
-
         /**
          * Sends a Not-Modified response
          *
          * @return static
          */
         public function setNotModified();
-
 
         /**
          * Sets the response content-type mime, optionally the charset
@@ -67,7 +62,6 @@ namespace ManaPHP\Http {
          * @return static
          */
         public function setContentType($contentType, $charset = null);
-
 
         /**
          * Redirect by HTTP to another action or URL
@@ -80,7 +74,6 @@ namespace ManaPHP\Http {
          */
         public function redirect($location, $externalRedirect = false, $statusCode = 302);
 
-
         /**
          * Sets HTTP response body
          *
@@ -89,7 +82,6 @@ namespace ManaPHP\Http {
          * @return static
          */
         public function setContent($content);
-
 
         /**
          * Sets HTTP response body. The parameter is automatically converted to JSON
@@ -105,7 +97,6 @@ namespace ManaPHP\Http {
          */
         public function setJsonContent($content, $jsonOptions = null);
 
-
         /**
          * Appends a string to the HTTP response body
          *
@@ -115,14 +106,12 @@ namespace ManaPHP\Http {
          */
         public function appendContent($content);
 
-
         /**
          * Gets the HTTP response body
          *
          * @return string
          */
         public function getContent();
-
 
         /**
          * Sends headers to the client
@@ -147,14 +136,12 @@ namespace ManaPHP\Http {
          */
         public function sendCookies();
 
-
         /**
          * Prints out HTTP response to the client
          *
          * @return static
          */
         public function send();
-
 
         /**
          * Sets an attached file to be sent at the end of the request

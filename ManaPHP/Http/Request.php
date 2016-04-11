@@ -120,7 +120,6 @@ namespace ManaPHP\Http {
             return $this->_getHelper($_GET, $name, $filters, $defaultValue);
         }
 
-
         /**
          * Gets a variable from the $_POST applying filters if needed
          * If no parameters are given the $_POST is returned
@@ -144,7 +143,6 @@ namespace ManaPHP\Http {
         {
             return $this->_getHelper($_POST, $name, $filters, $defaultValue);
         }
-
 
         /**
          * Gets a variable from put request
@@ -170,7 +168,6 @@ namespace ManaPHP\Http {
 
             return $this->_getHelper($this->_putCache, $name, $filters, $defaultValue);
         }
-
 
         /**
          * Gets variable from $_GET applying filters if needed
@@ -199,7 +196,6 @@ namespace ManaPHP\Http {
             return $this->_getHelper($_GET, $name, $filters, $defaultValue);
         }
 
-
         /**
          * Checks whether $_REQUEST has certain index
          *
@@ -211,7 +207,6 @@ namespace ManaPHP\Http {
         {
             return isset($_REQUEST[$name]);
         }
-
 
         /**
          * Checks whether $_GET has certain index
@@ -237,7 +232,6 @@ namespace ManaPHP\Http {
             return isset($_POST[$name]);
         }
 
-
         /**
          * Checks whether put has certain index
          *
@@ -254,7 +248,6 @@ namespace ManaPHP\Http {
             return isset($this->_putCache[$name]);
         }
 
-
         /**
          * Checks whether $_GET has certain index
          *
@@ -266,7 +259,6 @@ namespace ManaPHP\Http {
         {
             return isset($_GET[$name]);
         }
-
 
         /**
          * Gets HTTP schema (http/https)
@@ -287,7 +279,6 @@ namespace ManaPHP\Http {
             }
         }
 
-
         /**
          * Checks whether request has been made using ajax. Checks if $_SERVER['HTTP_X_REQUESTED_WITH']=='XMLHttpRequest'
          *
@@ -297,7 +288,6 @@ namespace ManaPHP\Http {
         {
             return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
         }
-
 
         /**
          * Gets HTTP raw request body
@@ -312,7 +302,6 @@ namespace ManaPHP\Http {
 
             return $this->_rawBody;
         }
-
 
         /**
          * Gets most possible client IPv4 Address. This method search in $_SERVER['REMOTE_ADDR'] and optionally in $_SERVER['HTTP_X_FORWARDED_FOR']
@@ -339,7 +328,6 @@ namespace ManaPHP\Http {
             return $this->_client_address;
         }
 
-
         /**set the client address for getClientAddress method
          *
          * @param string|callable
@@ -363,7 +351,6 @@ namespace ManaPHP\Http {
             return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         }
 
-
         /**
          * Checks whether HTTP method is POST. if $_SERVER['REQUEST_METHOD']=='POST'
          *
@@ -384,7 +371,6 @@ namespace ManaPHP\Http {
             return $_SERVER['REQUEST_METHOD'] === 'GET';
         }
 
-
         /**
          * Checks whether HTTP method is PUT. if $_SERVER['REQUEST_METHOD']=='PUT'
          *
@@ -394,7 +380,6 @@ namespace ManaPHP\Http {
         {
             return $_SERVER['REQUEST_METHOD'] === 'PUT';
         }
-
 
         /**
          * Checks whether HTTP method is PATCH. if $_SERVER['REQUEST_METHOD']=='PATCH'
@@ -406,7 +391,6 @@ namespace ManaPHP\Http {
             return $_SERVER['REQUEST_METHOD'] === 'PATCH';
         }
 
-
         /**
          * Checks whether HTTP method is HEAD. if $_SERVER['REQUEST_METHOD']=='HEAD'
          *
@@ -416,7 +400,6 @@ namespace ManaPHP\Http {
         {
             return $_SERVER['REQUEST_METHOD'] === 'HEAD';
         }
-
 
         /**
          * Checks whether HTTP method is DELETE. if $_SERVER['REQUEST_METHOD']=='DELETE'
@@ -428,7 +411,6 @@ namespace ManaPHP\Http {
             return $_SERVER['REQUEST_METHOD'] === 'DELETE';
         }
 
-
         /**
          * Checks whether HTTP method is OPTIONS. if $_SERVER['REQUEST_METHOD']=='OPTIONS'
          *
@@ -438,7 +420,6 @@ namespace ManaPHP\Http {
         {
             return $_SERVER['REQUEST_METHOD'] === 'OPTIONS';
         }
-
 
         /**
          * Checks whether request includes attached files
@@ -471,7 +452,6 @@ namespace ManaPHP\Http {
             return false;
         }
 
-
         /**
          * Gets attached files as \ManaPHP\Http\Request\File instances
          *
@@ -487,11 +467,11 @@ namespace ManaPHP\Http {
                 if (is_int($file['error'])) {
                     if (!$onlySuccessful || $file['error'] === UPLOAD_ERR_OK) {
                         $files[] = new File($key, [
-                            'name'     => $file['name'],
-                            'type'     => $file['type'],
+                            'name' => $file['name'],
+                            'type' => $file['type'],
                             'tmp_name' => $file['tmp_name'],
-                            'error'    => $file['error'],
-                            'size'     => $file['size'],
+                            'error' => $file['error'],
+                            'size' => $file['size'],
                         ]);
                     }
                 } else {
@@ -500,11 +480,11 @@ namespace ManaPHP\Http {
                     for ($i = 0; $i < $countFiles; $i++) {
                         if (!$onlySuccessful || $file['error'][$i] === UPLOAD_ERR_OK) {
                             $files[] = new File($key, [
-                                'name'     => $file['name'][$i],
-                                'type'     => $file['type'][$i],
+                                'name' => $file['name'][$i],
+                                'type' => $file['type'][$i],
                                 'tmp_name' => $file['tmp_name'][$i],
-                                'error'    => $file['error'][$i],
-                                'size'     => $file['size'][$i],
+                                'error' => $file['error'][$i],
+                                'size' => $file['size'][$i],
                             ]);
                         }
                     }

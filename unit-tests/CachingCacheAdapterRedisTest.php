@@ -1,7 +1,6 @@
 <?php
 
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
-
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class CachingCacheAdapterRedisTest extends TestCase
 {
@@ -10,7 +9,7 @@ class CachingCacheAdapterRedisTest extends TestCase
         /**
          * @var \ManaPHP\Cache\Adapter\Redis\ConstructOptionsStub $options
          */
-        $options=[];
+        $options = [];
 
         $cache = new \ManaPHP\Caching\Cache\Adapter\Redis([]);
         $cache->delete('var');
@@ -43,7 +42,7 @@ class CachingCacheAdapterRedisTest extends TestCase
         $this->assertSame('{}', $cache->get('var'));
 
         // ttl
-        $cache->set('var','value',1);
+        $cache->set('var', 'value', 1);
         $this->assertTrue($cache->exists('var'));
         sleep(2);
         $this->assertFalse($cache->exists('var'));

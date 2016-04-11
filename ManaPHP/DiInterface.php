@@ -19,7 +19,6 @@ namespace ManaPHP {
          */
         public function set($name, $definition, $shared = false);
 
-
         /**
          * Registers an "always shared" service in the services container
          *
@@ -30,7 +29,6 @@ namespace ManaPHP {
          */
         public function setShared($name, $definition);
 
-
         /**
          * Removes a service from the service container
          *
@@ -39,7 +37,6 @@ namespace ManaPHP {
          * @return static
          */
         public function remove($name);
-
 
         /**
          * Resolves the service based on its configuration
@@ -51,7 +48,6 @@ namespace ManaPHP {
          */
         public function get($name, $parameters = null);
 
-
         /**
          * Resolves a shared service based on their configuration
          *
@@ -62,7 +58,6 @@ namespace ManaPHP {
          */
         public function getShared($name, $parameters = null);
 
-
         /**
          * Check whether the DI contains a service by a name
          *
@@ -71,7 +66,6 @@ namespace ManaPHP {
          * @return boolean
          */
         public function has($name);
-
 
         /**
          * Return the last DI created

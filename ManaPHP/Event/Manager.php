@@ -45,8 +45,8 @@ namespace ManaPHP\Event {
             }
 
             $this->_events[$type][] = [
-                'event'   => $event,
-                'name'    => $name,
+                'event' => $event,
+                'name' => $name,
                 'handler' => $handler,
             ];
 

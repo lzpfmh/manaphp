@@ -1,7 +1,9 @@
 <?php
 
 namespace Configure\Db\Adapter {
-    class Mysql{
+
+    class Mysql
+    {
         public $host;
         public $username;
         public $password;
@@ -10,8 +12,10 @@ namespace Configure\Db\Adapter {
     }
 }
 
-namespace Configure\Log\Adapter{
-    class File{
+namespace Configure\Log\Adapter {
+
+    class File
+    {
         public $file;
     }
 }

@@ -20,6 +20,6 @@ class Module implements ModuleInterface
 
     public function registerServices($di)
     {
-        
+
     }
 }

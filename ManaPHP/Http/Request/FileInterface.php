@@ -15,14 +15,12 @@ namespace ManaPHP\Http\Request {
          */
         public function getKey();
 
-
         /**
          * Returns the file size of the uploaded file
          *
          * @return int
          */
         public function getSize();
-
 
         /**
          * Returns the real name of the uploaded file
@@ -31,14 +29,12 @@ namespace ManaPHP\Http\Request {
          */
         public function getName();
 
-
         /**
          * Returns the temporal name of the uploaded file
          *
          * @return string
          */
         public function getTempName();
-
 
         /**
          * Returns the mime type reported by the browser
@@ -48,14 +44,12 @@ namespace ManaPHP\Http\Request {
          */
         public function getType();
 
-
         /**
          * Gets the real mime type of the upload file
          *
          * @return string
          */
         public function getRealType();
-
 
         /**
          * Move the temporary file to a destination

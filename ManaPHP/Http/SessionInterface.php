@@ -18,7 +18,6 @@ namespace ManaPHP\Http {
          */
         public function get($name, $defaultValue = null);
 
-
         /**
          * Sets a session variable in an application context
          *
@@ -26,7 +25,6 @@ namespace ManaPHP\Http {
          * @param string $value
          */
         public function set($name, $value);
-
 
         /**
          * Check whether a session variable is set in an application context
@@ -37,14 +35,12 @@ namespace ManaPHP\Http {
          */
         public function has($name);
 
-
         /**
          * Removes a session variable from an application context
          *
          * @param string $name
          */
         public function remove($name);
-
 
         /**
          * Destroys the active session

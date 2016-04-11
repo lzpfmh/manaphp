@@ -12,7 +12,6 @@ namespace ManaPHP\Caching {
          */
         public function exists($id);
 
-
         /**
          * Retrieves a value from store with a specified id.
          *
@@ -22,7 +21,6 @@ namespace ManaPHP\Caching {
          */
         public function get($id);
 
-
         /**
          * Retrieves multiple values from store with corresponding ids.
          *
@@ -31,7 +29,6 @@ namespace ManaPHP\Caching {
          * @return array
          */
         public function mGet($ids);
-
 
         /**
          * Stores a value identified by a id into store.
@@ -43,7 +40,6 @@ namespace ManaPHP\Caching {
          */
         public function set($id, $value);
 
-
         /**
          * Stores multiple values corresponding with ids into store.
          *
@@ -52,7 +48,6 @@ namespace ManaPHP\Caching {
          * @return void
          */
         public function mSet($idValues);
-
 
         /**
          * Deletes a value with the specified id from store
@@ -63,13 +58,11 @@ namespace ManaPHP\Caching {
          */
         public function delete($id);
 
-
         /** Retrieves the internal adapter instance
          *
          * @return \ManaPHP\Caching\Store\AdapterInterface
          */
         public function getAdapter();
-
 
         /**
          * @return \ManaPHP\Caching\Serializer\AdapterInterface

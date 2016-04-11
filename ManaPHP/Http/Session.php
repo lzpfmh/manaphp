@@ -51,7 +51,6 @@ namespace ManaPHP\Http {
             }
         }
 
-
         /**
          * Sets a session variable in an application context
          *
@@ -62,7 +61,6 @@ namespace ManaPHP\Http {
         {
             $_SESSION[$name] = $value;
         }
-
 
         /**
          * Check whether a session variable is set in an application context
@@ -76,7 +74,6 @@ namespace ManaPHP\Http {
             return isset($_SESSION[$name]);
         }
 
-
         /**
          * Removes a session variable from an application context
          *
@@ -86,7 +83,6 @@ namespace ManaPHP\Http {
         {
             unset($_SESSION[$name]);
         }
-
 
         /**
          * Destroys the active session

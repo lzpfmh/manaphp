@@ -33,7 +33,6 @@ namespace ManaPHP\Http\Response {
             $this->_headers[$header] = null;
         }
 
-
         /**
          * Removes a header to be sent at the end of the request
          *
@@ -43,7 +42,6 @@ namespace ManaPHP\Http\Response {
         {
             unset($this->_headers[$header_index]);
         }
-
 
         /**
          * Sends the headers to the client
@@ -70,7 +68,6 @@ namespace ManaPHP\Http\Response {
                 return false;
             }
         }
-
 
         /**
          * Returns the current headers as an array

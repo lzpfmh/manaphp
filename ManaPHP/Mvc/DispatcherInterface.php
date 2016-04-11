@@ -23,12 +23,10 @@ namespace ManaPHP\Mvc {
          */
         public function getRootNamespace();
 
-
         /**
          * Gets the module where the controller class is
          */
         public function getModuleName();
-
 
         /**
          * Gets last dispatched action name
@@ -37,14 +35,12 @@ namespace ManaPHP\Mvc {
          */
         public function getActionName();
 
-
         /**
          * Gets action params
          *
          * @return array
          */
         public function getParams();
-
 
         /**
          * Gets a param by its name or numeric index
@@ -57,14 +53,12 @@ namespace ManaPHP\Mvc {
          */
         public function getParam($param, $filters = null, $defaultValue = null);
 
-
         /**
          * Returns value returned by the latest dispatched action
          *
          * @return mixed
          */
         public function getReturnedValue();
-
 
         /**
          * Dispatches a handle action taking into account the routing parameters
@@ -78,11 +72,10 @@ namespace ManaPHP\Mvc {
          */
         public function dispatch($module, $controller, $action, $params = null);
 
-
         /**
          * Forwards the execution flow to another controller/action
          *
-         * @param array $forward
+         * @param string|array $forward
          */
         public function forward($forward);
 
@@ -93,14 +86,12 @@ namespace ManaPHP\Mvc {
          */
         public function wasForwarded();
 
-
         /**
          * Gets last dispatched controller name
          *
          * @return string
          */
         public function getControllerName();
-
 
         /**
          * Returns the previous controller in the dispatcher

@@ -16,7 +16,6 @@ namespace ManaPHP\Mvc\Model {
          */
         public function execute($binds = null);
 
-
         /**
          * Set default bind parameters
          *

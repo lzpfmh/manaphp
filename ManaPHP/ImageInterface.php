@@ -19,12 +19,10 @@ namespace ManaPHP {
          */
         public function __construct($file, $adapter = null);
 
-
         /**
          * @return \ManaPHP\Image\AdapterInterface
          */
         public function getAdapter();
-
 
         /**
          * Image width
@@ -40,7 +38,6 @@ namespace ManaPHP {
          */
         public function getHeight();
 
-
         /**
          * Resize the image by a given width and height
          *
@@ -51,7 +48,6 @@ namespace ManaPHP {
          */
         public function resize($width, $height);
 
-
         /**
          * Resize the image by a given width and height
          *
@@ -61,7 +57,6 @@ namespace ManaPHP {
          * @return static
          */
         public function resizeCropCenter($width, $height);
-
 
         /**
          * Scale the image by a given ratio
@@ -81,7 +76,6 @@ namespace ManaPHP {
          */
         public function scaleFixedWidth($width);
 
-
         /**
          * Scale the image by a given height
          *
@@ -90,7 +84,6 @@ namespace ManaPHP {
          * @return static
          */
         public function scaleFixedHeight($height);
-
 
         /**
          * @param int $width

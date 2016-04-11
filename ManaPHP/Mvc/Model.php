@@ -84,7 +84,6 @@ namespace ManaPHP\Mvc {
             }
         }
 
-
         /**
          * Returns the models meta-data service related to the entity instance
          *
@@ -124,7 +123,6 @@ namespace ManaPHP\Mvc {
             return $this->_modelsManager->getModelSource($this);
         }
 
-
         /**
          * Sets the DependencyInjection connection service name
          *
@@ -138,7 +136,6 @@ namespace ManaPHP\Mvc {
 
             return $this;
         }
-
 
         /**
          * Sets the DependencyInjection connection service name used to read data
@@ -154,7 +151,6 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
         /**
          * Sets the DependencyInjection connection service name used to write data
          *
@@ -169,7 +165,6 @@ namespace ManaPHP\Mvc {
             return $this;
         }
 
-
         /**
          * Returns the DependencyInjection connection service name used to read data related the model
          *
@@ -179,7 +174,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_modelsManager->getReadConnectionService($this);
         }
-
 
         /**
          * Returns the DependencyInjection connection service name used to write data related to the model
@@ -191,7 +185,6 @@ namespace ManaPHP\Mvc {
             return $this->_modelsManager->getWriteConnectionService($this);
         }
 
-
         /**
          * Gets the connection used to read data for the model
          *
@@ -202,7 +195,6 @@ namespace ManaPHP\Mvc {
             return $this->_modelsManager->getReadConnection($this);
         }
 
-
         /**
          * Gets the connection used to write data to the model
          *
@@ -212,7 +204,6 @@ namespace ManaPHP\Mvc {
         {
             return $this->_modelsManager->getWriteConnection($this);
         }
-
 
         /**
          * Assigns values to a model from an array
@@ -247,7 +238,6 @@ namespace ManaPHP\Mvc {
 
             return $this;
         }
-
 
         /**
          * Allows to query a set of records that match the specified conditions
@@ -310,7 +300,6 @@ namespace ManaPHP\Mvc {
                 return false;
             }
         }
-
 
         /**
          * Allows to query the first record that match the specified conditions
@@ -375,7 +364,6 @@ namespace ManaPHP\Mvc {
             }
         }
 
-
         /**
          * Create a criteria for a specific model
          *
@@ -390,7 +378,6 @@ namespace ManaPHP\Mvc {
 
             return $dependencyInjector->getShared('modelsManager')->createBuilder();
         }
-
 
         /**
          * Checks if the current record already exists or not
@@ -442,7 +429,6 @@ namespace ManaPHP\Mvc {
             return $num['row_count'] > 0;
         }
 
-
         /**
          * Generate a SQL SELECT statement for an aggregate
          *
@@ -484,7 +470,6 @@ namespace ManaPHP\Mvc {
             return $resultset[0][$alias];
         }
 
-
         /**
          * Allows to count how many records match the specified conditions
          *
@@ -517,7 +502,6 @@ namespace ManaPHP\Mvc {
             }
         }
 
-
         /**
          * Allows to calculate a summary on a column that match the specified conditions
          *
@@ -544,7 +528,6 @@ namespace ManaPHP\Mvc {
         {
             return self::_groupResult('SUM', 'summary', $column, $parameters, $cacheOptions = null);
         }
-
 
         /**
          * Allows to get the max value of a column that match the specified conditions
@@ -573,7 +556,6 @@ namespace ManaPHP\Mvc {
             return self::_groupResult('MAX', 'maximum', $column, $parameters, $cacheOptions);
         }
 
-
         /**
          * Allows to get the min value of a column that match the specified conditions
          *
@@ -600,7 +582,6 @@ namespace ManaPHP\Mvc {
         {
             return self::_groupResult('MIN', 'minimum', $column, $parameters, $cacheOptions);
         }
-
 
         /**
          * Allows to calculate the average value on a column matching the specified conditions
@@ -629,7 +610,6 @@ namespace ManaPHP\Mvc {
             return (double)self::_groupResult('AVG', 'average', $column, $parameters, $cacheOptions);
         }
 
-
         /**
          * Fires an event, implicitly calls behaviors and listeners in the events manager are notified
          *
@@ -643,7 +623,6 @@ namespace ManaPHP\Mvc {
                 $this->{$eventName}();
             }
         }
-
 
         /**
          * Fires an internal event that cancels the operation
@@ -703,7 +682,6 @@ namespace ManaPHP\Mvc {
             $this->_fireEvent('afterSave');
         }
 
-
         /**
          * Sends a pre-build INSERT SQL statement to the relational database system
          *
@@ -736,7 +714,6 @@ namespace ManaPHP\Mvc {
 
             return $success;
         }
-
 
         /**
          * Sends a pre-build UPDATE SQL statement to the relational database system
@@ -780,7 +757,6 @@ namespace ManaPHP\Mvc {
 
             return $success;
         }
-
 
         /**
          * Inserts or updates a model instance. Returning true on success or false otherwise.
@@ -832,7 +808,6 @@ namespace ManaPHP\Mvc {
             return $success;
         }
 
-
         /**
          * Inserts a model instance. If the instance already exists in the persistence it will throw an exception
          * Returning true on success or false otherwise.
@@ -869,7 +844,6 @@ namespace ManaPHP\Mvc {
             return $this->save($data, $whiteList);
         }
 
-
         /**
          * Updates a model instance. If the instance does n't exist in the persistence it will throw an exception
          * Returning true on success or false otherwise.
@@ -895,7 +869,6 @@ namespace ManaPHP\Mvc {
 
             return $this->save($data, $whiteList);
         }
-
 
         /**
          * Deletes a model instance. Returning true on success or false otherwise.
@@ -947,7 +920,6 @@ namespace ManaPHP\Mvc {
 
             return $success;
         }
-
 
         /**
          * Returns the instance as an array representation

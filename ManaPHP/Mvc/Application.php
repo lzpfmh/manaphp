@@ -2,6 +2,7 @@
 
 namespace ManaPHP\Mvc {
 
+    use ManaPHP\ApplicationInterface;
     use ManaPHP\Component;
     use ManaPHP\Di\FactoryDefault;
     use ManaPHP\Http\ResponseInterface;
@@ -45,17 +46,22 @@ namespace ManaPHP\Mvc {
      *
      *</code>
      */
-    class Application extends Component
+    class Application extends Component implements ApplicationInterface
     {
         /**
          * @var string
          */
-        protected $_rootDirectory;
+        protected $_appPath;
 
         /**
-         * var string
+         * @var string
          */
-        protected $_rootNamespace;
+        protected $_appNamespace;
+
+        /**
+         * @var string
+         */
+        protected $_dataPath;
 
         /**
          * @var string
@@ -75,24 +81,63 @@ namespace ManaPHP\Mvc {
         /**
          * \ManaPHP\Mvc\Application
          *
-         * @param string               $rootDirectory
-         * @param string               $rootNamespace
          * @param \ManaPHP\DiInterface $dependencyInjector
          */
-        public function __construct($rootDirectory, $rootNamespace = null, $dependencyInjector = null)
+        public function __construct($dependencyInjector = null)
         {
             $this->_dependencyInjector = $dependencyInjector ?: new FactoryDefault();
             $this->_dependencyInjector->setShared('application', $this);
 
-            $rootDirectory = str_replace('\\', '/', rtrim($rootDirectory, '\\/'));
-            $rootNamespace = $rootNamespace ?: ucfirst(basename($rootDirectory));
+            $appClass = null;
+            foreach (debug_backtrace() as $bt) {
+                if (isset($bt['class']) && $bt['class'] === __CLASS__) {
+                    $appClass = get_class($bt['object']);
+                    break;
+                }
+            }
 
-            $this->_rootDirectory = $rootDirectory;
-            $this->_rootNamespace = $rootNamespace;
+            if ($appClass !== null) {
+                $appFile = '/' . str_replace('\\', '/', $appClass) . '.php';
+                foreach (get_included_files() as $file) {
+                    $file = str_replace('\\', '/', $file);
 
-            $this->loader->registerNamespaces([$rootNamespace => $rootDirectory])->register();
+                    if (strpos($file, $appFile) !== false) {
+                        $root = str_replace($appFile, '', $file);
+                        list($this->_appNamespace) = explode('\\', $appClass, 2);
+                        $this->_appPath = $root . '/' . $this->_appNamespace;
+                        $this->_dataPath = $root . '/Data';
+
+                        $this->loader->registerNamespaces([$this->_appNamespace => $this->_appPath]);
+
+                        break;
+                    }
+                }
+            }
         }
 
+        /**
+         * @return string
+         */
+        public function getAppPath()
+        {
+            return $this->_appPath;
+        }
+
+        /**
+         * @return string
+         */
+        public function getAppNamespace()
+        {
+            return $this->_appNamespace;
+        }
+
+        /**
+         *
+         */
+        public function getDataPath()
+        {
+            return $this->_dataPath;
+        }
 
         /**
          * By default. The view is implicitly buffering all the output
@@ -108,7 +153,6 @@ namespace ManaPHP\Mvc {
 
             return $this;
         }
-
 
         /**
          * Register an array of modules present in the application
@@ -132,7 +176,7 @@ namespace ManaPHP\Mvc {
             foreach ($modules as $module) {
                 $moduleName = ucfirst($module);
 
-                $this->_modules[$moduleName] = $this->_rootNamespace . "\\$moduleName\\Module";
+                $this->_modules[$moduleName] = $this->getAppNamespace() . "\\$moduleName\\Module";
 
                 if ($this->_defaultModule === null) {
                     $this->_defaultModule = $moduleName;
@@ -141,7 +185,6 @@ namespace ManaPHP\Mvc {
 
             return $this;
         }
-
 
         /**
          * Handles a MVC request
@@ -203,8 +246,9 @@ namespace ManaPHP\Mvc {
 
             $dispatcher = $this->_dependencyInjector->getShared('dispatcher');
             if ($dispatcher->getRootNamespace() === null) {
-                $dispatcher->setRootNamespace($this->_rootNamespace);
+                $dispatcher->setRootNamespace($this->getAppNamespace());
             }
+
             if ($this->_dependencyInjector->has('authorization')) {
                 $dispatcher->attachEvent('dispatcher:beforeDispatch', function () use ($dispatcher) {
                     $dispatcher->getDependencyInjector()->getShared('authorization')->authorize($dispatcher);
@@ -238,7 +282,6 @@ namespace ManaPHP\Mvc {
             return $response;
         }
 
-
         /**
          * @param mixed  $actionReturnValue
          * @param        $module
@@ -267,10 +310,10 @@ namespace ManaPHP\Mvc {
 
                 if ($this->_implicitView === true) {
                     $view = $this->_dependencyInjector->getShared('view');
-                    $view->setAppDir($this->_rootDirectory);
+                    $view->setAppDir($this->getAppPath());
 
                     $view->setContent($content);
-                    $view->renderView($module, $controller, $action);
+                    $view->render($module, $controller, $action);
                     $response->setContent($view->getContent());
                 } else {
                     $response->setContent($content);

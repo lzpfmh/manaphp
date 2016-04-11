@@ -17,7 +17,6 @@ namespace ManaPHP {
          */
         public function error($message);
 
-
         /**
          * Shows a HTML notice/information message
          *
@@ -26,7 +25,6 @@ namespace ManaPHP {
          * @return void
          */
         public function notice($message);
-
 
         /**
          * Shows a HTML success message
@@ -37,7 +35,6 @@ namespace ManaPHP {
          */
         public function success($message);
 
-
         /**
          * Shows a HTML warning message
          *
@@ -46,7 +43,6 @@ namespace ManaPHP {
          * @return void
          */
         public function warning($message);
-
 
         /**
          * Prints the messages in the session flasher

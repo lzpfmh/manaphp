@@ -72,7 +72,6 @@ namespace ManaPHP\Mvc\Model {
             }
         }
 
-
         /**
          * Loads a model throwing an exception if it does't exist
          *
@@ -99,7 +98,6 @@ namespace ManaPHP\Mvc\Model {
             }
         }
 
-
         /**
          * Sets the mapped source for a model
          *
@@ -115,7 +113,6 @@ namespace ManaPHP\Mvc\Model {
 
             return $this;
         }
-
 
         /**
          * Returns the mapped source for a model
@@ -153,7 +150,6 @@ namespace ManaPHP\Mvc\Model {
             return $this;
         }
 
-
         /**
          * Sets write connection service for a model
          *
@@ -169,7 +165,6 @@ namespace ManaPHP\Mvc\Model {
 
             return $this;
         }
-
 
         /**
          * Sets read connection service for a model
@@ -187,7 +182,6 @@ namespace ManaPHP\Mvc\Model {
             return $this;
         }
 
-
         /**
          * Returns the connection to write data related to a model
          *
@@ -201,7 +195,6 @@ namespace ManaPHP\Mvc\Model {
 
             return $this->_dependencyInjector->getShared($serviceName);
         }
-
 
         /**
          * Returns the connection to read data related to a model
@@ -217,7 +210,6 @@ namespace ManaPHP\Mvc\Model {
             return $this->_dependencyInjector->getShared($serviceName);
         }
 
-
         /**
          * Returns the connection service name used to read data related to a model
          *
@@ -231,7 +223,6 @@ namespace ManaPHP\Mvc\Model {
 
             return isset($this->_readConnectionServices[$modelName]) ? $this->_readConnectionServices[$modelName] : 'db';
         }
-
 
         /**
          * Returns the connection service name used to write data related to a model
@@ -262,7 +253,6 @@ namespace ManaPHP\Mvc\Model {
 
             return $this->_builder;
         }
-
 
         /**
          * Returns the latest query created or executed in the models manager

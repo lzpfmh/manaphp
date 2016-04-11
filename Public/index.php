@@ -8,14 +8,11 @@
 
 error_reporting(E_ALL);
 
-
-define('APP_ROOT', dirname(__DIR__) . '/Application');
-
 require dirname(__DIR__) . '/ManaPHP/Autoloader.php';
-
 \ManaPHP\Autoloader::register(false);
+new \ManaPHP\Mvc\Router\RewriteChecker();
 
-require dirname(__DIR__).'/Application/Application.php';
-$application =new \Application\Application(APP_ROOT);
+require dirname(__DIR__) . '/Application/Application.php';
+$application = new \Application\Application();
 
 echo $application->main();

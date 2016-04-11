@@ -1,19 +1,35 @@
 <?php
 namespace ManaPHP\Configure {
+
+    use ManaPHP\Component;
+    use ManaPHP\Di;
+
     /**
      * Class Configure
      *
      * @package ManaPHP
      */
-    class Configure implements ConfigureInterface
+    class Configure extends Component implements ConfigureInterface
     {
-        public $debug=true;
+        public $debug = true;
 
         protected $_aliases = [];
 
-        public function __construct()
+        /**
+         * Configure constructor.
+         *
+         * @param \ManaPHP\DiInterface $dependencyInjector
+         *
+         * @throws \ManaPHP\Di\Exception|\ManaPHP\Configure\Exception
+         */
+        public function __construct($dependencyInjector = null)
         {
+            $this->_dependencyInjector = $dependencyInjector ?: Di::getDefault();
 
+            if ($this->_dependencyInjector !== null && $this->_dependencyInjector->has('application')) {
+                $this->setAlias('@app', $this->application->getAppPath());
+                $this->setAlias('@data', $this->application->getDataPath());
+            }
         }
 
         /**
@@ -42,11 +58,26 @@ namespace ManaPHP\Configure {
          */
         public function getAlias($name)
         {
-            if($name[0] !=='@'){
+            if ($name[0] !== '@') {
                 throw new Exception('alias must start with @ character');
             }
 
             return isset($this->_aliases[$name]) ? $this->_aliases[$name] : null;
+        }
+
+        /**
+         * @param string $name
+         *
+         * @return bool
+         * @throws \ManaPHP\Configure\Exception
+         */
+        public function hasAlias($name)
+        {
+            if ($name[0] !== '@') {
+                throw new Exception('alias must start with @ character');
+            }
+
+            return isset($this->_aliases[$name]);
         }
 
         /**
@@ -57,7 +88,7 @@ namespace ManaPHP\Configure {
          */
         public function resolvePath($path)
         {
-            $path = str_replace('\\', '/', rtrim($path,'\\/'));
+            $path = str_replace('\\', '/', rtrim($path, '\\/'));
 
             if ($path[0] !== '@') {
                 return $path;

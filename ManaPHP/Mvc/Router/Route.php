@@ -2,7 +2,6 @@
 
 namespace ManaPHP\Mvc\Router {
 
-
     /**
      * ManaPHP\Mvc\Router\Route
      *
@@ -34,7 +33,6 @@ namespace ManaPHP\Mvc\Router {
          */
         protected $_httpMethods;
 
-
         /**
          * \ManaPHP\Mvc\Router\Route constructor
          *
@@ -52,7 +50,6 @@ namespace ManaPHP\Mvc\Router {
             $this->_httpMethods = $httpMethods;
         }
 
-
         /**
          * Replaces placeholders from pattern returning a valid PCRE regular expression
          *
@@ -65,11 +62,11 @@ namespace ManaPHP\Mvc\Router {
             // If a pattern contains ':', maybe there are placeholders to replace
             if (strpos($pattern, ':') !== false) {
                 $pattern = strtr($pattern, [
-                    '/:module'     => '/{module:[a-z\d_-]+}',
+                    '/:module' => '/{module:[a-z\d_-]+}',
                     '/:controller' => '/{controller:[a-z\d_-]+}',
-                    '/:action'     => '/{action:[a-z\d_-]+}',
-                    '/:params'     => '/{params:.+}',
-                    '/:int'        => '/(\d+)',
+                    '/:action' => '/{action:[a-z\d_-]+}',
+                    '/:params' => '/{params:.+}',
+                    '/:int' => '/(\d+)',
                 ]);
             }
 
@@ -174,7 +171,6 @@ namespace ManaPHP\Mvc\Router {
             return $routePaths;
         }
 
-
         /**
          * Returns the paths
          *
@@ -184,7 +180,6 @@ namespace ManaPHP\Mvc\Router {
         {
             return $this->_paths;
         }
-
 
         /**
          * @param string     $handle_uri

@@ -6,7 +6,7 @@
  * Date: 2015/12/12
  * Time: 17:07
  */
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 use Models\Actor;
 use Models\City;
 use Models\Payment;
@@ -37,10 +37,10 @@ class MvcModelTest extends TestCase
         });
 
         $this->di->getShared('db')
-          ->attachEvent('db:beforeQuery', function ($event, \ManaPHP\DbInterface $source, $data) {
-              //var_dump(['sql'=>$source->getSQLStatement(),'bind'=>$source->getSQLBindParams(),'bindTypes'=>$source->getSQLBindTypes()]);
-        //      var_dump($source->getSQLStatement());
-          });
+            ->attachEvent('db:beforeQuery', function ($event, \ManaPHP\DbInterface $source, $data) {
+                //var_dump(['sql'=>$source->getSQLStatement(),'bind'=>$source->getSQLBindParams(),'bindTypes'=>$source->getSQLBindTypes()]);
+                //      var_dump($source->getSQLStatement());
+            });
     }
 
     public function test_count()
@@ -106,9 +106,9 @@ class MvcModelTest extends TestCase
         $this->assertEquals('WILLIS', $actor->last_name);
 
         $actor2 = Actor::findFirst([
-          'conditions' => 'first_name=:first_name',
-          'bind' => ['first_name' => 'BEN'],
-          'order' => 'actor_id'
+            'conditions' => 'first_name=:first_name',
+            'bind' => ['first_name' => 'BEN'],
+            'order' => 'actor_id'
         ]);
         $this->assertInstanceOf(get_class(new Actor()), $actor2);
         $this->assertEquals($actor->actor_id, $actor2->actor_id);
@@ -124,13 +124,14 @@ class MvcModelTest extends TestCase
         $this->assertEquals(5, $actor->actor_id);
     }
 
-    public function test_findFirst_usage(){
-        $this->assertEquals(10,City::findFirst(10)->city_id);
-        $this->assertEquals(10,City::findFirst(['city_id'=>10])->city_id);
-        $this->assertEquals(10,City::findFirst(['conditions'=>['city_id'=>10]])->city_id);
-        $this->assertEquals(10,City::findFirst(['conditions'=>'city_id =:city_id','bind'=>['city_id'=>10]])->city_id);
+    public function test_findFirst_usage()
+    {
+        $this->assertEquals(10, City::findFirst(10)->city_id);
+        $this->assertEquals(10, City::findFirst(['city_id' => 10])->city_id);
+        $this->assertEquals(10, City::findFirst(['conditions' => ['city_id' => 10]])->city_id);
+        $this->assertEquals(10, City::findFirst(['conditions' => 'city_id =:city_id', 'bind' => ['city_id' => 10]])->city_id);
     }
-	
+
     public function test_find()
     {
         $actors = Actor::find();
@@ -146,14 +147,14 @@ class MvcModelTest extends TestCase
 
         $this->assertCount(2, Actor::find('first_name=\'BEN\''));
         $this->assertCount(2, Actor::find([
-          'first_name=:first_name',
-          'bind' => ['first_name' => 'BEN']
+            'first_name=:first_name',
+            'bind' => ['first_name' => 'BEN']
         ]));
 
         $this->assertCount(1, Actor::find([
-          'first_name=:first_name',
-          'bind' => ['first_name' => 'BEN'],
-          'limit' => 1
+            'first_name=:first_name',
+            'bind' => ['first_name' => 'BEN'],
+            'limit' => 1
         ]));
 
         $this->assertCount(0, Actor::find('actor_id =-1'));
@@ -162,15 +163,16 @@ class MvcModelTest extends TestCase
         //   $this->assertCount(1,Actor::find(['first_name'=>'BEN']));
     }
 
-    public function test_find_usage(){
-        $this->assertCount(3,City::find(['country_id'=>2]));
-        $this->assertCount(3,City::find(['conditions'=>['country_id'=>2],'order'=>'city_id desc']));
-        $this->assertCount(3,City::find([['country_id'=>2],'order'=>'city_id desc']));
-        $this->assertCount(3,City::find(['conditions'=>'country_id =:country_id','bind'=>['country_id'=>2]]));
-        $this->assertCount(2,City::find([['country_id'=>2],'limit'=>2]));
-        $this->assertCount(1,City::find([['country_id'=>2],'limit'=>1,'offset'=>2]));
+    public function test_find_usage()
+    {
+        $this->assertCount(3, City::find(['country_id' => 2]));
+        $this->assertCount(3, City::find(['conditions' => ['country_id' => 2], 'order' => 'city_id desc']));
+        $this->assertCount(3, City::find([['country_id' => 2], 'order' => 'city_id desc']));
+        $this->assertCount(3, City::find(['conditions' => 'country_id =:country_id', 'bind' => ['country_id' => 2]]));
+        $this->assertCount(2, City::find([['country_id' => 2], 'limit' => 2]));
+        $this->assertCount(1, City::find([['country_id' => 2], 'limit' => 1, 'offset' => 2]));
     }
-	
+
     /**
      * @param \ManaPHP\Mvc\Model $model
      */
@@ -250,7 +252,7 @@ class MvcModelTest extends TestCase
 
         $this->assertTrue(Student::findFirst(1) !== false);
         $student->delete();
-        $this->assertTrue(Student::findFirst(1) ===false);
+        $this->assertTrue(Student::findFirst(1) === false);
     }
 
     public function test_assign()
@@ -267,6 +269,5 @@ class MvcModelTest extends TestCase
         $this->assertEquals(1, $city->city_id);
         $this->assertNull($city->city);
     }
-
 
 }

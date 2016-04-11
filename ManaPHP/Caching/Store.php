@@ -42,7 +42,6 @@ namespace ManaPHP\Caching {
             $this->_serializer = $serializer ?: new JsonPhp();
         }
 
-
         /**
          * Fetch content
          *
@@ -104,7 +103,6 @@ namespace ManaPHP\Caching {
             $this->_adapter->set($this->_prefix . $id, $this->_serializer->serialize($value));
         }
 
-
         /**
          * Stores a value identified by a id into store.
          *
@@ -133,7 +131,6 @@ namespace ManaPHP\Caching {
         {
             $this->_adapter->delete($this->_prefix . $id);
         }
-
 
         /**
          * Check if id exists

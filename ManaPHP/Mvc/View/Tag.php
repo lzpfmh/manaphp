@@ -44,7 +44,6 @@ namespace ManaPHP\Mvc\View {
             return $this;
         }
 
-
         /**
          * @return string
          */

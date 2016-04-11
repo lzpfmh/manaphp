@@ -1,6 +1,6 @@
 <?php
 
-defined('UNIT_TESTS_ROOT') || require __DIR__.'/bootstrap.php';
+defined('UNIT_TESTS_ROOT') || require __DIR__ . '/bootstrap.php';
 
 class CachingStoreAdapterMemoryTest extends TestCase
 {
@@ -13,7 +13,6 @@ class CachingStoreAdapterMemoryTest extends TestCase
         $this->assertTrue($cache->exists('var'));
     }
 
-
     public function test_get()
     {
         $cache = new \ManaPHP\Caching\Store\Adapter\Memory();
@@ -24,17 +23,16 @@ class CachingStoreAdapterMemoryTest extends TestCase
         $this->assertSame('value', $cache->get('var'));
     }
 
-
-    public function test_mGet(){
+    public function test_mGet()
+    {
         $cache = new \ManaPHP\Caching\Store\Adapter\Memory();
 
-        $cache->set('1','1');
-        $idValues=$cache->mGet(['1','2']);
+        $cache->set('1', '1');
+        $idValues = $cache->mGet(['1', '2']);
 
-        $this->assertEquals('1',$idValues['1']);
+        $this->assertEquals('1', $idValues['1']);
         $this->assertFalse($idValues[2]);
     }
-
 
     public function test_set()
     {
@@ -50,18 +48,17 @@ class CachingStoreAdapterMemoryTest extends TestCase
         $this->assertSame('{}', $cache->get('var'));
     }
 
-
-    public function test_mSet(){
+    public function test_mSet()
+    {
         $cache = new \ManaPHP\Caching\Store\Adapter\Memory();
 
         $cache->mSet([]);
 
-        $cache->mSet(['1'=>1,'2'=>2]);
-        $this->assertSame(1,$cache->get(1));
-        $this->assertSame(2,$cache->get(2));
+        $cache->mSet(['1' => 1, '2' => 2]);
+        $this->assertSame(1, $cache->get(1));
+        $this->assertSame(2, $cache->get(2));
         $this->assertFalse($cache->get(3));
     }
-
 
     public function test_delete()
     {
