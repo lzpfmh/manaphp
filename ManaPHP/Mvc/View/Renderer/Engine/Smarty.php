@@ -9,7 +9,7 @@ namespace ManaPHP\Mvc\View\Renderer\Engine {
     class Smarty extends Component implements EngineInterface
     {
         /**
-         * @var \smarty
+         * @var \Smarty
          */
         protected $_smarty;
 
