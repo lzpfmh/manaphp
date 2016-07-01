@@ -421,9 +421,9 @@ namespace ManaPHP\Http {
             $this->setAttachment($attachmentName);
 
             $file = fopen('php://temp', 'r+');
-			
+
             fprintf($file, "\xEF\xBB\xBF");
-			
+
             if ($header !== null) {
                 if (Text::startsWith($header[0], 'ID')) {
                     $header[0] = strtolower($header[0]);
@@ -445,6 +445,17 @@ namespace ManaPHP\Http {
                     $data = $row;
                 }
 
+                foreach ($data as &$v) {
+                    if (is_int($v)) {
+                        $v = (string)$v;
+                    }
+
+                    if (is_numeric($v) && strlen($v) >= 10) {
+                        $v = "\t" . $v . "\t";
+                    }
+                }
+                unset($v);
+
                 fputcsv($file, $data);
             }
 
@@ -453,7 +464,6 @@ namespace ManaPHP\Http {
             fclose($file);
 
             $this->setContentType('text/csv');
-            $this->setHeader('Content-Length', strlen($content));
             $this->setContent($content);
 
             return $this;
