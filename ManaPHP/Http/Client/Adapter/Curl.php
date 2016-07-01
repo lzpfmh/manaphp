@@ -22,7 +22,7 @@ namespace ManaPHP\Http\Client\Adapter {
         public function _request($type, $url, $data, $headers, $options)
         {
             $this->_curlResponseHeader=[];
-            
+
             $curl = curl_init();
 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
