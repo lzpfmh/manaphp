@@ -50,7 +50,7 @@ namespace ManaPHP\Http {
          *    $response->setStatusCode(404, "Not Found");
          *</code>
          *
-         * @param int    $code
+         * @param int $code
          * @param string $message
          *
          * @return static
@@ -191,7 +191,7 @@ namespace ManaPHP\Http {
          *</code>
          *
          * @param string|array $location
-         * @param int|string   $statusCode
+         * @param int|string $statusCode
          *
          * @return static
          * @throws \ManaPHP\Http\Response\Exception
@@ -250,7 +250,7 @@ namespace ManaPHP\Http {
          *</code>
          *
          * @param mixed $content
-         * @param int   $jsonOptions consisting on http://www.php.net/manual/en/json.constants.php
+         * @param int $jsonOptions consisting on http://www.php.net/manual/en/json.constants.php
          *
          * @return static
          */
@@ -402,8 +402,8 @@ namespace ManaPHP\Http {
         }
 
         /**
-         * @param array        $rows
-         * @param string       $attachmentName
+         * @param array $rows
+         * @param string $attachmentName
          * @param array|string $header
          *
          * @return static
@@ -446,7 +446,8 @@ namespace ManaPHP\Http {
                 }
 
                 foreach ($data as &$v) {
-                    if(is_numeric($v)){
+                    /** @noinspection ReferenceMismatchInspection */
+                    if (is_numeric($v)) {
                         $v = "\t" . $v . "\t";
                     }
                 }

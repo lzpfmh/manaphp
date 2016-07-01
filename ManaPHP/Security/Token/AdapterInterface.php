@@ -1,5 +1,5 @@
 <?php
-namespace ManaPHP\Security\WebToken {
+namespace ManaPHP\Security\Token {
 
     interface AdapterInterface
     {
