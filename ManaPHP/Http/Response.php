@@ -446,13 +446,7 @@ namespace ManaPHP\Http {
                 }
 
                 foreach ($data as &$v) {
-                    if (is_int($v)) {
-                        $v = (string)$v;
-                    }
-
-                    if (is_numeric($v) && strlen($v) >= 10) {
-                        $v = "\t" . $v . "\t";
-                    }
+                    $v = "\t" . $v . "\t";
                 }
                 unset($v);
 
