@@ -446,7 +446,9 @@ namespace ManaPHP\Http {
                 }
 
                 foreach ($data as &$v) {
-                    $v = "\t" . $v . "\t";
+                    if(is_numeric($v)){
+                        $v = "\t" . $v . "\t";
+                    }
                 }
                 unset($v);
 
